@@ -1,0 +1,647 @@
+[
+  {
+    "listingName": "Albrecht Outfitters",
+    "ownerName": "Taylor Albrecht",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://albrechtoutfitting.com/",
+    "phone": "435-979-7227",
+    "email": "tayloralbrecht@hotmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "All Out Outfitters",
+    "ownerName": "Alan Wood J.T. & Breanna Robbins",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://alloutoutfitters.net/",
+    "phone": "",
+    "email": "alloutoutfitters@gmail.com alan.wood@ipsc.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Alpha Outfitters",
+    "ownerName": "Garrett Smith",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "",
+    "phone": "",
+    "email": "thealphaoutﬁtter@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East",
+          "Manti/San Rafael"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [
+          "Grand Staircase Kanab"
+        ],
+        "usfsForests": [
+          "Duschene Dixie – Lake Powell Manti LaSal Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Apex Outfitters",
+    "ownerName": "Brett Guymon",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://apexoutfitters.net/",
+    "phone": "435-749-0060",
+    "email": "brettguymon77@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Manti/San Rafael",
+          "La Sal Mtns",
+          "Dolores Triangle"
+        ],
+        "reviewTokens": [
+          "San Juan"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Manti LaSal"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Apex Outfitters",
+    "ownerName": "Brett Guymon",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://apexoutfitters.net/",
+    "phone": "435-749-0060",
+    "email": "brettguymon77@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Elk",
+        "unitsServed": [
+          "Manti",
+          "San Juan",
+          "La Sal Mtns",
+          "La Sal, Dolores Triangle"
+        ],
+        "reviewTokens": [],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Manti LaSal"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Battleground G/O",
+    "ownerName": "JL Larsen",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "",
+    "phone": "801-647-5661",
+    "email": "freedomrv@hotmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Beaver Mountain Outfitters",
+    "ownerName": "Slade Edwards",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.facebook.com/profile.php?id=61576620110758#",
+    "phone": "435-421-1850",
+    "email": "edwardsslade@gmail.com aust4.ab@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake Dixie-Lake Powell"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Book Cliff Outfitters",
+    "ownerName": "Tim Pilling",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.bookcliffoutfitters.com/",
+    "phone": "970.327.4787",
+    "email": "tjpilling@gmail.com bookcliffoutfitters77@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [],
+        "reviewTokens": [
+          "Wasatch"
+        ],
+        "blmDistricts": [
+          "Grand Staircase Kanab"
+        ],
+        "usfsForests": [
+          "UWC"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Cisco Outfitting Travis Kruckenberg Outfitting",
+    "ownerName": "Travis Kruckenberg",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.traviskruckenbergoutfitting.com/",
+    "phone": "(970) 216-9694",
+    "email": "traviskruckenberg@live.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Manti/San Rafael",
+          "La Sal Mtns",
+          "Dolores Triangle"
+        ],
+        "reviewTokens": [
+          "San Juan"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Manti LaSal"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Cisco Outfitting Travis Kruckenberg Outfitting",
+    "ownerName": "Travis Kruckenberg",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.traviskruckenbergoutfitting.com/",
+    "phone": "(970) 216-9694",
+    "email": "traviskruckenberg@live.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Elk",
+        "unitsServed": [
+          "Manti",
+          "San Juan",
+          "La Sal Mtns",
+          "La Sal, Dolores Triangle"
+        ],
+        "reviewTokens": [],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Manti LaSal"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Crab Creek",
+    "ownerName": "Fairview, UT.",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "",
+    "phone": "",
+    "email": "crabcreekoutfitters@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Manti/San Rafael"
+        ],
+        "reviewTokens": [],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Manti LaSal"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Dc Outfitters, LLC",
+    "ownerName": "Ryan Carter",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://dcoutah.com/",
+    "phone": "(801) 921-9589",
+    "email": "ryan@dcoutah.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Dixie – Escalante Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Desert Mountain",
+    "ownerName": "Casey Shields",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "",
+    "phone": "",
+    "email": "shieldshunting@yahoo.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Dirtnap Outfitters LLC",
+    "ownerName": "Gage Mogle",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://dirtnapoutfitter.com/",
+    "phone": "435-299-0176",
+    "email": "gage@ﬁercearms.com info@dirtnapoutfitter.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Dixie – Escalante Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Double C Guides",
+    "ownerName": "Neil Crump",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "http://www.doublecguides.com/",
+    "phone": "801-349-0059",
+    "email": "droptine@doublecguides.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Dixie – Escalante Ashley – Roosevelt UWC – Evanston Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Dusty Trails Outfitting, LLC",
+    "ownerName": "Dusty White",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.dustytrailsoutfitting.com/",
+    "phone": "(435) 691-5116",
+    "email": "dusty@dustytrailsoutfitting.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [
+          "Cedar City"
+        ],
+        "usfsForests": [
+          "Dixie – Pine Valley Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Elite Western Outfitters LLC",
+    "ownerName": "Ryley Heidenreich",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.elitewesternoutfitters.com/",
+    "phone": "(385)-895-7801",
+    "email": "Elitewesternout@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver",
+          "Nebo"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Spanish Fork Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Elite Western Outfitters LLC",
+    "ownerName": "Ryley Heidenreich",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.elitewesternoutfitters.com/",
+    "phone": "(385)-895-7801",
+    "email": "Elitewesternout@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Elk",
+        "unitsServed": [
+          "Fishlake/Thousand Lakes",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East",
+          "Nebo"
+        ],
+        "reviewTokens": [
+          "North-Boulder",
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Spanish Fork Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "F-n-h Outfitters",
+    "ownerName": "Russell Hatch Kale Hatch",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://www.fnhoutfitters.com/",
+    "phone": "435-590-3695",
+    "email": "info@fnhoutfitters.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [
+          "Grand Staircase Kanab"
+        ],
+        "usfsForests": [
+          "Dixie – Lake Powell Fishlake"
+        ]
+      }
+    ]
+  },
+  {
+    "listingName": "Fremont River Outfitters",
+    "ownerName": "Randy Bradbury",
+    "listingType": "Outfitter",
+    "certLevel": "",
+    "verificationStatus": "Vetted",
+    "website": "https://flyfishingsouthernutah.com/hunting/rates-and-packages/",
+    "phone": "",
+    "email": "fremontriveroutfitters@gmail.com",
+    "region": "Utah",
+    "city": "",
+    "services": [
+      {
+        "species": "Deer",
+        "unitsServed": [
+          "Fishlake",
+          "Thousand Lakes",
+          "Boulder/Kaiparowits",
+          "Henry Mtns",
+          "Fillmore, Oak Creek LE",
+          "Mt Dutton",
+          "Monroe",
+          "Beaver, East"
+        ],
+        "reviewTokens": [
+          "Beaver"
+        ],
+        "blmDistricts": [],
+        "usfsForests": [
+          "Fishlake"
+        ]
+      }
+    ]
+  }
+]
