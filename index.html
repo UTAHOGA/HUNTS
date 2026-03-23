@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>U.O.G.A. Google DWR Mirror</title>
+  <title>U.O.G.A. Hunt Planner | VETTED OUTFITTERS</title>
   <style>
     /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
     :root {
@@ -24,7 +24,7 @@
     /* --- DARK MODE (U.O.G.A. WEBSITE MATCH) VARIABLES --- */
     body.theme-dark {
       --bg: #141414;
-      --panel: rgba(35, 30, 26, 0.88); /* Dark earth tone, slightly transparent */
+      --panel: rgba(35, 30, 26, 0.88);
       --panel2: #2b231d;
       --line: #5c412d;
       --text: #f4efe4;
@@ -38,47 +38,31 @@
 
     * { box-sizing: border-box; }
     html, body {
-      height: 100%;
-      margin: 0;
-      color: var(--text);
-      font-family: var(--font-ui);
-      background-color: var(--bg);
-      background-image: var(--bg-image);
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
+      height: 100%; margin: 0; color: var(--text); font-family: var(--font-ui);
+      background-color: var(--bg); background-image: var(--bg-image);
+      background-size: cover; background-attachment: fixed; background-position: center;
       transition: background-color 0.3s, color 0.3s;
     }
-    
-    body {
-      display: grid;
-      grid-template-rows: auto 1fr;
-    }
+    body { display: grid; grid-template-rows: auto 1fr; }
 
-    /* --- UPGRADED LOADING OVERLAY --- */
+    /* --- UPGRADED LOADING OVERLAY WITH REALISTIC ELK & LOGO --- */
     .loading-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      background: var(--panel);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--panel); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       transition: opacity 300ms ease, visibility 300ms ease;
     }
     .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
+    .loading-logo {
+      height: 80px; width: auto; margin-bottom: 30px; border-radius: 6px;
+      background: #fff; padding: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+
     .elk-loader { position: relative; width: 210px; height: 190px; margin-bottom: 20px; }
     .wheel {
-      position: absolute; top: 0; left: 50%; width: 150px; height: 150px;
-      transform: translateX(-50%);
-      border: 6px solid rgba(191, 107, 52, 0.15);
-      border-top: 6px solid var(--accent);
-      border-right: 6px solid var(--accent-dark);
-      border-radius: 50%;
+      position: absolute; top: 0; left: 50%; width: 150px; height: 150px; transform: translateX(-50%);
+      border: 6px solid rgba(191, 107, 52, 0.15); border-top: 6px solid var(--accent); border-right: 6px solid var(--accent-dark); border-radius: 50%;
       box-shadow: inset 0 0 12px rgba(191, 107, 52, 0.1), 0 12px 24px rgba(191, 107, 52, 0.25), 0 0 20px rgba(191, 107, 52, 0.15);
       animation: elk-wheel-spin 1s linear infinite;
     }
@@ -98,33 +82,32 @@
     .upright { position: absolute; top: 0; width: 6px; height: 58px; background: linear-gradient(180deg, #7d5a3e, #4a3322); border-radius: 999px; box-shadow: 0 6px 12px rgba(58, 37, 18, 0.2); }
     .upright.left { left: 42px; transform: rotate(16deg); } .upright.right { right: 42px; transform: rotate(-16deg); }
     .base { position: absolute; bottom: 0; left: 14px; right: 14px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #4a3322, #7d5a3e, #4a3322); box-shadow: 0 6px 12px rgba(58, 37, 18, 0.25); }
-    .elk { position: absolute; left: 50%; top: 53px; width: 106px; height: 74px; transform: translateX(-50%); animation: elk-bob 0.38s ease-in-out infinite; }
-    .elk .body { position: absolute; left: 18px; top: 20px; width: 54px; height: 25px; background: linear-gradient(to bottom, #744d31, #51331e); border-radius: 24px 20px 18px 18px; }
-    .elk .shoulder { position: absolute; left: 50px; top: 17px; width: 16px; height: 18px; background: #7d5335; border-radius: 12px; }
-    .elk .neck { position: absolute; left: 64px; top: 6px; width: 13px; height: 27px; background: linear-gradient(to bottom right, #744d31, #51331e); border-radius: 10px; transform: rotate(-15deg); }
-    .elk .head { position: absolute; left: 72px; top: 2px; width: 19px; height: 13px; background: #654026; border-radius: 8px 10px 7px 7px; transform: rotate(-8deg); }
-    .elk .ear { position: absolute; left: 80px; top: -3px; width: 7px; height: 8px; background: #5b3c28; border-radius: 3px 3px 0 0; transform: rotate(12deg); }
-    .elk .muzzle { position: absolute; left: 87px; top: 7px; width: 11px; height: 7px; background: #4a2d1a; border-radius: 0 6px 6px 0; }
-    .elk .tail { position: absolute; left: 15px; top: 22px; width: 12px; height: 5px; background: #51331e; border-radius: 4px; transform: rotate(20deg); }
-    .antlers { position: absolute; top: -13px; width: 3px; height: 20px; background: #e0d0bf; border-radius: 999px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-    .antler-left { left: 76px; transform: rotate(-18deg); } .antler-right { left: 84px; transform: rotate(18deg); }
-    .antler-left::before, .antler-left::after, .antler-right::before, .antler-right::after { content: ""; position: absolute; width: 3px; height: 10px; background: #e0d0bf; border-radius: 999px; }
-    .antler-left::before { top: 2px; left: -5px; transform: rotate(-38deg); } .antler-left::after { top: 8px; left: -4px; transform: rotate(-22deg); }
-    .antler-right::before { top: 2px; left: 5px; transform: rotate(38deg); } .antler-right::after { top: 8px; left: 4px; transform: rotate(22deg); }
-    .leg { position: absolute; width: 5px; height: 24px; top: 41px; background: #3d2616; border-radius: 999px; transform-origin: 50% 0; }
-    .leg-front-back { left: 56px; animation: elk-leg-a 0.38s ease-in-out infinite; background: #2b1b0f;} .leg-front-front { left: 67px; animation: elk-leg-b 0.38s ease-in-out infinite; }
-    .leg-rear-back { left: 31px; animation: elk-leg-b 0.38s ease-in-out infinite; background: #2b1b0f;} .leg-rear-front { left: 42px; animation: elk-leg-a 0.38s ease-in-out infinite; }
-    .shadow { position: absolute; left: 24px; bottom: 4px; width: 56px; height: 8px; background: rgba(58, 37, 18, 0.15); border-radius: 50%; filter: blur(2px); animation: elk-shadow 0.38s ease-in-out infinite; }
+    
+    /* The Realistic Vector Elk */
+    .realistic-elk-vector {
+      position: absolute;
+      left: 50%;
+      top: 50px;
+      width: 90px;
+      height: 90px;
+      margin-left: -45px;
+      fill: var(--text); /* Adapts to dark/light mode */
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+      animation: elk-gallop 0.6s ease-in-out infinite alternate;
+    }
+
+    .shadow { position: absolute; left: 24px; bottom: 4px; width: 56px; height: 8px; background: rgba(58, 37, 18, 0.15); border-radius: 50%; filter: blur(2px); animation: elk-shadow 0.6s ease-in-out infinite alternate; }
     .dust { position: absolute; bottom: 7px; width: 6px; height: 6px; border-radius: 50%; background: rgba(191, 107, 52, 0.35); opacity: 0; }
     .dust-1 { left: 18px; animation: elk-dust 0.8s linear infinite; } .dust-2 { left: 26px; animation: elk-dust 0.8s linear infinite 0.15s; } .dust-3 { left: 34px; animation: elk-dust 0.8s linear infinite 0.3s; }
-    .loading-text { font-family: var(--font-display); font-size: 24px; color: var(--accent); font-weight: 700; letter-spacing: 0.02em; text-align: center; padding: 0 18px; }
+    .loading-text { font-family: var(--font-display); font-size: 24px; color: var(--accent); font-weight: 700; letter-spacing: 0.02em; text-align: center; padding: 0 18px; text-shadow: 0 2px 4px rgba(255,255,255,0.6); }
     .loading-sub { margin-top: 8px; font-size: 13px; color: var(--text); font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; background: var(--panel2); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); }
 
     @keyframes elk-wheel-spin { to { transform: translateX(-50%) rotate(360deg); } }
-    @keyframes elk-bob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(2px); } }
-    @keyframes elk-leg-a { 0%, 100% { transform: rotate(32deg); } 50% { transform: rotate(-30deg); } }
-    @keyframes elk-leg-b { 0%, 100% { transform: rotate(-30deg); } 50% { transform: rotate(32deg); } }
-    @keyframes elk-shadow { 0%, 100% { transform: scaleX(1); opacity: 0.2; } 50% { transform: scaleX(0.85); opacity: 0.1; } }
+    @keyframes elk-gallop { 
+      0% { transform: translateY(0px) rotate(-2deg); } 
+      100% { transform: translateY(-8px) rotate(4deg); } 
+    }
+    @keyframes elk-shadow { 0% { transform: scaleX(1); opacity: 0.2; } 100% { transform: scaleX(0.7); opacity: 0.05; } }
     @keyframes elk-dust { 0% { opacity: 0; transform: translate(0, 0) scale(0.7); } 15% { opacity: 0.8; } 100% { opacity: 0; transform: translate(-20px, -12px) scale(1.5); } }
 
     /* --- TOPBAR & LOGO LOCKUP --- */
@@ -134,37 +117,14 @@
       border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2; 
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    .brand-logo-lockup {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .brand-logo-lockup img {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-      border-radius: 4px;
-      background: #fff; /* Keep logo readable on dark mode */
-      padding: 2px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    }
-    .brand h1 { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--text); }
+    .brand-logo-lockup { display: flex; align-items: center; gap: 16px; }
+    .brand-logo-lockup img { height: 52px; width: auto; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
     
-    /* Compact Navigation */
-    .compact-nav {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .compact-nav a {
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
+    .brand h1 { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--text); }
+    .brand p { margin: 4px 0 0; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-align: center;}
+    
+    .compact-nav { display: flex; gap: 12px; margin-top: 6px; justify-content: center; }
+    .compact-nav a { color: var(--accent); text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; transition: color 0.2s; }
     .compact-nav a:hover { color: var(--accent-dark); text-decoration: underline; }
     
     /* --- CONTROLS --- */
@@ -180,6 +140,7 @@
     button.secondary { background: var(--panel2); color: var(--text); box-shadow: none; border: 1px solid var(--line); }
     button.secondary:hover { background: var(--panel); }
     
+    /* --- LAYOUT & SIDEBAR --- */
     .layout { display: grid; grid-template-columns: 340px 1fr; min-height: 0; }
     .sidebar { border-right: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 14px; backdrop-filter: blur(10px); }
     .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
@@ -199,9 +160,36 @@
     .detail-grid strong { display: block; margin-bottom: 3px; color: var(--accent); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
     .detail-grid a { color: var(--text); font-weight: bold; }
     
+    /* --- MAP --- */
     .map-wrap { position: relative; min-height: 0; }
     #map { width: 100%; height: 100%; min-height: calc(100vh - 80px); }
     
+    .map-card { position: absolute; left: 18px; bottom: 28px; z-index: 2; width: min(420px, calc(100vw - 36px)); padding: 16px 20px; border: 1px solid rgba(185, 144, 111, 0.5); border-radius: 16px; background: rgba(255, 251, 244, 0.95); box-shadow: 0 12px 30px rgba(58, 37, 18, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    /* Force Map Card colors to stay legible even in dark mode, since it floats over the map */
+    body.theme-dark .map-card { background: rgba(35, 30, 26, 0.95); border-color: var(--line); }
+    .map-card h3 { margin: 0 0 6px; font-family: var(--font-display); font-size: 22px; line-height: 1.1; color: var(--text); }
+    .map-card p { margin: 0; color: var(--accent); line-height: 1.5; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; text-align: center;}
+    
+    /* --- NEW OUTFITTER LOGO & LINK STYLES --- */
+    .outfitter-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .outfitter-card-logo { width: 46px; height: 46px; object-fit: contain; border-radius: 6px; background: #fff; padding: 2px; border: 1px solid var(--line); }
+    .outfitter-card-title-wrap { display: flex; flex-direction: column; }
+    
+    /* Brighter, more visible blue links */
+    .outfitter-link, .detail-grid a { color: #3ea6ff; font-weight: 800; text-decoration: none; transition: color 0.2s; display: inline-block; }
+    .outfitter-link:hover, .detail-grid a:hover { color: #7cbcf7; text-decoration: underline; }
+    
+    /* Ensure the blue pops even more in Dark Mode */
+    body.theme-dark .outfitter-link, body.theme-dark .detail-grid a { color: #4dabf5; }
+    body.theme-dark .outfitter-link:hover, body.theme-dark .detail-grid a:hover { color: #82c4f8; }
+
+    /* --- CUSTOM GOOGLE LOGO PINS --- */
+    .outfitter-logo-pin-shell { position: relative; width: 44px; height: 58px; transform: translateY(-100%); cursor: pointer; }
+    .outfitter-logo-pin-base { position: absolute; left: 7px; top: 20px; width: 30px; height: 30px; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); border: 2px solid rgba(58, 37, 18, 0.8); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }
+    .outfitter-logo-pin-center { position: absolute; left: 8px; top: 8px; width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 2px solid rgba(58, 37, 18, 0.3); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .outfitter-logo-pin-center img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* Map Modals */
     .map-chooser { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); z-index: 3; width: min(640px, calc(100vw - 40px)); max-height: min(68vh, 720px); display: none; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .map-chooser.is-open { display: flex; }
     .map-chooser-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; }
@@ -224,23 +212,23 @@
       .layout { grid-template-columns: 1fr; }
       .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
       #map { min-height: 58vh; }
-      .compact-nav { display: none; } /* Hide direct links on mobile to save space */
-    }
-    @media (max-width: 720px) {
-      .detail-grid { grid-template-columns: 1fr; }
+      .compact-nav { display: none; }
     }
   </style>
 </head>
 <body class="theme-dark">
   <div id="loadingOverlay" class="loading-overlay">
+    <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo" class="loading-logo">
+    
     <div class="elk-loader" aria-hidden="true">
       <div class="wheel"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="hub"></span></div>
       <div class="stand"><span class="upright left"></span><span class="upright right"></span><span class="base"></span></div>
-      <div class="elk">
-        <span class="tail"></span><span class="body"></span><span class="shoulder"></span><span class="neck"></span><span class="head"></span><span class="ear"></span><span class="muzzle"></span><span class="antlers antler-left"></span><span class="antlers antler-right"></span>
-        <span class="leg leg-front-back"></span><span class="leg leg-front-front"></span><span class="leg leg-rear-back"></span><span class="leg leg-rear-front"></span>
-        <span class="shadow"></span><span class="dust dust-1"></span><span class="dust dust-2"></span><span class="dust dust-3"></span>
-      </div>
+      
+      <svg class="realistic-elk-vector" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M79.5,23.3 C77.2,21.5 75.3,16.5 74.8,13.2 C74.6,11.5 73.1,10.8 71.9,11.7 C70.2,13.0 69.1,16.4 69.5,19.2 C67.4,19.9 64.9,21.1 63.8,22.8 C62.7,24.5 59.9,28.6 56.4,32.3 C52.9,36.0 49.3,38.1 46.2,38.7 C42.1,39.5 35.8,38.8 30.1,39.9 C24.4,41.0 18.2,44.2 16.5,46.5 C15.1,48.4 15.6,50.1 18.2,50.1 C19.9,50.1 22.1,49.2 23.8,48.5 C24.5,52.3 26.1,56.9 25.1,62.2 C23.9,68.8 19.8,75.3 16.5,79.8 C15.1,81.7 16.8,84.1 19.1,83.2 C22.4,81.9 28.5,76.5 31.9,71.2 C35.3,65.9 36.8,59.2 36.8,55.8 C38.5,56.5 40.5,57.1 42.8,57.2 C41.2,62.4 38.6,69.5 36.1,75.1 C34.5,78.6 37.2,82.4 41.0,81.1 C44.5,80.0 50.1,73.5 52.8,68.2 C55.5,62.9 57.1,55.1 57.1,55.1 C61.9,54.8 66.8,52.2 71.1,48.1 C75.4,44.0 78.5,38.5 79.9,34.8 C80.9,32.2 82.2,30.5 84.1,29.9 C85.6,29.4 86.8,28.1 87.2,26.5 C87.8,24.1 86.5,23.3 84.5,23.8 C82.8,24.2 81.2,24.8 79.5,23.3 Z M82.1,10.5 C80.5,8.8 79.1,5.2 79.1,2.8 C79.1,1.1 77.2,0.3 75.9,1.5 C74.2,3.1 73.1,6.8 73.8,9.5 C74.5,12.2 76.2,14.5 78.1,15.8 C80.5,17.2 83.2,18.1 85.8,17.8 C87.5,17.6 88.5,15.9 87.5,14.5 C86.2,12.6 84.1,11.8 82.1,10.5 Z"></path>
+      </svg>
+
+      <span class="shadow"></span><span class="dust dust-1"></span><span class="dust dust-2"></span><span class="dust dust-3"></span>
     </div>
     <div id="loadingText" class="loading-text">Loading the herd...</div>
     <div class="loading-sub">Fetching Live Hunt Data</div>
@@ -253,7 +241,8 @@
           <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
         </a>
         <div>
-          <h1>Google DWR Mirror</h1>
+          <h1>U.O.G.A. Hunt Planner</h1>
+          <p>VETTED OUTFITTERS</p>
           <nav class="compact-nav">
             <a href="https://www.uoga.org" target="_blank">Home</a> |
             <a href="https://www.uoga.org/about" target="_blank">About</a> |
@@ -293,65 +282,28 @@
             <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
           </div>
           <div class="field">
-            <label for="unitFilter">Unit</label>
-            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
-          </div>
-          <div class="field">
             <label for="speciesFilter">Species</label>
             <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
           </div>
           <div class="field">
             <label for="sexFilter">Sex</label>
-            <select id="sexFilter" class="hunt-select">
-              <option value="All">All</option>
-              <option value="Buck">Buck</option>
-              <option value="Bull">Bull</option>
-              <option value="Antlerless">Antlerless</option>
-              <option value="Either Sex">Either Sex</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="huntTypeFilter">Hunt Type</label>
-            <select id="huntTypeFilter" class="hunt-select">
-              <option value="All">All</option>
-              <option value="General">General Season</option>
-              <option value="Youth">Youth</option>
-              <option value="Limited Entry">Limited Entry</option>
-              <option value="Premium Limited Entry">Premium Limited Entry</option>
-              <option value="Management">Management</option>
-              <option value="Dedicated Hunter">Dedicated Hunter</option>
-              <option value="Cactus Buck">Cactus Buck</option>
-              <option value="Once-in-a-Lifetime">Once-in-a-Lifetime</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="huntCategoryFilter">Hunt Class</label>
-            <select id="huntCategoryFilter" class="hunt-select">
-              <option value="All">All</option>
-              <option value="Mature Bull">Mature Bull</option>
-              <option value="General Bull">General Bull</option>
-              <option value="Spike Only">Spike Only</option>
-              <option value="Youth">Youth</option>
-              <option value="Extended Archery">Extended Archery</option>
-              <option value="Private Land Only">Private Land Only</option>
-              <option value="Antlerless">Antlerless</option>
-            </select>
+            <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
           </div>
           <div class="field">
             <label for="weaponFilter">Weapon Type</label>
-            <select id="weaponFilter" class="hunt-select">
-              <option value="All">All</option>
-              <option value="Any Legal Weapon">Any Legal Weapon</option>
-              <option value="Archery">Archery</option>
-              <option value="Extended Archery">Extended Archery</option>
-              <option value="Restricted Archery">Restricted Archery</option>
-              <option value="Muzzleloader">Muzzleloader</option>
-              <option value="Restricted Muzzleloader">Restricted Muzzleloader</option>
-              <option value="Restricted Rifle">Restricted Rifle</option>
-              <option value="HAMSS">HAMSS</option>
-              <option value="Multiseason">Multiseason</option>
-              <option value="Restricted Multiseason">Restricted Multiseason</option>
-            </select>
+            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntTypeFilter">Hunt Type</label>
+            <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntCategoryFilter">Hunt Class</label>
+            <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="unitFilter">Unit</label>
+            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
           </div>
           <div class="filter-actions">
             <button id="applyFiltersBtn" type="button">Apply Filters</button>
@@ -389,6 +341,12 @@
 
     <section class="map-wrap">
       <div id="map" aria-label="Google DWR mirror map"></div>
+      
+      <div class="map-card">
+        <h3>U.O.G.A. Hunt Planner</h3>
+        <p>VETTED OUTFITTERS</p>
+      </div>
+
       <div id="mapChooser" class="map-chooser" aria-hidden="true">
         <div class="map-chooser-head">
           <div>
@@ -405,7 +363,6 @@
   </main>
 
   <script>
-    // Theme Toggle Logic
     document.addEventListener('DOMContentLoaded', () => {
       const themeToggleBtn = document.getElementById('themeToggleBtn');
       if (themeToggleBtn) {
