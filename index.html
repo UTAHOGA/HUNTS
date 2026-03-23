@@ -45,7 +45,7 @@
     }
     body { display: grid; grid-template-rows: auto 1fr; }
 
-    /* --- UPGRADED LOADING OVERLAY WITH REALISTIC ELK & LOGO --- */
+    /* --- UPGRADED LOADING OVERLAY --- */
     .loading-overlay {
       position: fixed; inset: 0; z-index: 9999;
       background: var(--panel); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -83,20 +83,28 @@
     .upright.left { left: 42px; transform: rotate(16deg); } .upright.right { right: 42px; transform: rotate(-16deg); }
     .base { position: absolute; bottom: 0; left: 14px; right: 14px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #4a3322, #7d5a3e, #4a3322); box-shadow: 0 6px 12px rgba(58, 37, 18, 0.25); }
     
-    /* The Realistic Vector Elk */
+    /* --- NEW REALISTIC VECTOR ELK STYLING --- */
     .realistic-elk-vector {
       position: absolute;
       left: 50%;
-      top: 50px;
-      width: 90px;
-      height: 90px;
-      margin-left: -45px;
-      fill: var(--text); /* Adapts to dark/light mode */
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
-      animation: elk-gallop 0.6s ease-in-out infinite alternate;
+      top: 18px; /* Perfectly centered inside the wheel */
+      width: 140px; /* Scaled to fit */
+      height: auto;
+      margin-left: -70px;
+      animation: elk-gallop 0.5s ease-in-out infinite alternate;
+      /* Default assumes Dark Mode */
+      mix-blend-mode: screen; 
+      opacity: 0.95;
     }
 
-    .shadow { position: absolute; left: 24px; bottom: 4px; width: 56px; height: 8px; background: rgba(58, 37, 18, 0.15); border-radius: 50%; filter: blur(2px); animation: elk-shadow 0.6s ease-in-out infinite alternate; }
+    /* Light Mode Adaptation for the Elk AVIF */
+    body:not(.theme-dark) .realistic-elk-vector {
+      filter: invert(1);
+      mix-blend-mode: multiply;
+      opacity: 0.85;
+    }
+
+    .shadow { position: absolute; left: 24px; bottom: 4px; width: 56px; height: 8px; background: rgba(58, 37, 18, 0.15); border-radius: 50%; filter: blur(2px); animation: elk-shadow 0.5s ease-in-out infinite alternate; }
     .dust { position: absolute; bottom: 7px; width: 6px; height: 6px; border-radius: 50%; background: rgba(191, 107, 52, 0.35); opacity: 0; }
     .dust-1 { left: 18px; animation: elk-dust 0.8s linear infinite; } .dust-2 { left: 26px; animation: elk-dust 0.8s linear infinite 0.15s; } .dust-3 { left: 34px; animation: elk-dust 0.8s linear infinite 0.3s; }
     .loading-text { font-family: var(--font-display); font-size: 24px; color: var(--accent); font-weight: 700; letter-spacing: 0.02em; text-align: center; padding: 0 18px; text-shadow: 0 2px 4px rgba(255,255,255,0.6); }
@@ -224,9 +232,7 @@
       <div class="wheel"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="hub"></span></div>
       <div class="stand"><span class="upright left"></span><span class="upright right"></span><span class="base"></span></div>
       
-      <svg class="realistic-elk-vector" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M79.5,23.3 C77.2,21.5 75.3,16.5 74.8,13.2 C74.6,11.5 73.1,10.8 71.9,11.7 C70.2,13.0 69.1,16.4 69.5,19.2 C67.4,19.9 64.9,21.1 63.8,22.8 C62.7,24.5 59.9,28.6 56.4,32.3 C52.9,36.0 49.3,38.1 46.2,38.7 C42.1,39.5 35.8,38.8 30.1,39.9 C24.4,41.0 18.2,44.2 16.5,46.5 C15.1,48.4 15.6,50.1 18.2,50.1 C19.9,50.1 22.1,49.2 23.8,48.5 C24.5,52.3 26.1,56.9 25.1,62.2 C23.9,68.8 19.8,75.3 16.5,79.8 C15.1,81.7 16.8,84.1 19.1,83.2 C22.4,81.9 28.5,76.5 31.9,71.2 C35.3,65.9 36.8,59.2 36.8,55.8 C38.5,56.5 40.5,57.1 42.8,57.2 C41.2,62.4 38.6,69.5 36.1,75.1 C34.5,78.6 37.2,82.4 41.0,81.1 C44.5,80.0 50.1,73.5 52.8,68.2 C55.5,62.9 57.1,55.1 57.1,55.1 C61.9,54.8 66.8,52.2 71.1,48.1 C75.4,44.0 78.5,38.5 79.9,34.8 C80.9,32.2 82.2,30.5 84.1,29.9 C85.6,29.4 86.8,28.1 87.2,26.5 C87.8,24.1 86.5,23.3 84.5,23.8 C82.8,24.2 81.2,24.8 79.5,23.3 Z M82.1,10.5 C80.5,8.8 79.1,5.2 79.1,2.8 C79.1,1.1 77.2,0.3 75.9,1.5 C74.2,3.1 73.1,6.8 73.8,9.5 C74.5,12.2 76.2,14.5 78.1,15.8 C80.5,17.2 83.2,18.1 85.8,17.8 C87.5,17.6 88.5,15.9 87.5,14.5 C86.2,12.6 84.1,11.8 82.1,10.5 Z"></path>
-      </svg>
+      <img src="stylized-running-elk.jpg" alt="Running Elk" class="realistic-elk-vector">
 
       <span class="shadow"></span><span class="dust dust-1"></span><span class="dust dust-2"></span><span class="dust dust-3"></span>
     </div>
