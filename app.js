@@ -100,6 +100,7 @@ function setLoaderText(text) {
   const label = document.getElementById('loadingText');
   if (label) label.textContent = text;
 }
+
 function showLoader(text = 'Working...') {
   setLoaderText(text);
   if (loaderShowTimer) { clearTimeout(loaderShowTimer); loaderShowTimer = null; }
@@ -110,6 +111,7 @@ function showLoader(text = 'Working...') {
     loaderShowTimer = null;
   }, 140);
 }
+
 function hideLoader() {
   if (loaderShowTimer) { clearTimeout(loaderShowTimer); loaderShowTimer = null; }
   activeLoads = Math.max(0, activeLoads - 1);
@@ -118,13 +120,16 @@ function hideLoader() {
     if (overlay) overlay.classList.add('hidden');
   }
 }
+
 async function withLoader(text, work) { showLoader(text); try { return await work(); } finally { hideLoader(); } }
+
 function updateStatus(message) {
   const el = document.getElementById('status');
   if (el) el.textContent = message;
   const overlay = document.getElementById('loadingOverlay');
   if (overlay && !overlay.classList.contains('hidden')) setLoaderText(message);
 }
+
 function hideLoadingOverlay() { activeLoads = 0; const overlay = document.getElementById('loadingOverlay'); if (overlay) overlay.classList.add('hidden'); }
 
 function setMapChooserOpen(isOpen) {
@@ -508,7 +513,8 @@ function renderOutfitterResults() {
   const baseLat = center && typeof center.lat === 'function' ? center.lat() : GOOGLE_BASELINE_DEFAULT_CENTER.lat;
   const baseLng = center && typeof center.lng === 'function' ? center.lng() : GOOGLE_BASELINE_DEFAULT_CENTER.lng;
   const cityOffsets = new Map();
-container.innerHTML = matches.map(o => {
+
+  container.innerHTML = matches.map(o => {
     const logoUrl = escapeHtml(o.logoUrl || 'https://www.uoga.org/assets/default-logo.png');
     return `
     <div class="outfitter-card">
@@ -523,7 +529,7 @@ container.innerHTML = matches.map(o => {
       <div class="hunt-card-meta"><strong>Phone:</strong> ${escapeHtml(formatPhoneList(o.phone) || 'N/A')}</div>
       ${o.website ? `<div class="hunt-card-meta" style="margin-top:4px;"><a href="${escapeHtml(o.website)}" target="_blank" rel="noopener noreferrer" class="outfitter-link">Visit Website ➔</a></div>` : ''}
     </div>
-  `}).join('');  
+  `}).join('');
 
   if (!outfittersEnabled || !googleBaselineMap || !google.maps.marker) return;
 
