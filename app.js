@@ -7,7 +7,7 @@ const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`];
-const LOGO_DNR = './assets/logos/dnr-logo-small.png';
+const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
@@ -520,15 +520,17 @@ function buildDnrPlate(hunt, compact = false) {
   const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
   const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
   const boundaryLink = getBoundaryLink(hunt);
-  const wrapperWidth = compact ? 'min-width:390px;max-width:470px;' : 'width:100%;max-width:100%;';
+  const panelWidth = compact ? 440 : 520;
+  const panelHeight = compact ? 172 : 205;
+  const wrapperWidth = compact ? `width:${panelWidth}px;max-width:${panelWidth}px;` : `width:${panelWidth}px;max-width:100%;`;
   const titleSize = compact ? '17px' : '19px';
   const metaSize = compact ? '11.5px' : '12.5px';
   const infoTop = compact ? '14px' : '16px';
   const infoLeft = compact ? '31.5%' : '31%';
 
   return `
-    <div style="position:relative;${wrapperWidth}border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);aspect-ratio:1331 / 521;min-height:${compact ? '150px' : '168px'};background-image:url('${plateUrl}');background-size:cover;background-position:center;background-repeat:no-repeat;">
-      <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.001;pointer-events:none;" />
+    <div style="position:relative;${wrapperWidth}height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
+      <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
       <div style="position:absolute;top:${infoTop};left:${infoLeft};right:14px;bottom:14px;display:grid;align-content:start;gap:${compact ? '6px' : '8px'};color:#2b1c12;">
         <div style="display:grid;gap:2px;">
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Selected Hunt</div>
