@@ -128,8 +128,8 @@
     .brand-logo-lockup { display: flex; align-items: center; gap: 16px; }
     .brand-logo-lockup img { height: 52px; width: auto; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
     
-    .brand h1 { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--text); }
-    .brand p { margin: 4px 0 0; color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; text-align: center;}
+    .brand h1 { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--text); text-align: center; }
+    .brand p { margin: 4px 0 0; color: var(--accent); font-family: var(--font-display); font-size: 24px; line-height: 1; font-weight: 700; letter-spacing: 0; text-transform: none; text-align: center; }
     
     .compact-nav { display: flex; gap: 12px; margin-top: 6px; justify-content: center; }
     .compact-nav a { color: var(--accent); text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; transition: color 0.2s; }
@@ -142,6 +142,41 @@
     .toggle-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); flex-wrap: wrap; }
     .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer;}
     .toggle-chip input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;}
+    .layer-grid { display: grid; gap: 10px; }
+    .layer-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .layer-toggle-copy {
+      display: grid;
+      gap: 2px;
+    }
+    .layer-toggle-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .layer-toggle-note {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+    .layer-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
     select, button { border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); color: var(--text); font: inherit; padding: 10px 14px; }
     button { cursor: pointer; font-weight: 700; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.1s, box-shadow 0.1s; }
     button:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
@@ -151,6 +186,46 @@
     /* --- LAYOUT & SIDEBAR --- */
     .layout { display: grid; grid-template-columns: 340px 1fr; min-height: 0; }
     .sidebar { border-right: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 14px; backdrop-filter: blur(10px); }
+    .sidebar-brand {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 14px 12px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      box-shadow: var(--shadow);
+    }
+    .sidebar-brand img {
+      height: 64px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      background: #fff;
+      padding: 3px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    .sidebar-brand-title,
+    .sidebar-brand-subtitle {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 1.02;
+      color: var(--text);
+    }
+    .sidebar-brand-subtitle {
+      color: var(--accent);
+    }
+    .sidebar-menu-title {
+      margin: 0 0 12px;
+      text-align: center;
+      font-family: var(--font-display);
+      font-size: 26px;
+      line-height: 1;
+      color: var(--text);
+    }
     .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
     .panel h2 { margin: 0; padding: 12px 14px; font-family: var(--font-display); font-size: 19px; line-height: 1.05; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; letter-spacing: 0.02em; }
     .panel-body { padding: 14px; }
@@ -248,7 +323,7 @@
         </a>
         <div>
           <h1>U.O.G.A. Hunt Planner</h1>
-          <p>VETTED OUTFITTERS</p>
+          <p>Vetted Outfitters</p>
           <nav class="compact-nav">
             <a href="https://www.uoga.org" target="_blank">Home</a> |
             <a href="https://www.uoga.org/about" target="_blank">About</a> |
@@ -269,17 +344,21 @@
           <option value="satellite">Satellite</option>
         </select>
       </div>
-      <div class="toggle-row">
-        <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked>USFS</label>
-        <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked>BLM</label>
-        <label class="toggle-chip"><input id="toggleOutfitters" type="checkbox" checked>Outfitters</label>
-      </div>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
     </div>
   </header>
 
   <main class="layout">
     <aside class="sidebar">
+      <h2 class="sidebar-menu-title">Menu</h2>
+      <section class="sidebar-brand">
+        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
+          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
+        </a>
+        <h2 class="sidebar-brand-title">U.O.G.A. Hunt Planner</h2>
+        <h2 class="sidebar-brand-subtitle">Vetted Outfitters</h2>
+      </section>
+
       <section class="panel">
         <h2>Find a Hunt</h2>
         <div class="panel-body">
@@ -316,6 +395,56 @@
             <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
           </div>
           <div id="status" class="status">Loading native Google map…</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Land Layers</h2>
+        <div class="panel-body">
+          <div class="layer-grid">
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">USFS</span>
+                <span class="layer-toggle-note">National forest boundary lines.</span>
+              </span>
+              <input id="toggleUSFS" type="checkbox" checked>
+            </label>
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">BLM</span>
+                <span class="layer-toggle-note">District lines and federal admin context.</span>
+              </span>
+              <input id="toggleBLM" type="checkbox" checked>
+            </label>
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">SITLA</span>
+                <span class="layer-toggle-note">Utah state trust lands parcels.</span>
+              </span>
+              <input id="toggleSITLA" type="checkbox">
+            </label>
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">State</span>
+                <span class="layer-toggle-note">Other Utah state-managed land categories.</span>
+              </span>
+              <input id="toggleState" type="checkbox">
+            </label>
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">Private</span>
+                <span class="layer-toggle-note">Private parcel overlay from statewide ownership data.</span>
+              </span>
+              <input id="togglePrivate" type="checkbox">
+            </label>
+            <label class="layer-toggle">
+              <span class="layer-toggle-copy">
+                <span class="layer-toggle-title">Outfitters</span>
+                <span class="layer-toggle-note">Matched vetted outfitter markers and cards.</span>
+              </span>
+              <input id="toggleOutfitters" type="checkbox" checked>
+            </label>
+          </div>
         </div>
       </section>
 

@@ -25,6 +25,12 @@ const HUNT_BOUNDARY_SOURCES = [
   './data/hunt_boundaries.geojson'
 ];
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`, './data/outfitters.json'];
+const USFS_QUERY_URL = "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0/query?where=" + encodeURIComponent("FORESTNAME IN ('Ashley National Forest','Dixie National Forest','Fishlake National Forest','Manti-La Sal National Forest','Uinta-Wasatch-Cache National Forest')") + "&outFields=FORESTNAME&returnGeometry=true&outSR=4326&f=geojson";
+const BLM_QUERY_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
+const LAND_OWNERSHIP_BASE_URL = 'https://gis.trustlands.utah.gov/mapping/rest/services/Land_Ownership_WM/MapServer/0/query';
+const SITLA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='State Trust Lands'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
+const STATE_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd IN ('Other State','State Sovereign Land','State Parks and Recreation','State Wildlife Reserve/Management Area')")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
+const PRIVATE_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='Private'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
 
 const HUNT_BOUNDARY_NAME_OVERRIDES = {
   DB1503: ['Manti, San Rafael'],
@@ -64,6 +70,12 @@ let selectedBoundaryMatches = [];
 let isDataReady = false;
 let isMapReady = false;
 let boundaryInfoWindow = null;
+let utahOutlinePolygon = null;
+let usfsLayer = null;
+let blmLayer = null;
+let sitlaLayer = null;
+let stateLayer = null;
+let privateLayer = null;
 
 const searchInput = document.getElementById('searchInput');
 const speciesFilter = document.getElementById('speciesFilter');
@@ -80,6 +92,11 @@ const closeMapChooserBtn = document.getElementById('closeMapChooserBtn');
 const matchingHuntsEl = document.getElementById('matchingHunts');
 const selectedHuntPanel = document.getElementById('selectedHuntPanel');
 const outfitterResultsEl = document.getElementById('outfitterResults');
+const toggleUSFS = document.getElementById('toggleUSFS');
+const toggleBLM = document.getElementById('toggleBLM');
+const toggleSITLA = document.getElementById('toggleSITLA');
+const toggleState = document.getElementById('toggleState');
+const togglePrivate = document.getElementById('togglePrivate');
 
 function safe(value) {
   return String(value ?? '');
@@ -308,6 +325,155 @@ async function loadOutfittersData() {
     outfitters = Array.isArray(payload) ? payload : [];
   } catch (error) {
     outfitters = [];
+  }
+}
+
+async function ensureOverlayLayer(kind) {
+  if (!googleBaselineMap || !window.google || !google.maps) return null;
+
+  if (kind === 'usfs' && usfsLayer) return usfsLayer;
+  if (kind === 'blm' && blmLayer) return blmLayer;
+  if (kind === 'sitla' && sitlaLayer) return sitlaLayer;
+  if (kind === 'state' && stateLayer) return stateLayer;
+  if (kind === 'private' && privateLayer) return privateLayer;
+
+  const overlayConfigs = {
+    usfs: {
+      url: USFS_QUERY_URL,
+      style: {
+        strokeColor: '#476f2d',
+        strokeOpacity: 0.95,
+        strokeWeight: 2.4,
+        fillOpacity: 0
+      }
+    },
+    blm: {
+      url: BLM_QUERY_URL,
+      style: {
+        strokeColor: '#b9722f',
+        strokeOpacity: 0.9,
+        strokeWeight: 2.2,
+        fillOpacity: 0
+      }
+    },
+    sitla: {
+      url: SITLA_QUERY_URL,
+      style: {
+        strokeColor: '#2e86de',
+        strokeOpacity: 0.92,
+        strokeWeight: 1.8,
+        fillColor: '#2e86de',
+        fillOpacity: 0.05
+      }
+    },
+    state: {
+      url: STATE_QUERY_URL,
+      style: {
+        strokeColor: '#1f9d8b',
+        strokeOpacity: 0.9,
+        strokeWeight: 1.8,
+        fillColor: '#1f9d8b',
+        fillOpacity: 0.04
+      }
+    },
+    private: {
+      url: PRIVATE_QUERY_URL,
+      style: {
+        strokeColor: '#7a7a7a',
+        strokeOpacity: 0.55,
+        strokeWeight: 1.2,
+        fillColor: '#bfbfbf',
+        fillOpacity: 0.02
+      }
+    }
+  };
+
+  const config = overlayConfigs[kind];
+  if (!config) return null;
+  const url = config.url;
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`${kind.toUpperCase()} overlay failed: ${response.status}`);
+  }
+
+  const geojson = await response.json();
+  const layer = new google.maps.Data();
+  layer.addGeoJson(geojson);
+  layer.setStyle(config.style);
+
+  if (kind === 'usfs') {
+    usfsLayer = layer;
+    return usfsLayer;
+  }
+  if (kind === 'blm') {
+    blmLayer = layer;
+    return blmLayer;
+  }
+  if (kind === 'sitla') {
+    sitlaLayer = layer;
+    return sitlaLayer;
+  }
+  if (kind === 'state') {
+    stateLayer = layer;
+    return stateLayer;
+  }
+
+  privateLayer = layer;
+  return privateLayer;
+}
+
+function setOverlayVisibility(kind, isVisible) {
+  const layerMap = {
+    usfs: usfsLayer,
+    blm: blmLayer,
+    sitla: sitlaLayer,
+    state: stateLayer,
+    private: privateLayer
+  };
+  const layer = layerMap[kind];
+  if (!layer || !googleBaselineMap) return;
+  layer.setMap(isVisible ? googleBaselineMap : null);
+}
+
+async function syncOverlayToggles() {
+  try {
+    if (toggleUSFS && toggleUSFS.checked) {
+      await ensureOverlayLayer('usfs');
+      setOverlayVisibility('usfs', true);
+    } else {
+      setOverlayVisibility('usfs', false);
+    }
+
+    if (toggleBLM && toggleBLM.checked) {
+      await ensureOverlayLayer('blm');
+      setOverlayVisibility('blm', true);
+    } else {
+      setOverlayVisibility('blm', false);
+    }
+
+    if (toggleSITLA && toggleSITLA.checked) {
+      await ensureOverlayLayer('sitla');
+      setOverlayVisibility('sitla', true);
+    } else {
+      setOverlayVisibility('sitla', false);
+    }
+
+    if (toggleState && toggleState.checked) {
+      await ensureOverlayLayer('state');
+      setOverlayVisibility('state', true);
+    } else {
+      setOverlayVisibility('state', false);
+    }
+
+    if (togglePrivate && togglePrivate.checked) {
+      await ensureOverlayLayer('private');
+      setOverlayVisibility('private', true);
+    } else {
+      setOverlayVisibility('private', false);
+    }
+  } catch (error) {
+    console.warn('Overlay sync failed:', error);
+    updateStatus(`Overlay load issue: ${error.message}`);
   }
 }
 
@@ -646,6 +812,34 @@ function buildBoundaryLayer() {
   styleBoundaryLayer();
 }
 
+function renderUtahOutline() {
+  if (!googleBaselineMap) return;
+
+  const utahPath = [
+    { lat: 37.0, lng: -114.05 },
+    { lat: 42.0, lng: -114.05 },
+    { lat: 42.0, lng: -111.05 },
+    { lat: 41.0, lng: -111.05 },
+    { lat: 41.0, lng: -109.04 },
+    { lat: 37.0, lng: -109.04 },
+    { lat: 37.0, lng: -114.05 }
+  ];
+
+  if (utahOutlinePolygon) {
+    utahOutlinePolygon.setMap(null);
+  }
+
+  utahOutlinePolygon = new google.maps.Polyline({
+    path: utahPath,
+    map: googleBaselineMap,
+    strokeColor: '#b9722f',
+    strokeOpacity: 0.95,
+    strokeWeight: 4.5,
+    clickable: false,
+    zIndex: 2
+  });
+}
+
 function bindControls() {
   [searchInput, speciesFilter, sexFilter, weaponFilter, huntTypeFilter, huntCategoryFilter, unitFilter].forEach(el => {
     if (!el) return;
@@ -695,6 +889,36 @@ function bindControls() {
   if (mapTypeSelect) {
     mapTypeSelect.addEventListener('change', () => {
       if (googleBaselineMap) googleBaselineMap.setMapTypeId(mapTypeSelect.value);
+    });
+  }
+
+  if (toggleUSFS) {
+    toggleUSFS.addEventListener('change', () => {
+      void syncOverlayToggles();
+    });
+  }
+
+  if (toggleBLM) {
+    toggleBLM.addEventListener('change', () => {
+      void syncOverlayToggles();
+    });
+  }
+
+  if (toggleSITLA) {
+    toggleSITLA.addEventListener('change', () => {
+      void syncOverlayToggles();
+    });
+  }
+
+  if (toggleState) {
+    toggleState.addEventListener('change', () => {
+      void syncOverlayToggles();
+    });
+  }
+
+  if (togglePrivate) {
+    togglePrivate.addEventListener('change', () => {
+      void syncOverlayToggles();
     });
   }
 
@@ -751,7 +975,9 @@ function initGoogleBaseline() {
   googleApiReady = true;
   isMapReady = true;
   bindControls();
+  renderUtahOutline();
   buildBoundaryLayer();
+  void syncOverlayToggles();
   maybeFinishLoading();
 }
 
