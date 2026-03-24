@@ -36,20 +36,20 @@ const WMA_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("st
 const PRIVATE_QUERY_URL = `${LAND_OWNERSHIP_BASE_URL}?where=${encodeURIComponent("state_lgd='Private'")}&outFields=state_lgd,label_state,county&returnGeometry=true&outSR=4326&f=geojson`;
 const ARCGIS_PAGE_SIZE = 2000;
 const OFFICIAL_WATERFOWL_WMA_NAMES = [
-  'Bicknell Bottoms',
-  'Browns Park',
-  'Clear Lake',
-  'Desert Lake',
-  'Farmington Bay',
-  'Harold Crane',
-  'Howard Slough',
-  'Locomotive Springs',
-  'Ogden Bay',
-  'Public Shooting Grounds',
-  'Salt Creek',
-  'Timpie Springs',
-  'Topaz',
-  'Willard Spur'
+  'Bicknell Bottoms WMA',
+  'Browns Park WMA',
+  'Clear Lake WMA',
+  'Desert Lake WMA',
+  'Farmington Bay WMA',
+  'Harold Crane WMA',
+  'Howard Slough WMA',
+  'Locomotive Springs WMA',
+  'Ogden Bay WMA',
+  'Public Shooting Grounds WMA',
+  'Salt Creek WMA',
+  'Timpie Springs WMA',
+  'Topaz WMA',
+  'Willard Spur WMA'
 ];
 
 const HUNT_BOUNDARY_NAME_OVERRIDES = {
@@ -90,6 +90,7 @@ let selectedBoundaryMatches = [];
 let isDataReady = false;
 let isMapReady = false;
 let boundaryInfoWindow = null;
+let overlayInfoWindow = null;
 let utahOutlinePolygon = null;
 let usfsLayer = null;
 let blmLayer = null;
@@ -131,6 +132,10 @@ const toggleDwrUnits = document.getElementById('toggleDwrUnits');
 const toggleOutfitters = document.getElementById('toggleOutfitters');
 const mapWrapEl = document.querySelector('.map-wrap');
 const globeMapEl = document.getElementById('globeMap');
+const OFFICIAL_DWR_WMA_PAGE_URL = 'https://wildlife.utah.gov/discover/lands/wmas.html';
+const OFFICIAL_DWR_WATERFOWL_MAPS_URL = 'https://wildlife.utah.gov/hunting/maps.html';
+const OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL = 'https://wildlife.utah.gov/waterfowl-opener-conditions';
+const OFFICIAL_DWR_WMA_LOGO_URL = 'https://static.wixstatic.com/media/43f827_414cd06f064548efad0a5c3c8a1c88e5~mv2.png';
 const stateLayersSummaryEl = document.getElementById('stateLayersSummary');
 
 function safe(value) {
@@ -362,14 +367,113 @@ async function fetchAllArcGisGeoJson(url) {
 }
 
 function normalizePlaceText(value) {
-  return safe(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  return safe(value)
+    .trim()
+    .toLowerCase()
+    .replace(/\bwildlife management area\b/g, 'wma')
+    .replace(/\bwaterfowl management area\b/g, 'wma')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 }
 
 function isOfficialWaterfowlWmaFeature(feature) {
   const properties = feature && feature.properties ? feature.properties : {};
-  const candidateText = `${safe(properties.label_state)} ${safe(properties.county)}`;
-  const normalized = normalizePlaceText(candidateText);
-  return OFFICIAL_WATERFOWL_WMA_NAMES.some(name => normalized.includes(normalizePlaceText(name)));
+  const candidates = [
+    safe(properties.label_state),
+    safe(properties.NAME),
+    safe(properties.name),
+    safe(properties.county)
+  ]
+    .map(normalizePlaceText)
+    .filter(Boolean);
+
+  return candidates.some(candidate =>
+    OFFICIAL_WATERFOWL_WMA_NAMES.some(name => candidate === normalizePlaceText(name))
+  );
+}
+
+function getOverlayFeatureLabel(feature) {
+  const properties = feature && feature.properties ? feature.properties : {};
+  return firstNonEmpty(
+    properties.label_state,
+    properties.NAME,
+    properties.name,
+    properties.county,
+    'Selected Area'
+  );
+}
+
+function buildOverlayInfoContent(kind, feature) {
+  const label = getOverlayFeatureLabel(feature);
+  const safeLabel = escapeHtml(label);
+  const logoHtml = `
+    <div style="margin-bottom:10px;text-align:center;">
+      <img
+        src="${OFFICIAL_DWR_WMA_LOGO_URL}"
+        alt="Utah DWR WMA"
+        style="display:block;margin:0 auto;max-width:88px;height:auto;"
+      >
+    </div>
+  `;
+
+  if (kind === 'waterfowlWma') {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+        ${logoHtml}
+        <strong>${safeLabel}</strong><br>
+        Official Utah DWR waterfowl management area reference.
+        <div style="margin-top:10px;display:grid;gap:6px;">
+          <a href="${OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL}" target="_blank" rel="noopener noreferrer">Waterfowl Conditions & Maps</a>
+          <a href="${OFFICIAL_DWR_WATERFOWL_MAPS_URL}" target="_blank" rel="noopener noreferrer">DWR Hunting Maps</a>
+        </div>
+      </div>
+    `;
+  }
+
+  if (kind === 'wildlifeWma') {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+        ${logoHtml}
+        <strong>${safeLabel}</strong><br>
+        Official Utah DWR wildlife management area reference.
+        <div style="margin-top:10px;display:grid;gap:6px;">
+          <a href="${OFFICIAL_DWR_WMA_PAGE_URL}" target="_blank" rel="noopener noreferrer">DWR WMA Information</a>
+          <a href="${OFFICIAL_DWR_WATERFOWL_MAPS_URL}" target="_blank" rel="noopener noreferrer">DWR Hunting Maps</a>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:240px;">
+      <strong>${safeLabel}</strong>
+    </div>
+  `;
+}
+
+function bindOverlayLayerInteraction(kind, layer) {
+  if (!layer || kind === 'usfs' || kind === 'blm' || kind === 'sitla' || kind === 'stateLands' || kind === 'stateParks' || kind === 'private') {
+    return;
+  }
+
+  layer.addListener('click', event => {
+    if (!overlayInfoWindow) {
+      overlayInfoWindow = new google.maps.InfoWindow();
+    }
+
+    const featureData = {
+      properties: {
+        label_state: event.feature ? event.feature.getProperty('label_state') : '',
+        NAME: event.feature ? event.feature.getProperty('NAME') : '',
+        name: event.feature ? event.feature.getProperty('name') : '',
+        county: event.feature ? event.feature.getProperty('county') : ''
+      }
+    };
+
+    overlayInfoWindow.setContent(buildOverlayInfoContent(kind, featureData));
+    overlayInfoWindow.setPosition(event.latLng);
+    overlayInfoWindow.open({ map: googleBaselineMap });
+  });
 }
 
 async function loadHuntData() {
@@ -530,6 +634,7 @@ async function ensureOverlayLayer(kind) {
     features
   });
   layer.setStyle(config.style);
+  bindOverlayLayerInteraction(kind, layer);
 
   if (kind === 'usfs') {
     usfsLayer = layer;
