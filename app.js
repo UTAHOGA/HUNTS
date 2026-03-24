@@ -2,6 +2,7 @@ const GOOGLE_MAPS_API_KEY = 'AIzaSyBlxyY6T31oqQ7sBvGGm-Q23QU5zInRo0I';
 const GOOGLE_BASELINE_DEFAULT_CENTER = { lat: 39.2672138, lng: -111.6346885 };
 const GOOGLE_BASELINE_DEFAULT_ZOOM = 7;
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
+const CESIUM_ION_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxMjBiODg4NS1mMDNkLTRjNTYtOGQxZi1jMmY4ZjdhMTIxMGIiLCJpZCI6NDA3MDE1LCJpYXQiOjE3NzQwODk2NzF9.2nojSCO46EKYlLpsj3YQ5fGDj_z92PjmL-w1mdhfHfI';
 
 const HUNT_DATA_SOURCES = [
   { label: 'Buck Deer', required: true, candidates: [`${CLOUDFLARE_BASE}/Utah_Hunt_Planner_Master_BuckDeer_Pages_43_53.json`] },
@@ -76,6 +77,10 @@ let blmLayer = null;
 let sitlaLayer = null;
 let stateLayer = null;
 let privateLayer = null;
+let cesiumViewer = null;
+let cesiumReady = false;
+let activeMapMode = 'terrain';
+let globeSelectionEntity = null;
 
 const searchInput = document.getElementById('searchInput');
 const speciesFilter = document.getElementById('speciesFilter');
@@ -97,6 +102,9 @@ const toggleBLM = document.getElementById('toggleBLM');
 const toggleSITLA = document.getElementById('toggleSITLA');
 const toggleState = document.getElementById('toggleState');
 const togglePrivate = document.getElementById('togglePrivate');
+const toggleOutfitters = document.getElementById('toggleOutfitters');
+const mapWrapEl = document.querySelector('.map-wrap');
+const globeMapEl = document.getElementById('globeMap');
 
 function safe(value) {
   return String(value ?? '');
@@ -161,6 +169,12 @@ function updateStatus(message) {
 function hideLoadingOverlay() {
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) overlay.classList.add('hidden');
+}
+
+function getOfficialDwrHuntUrl(hunt) {
+  const huntCode = safe(getHuntCode(hunt)).trim();
+  if (!huntCode) return 'https://dwrapps.utah.gov/huntboundary/hbstart';
+  return `https://dwrapps.utah.gov/huntboundary/PrintABoundary?HN=${encodeURIComponent(huntCode)}`;
 }
 
 function maybeFinishLoading() {
@@ -667,6 +681,10 @@ function getSelectedOutfitters() {
 
 function renderOutfitters() {
   if (!outfitterResultsEl) return;
+  if (toggleOutfitters && !toggleOutfitters.checked) {
+    outfitterResultsEl.innerHTML = '<div class="empty-note">Outfitters are hidden right now. Turn Outfitters back on to see vetted matches.</div>';
+    return;
+  }
   if (!selectedHunt) {
     outfitterResultsEl.innerHTML = '<div class="empty-note">Select a hunt to load matching vetted outfitters.</div>';
     return;
@@ -691,6 +709,7 @@ function renderSelectedHunt() {
     selectedHuntPanel.innerHTML = '<div class="empty-note">No hunt selected yet.</div>';
     return;
   }
+  const officialDwrUrl = getOfficialDwrHuntUrl(selectedHunt);
   selectedHuntPanel.innerHTML = `
     <div class="detail-grid">
       <div><strong>Hunt #</strong>${escapeHtml(getHuntCode(selectedHunt))}</div>
@@ -699,6 +718,9 @@ function renderSelectedHunt() {
       <div><strong>Sex</strong>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
       <div><strong>Weapon</strong>${escapeHtml(getWeapon(selectedHunt))}</div>
       <div><strong>Dates</strong>${escapeHtml(getDates(selectedHunt))}</div>
+    </div>
+    <div style="margin-top:14px;">
+      <a href="${escapeHtml(officialDwrUrl)}" target="_blank" rel="noopener noreferrer">Official Utah DWR Hunt Details</a>
     </div>
   `;
 }
@@ -747,6 +769,149 @@ function styleBoundaryLayer() {
   });
 }
 
+function getSelectedHuntCenter() {
+  if (!selectedHunt || !window.google || !google.maps) {
+    return GOOGLE_BASELINE_DEFAULT_CENTER;
+  }
+
+  const selectedNames = buildBoundaryMatchSet(selectedHunt);
+  const bounds = new google.maps.LatLngBounds();
+  let found = false;
+
+  if (huntUnitsLayer) {
+    huntUnitsLayer.forEach(feature => {
+      const boundaryName = getFeatureBoundaryName(feature).toLowerCase();
+      if (!selectedNames.has(boundaryName)) return;
+      const geometry = feature.getGeometry();
+      if (!geometry) return;
+      geometry.forEachLatLng(latLng => {
+        bounds.extend(latLng);
+        found = true;
+      });
+    });
+  }
+
+  if (found) {
+    const center = bounds.getCenter();
+    return { lat: center.lat(), lng: center.lng() };
+  }
+
+  return GOOGLE_BASELINE_DEFAULT_CENTER;
+}
+
+function updateMapModeUi() {
+  if (!mapWrapEl) return;
+  mapWrapEl.classList.toggle('is-globe-mode', activeMapMode === 'globe');
+}
+
+function syncGoogleMapForMode() {
+  if (!googleBaselineMap || activeMapMode === 'globe') return;
+  googleBaselineMap.setMapTypeId(activeMapMode);
+}
+
+function syncCesiumToSelection() {
+  if (!cesiumViewer || !window.Cesium) return;
+  const C = window.Cesium;
+  const center = getSelectedHuntCenter();
+
+  if (globeSelectionEntity) {
+    cesiumViewer.entities.remove(globeSelectionEntity);
+    globeSelectionEntity = null;
+  }
+
+  globeSelectionEntity = cesiumViewer.entities.add({
+    position: C.Cartesian3.fromDegrees(center.lng, center.lat, 0),
+    point: {
+      pixelSize: 12,
+      color: C.Color.fromCssColorString('#bf6b34'),
+      outlineColor: C.Color.WHITE,
+      outlineWidth: 2
+    },
+    label: {
+      text: selectedHunt ? (getUnitName(selectedHunt) || getHuntCode(selectedHunt) || 'Selected Hunt') : 'Utah',
+      font: '700 14px Georgia',
+      fillColor: C.Color.WHITE,
+      outlineColor: C.Color.fromCssColorString('#2b1c12'),
+      outlineWidth: 3,
+      style: C.LabelStyle.FILL_AND_OUTLINE,
+      pixelOffset: new C.Cartesian2(0, 18),
+      disableDepthTestDistance: Number.POSITIVE_INFINITY
+    }
+  });
+
+  cesiumViewer.camera.flyTo({
+    destination: C.Cartesian3.fromDegrees(center.lng, center.lat, selectedHunt ? 220000 : 1800000),
+    orientation: {
+      heading: 0,
+      pitch: C.Math.toRadians(selectedHunt ? -45 : -65),
+      roll: 0
+    },
+    duration: 1.4
+  });
+}
+
+function ensureCesiumViewer() {
+  if (cesiumReady || !globeMapEl || !window.Cesium) return;
+  const C = window.Cesium;
+  const terrainProvider = CESIUM_ION_TOKEN && typeof C.createWorldTerrain === 'function'
+    ? C.createWorldTerrain()
+    : new C.EllipsoidTerrainProvider();
+
+  if (CESIUM_ION_TOKEN) {
+    C.Ion.defaultAccessToken = CESIUM_ION_TOKEN;
+  }
+
+  cesiumViewer = new C.Viewer('globeMap', {
+    animation: false,
+    timeline: false,
+    geocoder: false,
+    baseLayerPicker: false,
+    sceneModePicker: false,
+    navigationHelpButton: false,
+    homeButton: false,
+    fullscreenButton: false,
+    infoBox: false,
+    selectionIndicator: false,
+    terrainProvider,
+    baseLayer: false
+  });
+
+  cesiumViewer.imageryLayers.addImageryProvider(
+    new C.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      credit: 'Esri'
+    })
+  );
+
+  cesiumViewer.imageryLayers.addImageryProvider(
+    new C.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places_Alternate/MapServer/tile/{z}/{y}/{x}',
+      credit: 'Esri'
+    })
+  );
+
+  cesiumViewer.scene.globe.enableLighting = true;
+  cesiumViewer.scene.verticalExaggeration = 2.0;
+  cesiumViewer.scene.verticalExaggerationRelativeHeight = 0.0;
+  cesiumReady = true;
+  syncCesiumToSelection();
+}
+
+function setActiveMapMode(mode) {
+  activeMapMode = mode === 'globe' ? 'globe' : (mode || 'terrain');
+  updateMapModeUi();
+
+  if (activeMapMode === 'globe') {
+    ensureCesiumViewer();
+    syncCesiumToSelection();
+    updateStatus(selectedHunt ? 'Globe view centered on the selected hunt with 2x terrain relief.' : 'Globe view enabled with 2x terrain relief.');
+    return;
+  }
+
+  syncGoogleMapForMode();
+  updateStatus(`Map switched to ${activeMapMode}.`);
+}
+
 function zoomToSelectedBoundary() {
   if (!huntUnitsLayer || !selectedHunt || !googleBaselineMap) return;
   const selectedNames = buildBoundaryMatchSet(selectedHunt);
@@ -774,6 +939,9 @@ function selectHuntByCode(code) {
   renderOutfitters();
   styleBoundaryLayer();
   zoomToSelectedBoundary();
+  if (activeMapMode === 'globe') {
+    syncCesiumToSelection();
+  }
   setMapChooserOpen(false);
   updateStatus(`Selected ${getHuntTitle(hunt)}.`);
 }
@@ -880,15 +1048,20 @@ function bindControls() {
       renderOutfitters();
       styleBoundaryLayer();
       setMapChooserOpen(false);
-      googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
-      googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
+      if (googleBaselineMap) {
+        googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
+        googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
+      }
+      if (cesiumReady) {
+        syncCesiumToSelection();
+      }
       updateStatus('Planner reset.');
     });
   }
 
   if (mapTypeSelect) {
     mapTypeSelect.addEventListener('change', () => {
-      if (googleBaselineMap) googleBaselineMap.setMapTypeId(mapTypeSelect.value);
+      setActiveMapMode(mapTypeSelect.value || 'terrain');
     });
   }
 
@@ -922,11 +1095,21 @@ function bindControls() {
     });
   }
 
+  if (toggleOutfitters) {
+    toggleOutfitters.addEventListener('change', () => {
+      renderOutfitters();
+    });
+  }
+
   if (resetViewBtn) {
     resetViewBtn.addEventListener('click', () => {
-      if (!googleBaselineMap) return;
-      googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
-      googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
+      if (googleBaselineMap) {
+        googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
+        googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
+      }
+      if (cesiumReady) {
+        syncCesiumToSelection();
+      }
       setMapChooserOpen(false);
       updateStatus('Reset to Utah.');
     });
@@ -966,7 +1149,7 @@ function initGoogleBaseline() {
     center: GOOGLE_BASELINE_DEFAULT_CENTER,
     zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
-    mapTypeId: mapTypeSelect && mapTypeSelect.value ? mapTypeSelect.value : 'terrain',
+    mapTypeId: mapTypeSelect && mapTypeSelect.value && mapTypeSelect.value !== 'globe' ? mapTypeSelect.value : 'terrain',
     streetViewControl: false,
     fullscreenControl: true,
     mapTypeControl: true
@@ -978,6 +1161,7 @@ function initGoogleBaseline() {
   renderUtahOutline();
   buildBoundaryLayer();
   void syncOverlayToggles();
+  setActiveMapMode(mapTypeSelect && mapTypeSelect.value ? mapTypeSelect.value : 'terrain');
   maybeFinishLoading();
 }
 

@@ -125,13 +125,13 @@
       border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2; 
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    .brand-logo-lockup { display: flex; align-items: center; gap: 16px; }
+    .brand-logo-lockup { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; }
     .brand-logo-lockup img { height: 52px; width: auto; object-fit: contain; border-radius: 4px; background: #fff; padding: 2px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); }
     
     .brand h1 { margin: 0; font-family: var(--font-display); font-size: 24px; line-height: 1; color: var(--text); text-align: center; }
     .brand p { margin: 4px 0 0; color: var(--accent); font-family: var(--font-display); font-size: 24px; line-height: 1; font-weight: 700; letter-spacing: 0; text-transform: none; text-align: center; }
     
-    .compact-nav { display: flex; gap: 12px; margin-top: 6px; justify-content: center; }
+    .compact-nav { display: flex; gap: 12px; margin-top: 6px; justify-content: center; width: 100%; }
     .compact-nav a { color: var(--accent); text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; transition: color 0.2s; }
     .compact-nav a:hover { color: var(--accent-dark); text-decoration: underline; }
     
@@ -218,14 +218,6 @@
     .sidebar-brand-subtitle {
       color: var(--accent);
     }
-    .sidebar-menu-title {
-      margin: 0 0 12px;
-      text-align: center;
-      font-family: var(--font-display);
-      font-size: 26px;
-      line-height: 1;
-      color: var(--text);
-    }
     .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
     .panel h2 { margin: 0; padding: 12px 14px; font-family: var(--font-display); font-size: 19px; line-height: 1.05; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; letter-spacing: 0.02em; }
     .panel-body { padding: 14px; }
@@ -244,8 +236,18 @@
     .detail-grid a { color: var(--text); font-weight: bold; }
     
     /* --- MAP --- */
-    .map-wrap { position: relative; min-height: 0; }
-    #map { width: 100%; height: 100%; min-height: calc(100vh - 80px); }
+    .map-wrap { position: relative; min-height: 0; overflow: hidden; }
+    .map-stage { position: relative; width: 100%; height: 100%; min-height: calc(100vh - 80px); }
+    #map, #globeMap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 80px);
+    }
+    #globeMap { display: none; background: #0f1723; }
+    .map-wrap.is-globe-mode #map { display: none; }
+    .map-wrap.is-globe-mode #globeMap { display: block; }
     
     .map-card { position: absolute; left: 18px; bottom: 28px; z-index: 2; width: min(420px, calc(100vw - 36px)); padding: 16px 20px; border: 1px solid rgba(185, 144, 111, 0.5); border-radius: 16px; background: rgba(255, 251, 244, 0.95); box-shadow: 0 12px 30px rgba(58, 37, 18, 0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     /* Force Map Card colors to stay legible even in dark mode, since it floats over the map */
@@ -342,7 +344,16 @@
           <option value="roadmap">Roadmap</option>
           <option value="hybrid">Hybrid</option>
           <option value="satellite">Satellite</option>
+          <option value="globe">Globe</option>
         </select>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked>USFS</label>
+        <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked>BLM</label>
+        <label class="toggle-chip"><input id="toggleSITLA" type="checkbox">SITLA</label>
+        <label class="toggle-chip"><input id="toggleState" type="checkbox">State</label>
+        <label class="toggle-chip"><input id="togglePrivate" type="checkbox">Private</label>
+        <label class="toggle-chip"><input id="toggleOutfitters" type="checkbox" checked>Outfitters</label>
       </div>
       <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
     </div>
@@ -350,7 +361,6 @@
 
   <main class="layout">
     <aside class="sidebar">
-      <h2 class="sidebar-menu-title">Menu</h2>
       <section class="sidebar-brand">
         <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
           <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
@@ -399,56 +409,6 @@
       </section>
 
       <section class="panel">
-        <h2>Land Layers</h2>
-        <div class="panel-body">
-          <div class="layer-grid">
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">USFS</span>
-                <span class="layer-toggle-note">National forest boundary lines.</span>
-              </span>
-              <input id="toggleUSFS" type="checkbox" checked>
-            </label>
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">BLM</span>
-                <span class="layer-toggle-note">District lines and federal admin context.</span>
-              </span>
-              <input id="toggleBLM" type="checkbox" checked>
-            </label>
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">SITLA</span>
-                <span class="layer-toggle-note">Utah state trust lands parcels.</span>
-              </span>
-              <input id="toggleSITLA" type="checkbox">
-            </label>
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">State</span>
-                <span class="layer-toggle-note">Other Utah state-managed land categories.</span>
-              </span>
-              <input id="toggleState" type="checkbox">
-            </label>
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">Private</span>
-                <span class="layer-toggle-note">Private parcel overlay from statewide ownership data.</span>
-              </span>
-              <input id="togglePrivate" type="checkbox">
-            </label>
-            <label class="layer-toggle">
-              <span class="layer-toggle-copy">
-                <span class="layer-toggle-title">Outfitters</span>
-                <span class="layer-toggle-note">Matched vetted outfitter markers and cards.</span>
-              </span>
-              <input id="toggleOutfitters" type="checkbox" checked>
-            </label>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
         <h2>Matching Hunts</h2>
         <div class="panel-body">
           <div id="matchingHunts" class="hunt-list">
@@ -475,7 +435,10 @@
     </aside>
 
     <section class="map-wrap">
-      <div id="map" aria-label="Google DWR mirror map"></div>
+      <div class="map-stage">
+        <div id="map" aria-label="Google DWR mirror map"></div>
+        <div id="globeMap" aria-label="Cesium globe view"></div>
+      </div>
       
       <div class="map-card">
         <h3>U.O.G.A. Hunt Planner</h3>
@@ -509,6 +472,8 @@
       }
     });
   </script>
+  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
