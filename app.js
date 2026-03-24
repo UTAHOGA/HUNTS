@@ -133,6 +133,7 @@ const OFFICIAL_DWR_WMA_PAGE_URL = 'https://wildlife.utah.gov/discover/lands/wmas
 const OFFICIAL_DWR_WATERFOWL_MAPS_URL = 'https://wildlife.utah.gov/hunting/maps.html';
 const OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL = 'https://wildlife.utah.gov/waterfowl-opener-conditions';
 const OFFICIAL_DWR_WMA_LOGO_URL = './assets/logos/dwr-wma.jpg';
+const OFFICIAL_DNR_DWR_LOGO_URL = './assets/logos/dnr-logo-small.bmp';
 const OFFICIAL_USFS_PAGE_URL = 'https://www.fs.usda.gov/';
 const OFFICIAL_USFS_LOGO_URL = './assets/logos/usfs.png';
 const OFFICIAL_BLM_PAGE_URL = 'https://www.blm.gov/office/utah-state-office';
@@ -540,6 +541,31 @@ function getOverlayFeatureProperties(feature) {
   return feature && feature.properties ? feature.properties : {};
 }
 
+function resolveOverlayKind(kind, feature) {
+  const properties = getOverlayFeatureProperties(feature);
+  const hasForestName = !!safe(properties.FORESTNAME).trim();
+  const hasBlmAdmin = !!safe(firstNonEmpty(
+    properties.ADMU_NAME,
+    properties.ADMU_DISPLAY_NAME,
+    properties.ADMIN_ST_NAME,
+    properties.OFFICE_NAME,
+    properties.DISTRICT_NAME,
+    properties.PARENT_NAME
+  )).trim();
+  const admin = safe(properties.admin).trim().toUpperCase();
+  const designation = safe(firstNonEmpty(properties.desig, properties.state_lgd, properties.ut_lgd)).trim().toLowerCase();
+  const owner = safe(properties.owner).trim().toLowerCase();
+
+  if (hasForestName) return 'usfs';
+  if (hasBlmAdmin) return 'blm';
+  if (admin === 'USP') return 'stateParks';
+  if (admin === 'SITLA') return 'sitla';
+  if (admin === 'UDWR' && designation.includes('wildlife reserve/management area')) return kind === 'waterfowlWma' ? 'waterfowlWma' : 'wildlifeWma';
+  if (owner === 'private') return 'private';
+  if (owner === 'state' && (admin === 'OS' || admin === 'FFSL')) return 'stateLands';
+  return kind;
+}
+
 function isOverlayToggleEnabled(kind) {
   const toggleMap = {
     usfs: toggleUSFS,
@@ -635,12 +661,8 @@ function getOverlayFeatureSubtitle(kind, feature) {
     return firstNonEmpty(properties.desig, properties.state_lgd, 'State Park');
   }
 
-  if (kind === 'wildlifeWma') {
-    return 'Wildlife WMA';
-  }
-
-  if (kind === 'waterfowlWma') {
-    return 'Waterfowl WMA';
+  if (kind === 'wildlifeWma' || kind === 'waterfowlWma') {
+    return 'WMA';
   }
 
   if (kind === 'private') {
@@ -702,6 +724,7 @@ function buildOverlayInfoContent(kind, feature) {
   const subtitleHtml = subtitle
     ? `<div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6a5848;margin-bottom:4px;">${escapeHtml(subtitle)}</div>`
     : '';
+  const wrapStyle = 'font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:280px;';
   const renderLogoHtml = (src, alt) => `
     <div style="margin-bottom:10px;text-align:center;">
       <img
@@ -717,7 +740,7 @@ function buildOverlayInfoContent(kind, feature) {
 
   if (kind === 'usfs') {
     return `
-      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+      <div style="${wrapStyle}">
         ${renderLogoHtml(OFFICIAL_USFS_LOGO_URL, 'US Forest Service')}
         ${subtitleHtml}<strong>${safeLabel}</strong><br>
         ${detailLines}
@@ -730,7 +753,7 @@ function buildOverlayInfoContent(kind, feature) {
 
   if (kind === 'blm') {
     return `
-      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
+      <div style="${wrapStyle}">
         ${renderLogoHtml(OFFICIAL_BLM_LOGO_URL, 'Bureau of Land Management')}
         ${subtitleHtml}<strong>${safeLabel}</strong><br>
         ${detailLines}
@@ -780,21 +803,7 @@ function buildOverlayInfoContent(kind, feature) {
     `;
   }
 
-  if (kind === 'waterfowlWma') {
-    return `
-      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
-        ${renderLogoHtml(OFFICIAL_DWR_WMA_LOGO_URL, 'Utah DWR WMA')}
-        ${subtitleHtml}<strong>${safeLabel}</strong><br>
-        ${detailLines}
-        <div style="margin-top:10px;display:grid;gap:6px;">
-          <a href="${OFFICIAL_DWR_WATERFOWL_CONDITIONS_URL}" target="_blank" rel="noopener noreferrer">Waterfowl Conditions & Maps</a>
-          <a href="${OFFICIAL_DWR_WATERFOWL_MAPS_URL}" target="_blank" rel="noopener noreferrer">DWR Hunting Maps</a>
-        </div>
-      </div>
-    `;
-  }
-
-  if (kind === 'wildlifeWma') {
+  if (kind === 'waterfowlWma' || kind === 'wildlifeWma') {
     return `
       <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.4;max-width:260px;">
         ${renderLogoHtml(OFFICIAL_DWR_WMA_LOGO_URL, 'Utah DWR WMA')}
@@ -860,7 +869,9 @@ function bindOverlayLayerInteraction(kind, layer) {
       }
     };
 
-    overlayInfoWindow.setContent(buildOverlayInfoContent(kind, featureData));
+    const resolvedKind = resolveOverlayKind(kind, featureData);
+    if (!isOverlayToggleEnabled(resolvedKind)) return;
+    overlayInfoWindow.setContent(buildOverlayInfoContent(resolvedKind, featureData));
     overlayInfoWindow.setPosition(event.latLng);
     overlayInfoWindow.open({ map: googleBaselineMap });
   });
@@ -1078,18 +1089,18 @@ function setOverlayVisibility(kind, isVisible) {
 
 async function syncOverlayToggles() {
   try {
-    if (toggleUSFS && toggleUSFS.checked) {
-      await ensureOverlayLayer('usfs');
-      setOverlayVisibility('usfs', true);
-    } else {
-      setOverlayVisibility('usfs', false);
-    }
-
     if (toggleBLM && toggleBLM.checked) {
       await ensureOverlayLayer('blm');
       setOverlayVisibility('blm', true);
     } else {
       setOverlayVisibility('blm', false);
+    }
+
+    if (toggleUSFS && toggleUSFS.checked) {
+      await ensureOverlayLayer('usfs');
+      setOverlayVisibility('usfs', true);
+    } else {
+      setOverlayVisibility('usfs', false);
     }
 
     if (toggleSITLA && toggleSITLA.checked) {
@@ -1319,10 +1330,81 @@ function buildHuntUnitHoverContent(feature) {
 
 function buildDwrHuntUnitPopupContent(boundaryName, matches) {
   const singleMatch = Array.isArray(matches) && matches.length === 1 ? matches[0] : null;
-  const huntNumberLine = singleMatch
-    ? `<div style="font-size:12px;margin-top:2px;"><strong>Hunt #:</strong> ${escapeHtml(getHuntCode(singleMatch))}</div>`
+  const renderDwrHuntCard = hunt => `
+    <div style="
+      position:relative;
+      width:100%;
+      max-width:300px;
+      min-height:350px;
+      margin:0 auto;
+      border-radius:12px;
+      overflow:hidden;
+      background:#fff url('${OFFICIAL_DNR_DWR_LOGO_URL}') center/cover no-repeat;
+      box-shadow:0 10px 24px rgba(43,28,18,0.18);
+      border:1px solid rgba(191,107,52,0.28);
+    ">
+      <div style="
+        position:absolute;
+        left:18px;
+        right:18px;
+        top:118px;
+        padding:12px 14px;
+        background:rgba(255,255,255,0.88);
+        border:1px solid rgba(191,107,52,0.22);
+        border-radius:12px;
+        backdrop-filter:blur(2px);
+      ">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#b45e2c;">DWR Hunt Unit</div>
+        <div style="font-size:15px;font-weight:900;line-height:1.15;color:#2b1c12;margin-top:2px;">${escapeHtml(boundaryName)}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:10px;font-size:12px;color:#2b1c12;">
+          <div><strong>Hunt #</strong><br>${escapeHtml(getHuntCode(hunt))}</div>
+          <div><strong>Species</strong><br>${escapeHtml(getSpeciesDisplay(hunt))}</div>
+          <div><strong>Sex</strong><br>${escapeHtml(getNormalizedSex(hunt))}</div>
+          <div><strong>Type</strong><br>${escapeHtml(getHuntType(hunt))}</div>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#2b1c12;"><strong>Weapon</strong><br>${escapeHtml(getWeapon(hunt))}</div>
+        <div style="margin-top:8px;font-size:12px;color:#2b1c12;"><strong>Dates</strong><br>${escapeHtml(getDates(hunt))}</div>
+        <div style="margin-top:12px;">
+          <button type="button" onclick="window.selectHuntByCode && window.selectHuntByCode('${escapeHtml(getHuntCode(hunt))}')" style="width:100%;border:none;border-radius:999px;padding:8px 12px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#bf6b34,#9e5323);color:#fff6ed;">Select Hunt</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  if (singleMatch) {
+    return `
+      <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.3;max-width:320px;">
+        ${renderDwrHuntCard(singleMatch)}
+      </div>
+    `;
+  }
+
+  const rows = matches.slice(0, 12).map(hunt => `
+    <div style="padding:8px 0;border-top:1px solid #d8c8b8;">
+      <div style="font-size:12px;font-weight:800;">${escapeHtml(getHuntCode(hunt))} | ${escapeHtml(getHuntTitle(hunt))}</div>
+      <div style="font-size:11px;color:#6b5646;margin-top:2px;">${escapeHtml(getWeapon(hunt))} | ${escapeHtml(getDates(hunt))}</div>
+      <div style="margin-top:6px;">
+        <button type="button" onclick="window.selectHuntByCode && window.selectHuntByCode('${escapeHtml(getHuntCode(hunt))}')" style="border:none;border-radius:999px;padding:6px 10px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#bf6b34,#9e5323);color:#fff6ed;">Select</button>
+      </div>
+    </div>
+  `).join('');
+
+  const moreNote = matches.length > 12
+    ? `<div style="font-size:11px;color:#6b5646;margin-top:8px;">Showing 12 of ${matches.length} matching hunts.</div>`
     : '';
-  return `<div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.25;"><div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6c43c8;">DWR Hunt Unit</div><strong>${escapeHtml(boundaryName)}</strong>${huntNumberLine}<div style="font-size:12px;margin-top:4px;">${matches.length} matching hunt${matches.length === 1 ? '' : 's'}</div></div>`;
+
+  return `
+    <div style="font-family:Segoe UI,Arial,sans-serif;color:#2b1c12;line-height:1.25;max-width:320px;">
+      <div style="margin-bottom:10px;text-align:center;">
+        <img src="${OFFICIAL_DNR_DWR_LOGO_URL}" alt="Utah DWR" style="display:block;margin:0 auto;max-width:82px;height:auto;">
+      </div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#6c43c8;">DWR Hunt Unit</div>
+      <div style="font-size:16px;font-weight:800;margin-top:2px;">${escapeHtml(boundaryName)}</div>
+      <div style="font-size:12px;margin-top:4px;">${matches.length} matching hunts</div>
+      <div style="margin-top:8px;">${rows}</div>
+      ${moreNote}
+    </div>
+  `;
 }
 
 function findMatchingHuntsForFeature(feature) {
@@ -1399,13 +1481,38 @@ function renderSelectedHunt() {
   }
   const officialDwrUrl = getOfficialDwrHuntUrl(selectedHunt);
   selectedHuntPanel.innerHTML = `
-    <div class="detail-grid">
-      <div><strong>Hunt #</strong>${escapeHtml(getHuntCode(selectedHunt))}</div>
-      <div><strong>Unit</strong>${escapeHtml(getUnitName(selectedHunt))}</div>
-      <div><strong>Species</strong>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
-      <div><strong>Sex</strong>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
-      <div><strong>Weapon</strong>${escapeHtml(getWeapon(selectedHunt))}</div>
-      <div><strong>Dates</strong>${escapeHtml(getDates(selectedHunt))}</div>
+    <div style="
+      position:relative;
+      width:100%;
+      min-height:360px;
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff url('${OFFICIAL_DNR_DWR_LOGO_URL}') center/cover no-repeat;
+      box-shadow:0 10px 24px rgba(43,28,18,0.16);
+      border:1px solid rgba(191,107,52,0.28);
+    ">
+      <div style="
+        position:absolute;
+        left:18px;
+        right:18px;
+        top:122px;
+        padding:12px 14px;
+        background:rgba(255,255,255,0.9);
+        border:1px solid rgba(191,107,52,0.22);
+        border-radius:12px;
+        backdrop-filter:blur(2px);
+      ">
+        <div style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#b45e2c;">Selected Hunt</div>
+        <div style="font-size:15px;font-weight:900;line-height:1.15;color:#2b1c12;margin-top:2px;">${escapeHtml(getUnitName(selectedHunt))}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:10px;font-size:12px;color:#2b1c12;">
+          <div><strong>Hunt #</strong><br>${escapeHtml(getHuntCode(selectedHunt))}</div>
+          <div><strong>Species</strong><br>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
+          <div><strong>Sex</strong><br>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
+          <div><strong>Type</strong><br>${escapeHtml(getHuntType(selectedHunt))}</div>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#2b1c12;"><strong>Weapon</strong><br>${escapeHtml(getWeapon(selectedHunt))}</div>
+        <div style="margin-top:8px;font-size:12px;color:#2b1c12;"><strong>Dates</strong><br>${escapeHtml(getDates(selectedHunt))}</div>
+      </div>
     </div>
     <div style="margin-top:14px;">
       <a href="${escapeHtml(officialDwrUrl)}" target="_blank" rel="noopener noreferrer">Official Utah DWR Hunt Details</a>
@@ -1671,7 +1778,6 @@ function bindBoundaryLayerInteraction() {
     const matches = findMatchingHuntsForFeature(event.feature);
     selectedBoundaryMatches = matches;
     const boundaryName = getFeatureBoundaryName(event.feature);
-    renderMapChooser(matches, boundaryName);
 
     if (!boundaryInfoWindow) boundaryInfoWindow = new google.maps.InfoWindow();
     boundaryInfoWindow.setContent(buildDwrHuntUnitPopupContent(boundaryName, matches));
