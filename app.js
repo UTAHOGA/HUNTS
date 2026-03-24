@@ -520,24 +520,24 @@ function buildDnrPlate(hunt, compact = false) {
   const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
   const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
   const boundaryLink = getBoundaryLink(hunt);
-  const panelWidth = compact ? 440 : 520;
-  const panelHeight = compact ? 172 : 205;
+  const panelWidth = compact ? 480 : 560;
+  const panelHeight = compact ? 184 : 214;
   const wrapperWidth = compact ? `width:${panelWidth}px;max-width:${panelWidth}px;` : `width:${panelWidth}px;max-width:100%;`;
-  const titleSize = compact ? '17px' : '19px';
-  const metaSize = compact ? '11.5px' : '12.5px';
-  const infoTop = compact ? '14px' : '16px';
-  const infoLeft = compact ? '31.5%' : '31%';
+  const titleSize = compact ? '21px' : '23px';
+  const metaSize = compact ? '14px' : '15px';
+  const infoTop = compact ? '15px' : '17px';
+  const infoLeft = compact ? '38%' : '37%';
 
   return `
     <div style="position:relative;${wrapperWidth}height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
       <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
-      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:14px;bottom:14px;display:grid;align-content:start;gap:${compact ? '6px' : '8px'};color:#2b1c12;">
+      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:18px;bottom:16px;display:grid;align-content:start;gap:${compact ? '7px' : '9px'};color:#2b1c12;">
         <div style="display:grid;gap:2px;">
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Selected Hunt</div>
+          <div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Selected Hunt</div>
           <div style="font-size:${titleSize};font-weight:900;line-height:1.05;">${code}</div>
-          <div style="font-size:${compact ? '14px' : '15px'};font-weight:800;line-height:1.12;">${unit}</div>
+          <div style="font-size:${compact ? '18px' : '19px'};font-weight:800;line-height:1.12;">${unit}</div>
         </div>
-        <div style="display:grid;gap:${compact ? '3px' : '5px'};font-size:${metaSize};line-height:1.25;">
+        <div style="display:grid;gap:${compact ? '4px' : '6px'};font-size:${metaSize};line-height:1.28;">
           <div><strong>Species:</strong> ${species}</div>
           <div><strong>Sex:</strong> ${sex}</div>
           <div><strong>Hunt Type:</strong> ${huntType}</div>
