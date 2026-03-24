@@ -7,7 +7,7 @@ const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`];
-const LOGO_DNR = './assets/logos/dnr-logo-small.bmp';
+const LOGO_DNR = './assets/logos/dnr-logo-small.png';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
@@ -110,6 +110,7 @@ function getHuntTitle(h) { return firstNonEmpty(h.title, h.Title, h.huntTitle, g
 function getUnitCode(h) { return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCode); }
 function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName); }
 function getUnitValue(h) { return firstNonEmpty(getUnitCode(h), getUnitName(h)); }
+function getBoundaryId(h) { return firstNonEmpty(h.boundaryId, h.boundaryID, h.BoundaryID); }
 function normalizeWeaponLabel(raw) {
   const value = safe(raw).trim();
   const lower = value.toLowerCase();
@@ -166,6 +167,13 @@ function normalizeHuntCategoryLabel(raw) {
 function getHuntCategory(h) { return normalizeHuntCategoryLabel(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)); }
 function getDates(h) { return firstNonEmpty(h.seasonLabel, h.seasonDates, h.dates); }
 function getBoundaryLink(h) { return firstNonEmpty(h.boundaryLink, h.boundaryURL, h.huntBoundaryLink); }
+function normalizeBoundaryKey(value) {
+  return safe(value)
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 // --- FILTERING ENGINE ---
 function getFilteredHunts(excludeKey = '') {
@@ -438,11 +446,14 @@ function buildBoundaryLayer() {
 
 function styleBoundaryLayer() {
     if (!huntUnitsLayer) return;
-    const codes = new Set(getFilteredHunts().map(h => getUnitCode(h)));
+    const filtered = getFilteredHunts();
+    const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
+    const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
+    const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
     huntUnitsLayer.setStyle(f => {
         const id = safe(f.getProperty('BoundaryID'));
-        const name = safe(f.getProperty('Boundary_Name')).toLowerCase();
-        const isMatch = codes.has(id) || codes.has(name);
+        const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+        const isMatch = boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name);
         return { visible: isMatch, strokeColor: '#3653b3', fillOpacity: 0.1 };
     });
 }
@@ -472,10 +483,14 @@ function zoomToSelectedBoundary() {
   if (!huntUnitsLayer || !selectedHunt) return;
   const bounds = new google.maps.LatLngBounds();
   let found = false;
-  const unitCode = getUnitCode(selectedHunt);
+  const boundaryId = safe(getBoundaryId(selectedHunt));
+  const unitCode = normalizeBoundaryKey(getUnitCode(selectedHunt));
+  const unitName = normalizeBoundaryKey(getUnitName(selectedHunt));
   
   huntUnitsLayer.forEach(f => {
-    if (safe(f.getProperty('BoundaryID')) === unitCode) {
+    const featureBoundaryId = safe(f.getProperty('BoundaryID'));
+    const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+    if (featureBoundaryId === boundaryId || featureName === unitCode || featureName === unitName) {
       f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
     }
   });
