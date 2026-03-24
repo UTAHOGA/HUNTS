@@ -374,6 +374,7 @@ function handleFilterChange(event) {
   styleBoundaryLayer();
   renderMatchingHunts();
   renderSelectedHunt();
+  renderOutfitters();
 }
 
 function refreshSelectionMatrix() {
@@ -440,6 +441,7 @@ function refreshSelectionMatrix() {
 // --- CORE APP LOGIC ---
 async function loadHuntData() {
   let merged = [];
+  updateStatus('Loading hunt data...');
   for (let s of HUNT_DATA_SOURCES) {
     for (const candidate of s.candidates) {
       try {
@@ -459,6 +461,7 @@ async function loadHuntData() {
   }
   huntData = merged;
   refreshSelectionMatrix();
+  updateStatus(`Loaded ${huntData.length} hunts.`);
 }
 
 function renderMatchingHunts() {
@@ -481,6 +484,7 @@ function renderMatchingHunts() {
 function closeSelectionInfoWindow() {
   if (selectionInfoWindow) {
     selectionInfoWindow.close();
+    selectionInfoWindow = null;
   }
 }
 
@@ -496,6 +500,41 @@ function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLink
       </div>
       ${detailText ? `<div style="font-size:12px;line-height:1.35;color:#6b5646;">${escapeHtml(detailText)}</div>` : ''}
       ${detailsLink ? `<a href="${escapeHtml(detailsLink)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">${escapeHtml(detailsLinkText || 'Open details')}</a>` : ''}
+    </div>`;
+}
+function buildDnrPlate(hunt, compact = false) {
+  const code = escapeHtml(getHuntCode(hunt) || '');
+  const unit = escapeHtml(getUnitName(hunt) || getHuntTitle(hunt));
+  const species = escapeHtml(getSpeciesDisplay(hunt) || 'N/A');
+  const sex = escapeHtml(getNormalizedSex(hunt) || 'N/A');
+  const huntType = escapeHtml(getHuntType(hunt) || 'N/A');
+  const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
+  const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
+  const boundaryLink = getBoundaryLink(hunt);
+  const wrapperWidth = compact ? 'min-width:360px;max-width:430px;' : 'width:100%;';
+  const titleSize = compact ? '18px' : '20px';
+  const metaSize = compact ? '12px' : '13px';
+  const infoTop = compact ? '18px' : '20px';
+  const infoLeft = compact ? '32%' : '31%';
+
+  return `
+    <div style="position:relative;${wrapperWidth}border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
+      <img src="${LOGO_DNR}" alt="Utah DNR hunt information plate" style="display:block;width:100%;height:auto;">
+      <div style="position:absolute;top:${infoTop};left:${infoLeft};right:16px;bottom:16px;display:grid;align-content:start;gap:8px;color:#2b1c12;">
+        <div style="display:grid;gap:2px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Selected Hunt</div>
+          <div style="font-size:${titleSize};font-weight:900;line-height:1.05;">${code}</div>
+          <div style="font-size:${compact ? '15px' : '16px'};font-weight:800;line-height:1.12;">${unit}</div>
+        </div>
+        <div style="display:grid;gap:5px;font-size:${metaSize};line-height:1.3;">
+          <div><strong>Species:</strong> ${species}</div>
+          <div><strong>Sex:</strong> ${sex}</div>
+          <div><strong>Hunt Type:</strong> ${huntType}</div>
+          <div><strong>Weapon:</strong> ${weapon}</div>
+          <div><strong>Dates:</strong> ${dates}</div>
+        </div>
+        ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer" style="margin-top:2px;color:#2f7fd1;font-size:${metaSize};font-weight:800;text-decoration:none;">Official Utah DWR Hunt Details</a>` : ''}
+      </div>
     </div>`;
 }
 
@@ -517,23 +556,11 @@ function renderSelectedHunt() {
   if (!p) return;
   if (!selectedHunt) {
     p.innerHTML = '<div class="empty-note">Select a hunt result or hunt unit to see details.</div>';
-    renderOutfitters();
     return;
   }
-  const boundaryLink = getBoundaryLink(selectedHunt);
   p.innerHTML = `
     <div style="display:grid;gap:12px;">
-      <div style="display:grid;gap:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:12px;box-shadow:var(--shadow);">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <img src="${LOGO_DNR}" alt="Utah DNR logo" style="width:56px;height:56px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid var(--line);">
-          <div style="display:grid;gap:3px;">
-            <div style="font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);">Selected Hunt</div>
-            <div style="font-size:18px;font-weight:900;line-height:1.05;color:var(--text);">${escapeHtml(getHuntCode(selectedHunt))}</div>
-            <div style="font-size:14px;font-weight:800;line-height:1.15;color:var(--text);">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt))}</div>
-          </div>
-        </div>
-        <div style="font-size:12px;line-height:1.3;color:var(--muted);">${escapeHtml(getSpeciesDisplay(selectedHunt))} | ${escapeHtml(getNormalizedSex(selectedHunt))} | ${escapeHtml(getHuntType(selectedHunt))} | ${escapeHtml(getWeapon(selectedHunt))}</div>
-      </div>
+      ${buildDnrPlate(selectedHunt, false)}
       <div class="detail-grid">
         <div><strong>Species</strong>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
         <div><strong>Sex</strong>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
@@ -542,7 +569,6 @@ function renderSelectedHunt() {
         <div><strong>Hunt Class</strong>${escapeHtml(getHuntCategory(selectedHunt))}</div>
         <div><strong>DWR Hunt Unit</strong>${escapeHtml(getUnitName(selectedHunt))}</div>
         <div style="grid-column:1 / -1;"><strong>Dates</strong>${escapeHtml(getDates(selectedHunt) || 'See official hunt details')}</div>
-        ${boundaryLink ? `<div style="grid-column:1 / -1;"><strong>Official Utah DWR Hunt Details</strong><a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">Open official details</a></div>` : ''}
       </div>
     </div>`;
 }
@@ -649,6 +675,7 @@ function closeSelectedHuntPopup() {
   if (!mapChooser) return;
   mapChooser.classList.remove('is-open');
   mapChooser.setAttribute('aria-hidden', 'true');
+  selectedBoundaryMatches = [];
   if (mapChooserBody) {
     mapChooserBody.innerHTML = '<div class="map-chooser-empty">Click a hunt boundary to load matching hunts.</div>';
   }
@@ -666,20 +693,7 @@ function getFeatureMatches(feature) {
 }
 
 function buildPopupCardForHunt(hunt) {
-  return `
-    <div style="display:grid;gap:8px;min-width:300px;max-width:340px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${LOGO_DNR}" alt="Utah DNR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
-        <div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">${escapeHtml(getHuntCode(hunt))} | ${escapeHtml(getUnitName(hunt) || getHuntTitle(hunt))}</div>
-        </div>
-      </div>
-      <div style="font-size:12px;color:#6b5646;">${escapeHtml(getSpeciesDisplay(hunt))} | ${escapeHtml(getNormalizedSex(hunt))}</div>
-      <div style="font-size:12px;color:#6b5646;">${escapeHtml(getHuntType(hunt))} | ${escapeHtml(getWeapon(hunt))}</div>
-      <div style="font-size:12px;color:#6b5646;">${escapeHtml(getDates(hunt) || 'See official hunt details')}</div>
-      ${getBoundaryLink(hunt) ? `<a href="${escapeHtml(getBoundaryLink(hunt))}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">Official Utah DWR Hunt Details</a>` : ''}
-    </div>`;
+  return buildDnrPlate(hunt, true);
 }
 
 function buildPopupListForMatches(matches) {
@@ -703,6 +717,7 @@ function buildPopupListForMatches(matches) {
 
 function openMapChooser(feature, matches) {
   if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
+  selectedBoundaryMatches = matches.slice();
   const boundaryName = firstNonEmpty(feature?.getProperty('Boundary_Name'), 'Selected Unit');
   mapChooserKicker.textContent = 'Selected Unit';
   mapChooserTitle.textContent = boundaryName;
@@ -734,6 +749,7 @@ function openBoundaryPopup(feature, latLng) {
   if (!googleBaselineMap || !feature || !latLng) return;
   const matches = getFeatureMatches(feature);
   selectedBoundaryFeature = feature;
+  selectedBoundaryMatches = matches.slice();
   if (matches.length > 1) {
     closeSelectionInfoWindow();
     openMapChooser(feature, matches);
@@ -1007,14 +1023,15 @@ function initGoogleBaseline() {
   });
   googleApiReady = true;
   if (huntBoundaryGeoJson) buildBoundaryLayer();
-  if (toggleUSFS?.checked) ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
   if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
+  if (toggleUSFS?.checked) ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
   if (toggleSITLA?.checked) ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
   if (toggleStateLands?.checked) ensureStateLandsLayer().catch(err => console.error('State lands layer failed', err));
   if (toggleStateParks?.checked) ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
   if (toggleWma?.checked) ensureWmaLayer().catch(err => console.error('WMA layer failed', err));
   if (togglePrivate?.checked) ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
   updateStateLayersSummary();
+  updateStatus('Map ready. Select filters or click a hunt unit.');
   bindControls();
 }
 
@@ -1094,6 +1111,10 @@ function bindControls() {
   toggleBLM?.addEventListener('change', async () => {
     if (toggleBLM.checked) await ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
     setLayerVisibility(blmLayer, !!toggleBLM.checked);
+    if (toggleUSFS?.checked) {
+      setLayerVisibility(usfsLayer, false);
+      setLayerVisibility(usfsLayer, true);
+    }
   });
   toggleSITLA?.addEventListener('change', async () => {
     if (toggleSITLA.checked) await ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
