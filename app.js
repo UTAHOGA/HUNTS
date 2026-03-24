@@ -236,6 +236,23 @@ function getNormalizedSex(valueOrHunt) {
   return titleCaseWords(raw);
 }
 
+function getSexOptionsForSpecies(speciesValue) {
+  const species = safe(speciesValue).trim().toLowerCase();
+  if (species === 'mule deer' || species === 'deer') {
+    return ['All', 'Buck', 'Antlerless', 'Either Sex'];
+  }
+  if (species === 'elk') {
+    return ['All', 'Bull', 'Antlerless', 'Either Sex'];
+  }
+  if (species === 'pronghorn') {
+    return ['All', 'Buck', 'Antlerless', 'Either Sex'];
+  }
+  if (species === 'moose') {
+    return ['All', 'Bull', 'Antlerless', 'Either Sex'];
+  }
+  return null;
+}
+
 async function fetchJsonWithCandidates(candidates) {
   let lastStatus = 'not-started';
   for (const url of candidates) {
@@ -338,9 +355,15 @@ function populateSpecies() {
 
 function populateSexes() {
   const previous = sexFilter.value || 'All';
-  const values = Array.from(new Set(getFilteredHunts('sex').map(hunt => getNormalizedSex(hunt)).filter(Boolean)));
-  sortWithPreferredOrder(values, SEX_ORDER);
-  const options = ['All', ...values];
+  const selectedSpecies = safe(speciesFilter.value || 'All Species');
+  let options = getSexOptionsForSpecies(selectedSpecies);
+
+  if (!options) {
+    const values = Array.from(new Set(getFilteredHunts('sex').map(hunt => getNormalizedSex(hunt)).filter(Boolean)));
+    sortWithPreferredOrder(values, SEX_ORDER);
+    options = ['All', ...values];
+  }
+
   sexFilter.innerHTML = options.map(value => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join('');
   sexFilter.value = options.includes(previous) ? previous : 'All';
 }
