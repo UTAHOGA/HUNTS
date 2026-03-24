@@ -316,14 +316,14 @@
       width: min(780px, calc(100vw - 48px));
       max-height: min(74vh, 760px);
       display: none;
-      overflow: auto;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      overflow: visible;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
     .selected-hunt-float.is-open { display: block; }
     .globe-basemap-panel {
@@ -517,6 +517,23 @@
       </div>
 
       <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
+      <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
+        <div class="globe-basemap-title">Globe Basemap</div>
+        <p class="globe-basemap-note">Switch between imagery, topo, dark, and street-style globe backgrounds.</p>
+        <select id="globeBasemapSelect" class="hunt-select">
+          <option value="osm">OpenStreetMap</option>
+          <option value="esriImagery">Esri World Imagery</option>
+          <option value="esriTopo">Esri World Topo</option>
+          <option value="esriStreet">Esri World Street</option>
+          <option value="esriNatGeo">Esri NatGeo</option>
+          <option value="usgsImagery">USGS Imagery</option>
+          <option value="usgsTopo">USGS Topo</option>
+          <option value="openTopo">OpenTopoMap</option>
+          <option value="cartoLight">Carto Light</option>
+          <option value="cartoDark">Carto Dark</option>
+          <option value="osmHot">OSM Humanitarian</option>
+        </select>
+      </div>
     </section>
 
     <aside class="rightbar">

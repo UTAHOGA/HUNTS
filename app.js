@@ -8,7 +8,7 @@ const HUNT_DATA_VERSION = '20260324-master-1733';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [`${CLOUDFLARE_BASE}/outfitters.json`];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
-const LOGO_DNR_ROOMY = 'https://static.wixstatic.com/media/43f827_59419a126e0b4c0b9593fab8b0e4b970~mv2.jpg';
+const LOGO_DNR_ROOMY = './assets/logos/HUNT PANEL.jpg';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
@@ -56,7 +56,7 @@ const HUNT_CLASS_ORDER = [ 'General Season', 'Limited Entry', 'Premium Limited E
 const SEX_ORDER = ['Buck', 'Bull', 'Ram', 'Ewe', 'Bearded', 'Antlerless', 'Either Sex', "Hunter's Choice"];
 const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restricted Archery', 'Muzzleloader', 'Restricted Muzzleloader', 'Restricted Rifle', 'HAMSS', 'Multiseason', 'Restricted Multiseason' ];
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'osm';
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -66,6 +66,7 @@ const searchInput = document.getElementById('searchInput'),
   huntCategoryFilter = document.getElementById('huntCategoryFilter'),
   unitFilter = document.getElementById('unitFilter'),
   mapTypeSelect = document.getElementById('mapTypeSelect'),
+  globeBasemapSelect = document.getElementById('globeBasemapSelect'),
   resetViewBtn = document.getElementById('resetViewBtn'),
   applyFiltersBtn = document.getElementById('applyFiltersBtn'),
   clearFiltersBtn = document.getElementById('clearFiltersBtn'),
@@ -572,10 +573,8 @@ function openSelectedHuntFloat() {
     return;
   }
   selectedHuntFloat.innerHTML = `
-    <div style="display:grid;gap:12px;">
-      <div style="display:flex;justify-content:flex-end;">
-        <button type="button" data-close-selected-hunt-float style="border:1px solid #d6c1ae;border-radius:999px;background:#fffdf8;color:#2b1c12;padding:8px 14px;cursor:pointer;font-weight:800;">Close</button>
-      </div>
+    <div style="position:relative;width:max-content;max-width:100%;">
+      <button type="button" data-close-selected-hunt-float aria-label="Close selected hunt" style="position:absolute;top:18px;right:20px;z-index:2;border:0;background:transparent;color:#5b3a24;padding:0;cursor:pointer;font-weight:900;font-size:24px;line-height:1;">X</button>
       ${buildDnrPlate(selectedHunt, false, true)}
     </div>`;
   selectedHuntFloat.classList.add('is-open');
@@ -600,6 +599,61 @@ function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLink
       ${detailsLink ? `<a href="${escapeHtml(detailsLink)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">${escapeHtml(detailsLinkText || 'Open details')}</a>` : ''}
     </div>`;
 }
+
+function createGlobeImageryProvider(key) {
+  if (typeof Cesium === 'undefined') return null;
+  const providers = {
+    osm: () => new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
+    osmHot: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      subdomains: ['a', 'b', 'c']
+    }),
+    openTopo: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
+      credit: 'OpenTopoMap'
+    }),
+    cartoLight: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      subdomains: ['a', 'b', 'c', 'd']
+    }),
+    cartoDark: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      subdomains: ['a', 'b', 'c', 'd']
+    }),
+    esriImagery: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+    }),
+    esriTopo: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+    }),
+    esriStreet: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
+    }),
+    esriNatGeo: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
+    }),
+    usgsImagery: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'
+    }),
+    usgsTopo: () => new Cesium.UrlTemplateImageryProvider({
+      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}'
+    })
+  };
+  return providers[key]?.() || providers.osm();
+}
+
+function applyGlobeBasemap(key = currentGlobeBasemap) {
+  if (!cesiumViewer || typeof Cesium === 'undefined') return;
+  const imageryProvider = createGlobeImageryProvider(key);
+  if (!imageryProvider) return;
+  currentGlobeBasemap = key;
+  cesiumViewer.imageryLayers.removeAll();
+  cesiumViewer.imageryLayers.addImageryProvider(imageryProvider);
+  cesiumViewer.scene.requestRender();
+  if (globeBasemapSelect) {
+    globeBasemapSelect.value = currentGlobeBasemap;
+  }
+}
 function buildDnrPlate(hunt, compact = false, roomy = false) {
   const plateUrl = assetUrl(roomy ? LOGO_DNR_ROOMY : LOGO_DNR);
   const code = escapeHtml(getHuntCode(hunt) || '');
@@ -614,23 +668,48 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
   const panelWidth = roomy ? 720 : (compact ? 480 : 560);
   const panelHeight = roomy ? 440 : (compact ? 184 : 214);
   const wrapperWidth = compact ? `width:${panelWidth}px;max-width:${panelWidth}px;` : `width:${panelWidth}px;max-width:100%;`;
-  const titleSize = roomy ? '26px' : (compact ? '21px' : '23px');
-  const metaSize = roomy ? '16px' : (compact ? '14px' : '15px');
-  const infoTop = roomy ? '32px' : (compact ? '15px' : '17px');
-  const infoLeft = roomy ? '39%' : (compact ? '38%' : '37%');
+  const titleSize = roomy ? '24px' : (compact ? '21px' : '23px');
+  const metaSize = roomy ? '15px' : (compact ? '14px' : '15px');
+  const infoTop = roomy ? '108px' : (compact ? '15px' : '17px');
+  const infoLeft = roomy ? '37%' : (compact ? '38%' : '37%');
   const infoRight = roomy ? '30px' : '18px';
   const infoBottom = roomy ? '28px' : '16px';
   const infoGap = roomy ? '10px' : (compact ? '7px' : '9px');
   const detailGap = roomy ? '6px' : (compact ? '4px' : '6px');
-  const unitSize = roomy ? '24px' : (compact ? '18px' : '19px');
+  const unitSize = roomy ? '18px' : (compact ? '18px' : '19px');
   const linkSize = roomy ? '16px' : metaSize;
+
+  if (roomy) {
+    return `
+      <div style="position:relative;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
+        <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
+        <div style="position:absolute;left:48px;top:302px;width:210px;display:grid;gap:6px;color:#2b1c12;">
+          <div style="font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">Hunt #</div>
+          <div style="font-size:32px;font-weight:900;line-height:1;">${code}</div>
+        </div>
+        <div style="position:absolute;top:132px;left:38%;right:36px;bottom:32px;display:grid;align-content:start;gap:10px;color:#2b1c12;">
+          <div style="display:grid;gap:6px;">
+            <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">${heading}</div>
+            <div style="font-size:30px;font-weight:900;line-height:1.02;">${unit}</div>
+          </div>
+          <div style="display:grid;gap:7px;font-size:17px;line-height:1.28;">
+            <div><strong>Species:</strong> ${species}</div>
+            <div><strong>Sex:</strong> ${sex}</div>
+            <div><strong>Hunt Type:</strong> ${huntType}</div>
+            <div><strong>Weapon:</strong> ${weapon}</div>
+            <div><strong>Dates:</strong> ${dates}</div>
+          </div>
+          ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer" style="margin-top:4px;color:#2f7fd1;font-size:17px;font-weight:800;text-decoration:none;">Official Utah DWR Hunt Details</a>` : ''}
+        </div>
+      </div>`;
+  }
 
   return `
     <div style="position:relative;${wrapperWidth}height:${panelHeight}px;border:1px solid #d38449;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(58,37,18,0.18);">
       <img src="${plateUrl}" alt="Utah DNR hunt information plate" style="display:block;width:${panelWidth}px;max-width:100%;height:${panelHeight}px;object-fit:fill;border:0;">
       <div style="position:absolute;top:${infoTop};left:${infoLeft};right:${infoRight};bottom:${infoBottom};display:grid;align-content:start;gap:${infoGap};color:#2b1c12;">
         <div style="display:grid;gap:3px;">
-          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">${heading}</div>
+          <div style="font-size:${roomy ? '12px' : '13px'};font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#bf6b34;">${heading}</div>
           <div style="font-size:${titleSize};font-weight:900;line-height:1.05;">${code}</div>
           <div style="font-size:${unitSize};font-weight:800;line-height:1.12;">${unit}</div>
         </div>
@@ -1058,10 +1137,7 @@ function ensureCesiumViewer() {
     selectionIndicator: false,
     infoBox: false
   });
-  cesiumViewer.imageryLayers.removeAll();
-  cesiumViewer.imageryLayers.addImageryProvider(new Cesium.OpenStreetMapImageryProvider({
-    url: 'https://tile.openstreetmap.org/'
-  }));
+  applyGlobeBasemap(currentGlobeBasemap);
   cesiumViewer.scene.globe.enableLighting = false;
   cesiumViewer.scene.globe.showGroundAtmosphere = false;
   cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#d7e7f5');
@@ -1230,6 +1306,11 @@ function bindControls() {
   });
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   mapTypeSelect?.addEventListener('change', applyMapMode);
+  globeBasemapSelect?.addEventListener('change', () => {
+    currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');
+    applyGlobeBasemap(currentGlobeBasemap);
+    updateStatus(`${titleCaseWords(currentGlobeBasemap.replace(/([A-Z])/g, ' $1').trim())} globe basemap active.`);
+  });
   resetViewBtn?.addEventListener('click', resetMapView);
   toggleDwrUnits?.addEventListener('change', () => {
     if (!toggleDwrUnits.checked) {
