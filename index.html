@@ -165,13 +165,20 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 3;
-      overflow: hidden;
-      box-shadow: inset 0 0 0 12px rgba(87, 56, 32, 0.98);
+      overflow: visible;
       animation: elk-wheel-spin 6.5s linear infinite;
     }
-    .wheel-foreground .spoke {
-      background: linear-gradient(180deg, rgba(214, 136, 72, 0.98) 0%, rgba(97, 61, 34, 0.98) 100%);
-      opacity: 1;
+    .wheel-spokes-front {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: repeating-conic-gradient(
+        from 0deg,
+        rgba(214, 136, 72, 0.98) 0deg 2.4deg,
+        transparent 2.4deg 45deg
+      );
+      -webkit-mask: radial-gradient(circle, transparent 0 44px, #000 44px 188px, transparent 188px 100%);
+      mask: radial-gradient(circle, transparent 0 44px, #000 44px 188px, transparent 188px 100%);
     }
     .wheel-foreground::before,
     .wheel-foreground::after {
@@ -181,11 +188,7 @@
       border-radius: 50%;
     }
     .wheel-foreground::before { box-shadow: inset 0 0 0 5px rgba(232, 154, 82, 0.94); }
-    .wheel-foreground::after { box-shadow: inset 0 0 0 16px rgba(84, 53, 31, 0.98); }
-    .wheel-foreground .spoke-5 { transform: rotate(22.5deg); }
-    .wheel-foreground .spoke-6 { transform: rotate(67.5deg); }
-    .wheel-foreground .spoke-7 { transform: rotate(112.5deg); }
-    .wheel-foreground .spoke-8 { transform: rotate(157.5deg); }
+    .wheel-foreground::after { box-shadow: inset 0 0 0 16px rgba(84, 53, 31, 0.98), inset 0 0 0 28px rgba(126, 80, 46, 0.96); }
     .stand { position: absolute; left: 50%; bottom: 6px; width: 340px; height: 128px; transform: translateX(-50%); pointer-events:none; }
     .upright { position: absolute; top: 0; width: 8px; height: 94px; background: linear-gradient(180deg, #7d5a3e, #4a3322); border-radius: 999px; box-shadow: 0 6px 12px rgba(58, 37, 18, 0.2); }
     .upright.left { left: 86px; transform: rotate(16deg); } .upright.right { right: 86px; transform: rotate(-16deg); }
@@ -560,6 +563,10 @@
       .upright.left { left: 62px; }
       .upright.right { right: 62px; }
       .wheel-foreground { width: 320px; height: 320px; top: 24px; }
+      .wheel-spokes-front {
+        -webkit-mask: radial-gradient(circle, transparent 0 34px, #000 34px 138px, transparent 138px 100%);
+        mask: radial-gradient(circle, transparent 0 34px, #000 34px 138px, transparent 138px 100%);
+      }
     }
   </style>
 </head>
@@ -580,7 +587,7 @@
             <span class="shadow"></span><span class="dust dust-1"></span><span class="dust dust-2"></span><span class="dust dust-3"></span>
           </div>
         </div>
-        <div class="wheel-foreground"><span class="spoke spoke-1"></span><span class="spoke spoke-2"></span><span class="spoke spoke-3"></span><span class="spoke spoke-4"></span><span class="spoke spoke-5"></span><span class="spoke spoke-6"></span><span class="spoke spoke-7"></span><span class="spoke spoke-8"></span></div>
+        <div class="wheel-foreground"><div class="wheel-spokes-front"></div></div>
         <div class="stand"><span class="upright left"></span><span class="upright right"></span><span class="base"></span></div>
         <div class="loader-plaque">Hunt Planner Loading Dock</div>
       </div>
