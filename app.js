@@ -5,12 +5,13 @@ const GOOGLE_BASELINE_DEFAULT_ZOOM = 7;
 // --- CLOUDFLARE JSON SOURCES ---
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
+const OUTFITTERS_DATA_VERSION = '20260326-outfitters-geo-1';
 const LOCAL_HUNT_BOUNDARIES_PATH = `${CLOUDFLARE_BASE}/hunt_boundaries.geojson`;
 const OUTFITTERS_DATA_SOURCES = [
-  `${CLOUDFLARE_BASE}/outfitters-public.json`,
-  `${CLOUDFLARE_BASE}/outfitters.json`,
-  './data/outfitters-public.json',
-  './data/outfitters.json'
+  `./data/outfitters-public.json?v=${OUTFITTERS_DATA_VERSION}`,
+  `./data/outfitters.json?v=${OUTFITTERS_DATA_VERSION}`,
+  `${CLOUDFLARE_BASE}/outfitters-public.json?v=${OUTFITTERS_DATA_VERSION}`,
+  `${CLOUDFLARE_BASE}/outfitters.json?v=${OUTFITTERS_DATA_VERSION}`
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
 const LOGO_DNR_ROOMY = 'https://static.wixstatic.com/media/43f827_28020dbfc9b9434c91dc6d92d9a07cd4~mv2.png';
