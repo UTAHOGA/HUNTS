@@ -13,7 +13,7 @@ const OUTFITTERS_DATA_SOURCES = [
   './data/outfitters.json'
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
-const LOGO_DNR_ROOMY = './assets/logos/HUNT PANEL.jpg';
+const LOGO_DNR_ROOMY = './assets/logos/HUNT PANEL.bmp';
 const LOGO_DWR_WMA = './assets/logos/dwr-wma.jpg';
 const LOGO_USFS = './assets/logos/usfs.png';
 const LOGO_BLM = './assets/logos/blm.png';
@@ -63,7 +63,7 @@ const WEAPON_ORDER = [ 'Any Legal Weapon', 'Archery', 'Extended Archery', 'Restr
 const DNR_ORANGE = '#d66a1f';
 const DNR_BROWN = '#4f2b14';
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 const outfitterGeocodeCache = new Map();
 
 const searchInput = document.getElementById('searchInput'),
@@ -354,6 +354,81 @@ function normalizeListValues(values) {
   const one = safe(values).trim();
   return one ? [one] : [];
 }
+function normalizeBoolean(value) {
+  if (typeof value === 'boolean') return value;
+  const lowered = safe(value).trim().toLowerCase();
+  return lowered === 'true' || lowered === 'yes' || lowered === '1';
+}
+function normalizeOutfitterRecord(record) {
+  if (!record || typeof record !== 'object') return null;
+  const isNested = !!(record.contact || record.branding || record.serviceArea || record.headquarters);
+  if (!isNested) {
+    return {
+      ...record,
+      listingName: firstNonEmpty(record.listingName, record.displayName, record.businessName, record.Outfitter),
+      logoUrl: firstNonEmpty(record.logoUrl, record.logo, record.logoURL),
+      website: firstNonEmpty(record.website, record.url),
+      phone: normalizeListValues(record.phone),
+      speciesServed: normalizeListValues(record.speciesServed),
+      unitsServed: normalizeListValues(record.unitsServed),
+      address: firstNonEmpty(record.address, record.hometown),
+      city: firstNonEmpty(record.city),
+      region: firstNonEmpty(record.region, record.state)
+    };
+  }
+
+  const contact = record.contact || {};
+  const branding = record.branding || {};
+  const headquarters = record.headquarters || {};
+  const serviceArea = record.serviceArea || {};
+  const services = record.services || {};
+
+  return {
+    ...record,
+    listingName: firstNonEmpty(record.displayName, record.legalBusinessName, record.businessName, record.Outfitter),
+    businessName: firstNonEmpty(record.displayName, record.legalBusinessName, record.businessName),
+    logoUrl: firstNonEmpty(branding.logoUrl, branding.cardImageUrl, branding.heroImageUrl),
+    website: firstNonEmpty(contact.website, contact.facebookUrl, contact.instagramUrl, contact.instagramHandle),
+    phone: normalizeListValues(contact.phoneNumbers?.length ? contact.phoneNumbers : contact.phonePrimary),
+    email: normalizeListValues(contact.emailAddresses?.length ? contact.emailAddresses : contact.emailPrimary),
+    ownerNames: normalizeListValues(contact.ownerNames?.length ? contact.ownerNames : contact.primaryName),
+    address: firstNonEmpty(headquarters.mailingAddress, headquarters.publicMeetingLocation),
+    hometown: firstNonEmpty(headquarters.publicMeetingLocation, headquarters.city),
+    city: firstNonEmpty(headquarters.city),
+    region: firstNonEmpty(headquarters.region, headquarters.state),
+    state: firstNonEmpty(headquarters.state),
+    speciesServed: normalizeListValues(serviceArea.speciesServed),
+    unitsServed: normalizeListValues(serviceArea.unitsServed),
+    usfsForests: normalizeListValues(serviceArea.usfsForests),
+    blmDistricts: normalizeListValues(serviceArea.blmDistricts),
+    countiesServed: normalizeListValues(serviceArea.countiesServed),
+    wmasServed: normalizeListValues(serviceArea.wmasServed),
+    statewide: normalizeBoolean(serviceArea.statewide),
+    guidedHunts: normalizeBoolean(services.guidedHunts),
+    diySupport: normalizeBoolean(services.diySupport),
+    trespassAccess: normalizeBoolean(services.trespassAccess),
+    lodgingIncluded: normalizeBoolean(services.lodgingIncluded),
+    mealsIncluded: normalizeBoolean(services.mealsIncluded),
+    packTrips: normalizeBoolean(services.packTrips),
+    youthHunts: normalizeBoolean(services.youthHunts),
+    archery: normalizeBoolean(services.archery),
+    muzzleloader: normalizeBoolean(services.muzzleloader),
+    socialUrls: [
+      firstNonEmpty(contact.facebookUrl),
+      firstNonEmpty(contact.instagramUrl, contact.instagramHandle),
+      firstNonEmpty(contact.youtubeUrl)
+    ].filter(Boolean)
+  };
+}
+function normalizeOutfitterList(list) {
+  return (Array.isArray(list) ? list : []).map(normalizeOutfitterRecord).filter(Boolean);
+}
+function noteOutfitterInteraction() {
+  suppressLandClickUntil = Date.now() + 800;
+}
+function shouldSuppressLandClick() {
+  return Date.now() < suppressLandClickUntil;
+}
 function slugText(value) {
   return safe(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
@@ -416,8 +491,12 @@ function buildOwnershipDetails(bucket, props) {
   const county = getOwnershipCounty(props);
   const acres = getOwnershipAcres(props);
   const detailBits = [];
+  let noticeText = '';
   if (county) detailBits.push(`${county} County`);
   if (acres) detailBits.push(`${acres} acres`);
+  if (bucket === 'wma') {
+    noticeText = "Utah DWR W.M.A.'s do not imply outfitter approval, endorsement, or exclusive access.";
+  }
   const detailText = detailBits.join(' | ');
   let logo = '';
   if (bucket === 'sitla') logo = LOGO_SITLA;
@@ -427,7 +506,8 @@ function buildOwnershipDetails(bucket, props) {
     logo,
     title: getOwnershipTitle(bucket, props),
     subtitle: getOwnershipSubtitle(bucket, props),
-    detailText
+    detailText,
+    noticeText
   };
 }
 function setLayerVisibility(layer, visible) {
@@ -617,7 +697,7 @@ function openSelectedHuntFloat() {
   });
 }
 
-function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLinkText = '', detailsLink = '' }) {
+function buildLandInfoCard({ logo, title, subtitle, detailText = '', noticeText = '', detailsLinkText = '', detailsLink = '' }) {
   const resolvedLogo = logo ? assetUrl(logo) : '';
   return `
     <div style="display:grid;gap:8px;min-width:270px;max-width:320px;">
@@ -629,6 +709,7 @@ function buildLandInfoCard({ logo, title, subtitle, detailText = '', detailsLink
         </div>
       </div>
       ${detailText ? `<div style="font-size:12px;line-height:1.35;color:#6b5646;">${escapeHtml(detailText)}</div>` : ''}
+      ${noticeText ? `<div style="font-size:12px;line-height:1.4;color:#7b3f1d;font-weight:700;background:#fff4ea;border:1px solid #edc39f;border-radius:10px;padding:8px 10px;">${escapeHtml(noticeText)}</div>` : ''}
       ${detailsLink ? `<a href="${escapeHtml(detailsLink)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">${escapeHtml(detailsLinkText || 'Open details')}</a>` : ''}
     </div>`;
 }
@@ -1039,7 +1120,15 @@ function createOutfitterLogoMarker(position, outfitter) {
       </div>`;
     div.title = safe(outfitter.listingName).trim() || 'Outfitter';
     div.style.pointerEvents = 'auto';
-    div.addEventListener('click', () => {
+    if (google.maps.OverlayView?.preventMapHitsAndGesturesFrom) {
+      google.maps.OverlayView.preventMapHitsAndGesturesFrom(div);
+    }
+    const openOutfitterInfo = (event) => {
+      if (event) {
+        event.preventDefault?.();
+        event.stopPropagation?.();
+      }
+      noteOutfitterInteraction();
       closeSelectionInfoWindow();
       selectionInfoWindow = new google.maps.InfoWindow({
         content: buildOutfitterPopupCard(outfitter),
@@ -1047,7 +1136,15 @@ function createOutfitterLogoMarker(position, outfitter) {
         pixelOffset: new google.maps.Size(0, -36)
       });
       selectionInfoWindow.open(googleBaselineMap);
+    };
+    ['pointerdown', 'mousedown', 'touchstart'].forEach(type => {
+      div.addEventListener(type, event => {
+        event.preventDefault?.();
+        event.stopPropagation?.();
+        noteOutfitterInteraction();
+      }, { passive: false });
     });
+    div.addEventListener('click', openOutfitterInfo, { passive: false });
     this.div = div;
     this.getPanes().overlayMouseTarget.appendChild(div);
   };
@@ -1252,8 +1349,9 @@ async function loadOutfitters() {
       const resp = await fetch(candidate, { cache: 'no-store' });
       if (!resp.ok) continue;
       const json = await resp.json();
-      if (Array.isArray(json) && json.length) {
-        outfitters = json;
+      const normalized = normalizeOutfitterList(json);
+      if (normalized.length) {
+        outfitters = normalized;
         return;
       }
     } catch (error) {
@@ -1283,6 +1381,7 @@ function createOwnershipLayer(filterFn, style, clickBuilder) {
   }).catch(err => console.error('Ownership layer failed', err));
   layer.setStyle(style);
   layer.addListener('click', event => {
+    if (shouldSuppressLandClick()) return;
     const card = clickBuilder(event.feature);
     openLandInfoWindow(card, event.latLng);
   });
@@ -1358,6 +1457,7 @@ async function ensureUsfsLayer() {
     zIndex: 30
   });
   usfsLayer.addListener('click', event => {
+    if (shouldSuppressLandClick()) return;
     openLandInfoWindow(buildLandInfoCard({
       logo: LOGO_USFS,
       title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
@@ -1381,6 +1481,7 @@ async function ensureBlmLayer() {
     zIndex: 12
   });
   blmLayer.addListener('click', event => {
+    if (shouldSuppressLandClick()) return;
     openLandInfoWindow(buildLandInfoCard({
       logo: LOGO_BLM,
       title: firstNonEmpty(
