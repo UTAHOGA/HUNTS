@@ -405,6 +405,8 @@ function normalizeOutfitterRecord(record) {
     city: firstNonEmpty(headquarters.city),
     region: firstNonEmpty(headquarters.region, headquarters.state),
     state: firstNonEmpty(headquarters.state),
+    latitude: Number.isFinite(Number(headquarters.latitude)) ? Number(headquarters.latitude) : null,
+    longitude: Number.isFinite(Number(headquarters.longitude)) ? Number(headquarters.longitude) : null,
     speciesServed: normalizeListValues(serviceArea.speciesServed),
     unitsServed: normalizeListValues(serviceArea.unitsServed),
     usfsForests: normalizeListValues(serviceArea.usfsForests),
@@ -1222,12 +1224,41 @@ function getOutfitterSummaryTags(outfitter) {
   if (outfitter.muzzleloader) tags.push('Muzzleloader');
   return Array.from(new Set(tags));
 }
+function formatUtahAddressPart(value) {
+  return safe(value)
+    .replace(/\bNorth\b/ig, 'N')
+    .replace(/\bSouth\b/ig, 'S')
+    .replace(/\bEast\b/ig, 'E')
+    .replace(/\bWest\b/ig, 'W')
+    .replace(/\bUtah\b/ig, 'UT')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*\.\s*/g, '.')
+    .trim();
+}
+function cleanUtahAddress(rawAddress, city, state) {
+  const raw = safe(rawAddress).trim();
+  if (!raw) return '';
+  const parts = raw.split(',').map(part => formatUtahAddressPart(part)).filter(Boolean);
+  const cityText = formatUtahAddressPart(city);
+  const stateText = formatUtahAddressPart(state) || 'UT';
+  const zip = firstNonEmpty(raw.match(/\b\d{5}(?:-\d{4})?\b/)?.[0], '');
+  const street = parts.find(part => /\d/.test(part) && /\b(?:N|S|E|W|HWY|HIGHWAY|RD|ROAD|ST|STREET|AVE|AVENUE|DR|DRIVE|LN|LANE|BLVD|WAY|CT|COURT|CIR|CIRCLE)\b/i.test(part))
+    || parts.find(part => /\d/.test(part) && !/\b(?:UT|USA|UNITED STATES)\b/i.test(part))
+    || '';
+  const cityCandidate = cityText
+    || parts.find(part => /^[A-Za-z .'-]+$/.test(part) && !/\b(?:UT|USA|UNITED STATES)\b/i.test(part) && !/\d/.test(part))
+    || '';
+  const normalizedState = stateText.toUpperCase() === 'UTAH' ? 'UT' : stateText.toUpperCase();
+  const combined = [street, cityCandidate, normalizedState, zip].filter(Boolean).join(', ');
+  return combined.length >= 8 ? combined : '';
+}
 function getOutfitterGeocodeQueries(outfitter) {
   const address = safe(outfitter.address).trim();
   const hometown = safe(outfitter.hometown).trim();
   const city = safe(outfitter.city).trim();
   const region = safe(outfitter.region).trim();
   const state = safe(outfitter.state).trim() || 'Utah';
+  const cleanedAddress = cleanUtahAddress(address, city || hometown, state);
   const queries = [];
   const pushQuery = value => {
     const text = safe(value).trim();
@@ -1236,8 +1267,10 @@ function getOutfitterGeocodeQueries(outfitter) {
     if (!queries.includes(text)) queries.push(text);
   };
 
+  pushQuery(cleanedAddress);
   pushQuery(address);
   if (address && !/utah/i.test(address)) pushQuery(`${address}, ${state}`);
+  if (cleanedAddress && !/\bUT\b/i.test(cleanedAddress) && !/utah/i.test(cleanedAddress)) pushQuery(`${cleanedAddress}, UT`);
   if (hometown && city && hometown.toLowerCase() !== city.toLowerCase()) pushQuery(`${hometown}, ${city}, ${state}`);
   pushQuery(hometown && !/utah/i.test(hometown) ? `${hometown}, ${state}` : hometown);
   pushQuery(city ? `${city}, ${state}` : '');
@@ -1389,6 +1422,11 @@ function geocodeOutfitter(outfitter) {
   if (outfitterGeocodeCache.has(key)) {
     return Promise.resolve(outfitterGeocodeCache.get(key));
   }
+  if (Number.isFinite(outfitter?.latitude) && Number.isFinite(outfitter?.longitude)) {
+    const directLocation = new google.maps.LatLng(outfitter.latitude, outfitter.longitude);
+    outfitterGeocodeCache.set(key, directLocation);
+    return Promise.resolve(directLocation);
+  }
   if (!google.maps?.Geocoder) return Promise.resolve(null);
   const queries = getOutfitterGeocodeQueries(outfitter);
   if (!queries.length) return Promise.resolve(null);
@@ -1398,7 +1436,7 @@ function geocodeOutfitter(outfitter) {
       const loc = await new Promise(done => {
         geocoder.geocode({
           address: query,
-          componentRestrictions: { country: 'US', administrativeArea: 'UT' }
+          componentRestrictions: { country: 'US' }
         }, (results, status) => {
           const result = status === 'OK' && results?.[0]?.geometry?.location ? results[0].geometry.location : null;
           done(result);
