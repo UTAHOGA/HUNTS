@@ -5,7 +5,8 @@ const GOOGLE_BASELINE_DEFAULT_ZOOM = 7;
 // --- CLOUDFLARE JSON SOURCES ---
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
-const OUTFITTERS_DATA_VERSION = '20260326-outfitters-geo-1';
+const OUTFITTERS_DATA_VERSION = '20260327-dwr-public-filter-1';
+const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
 const HUNT_BOUNDARY_SOURCES = [
   `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
   `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`
@@ -15,6 +16,10 @@ const OUTFITTERS_DATA_SOURCES = [
   `./data/outfitters.json?v=${OUTFITTERS_DATA_VERSION}`,
   `${CLOUDFLARE_BASE}/outfitters-public.json?v=${OUTFITTERS_DATA_VERSION}`,
   `${CLOUDFLARE_BASE}/outfitters.json?v=${OUTFITTERS_DATA_VERSION}`
+];
+const OUTFITTER_FEDERAL_COVERAGE_SOURCES = [
+  `./data/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`,
+  `${CLOUDFLARE_BASE}/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`
 ];
 const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
 const LOGO_DNR_ROOMY = 'https://static.wixstatic.com/media/43f827_28020dbfc9b9434c91dc6d92d9a07cd4~mv2.png';
@@ -94,11 +99,12 @@ const KNOWN_OUTFITTER_COORDS = new Map([
   ['wild eyez outfitters', { lat: 39.2574155, lng: -111.631482 }]
 ]);
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 const outfitterGeocodeCache = new Map();
 const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
+const outfitterFederalCoverageIndex = new Map();
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -495,6 +501,12 @@ function normalizeBoolean(value) {
   const lowered = safe(value).trim().toLowerCase();
   return lowered === 'true' || lowered === 'yes' || lowered === '1';
 }
+function choosePrimaryListValue(primaryValue, values) {
+  const list = normalizeListValues(values);
+  const primary = safe(primaryValue).trim();
+  if (primary && primary.length > 3) return primary;
+  return list[0] || primary;
+}
 function normalizeOutfitterRecord(record) {
   if (!record || typeof record !== 'object') return null;
   const isNested = !!(record.contact || record.branding || record.serviceArea || record.headquarters);
@@ -527,6 +539,8 @@ function normalizeOutfitterRecord(record) {
     website: firstNonEmpty(contact.website, contact.facebookUrl, contact.instagramUrl, contact.instagramHandle),
     phone: normalizeListValues(contact.phoneNumbers?.length ? contact.phoneNumbers : contact.phonePrimary),
     email: normalizeListValues(contact.emailAddresses?.length ? contact.emailAddresses : contact.emailPrimary),
+    phonePrimary: choosePrimaryListValue(contact.phonePrimary, contact.phoneNumbers),
+    emailPrimary: choosePrimaryListValue(contact.emailPrimary, contact.emailAddresses),
     ownerNames: normalizeListValues(contact.ownerNames?.length ? contact.ownerNames : contact.primaryName),
     address: firstNonEmpty(headquarters.mailingAddress, headquarters.publicMeetingLocation),
     hometown: firstNonEmpty(headquarters.publicMeetingLocation, headquarters.city),
@@ -538,9 +552,15 @@ function normalizeOutfitterRecord(record) {
     speciesServed: normalizeListValues(serviceArea.speciesServed),
     unitsServed: normalizeListValues(serviceArea.unitsServed),
     usfsForests: normalizeListValues(serviceArea.usfsForests),
+    usfsForestIds: normalizeListValues(serviceArea.usfsForestIds),
+    usfsDistrictIds: normalizeListValues(serviceArea.usfsDistrictIds),
     blmDistricts: normalizeListValues(serviceArea.blmDistricts),
+    blmDistrictIds: normalizeListValues(serviceArea.blmDistrictIds),
+    zoneTags: normalizeListValues(serviceArea.zoneTags),
     countiesServed: normalizeListValues(serviceArea.countiesServed),
     wmasServed: normalizeListValues(serviceArea.wmasServed),
+    stateParks: normalizeListValues(serviceArea.stateParks),
+    sitla: normalizeListValues(serviceArea.sitla),
     statewide: normalizeBoolean(serviceArea.statewide),
     guidedHunts: normalizeBoolean(services.guidedHunts),
     diySupport: normalizeBoolean(services.diySupport),
@@ -560,6 +580,41 @@ function normalizeOutfitterRecord(record) {
 }
 function normalizeOutfitterList(list) {
   return (Array.isArray(list) ? list : []).map(normalizeOutfitterRecord).filter(Boolean);
+}
+function getOutfitterCoverageKey(species, unitCode) {
+  return `${normalizeBoundaryKey(species)}|${normalizeBoundaryKey(unitCode)}`;
+}
+function normalizeOutfitterCoverageList(list) {
+  return (Array.isArray(list) ? list : []).map(row => {
+    const species = firstNonEmpty(row.Species, row.species);
+    const unitCode = firstNonEmpty(row.UnitCode, row.unitCode);
+    const unitName = firstNonEmpty(row.UnitName, row.unitName);
+    return {
+      species,
+      unitCode,
+      unitName,
+      primaryUsfsForestName: firstNonEmpty(row.PrimaryUsfsForestName, row.primaryUsfsForestName),
+      primaryBlmDistrictName: firstNonEmpty(row.PrimaryBlmDistrictName, row.primaryBlmDistrictName),
+      usfsAuthoritySource: firstNonEmpty(row.UsfsAuthoritySource, row.usfsAuthoritySource),
+      blmAuthoritySource: firstNonEmpty(row.BlmAuthoritySource, row.blmAuthoritySource),
+      usfsPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.UsfsPermitMatchedOutfitters, row.usfsPermitMatchedOutfitters)),
+      blmPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.BlmPermitMatchedOutfitters, row.blmPermitMatchedOutfitters)),
+      federalPermitMatchedOutfitters: normalizeListValues(firstNonEmpty(row.FederalPermitMatchedOutfitters, row.federalPermitMatchedOutfitters)),
+      federalCoverageEligible: firstNonEmpty(row.FederalCoverageEligible, row.federalCoverageEligible),
+      notes: firstNonEmpty(row.Notes, row.notes)
+    };
+  }).filter(row => row.species && row.unitCode);
+}
+function indexOutfitterFederalCoverage(list) {
+  outfitterFederalCoverageIndex.clear();
+  outfitterFederalCoverage = normalizeOutfitterCoverageList(list);
+  outfitterFederalCoverage.forEach(row => {
+    outfitterFederalCoverageIndex.set(getOutfitterCoverageKey(row.species, row.unitCode), row);
+  });
+}
+function getFederalCoverageForHunt(hunt) {
+  if (!hunt) return null;
+  return outfitterFederalCoverageIndex.get(getOutfitterCoverageKey(getSpeciesDisplay(hunt), getUnitCode(hunt))) || null;
 }
 function noteOutfitterInteraction() {
   suppressLandClickUntil = Date.now() + 800;
@@ -1459,6 +1514,31 @@ function renderSelectedHunt() {
 
 function getMatchingOutfittersForHunt(hunt) {
   if (!hunt || !outfitters.length) return [];
+  const publishedCoverage = getFederalCoverageForHunt(hunt);
+  if (publishedCoverage && publishedCoverage.federalCoverageEligible !== 'No') {
+    const publishedNames = normalizeListValues(
+      publishedCoverage.federalPermitMatchedOutfitters?.length
+        ? publishedCoverage.federalPermitMatchedOutfitters
+        : publishedCoverage.usfsPermitMatchedOutfitters
+    );
+    if (publishedNames.length) {
+      const lookup = new Map(outfitters.map(o => [safe(o.listingName).trim().toLowerCase(), o]));
+      const publishedMatches = publishedNames
+        .map(name => lookup.get(safe(name).trim().toLowerCase()))
+        .filter(Boolean)
+        .map(o => {
+          const matchReasons = [];
+          if (publishedCoverage.primaryUsfsForestName) {
+            matchReasons.push(`${publishedCoverage.primaryUsfsForestName} Permit Match`);
+          }
+          if (publishedCoverage.primaryBlmDistrictName) {
+            matchReasons.push(`${publishedCoverage.primaryBlmDistrictName} Permit Match`);
+          }
+          return { ...o, matchReasons: [...new Set(matchReasons)] };
+        });
+      if (publishedMatches.length) return publishedMatches.slice(0, 12);
+    }
+  }
   const species = normalizeBoundaryKey(getSpeciesDisplay(hunt));
   const unitCode = normalizeBoundaryKey(getUnitCode(hunt));
   const unitName = normalizeBoundaryKey(getUnitName(hunt));
@@ -1467,20 +1547,44 @@ function getMatchingOutfittersForHunt(hunt) {
     const speciesServed = normalizeListValues(o.speciesServed).map(normalizeBoundaryKey);
     const unitsServed = normalizeListValues(o.unitsServed).map(normalizeBoundaryKey);
     const usfsForests = normalizeListValues(o.usfsForests).map(normalizeBoundaryKey);
+    const usfsForestIds = normalizeListValues(o.usfsForestIds).map(normalizeBoundaryKey);
     const speciesMatch = !speciesServed.length || speciesServed.includes(species);
     const unitMatch = !unitsServed.length
       || unitsServed.includes(unitCode)
       || unitsServed.includes(unitName)
       || unitsServed.some(u => unitName.includes(u) || u.includes(unitName) || unitCode.includes(u));
     const forestMatch = !requiredUsfsForests.length
-      || (usfsForests.length && requiredUsfsForests.some(required => usfsForests.includes(required)));
-    return { outfitter: o, speciesMatch, unitMatch, forestMatch };
+      || requiredUsfsForests.some(required => usfsForestIds.includes(required) || usfsForests.includes(required));
+    const confidence = [
+      speciesMatch ? 1 : 0,
+      unitMatch ? 1 : 0,
+      forestMatch ? 2 : 0,
+      usfsForestIds.length ? 1 : 0
+    ].reduce((sum, value) => sum + value, 0);
+    const matchReasons = [];
+    if (forestMatch && requiredUsfsForests.length) {
+      const forestLabel = requiredUsfsForests[0]
+        .split('-')
+        .map(part => titleCaseWords(part))
+        .join('-');
+      matchReasons.push(`${forestLabel} Permit Match`);
+    }
+    if (unitMatch && unitsServed.length) matchReasons.push('Unit Match');
+    if (speciesMatch && speciesServed.length) matchReasons.push('Species Match');
+    if (o.guidedHunts) matchReasons.push('Guided Hunts');
+    return { outfitter: o, speciesMatch, unitMatch, forestMatch, confidence, matchReasons };
   });
 
-  const strongMatches = evaluated.filter(row => row.speciesMatch && row.unitMatch && row.forestMatch).map(row => row.outfitter);
+  const strongMatches = evaluated
+    .filter(row => row.speciesMatch && row.unitMatch && row.forestMatch)
+    .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
+    .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
   if (strongMatches.length) return strongMatches.slice(0, 12);
 
-  const speciesOnlyMatches = evaluated.filter(row => row.speciesMatch && row.forestMatch).map(row => row.outfitter);
+  const speciesOnlyMatches = evaluated
+    .filter(row => row.speciesMatch && row.forestMatch)
+    .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
+    .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
   return speciesOnlyMatches.slice(0, 12);
 }
 
@@ -1501,9 +1605,10 @@ function renderOutfitters() {
   container.innerHTML = matches.map(o => {
     const website = safe(o.website).trim();
     const phone = getOutfitterPrimaryPhone(o);
+    const email = getOutfitterPrimaryEmail(o);
     const logo = safe(o.logoUrl).trim();
     const location = getOutfitterLocationText(o);
-    const tags = getOutfitterSummaryTags(o).slice(0, 3);
+    const tags = [...normalizeListValues(o.matchReasons), ...getOutfitterSummaryTags(o)].slice(0, 4);
     return `
       <div class="outfitter-card" data-outfitter-id="${escapeHtml(firstNonEmpty(o.id, o.slug, o.listingName))}" role="button" tabindex="0" title="Zoom to ${escapeHtml(o.listingName || 'outfitter')}">
         <div class="outfitter-card-header">
@@ -1520,6 +1625,7 @@ function renderOutfitters() {
           ${website ? `<a class="outfitter-action-btn" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">Website</a>` : ''}
         </div>
         ${phone ? `<div class="hunt-card-meta">${escapeHtml(phone)}</div>` : ''}
+        ${email ? `<div class="hunt-card-meta">${escapeHtml(email)}</div>` : ''}
       </div>`;
   }).join('');
   container.querySelectorAll('[data-outfitter-focus]').forEach(button => {
@@ -1562,7 +1668,10 @@ function getOutfitterLocationText(outfitter) {
   return '';
 }
 function getOutfitterPrimaryPhone(outfitter) {
-  return normalizeListValues(outfitter.phone)[0] || '';
+  return choosePrimaryListValue(outfitter.phonePrimary, outfitter.phone);
+}
+function getOutfitterPrimaryEmail(outfitter) {
+  return choosePrimaryListValue(outfitter.emailPrimary, outfitter.email);
 }
 function getOutfitterSummaryTags(outfitter) {
   const tags = [];
@@ -1646,8 +1755,9 @@ function buildOutfitterPopupCard(outfitter) {
   const name = safe(outfitter.listingName).trim() || 'Outfitter';
   const website = safe(outfitter.website).trim();
   const phone = getOutfitterPrimaryPhone(outfitter);
+  const email = getOutfitterPrimaryEmail(outfitter);
   const location = getOutfitterLocationText(outfitter);
-  const tags = getOutfitterSummaryTags(outfitter).slice(0, 4);
+  const tags = [...normalizeListValues(outfitter.matchReasons), ...getOutfitterSummaryTags(outfitter)].slice(0, 5);
   return `
     <div style="display:grid;gap:10px;min-width:280px;max-width:340px;">
       <div style="display:grid;grid-template-columns:58px minmax(0,1fr);align-items:center;gap:12px;">
@@ -1660,6 +1770,7 @@ function buildOutfitterPopupCard(outfitter) {
       ${tags.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px;">${tags.map(tag => `<span style="display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:rgba(214,106,31,.11);border:1px solid rgba(214,106,31,.2);font-size:12px;font-weight:800;color:#3b2417;">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
       ${location ? `<div style="font-size:13px;color:#6b5646;line-height:1.35;">${escapeHtml(location)}</div>` : ''}
       ${phone ? `<div style="font-size:13px;color:#6b5646;">${escapeHtml(phone)}</div>` : ''}
+      ${email ? `<div style="font-size:13px;color:#6b5646;">${escapeHtml(email)}</div>` : ''}
       ${website ? `<a href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" style="color:#2f7fd1;font-weight:800;text-decoration:none;">Visit website</a>` : ''}
     </div>`;
 }
@@ -2034,6 +2145,23 @@ async function loadOutfitters() {
     }
   }
   outfitters = [];
+}
+async function loadOutfitterFederalCoverage() {
+  for (const candidate of OUTFITTER_FEDERAL_COVERAGE_SOURCES) {
+    try {
+      const resp = await fetch(candidate, { cache: 'no-store' });
+      if (!resp.ok) continue;
+      const json = await resp.json();
+      const normalized = normalizeOutfitterCoverageList(json);
+      if (normalized.length) {
+        indexOutfitterFederalCoverage(normalized);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to load outfitter federal coverage from', candidate, error);
+    }
+  }
+  indexOutfitterFederalCoverage([]);
 }
 
 async function fetchGeoJson(url) {
@@ -2958,6 +3086,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load Data
   await loadHuntData();
   await loadOutfitters();
+  await loadOutfitterFederalCoverage();
   try {
       huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
       if (googleApiReady) buildBoundaryLayer();
