@@ -28,12 +28,13 @@ const LOCAL_CWMU_BOUNDARIES_PATH = './data/cwmu-boundaries.geojson';
 const CWMU_BOUNDARY_IDS_PATH = './data/dwr-GetCWMUBoundaries.json';
 const PUBLIC_OWNERSHIP_LAYER_URL = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/ArcGIS/rest/services/SITLA_Ownership/FeatureServer/0';
 const BLM_SURFACE_OWNERSHIP_LAYER_URL = 'https://gis.blm.gov/utarcgis/rest/services/Lands/BLM_UT_SMA/FeatureServer/0';
-const BLM_ADMIN_QUERY_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
+const BLM_ADMIN_LAYER_URL = 'https://gis.blm.gov/utarcgis/rest/services/AdminBoundaries/BLM_UT_ADMU/FeatureServer/0';
+const BLM_ADMIN_QUERY_URL = `${BLM_ADMIN_LAYER_URL}/query?where=${encodeURIComponent("BLM_ORG_TYPE IN ('District','Field')")}&outFields=*&returnGeometry=true&outSR=4326&f=geojson`;
 const CWMU_QUERY_URL = 'https://dwrmapserv.utah.gov/dwrarcgis/rest/services/hunt/CWMU_Tradelands_ver3/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
 const STATE_PARKS_QUERY_URL = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/ArcGIS/rest/services/Utah_State_Park_Management_Areas/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
 const WMA_QUERY_URL = 'https://services.arcgis.com/ZzrwjTRez6FJiOq4/arcgis/rest/services/WMA/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson';
 const WILDERNESS_QUERY_URL = "https://services1.arcgis.com/ERdCHt0sNM6dENSD/ArcGIS/rest/services/Wilderness_Areas_in_the_United_States/FeatureServer/0/query?where=" + encodeURIComponent("STATE = 'UT' AND Agency IN ('BLM','FS')") + "&outFields=NAME,Agency,URL,Acreage&returnGeometry=true&outSR=4326&f=geojson";
-const UTAH_OUTLINE_QUERY_URL = 'https://services5.arcgis.com/2ZRAaoTSJbQ20ceg/arcgis/rest/services/state_boundary/FeatureServer/0/query?where=STATE%20%3D%20%27UTAH%27%20OR%20NAME%20%3D%20%27Utah%27&outFields=NAME,STATE&returnGeometry=true&outSR=4326&f=geojson';
+const UTAH_OUTLINE_QUERY_URL = 'https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahStateBoundary/FeatureServer/0/query?where=NAME%20%3D%20%27Utah%27&outFields=NAME&returnGeometry=true&outSR=4326&f=geojson';
 
 const USFS_QUERY_URL = "https://apps.fs.usda.gov/arcx/rest/services/EDW/EDW_ForestSystemBoundaries_01/MapServer/0/query?where=" + encodeURIComponent("FORESTNAME IN ('Ashley National Forest','Dixie National Forest','Fishlake National Forest','Manti-La Sal National Forest','Uinta-Wasatch-Cache National Forest')") + "&outFields=FORESTNAME&returnGeometry=true&outSR=4326&f=geojson";
 const WATERFOWL_WMA_NAMES = new Set([
@@ -93,7 +94,7 @@ const KNOWN_OUTFITTER_COORDS = new Map([
   ['wild eyez outfitters', { lat: 39.2574155, lng: -111.631482 }]
 ]);
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 const outfitterGeocodeCache = new Map();
 const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
@@ -655,8 +656,16 @@ function setLayerVisibility(layer, visible) {
 function shouldShowWildernessOverlay() {
   return !!(toggleUSFS?.checked || toggleBLM?.checked);
 }
+function shouldShowWildernessFeature(featureOrAgency) {
+  const agency = typeof featureOrAgency === 'string'
+    ? safe(featureOrAgency).toUpperCase()
+    : safe(featureOrAgency?.getProperty?.('Agency')).toUpperCase();
+  if (agency === 'FS') return !!toggleUSFS?.checked;
+  if (agency === 'BLM') return !!toggleBLM?.checked;
+  return false;
+}
 function shouldDeprioritizeFederalClicks() {
-  return !!shouldShowHuntBoundaries();
+  return false;
 }
 function updateWildernessOverlayVisibility() {
   setLayerVisibility(wildernessLayer, shouldShowWildernessOverlay());
@@ -1001,10 +1010,8 @@ function openSelectedUnitsChooser() {
       renderSelectedHunt();
       renderOutfitters();
       const hunts = getDisplayHunts().filter(h => getUnitValue(h) === unitValue);
-      closeSelectedHuntPopup();
-      if (hunts.length) {
-        window.selectHuntByKey(getHuntRecordKey(hunts[0]));
-      }
+      const unitTitle = firstNonEmpty(hunts[0] && getUnitName(hunts[0]), unitValue);
+      showHuntMatchesChooser(unitTitle, hunts, 'Matching Hunts');
     };
     card.addEventListener('click', select);
     card.addEventListener('keydown', event => {
@@ -1189,20 +1196,70 @@ async function ensureCesiumHuntBoundaries() {
     cesiumHuntDataSource.entities.values.forEach(entity => {
       if (entity.polygon) {
         entity.polygon.fill = true;
-        entity.polygon.outline = true;
-        entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#3653b3');
-        entity.polygon.material = Cesium.Color.fromCssColorString('#3653b3').withAlpha(0.08);
-        entity.polygon.outlineWidth = 2;
+        entity.polygon.outline = false;
+        entity.polygon.material = Cesium.Color.fromCssColorString('#3653b3').withAlpha(0.18);
       }
       if (entity.polyline) {
-        entity.polyline.width = 2;
-        entity.polyline.material = Cesium.Color.fromCssColorString('#3653b3');
+        entity.polyline.show = false;
       }
       entity.show = false;
     });
   }
   updateCesiumBoundaryStyles();
   return cesiumHuntDataSource;
+}
+
+async function ensureCesiumUtahOutline() {
+  if (!cesiumViewer || typeof Cesium === 'undefined') return null;
+  if (cesiumUtahOutlineDataSource) return cesiumUtahOutlineDataSource;
+  const geojson = await fetchGeoJson(UTAH_OUTLINE_QUERY_URL);
+  cesiumUtahOutlineDataSource = await Cesium.GeoJsonDataSource.load(geojson, {
+    clampToGround: true,
+    stroke: Cesium.Color.fromCssColorString('#c84f00'),
+    strokeWidth: 8,
+    fill: Cesium.Color.fromCssColorString('#c84f00').withAlpha(0.0)
+  });
+  cesiumViewer.dataSources.add(cesiumUtahOutlineDataSource);
+  if (cesiumUtahOutlineDataSource?.entities?.values) {
+    cesiumUtahOutlineDataSource.entities.values.forEach(entity => {
+      entity.show = true;
+      if (entity.polygon) {
+        entity.polygon.fill = false;
+        entity.polygon.outline = true;
+        entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#c84f00');
+        entity.polygon.outlineWidth = 8;
+      }
+      if (entity.polyline) {
+        entity.polyline.show = true;
+        entity.polyline.width = 8;
+        entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
+          color: Cesium.Color.fromCssColorString('#c84f00'),
+          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
+          outlineWidth: 2
+        });
+        entity.polyline.clampToGround = true;
+      }
+    });
+  }
+  cesiumViewer?.scene?.requestRender?.();
+  return cesiumUtahOutlineDataSource;
+}
+
+function getCesiumEntityOutlinePositions(entity) {
+  if (!entity?.polygon?.hierarchy || typeof Cesium === 'undefined') return null;
+  try {
+    const hierarchyValue = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
+    const positions = hierarchyValue?.positions;
+    if (!Array.isArray(positions) || positions.length < 2) return null;
+    const closed = positions.slice();
+    const first = closed[0];
+    const last = closed[closed.length - 1];
+    if (!Cesium.Cartesian3.equals(first, last)) closed.push(first);
+    return closed;
+  } catch (error) {
+    console.error('Cesium outline extraction failed', error);
+    return null;
+  }
 }
 
 function getCesiumEntityMatches(entity) {
@@ -1213,12 +1270,21 @@ function getCesiumEntityMatches(entity) {
     ?? properties?.BOUNDARY_NAME?.getValue?.()
     ?? properties?.BoundaryName?.getValue?.()
   );
-  return huntData.filter(h => {
+  const displaySource = getDisplayHunts();
+  const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
+  return source.filter(h => {
     const hBoundaryId = safe(getBoundaryId(h));
     const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
     const hUnitName = normalizeBoundaryKey(getUnitName(h));
     return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
   });
+}
+
+function focusCesiumBoundaryEntity(entity) {
+  if (!cesiumViewer || !entity || typeof Cesium === 'undefined') return;
+  cesiumViewer.flyTo(entity, {
+    offset: new Cesium.HeadingPitchRange(0, -0.8, 180000)
+  }).catch?.(() => {});
 }
 
 function updateCesiumBoundaryStyles() {
@@ -1245,16 +1311,30 @@ function updateCesiumBoundaryStyles() {
     );
     const visible = showBoundaries && isMatch;
     entity.show = visible;
-    const strokeColor = Cesium.Color.fromCssColorString(isSelected ? '#c84f00' : '#3653b3');
-    const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#ff8a3d' : '#3653b3').withAlpha(isSelected ? 0.24 : 0.08);
+    const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#ff8a3d' : '#3653b3').withAlpha(isSelected ? 0.0 : 0.32);
     if (entity.polygon) {
-      entity.polygon.outlineColor = strokeColor;
       entity.polygon.material = fillColor;
-      entity.polygon.outlineWidth = isSelected ? 3 : 2;
+      entity.polygon.outline = false;
+    }
+    const outlinePositions = isSelected ? getCesiumEntityOutlinePositions(entity) : null;
+    if (outlinePositions?.length >= 2) {
+      entity.polyline = new Cesium.PolylineGraphics({
+        positions: outlinePositions,
+        width: 9,
+        material: new Cesium.PolylineOutlineMaterialProperty({
+          color: Cesium.Color.fromCssColorString('#c84f00'),
+          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
+          outlineWidth: 2
+        }),
+        clampToGround: true
+      });
+    } else if (entity.polyline) {
+      entity.polyline = isSelected
+        ? entity.polyline
+        : undefined;
     }
     if (entity.polyline) {
-      entity.polyline.material = strokeColor;
-      entity.polyline.width = isSelected ? 3 : 2;
+      entity.polyline.show = visible && isSelected;
     }
   });
   cesiumViewer?.scene?.requestRender?.();
@@ -1855,7 +1935,9 @@ function closeSelectedHuntPopup() {
 function getFeatureMatches(feature) {
   const boundaryId = safe(feature?.getProperty('BoundaryID'));
   const boundaryName = normalizeBoundaryKey(feature?.getProperty('Boundary_Name'));
-  return huntData.filter(h => {
+  const displaySource = getDisplayHunts();
+  const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
+  return source.filter(h => {
     const hBoundaryId = safe(getBoundaryId(h));
     const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
     const hUnitName = normalizeBoundaryKey(getUnitName(h));
@@ -1886,13 +1968,12 @@ function buildPopupListForMatches(matches) {
     </div>`;
 }
 
-function openMapChooser(feature, matches) {
+function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
   if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
   closeSelectedHuntFloat();
   selectedBoundaryMatches = matches.slice();
-  const boundaryName = firstNonEmpty(feature?.getProperty('Boundary_Name'), 'Selected Unit');
-  mapChooserKicker.textContent = 'Selected Unit';
-  mapChooserTitle.textContent = boundaryName;
+  mapChooserKicker.textContent = kicker;
+  mapChooserTitle.textContent = firstNonEmpty(title, 'Matching Hunts');
   mapChooserBody.innerHTML = matches.length ? matches.slice(0, 12).map(h => `
     <div class="map-chooser-card" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
       <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
@@ -1916,25 +1997,25 @@ function openMapChooser(feature, matches) {
     });
   });
 }
+function openMapChooser(feature, matches) {
+  const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
+  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Matching Hunts' : 'Selected Unit');
+}
 
 function openBoundaryPopup(feature, latLng) {
   if (!googleBaselineMap || !feature || !latLng) return;
   const matches = getFeatureMatches(feature);
   selectedBoundaryFeature = feature;
   selectedBoundaryMatches = matches.slice();
-  if (matches.length > 1) {
-    closeSelectionInfoWindow();
-    openMapChooser(feature, matches);
-    return;
-  }
-  closeSelectedHuntPopup();
-  closeSelectedHuntFloat();
   closeSelectionInfoWindow();
-  selectedHunt = matches[0] || null;
-  renderSelectedHunt();
-  renderOutfitters();
-  renderMatchingHunts();
-  styleBoundaryLayer();
+  closeSelectedHuntPopup();
+  fitDataFeatureBounds(feature, 11);
+  const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
+  if (matches.length) {
+    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+  } else {
+    updateStatus(`Zoomed to ${boundaryName}.`);
+  }
 }
 
 async function loadOutfitters() {
@@ -1997,6 +2078,20 @@ function getLatLngCacheKey(latLng, precision = 4) {
   if (!latLng) return '';
   return `${Number(latLng.lat()).toFixed(precision)},${Number(latLng.lng()).toFixed(precision)}`;
 }
+function formatBlmDistrictTitle(attrs) {
+  const name = firstNonEmpty(attrs?.ADMU_NAME, attrs?.DISTRICT_NAME);
+  const parentName = firstNonEmpty(attrs?.PARENT_NAME, attrs?.Parent_Name);
+  const orgType = firstNonEmpty(attrs?.BLM_ORG_TYPE);
+  if (!name) return 'BLM Administrative Unit';
+  if (/field/i.test(orgType) && parentName) {
+    if (/district/i.test(parentName)) return parentName;
+    return `${parentName} District`;
+  }
+  if (/district/i.test(name) || /field/i.test(name)) return name;
+  if (/district/i.test(orgType)) return `${name} District`;
+  if (/field/i.test(orgType)) return `${name} Field Office`;
+  return name;
+}
 async function queryBlmOwnershipAtLatLng(latLng) {
   if (!latLng) return null;
   const cacheKey = getLatLngCacheKey(latLng);
@@ -2015,7 +2110,7 @@ async function queryBlmDistrictAtLatLng(latLng) {
   if (!latLng) return null;
   const cacheKey = getLatLngCacheKey(latLng);
   if (blmDistrictPointCache.has(cacheKey)) return blmDistrictPointCache.get(cacheKey);
-  const queryUrl = `${BLM_ADMIN_QUERY_URL.replace('/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson', '')}/query?where=1%3D1&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ADMU_NAME,DISTRICT_NAME,FIELD_OFFICE&returnGeometry=false&f=json`;
+  const queryUrl = `${BLM_ADMIN_LAYER_URL}/query?where=${encodeURIComponent("BLM_ORG_TYPE IN ('District','Field')")}&geometry=${encodeURIComponent(`${latLng.lng()},${latLng.lat()}`)}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=ADMU_NAME,PARENT_NAME,BLM_ORG_TYPE&returnGeometry=false&orderByFields=BLM_ORG_TYPE%20ASC&f=json`;
   const promise = fetchJson(queryUrl)
     .then(json => Array.isArray(json?.features) ? json.features[0]?.attributes || null : null)
     .catch(error => {
@@ -2110,7 +2205,7 @@ async function ensureSitlaLayer() {
   if (sitlaLayer || !googleBaselineMap) return sitlaLayer;
   sitlaLayer = createOwnershipLayer(
     'sitla',
-    { strokeColor: '#2a78d2', strokeWeight: 2, fillColor: '#6fb3ff', fillOpacity: 0.08, zIndex: 18 },
+    { strokeColor: '#2a78d2', strokeWeight: 2, fillColor: '#6fb3ff', fillOpacity: 0.08, zIndex: 34 },
     feature => buildLandInfoCard(buildOwnershipDetails('sitla', featureProps(feature)))
   );
   setLayerVisibility(sitlaLayer, !!toggleSITLA?.checked);
@@ -2126,7 +2221,7 @@ async function ensureStateLandsLayer() {
   if (stateLandsLayer || !googleBaselineMap) return stateLandsLayer;
   stateLandsLayer = createOwnershipLayer(
     'stateLands',
-    { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08, zIndex: 17 },
+    { strokeColor: '#2f8f9a', strokeWeight: 2, fillColor: '#6ac7d2', fillOpacity: 0.08, zIndex: 33 },
     feature => buildLandInfoCard(buildOwnershipDetails('stateLands', featureProps(feature)))
   );
   setLayerVisibility(stateLandsLayer, false);
@@ -2142,7 +2237,7 @@ async function ensureStateParksLayer() {
     strokeWeight: 2.5,
     fillColor: '#5ec7d1',
     fillOpacity: 0.1,
-    zIndex: 19
+    zIndex: 35
   });
   stateParksLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
@@ -2190,7 +2285,7 @@ async function ensureWmaLayer() {
     strokeWeight: 2.5,
     fillColor: '#ffd84d',
     fillOpacity: 0.12,
-    zIndex: 20
+    zIndex: 36
   });
   wmaLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
@@ -2223,7 +2318,7 @@ async function ensureCwmuLayer() {
     strokeWeight: 2,
     fillColor: '#ff6b6b',
     fillOpacity: 0.1,
-    zIndex: 18
+    zIndex: 37
   });
   cwmuLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
@@ -2249,7 +2344,7 @@ async function ensurePrivateLayer() {
   if (privateLayer || !googleBaselineMap) return privateLayer;
   privateLayer = createOwnershipLayer(
     'private',
-    { strokeColor: '#8f4a3a', strokeWeight: 1.5, fillColor: '#c99284', fillOpacity: 0.05, zIndex: 16 },
+    { strokeColor: '#8f4a3a', strokeWeight: 1.5, fillColor: '#c99284', fillOpacity: 0.05, zIndex: 32 },
     feature => buildLandInfoCard(buildOwnershipDetails('private', featureProps(feature)))
   );
   setLayerVisibility(privateLayer, !!togglePrivate?.checked);
@@ -2266,7 +2361,7 @@ async function ensureUsfsLayer() {
     strokeWeight: 2,
     fillColor: '#7ea96b',
     fillOpacity: 0.08,
-    zIndex: 30
+    zIndex: 14
   });
   usfsLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
@@ -2293,36 +2388,8 @@ async function ensureBlmLayer() {
     strokeWeight: 2,
     fillColor: '#d8af7b',
     fillOpacity: 0.04,
+    clickable: false,
     zIndex: 12
-  });
-  blmLayer.addListener('click', event => {
-    if (shouldSuppressLandClick()) return;
-    if (resolveOutfitterPriorityClick(event.latLng)) return;
-    if (shouldDeprioritizeFederalClicks()) return;
-    Promise.all([
-      queryBlmOwnershipAtLatLng(event.latLng),
-      queryBlmDistrictAtLatLng(event.latLng)
-    ]).then(([detailHit, districtHit]) => {
-      if (!detailHit) return;
-      const county = firstNonEmpty(detailHit.COUNTY, detailHit.CO_NAME);
-      const acres = firstNonEmpty(detailHit.GIS_ACRES, detailHit.ACRES);
-      const detailText = [county ? `${county} County` : '', acres ? `${acres} acres` : ''].filter(Boolean).join(' | ');
-      openLandInfoWindow(buildLandInfoCard({
-        logo: LOGO_BLM,
-        title: firstNonEmpty(
-          districtHit?.ADMU_NAME,
-          districtHit?.DISTRICT_NAME,
-          districtHit?.FIELD_OFFICE,
-          event.feature.getProperty('ADMU_NAME'),
-          event.feature.getProperty('DISTRICT_NAME'),
-          event.feature.getProperty('FIELD_OFFICE'),
-          'BLM Land'
-        ),
-        subtitle: 'Bureau of Land Management',
-        detailText,
-        logoSize: 68
-      }), event.latLng);
-    });
   });
   setLayerVisibility(blmLayer, !!toggleBLM?.checked);
   return blmLayer;
@@ -2336,13 +2403,7 @@ async function ensureBlmDetailLayer() {
   );
   blmDetailLayer = new google.maps.Data();
   blmDetailLayer.addGeoJson(geojson);
-  blmDetailLayer.setStyle({
-    strokeColor: '#b9722f',
-    strokeWeight: 1.25,
-    fillColor: '#d8af7b',
-    fillOpacity: 0.03,
-    zIndex: 11
-  });
+  applyBlmDetailLayerStyle();
   blmDetailLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
     if (resolveOutfitterPriorityClick(event.latLng)) return;
@@ -2354,12 +2415,6 @@ async function ensureBlmDetailLayer() {
         event.feature.getProperty('CO_NAME'),
         event.feature.getProperty('co_name')
       );
-      const acres = firstNonEmpty(
-        event.feature.getProperty('GIS_ACRES'),
-        event.feature.getProperty('gis_acres'),
-        event.feature.getProperty('ACRES'),
-        event.feature.getProperty('acres')
-      );
       const surfaceLabel = firstNonEmpty(
         event.feature.getProperty('UT_LGD'),
         event.feature.getProperty('ut_lgd'),
@@ -2369,16 +2424,13 @@ async function ensureBlmDetailLayer() {
       );
       const detailText = [
         county ? `${county} County` : '',
-        acres ? `${acres} acres` : '',
         surfaceLabel
       ].filter(Boolean).join(' | ');
       openLandInfoWindow(buildLandInfoCard({
         logo: LOGO_BLM,
         title: firstNonEmpty(
-          districtHit?.ADMU_NAME,
-          districtHit?.DISTRICT_NAME,
-          districtHit?.FIELD_OFFICE,
-          'BLM Land'
+          formatBlmDistrictTitle(districtHit),
+          'BLM District'
         ),
         subtitle: 'Bureau of Land Management',
         detailText,
@@ -2386,8 +2438,23 @@ async function ensureBlmDetailLayer() {
       }), event.latLng);
     });
   });
-  setLayerVisibility(blmDetailLayer, !!toggleBLMDetail?.checked);
+  setLayerVisibility(blmDetailLayer, !!(toggleBLM?.checked || toggleBLMDetail?.checked));
   return blmDetailLayer;
+}
+function applyBlmDetailLayerStyle() {
+  if (!blmDetailLayer) return;
+  blmDetailLayer.setStyle(() => {
+    const showVisibleDetail = !!toggleBLMDetail?.checked;
+    return {
+      strokeColor: '#b9722f',
+      strokeWeight: showVisibleDetail ? 1.25 : 0.1,
+      strokeOpacity: showVisibleDetail ? 0.55 : 0,
+      fillColor: '#d8af7b',
+      fillOpacity: showVisibleDetail ? 0.03 : 0,
+      clickable: true,
+      zIndex: 11
+    };
+  });
 }
 async function ensureWildernessLayer() {
   if (wildernessLayer || !googleBaselineMap) return wildernessLayer;
@@ -2397,17 +2464,21 @@ async function ensureWildernessLayer() {
   wildernessLayer.setStyle(feature => {
     const agency = safe(feature.getProperty('Agency')).toUpperCase();
     const isUsfs = agency === 'FS';
+    const isVisible = shouldShowWildernessFeature(agency);
     return {
+      visible: isVisible,
+      clickable: isVisible,
       strokeColor: isUsfs ? '#1f5130' : '#8a611d',
       strokeWeight: 2,
-      strokeOpacity: 0.9,
+      strokeOpacity: isVisible ? 0.9 : 0,
       fillColor: isUsfs ? '#7f9f74' : '#c8a76f',
-      fillOpacity: 0.12,
+      fillOpacity: isVisible ? 0.12 : 0,
       zIndex: 31
     };
   });
   wildernessLayer.addListener('click', event => {
     if (shouldSuppressLandClick()) return;
+    if (!shouldShowWildernessFeature(event.feature)) return;
     if (resolveOutfitterPriorityClick(event.latLng)) return;
     fitDataFeatureBounds(event.feature, 11);
     const agency = safe(event.feature.getProperty('Agency')).toUpperCase();
@@ -2477,47 +2548,23 @@ function ensureCesiumViewer() {
   if (huntBoundaryGeoJson) {
     ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
   }
+  ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
   const handler = new Cesium.ScreenSpaceEventHandler(cesiumViewer.scene.canvas);
   handler.setInputAction((movement) => {
     const picked = cesiumViewer.scene.pick(movement.position);
     const entity = picked?.id;
     if (!entity?.properties) return;
     const matches = getCesiumEntityMatches(entity);
-    if (!matches.length) return;
-    if (matches.length === 1) {
-      window.selectHuntByKey(getHuntRecordKey(matches[0]));
-      return;
-    }
-    selectedBoundaryMatches = matches.slice();
-    if (mapChooser && mapChooserBody && mapChooserTitle && mapChooserKicker) {
-      mapChooserKicker.textContent = 'Selected Unit';
-      mapChooserTitle.textContent = firstNonEmpty(
-        entity.properties?.Boundary_Name?.getValue?.(),
-        entity.properties?.BOUNDARY_NAME?.getValue?.(),
-        'Selected Unit'
-      );
-      mapChooserBody.innerHTML = matches.slice(0, 12).map(h => `
-        <div class="map-chooser-card" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
-          <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
-          <div class="map-chooser-meta">${escapeHtml(getSpeciesDisplay(h))} | ${escapeHtml(getNormalizedSex(h))} | ${escapeHtml(getHuntType(h))}</div>
-          <div class="map-chooser-meta">${escapeHtml(getWeapon(h))} | ${escapeHtml(getDates(h) || 'See official hunt details')}</div>
-        </div>
-      `).join('');
-      mapChooser.classList.add('is-open');
-      mapChooser.setAttribute('aria-hidden', 'false');
-      mapChooserBody.querySelectorAll('[data-popup-hunt-key]').forEach(card => {
-        const select = () => {
-          closeSelectedHuntPopup();
-          window.selectHuntByKey(card.getAttribute('data-popup-hunt-key'));
-        };
-        card.addEventListener('click', select);
-        card.addEventListener('keydown', evt => {
-          if (evt.key === 'Enter' || evt.key === ' ') {
-            evt.preventDefault();
-            select();
-          }
-        });
-      });
+    focusCesiumBoundaryEntity(entity);
+    const boundaryName = firstNonEmpty(
+      entity.properties?.Boundary_Name?.getValue?.(),
+      entity.properties?.BOUNDARY_NAME?.getValue?.(),
+      'Selected Unit'
+    );
+    if (matches.length) {
+      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+    } else {
+      updateStatus(`Zoomed to ${boundaryName}.`);
     }
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
@@ -2657,7 +2704,7 @@ function initGoogleBaseline() {
   if (huntBoundaryGeoJson) buildBoundaryLayer();
   ensureUtahOutlineLayer().catch(err => console.error('Utah outline failed', err));
   if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
-  if (toggleBLMDetail?.checked) ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
+  if (toggleBLM?.checked || toggleBLMDetail?.checked) ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
   if (toggleUSFS?.checked) ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
   if (shouldShowWildernessOverlay()) ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
   if (toggleSITLA?.checked) ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
@@ -2678,13 +2725,7 @@ function buildBoundaryLayer() {
       huntUnitsLayer.addGeoJson(huntBoundaryGeoJson);
       huntUnitsLayer.setStyle({ strokeColor: '#3653b3', strokeWeight: 1, fillOpacity: 0.05 });
       huntUnitsLayer.addListener('click', event => {
-        const matches = getFeatureMatches(event.feature);
-        if (!matches.length) return;
-        if (matches.length === 1) {
-          window.selectHuntByKey(getHuntRecordKey(matches[0]));
-        } else {
-          openBoundaryPopup(event.feature, event.latLng);
-        }
+        openBoundaryPopup(event.feature, event.latLng);
       });
       styleBoundaryLayer();
   }
@@ -2735,24 +2776,27 @@ function bindControls() {
     renderOutfitters();
     const results = getDisplayHunts();
     const count = results.length;
+    const selectedUnitValue = safe(unitFilter?.value).trim();
+    const selectedUnitGroups = getSelectedUnitGroups();
     if (typeof window !== 'undefined' && document.getElementById('matchingHunts')) {
       document.getElementById('matchingHunts').scrollTop = 0;
     }
-    if (count === 1) {
-      window.selectHuntByKey(getHuntRecordKey(results[0]));
-      updateStatus('1 matching hunt applied and selected.');
-    } else if (getSelectedUnitGroups().length > 1 && !safe(unitFilter?.value).trim()) {
+    if (!count) {
+      updateStatus('No matching hunts found for the current filters.');
+    } else if (selectedUnitGroups.length > 1 && !selectedUnitValue) {
       zoomToDisplayHuntsBounds();
       openSelectedUnitsChooser();
-      updateStatus(`${count} matching hunts across ${getSelectedUnitGroups().length} selected units.`);
+      updateStatus(`${count} matching hunts across ${selectedUnitGroups.length} selected units.`);
     } else {
-      const selectedUnitValue = safe(unitFilter?.value).trim();
-      const selectedUnitGroups = getSelectedUnitGroups();
       if (selectedUnitValue && selectedUnitGroups.length === 1) {
         zoomToDisplayHuntsBounds();
       } else if (!selectedUnitValue) {
         zoomToDisplayHuntsBounds();
       }
+      const chooserTitle = selectedUnitValue
+        ? firstNonEmpty(selectedUnitGroups[0]?.unitName, selectedUnitValue)
+        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Matching Hunts');
+      showHuntMatchesChooser(chooserTitle, results, 'Matching Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
   });
@@ -2816,6 +2860,9 @@ function bindControls() {
   toggleBLM?.addEventListener('change', async () => {
     if (toggleBLM.checked) await ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
     setLayerVisibility(blmLayer, !!toggleBLM.checked);
+    if (toggleBLM.checked || toggleBLMDetail?.checked) await ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
+    setLayerVisibility(blmDetailLayer, !!(toggleBLM.checked || toggleBLMDetail?.checked));
+    applyBlmDetailLayerStyle();
     if (shouldShowWildernessOverlay()) await ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
     updateWildernessOverlayVisibility();
     if (toggleUSFS?.checked) {
@@ -2826,7 +2873,8 @@ function bindControls() {
   });
   toggleBLMDetail?.addEventListener('change', async () => {
     if (toggleBLMDetail.checked) await ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
-    setLayerVisibility(blmDetailLayer, !!toggleBLMDetail.checked);
+    setLayerVisibility(blmDetailLayer, !!(toggleBLM?.checked || toggleBLMDetail.checked));
+    applyBlmDetailLayerStyle();
     updateFederalLayersSummary();
   });
   toggleSITLA?.addEventListener('change', async () => {
