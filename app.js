@@ -679,11 +679,15 @@ function handleFilterChange(event) {
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
-  if (event && event.target && event.target.id === 'speciesFilter') {
+  const changedId = safe(event?.target?.id);
+  if (changedId === 'speciesFilter') {
     if (sexFilter) sexFilter.value = 'All';
     if (huntTypeFilter) huntTypeFilter.value = 'All';
     if (weaponFilter) weaponFilter.value = 'All';
     if (huntCategoryFilter) huntCategoryFilter.value = 'All';
+    if (unitFilter) unitFilter.value = '';
+  }
+  if (['sexFilter', 'huntTypeFilter', 'weaponFilter', 'huntCategoryFilter'].includes(changedId)) {
     if (unitFilter) unitFilter.value = '';
   }
   if (toggleDwrUnits && hasActiveMatrixSelections()) {
