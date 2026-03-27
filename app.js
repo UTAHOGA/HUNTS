@@ -567,6 +567,7 @@ function buildOwnershipDetails(bucket, props) {
   if (bucket === 'wma') logo = LOGO_DWR_WMA;
   return {
     logo,
+    logoSize: logo ? 68 : undefined,
     title: getOwnershipTitle(bucket, props),
     subtitle: getOwnershipSubtitle(bucket, props),
     detailText,
@@ -1581,18 +1582,18 @@ async function updateOutfitterMarkers(matches) {
 
 function updateStateLayersSummary() {
   if (!stateLayersSummary) return;
-  const count = [toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
-  stateLayersSummary.textContent = count ? `State (${count})` : 'State';
+  const count = [toggleSITLA, toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
+  stateLayersSummary.innerHTML = count ? `State <span class="toggle-menu-count">(${count})</span>` : 'State';
 }
 function updateFederalLayersSummary() {
   if (!federalLayersSummary) return;
   const count = [toggleUSFS, toggleBLM].filter(el => !!el?.checked).length;
-  federalLayersSummary.textContent = count ? `Federal (${count})` : 'Federal';
+  federalLayersSummary.innerHTML = count ? `Federal <span class="toggle-menu-count">(${count})</span>` : 'Federal';
 }
 function updatePrivateLayersSummary() {
   if (!privateLayersSummary) return;
   const count = [togglePrivate, toggleCwmu].filter(el => !!el?.checked).length;
-  privateLayersSummary.textContent = count ? `Private (${count})` : 'Private';
+  privateLayersSummary.innerHTML = count ? `Private <span class="toggle-menu-count">(${count})</span>` : 'Private';
 }
 
 function openSelectedHuntPopup() {
@@ -1907,7 +1908,7 @@ async function ensureWmaLayer() {
       logo: LOGO_DWR_WMA,
       title,
       subtitle: "UT. DWR W.M.A.'s",
-      logoSize: 58,
+      logoSize: 68,
       noticeText: "Utah DWR W.M.A.'s do not imply outfitter approval, endorsement, or exclusive access."
     }), event.latLng);
   });
@@ -1972,7 +1973,8 @@ async function ensureUsfsLayer() {
     openLandInfoWindow(buildLandInfoCard({
       logo: LOGO_USFS,
       title: firstNonEmpty(event.feature.getProperty('FORESTNAME'), 'National Forest'),
-      subtitle: 'US Forest Service'
+      subtitle: 'US Forest Service',
+      logoSize: 68
     }), event.latLng);
   });
   setLayerVisibility(usfsLayer, !!toggleUSFS?.checked);
@@ -2002,7 +2004,8 @@ async function ensureBlmLayer() {
         event.feature.getProperty('FIELD_OFFICE'),
         'BLM Land'
       ),
-      subtitle: 'Bureau of Land Management'
+      subtitle: 'Bureau of Land Management',
+      logoSize: 68
     }), event.latLng);
   });
   setLayerVisibility(blmLayer, !!toggleBLM?.checked);

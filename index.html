@@ -111,6 +111,7 @@
       line-height: 1;
       color: var(--muted);
     }
+    .toggle-menu-count { color: var(--accent); font-weight: 900; }
     .toggle-menu[open] summary::after { content: "▴"; }
     .toggle-menu-panel {
       position: absolute;
@@ -589,6 +590,7 @@
         <details class="toggle-menu">
           <summary id="stateLayersSummary">State</summary>
           <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
             <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
             <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
           </div>
@@ -763,7 +765,7 @@
   </script>
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
-  <script src="app.js?v=20260327-wma-public-1"></script>
+  <script src="app.js?v=20260327-sitla-restore-1"></script>
 </body>
 </html>
 
