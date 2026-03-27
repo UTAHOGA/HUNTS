@@ -2599,9 +2599,17 @@ function bindControls() {
       window.selectHuntByCode(getHuntCode(results[0]));
       updateStatus('1 matching hunt applied and selected.');
     } else if (getSelectedUnitGroups().length > 1 && !safe(unitFilter?.value).trim()) {
+      zoomToDisplayHuntsBounds();
       openSelectedUnitsChooser();
       updateStatus(`${count} matching hunts across ${getSelectedUnitGroups().length} selected units.`);
     } else {
+      const selectedUnitValue = safe(unitFilter?.value).trim();
+      const selectedUnitGroups = getSelectedUnitGroups();
+      if (selectedUnitValue && selectedUnitGroups.length === 1) {
+        zoomToDisplayHuntsBounds();
+      } else if (!selectedUnitValue) {
+        zoomToDisplayHuntsBounds();
+      }
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
   });
@@ -2716,6 +2724,32 @@ function zoomToSelectedBoundary() {
     }
   });
   if (found) googleBaselineMap.fitBounds(bounds);
+}
+
+function zoomToDisplayHuntsBounds() {
+  if (!huntUnitsLayer || !googleBaselineMap) return false;
+  const filtered = getDisplayHunts();
+  if (!filtered.length) return false;
+  const boundaryIds = new Set(filtered.map(h => safe(getBoundaryId(h))).filter(Boolean));
+  const unitCodes = new Set(filtered.map(h => normalizeBoundaryKey(getUnitCode(h))).filter(Boolean));
+  const unitNames = new Set(filtered.map(h => normalizeBoundaryKey(getUnitName(h))).filter(Boolean));
+  const bounds = new google.maps.LatLngBounds();
+  let found = false;
+  huntUnitsLayer.forEach(f => {
+    const id = safe(f.getProperty('BoundaryID'));
+    const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+    if (boundaryIds.has(id) || unitCodes.has(name) || unitNames.has(name)) {
+      f.getGeometry().forEachLatLng(ll => {
+        bounds.extend(ll);
+        found = true;
+      });
+    }
+  });
+  if (found) {
+    googleBaselineMap.fitBounds(bounds);
+    return true;
+  }
+  return false;
 }
 
 // --- BOOTSTRAP ---
