@@ -11,7 +11,7 @@ const UTAH_LOCATION_BOUNDS = {
 // --- CLOUDFLARE JSON SOURCES ---
 const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 const HUNT_DATA_VERSION = '20260324-master-1733';
-const OUTFITTERS_DATA_VERSION = '20260327-dwr-public-filter-1';
+const OUTFITTERS_DATA_VERSION = '20260327-outfitters-public-lean-1';
 const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
 const HUNT_BOUNDARY_SOURCES = [
   `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
@@ -1521,30 +1521,6 @@ function renderSelectedHunt() {
 function getMatchingOutfittersForHunt(hunt) {
   if (!hunt || !outfitters.length) return [];
   const publishedCoverage = getFederalCoverageForHunt(hunt);
-  if (publishedCoverage && publishedCoverage.federalCoverageEligible !== 'No') {
-    const publishedNames = normalizeListValues(
-      publishedCoverage.federalPermitMatchedOutfitters?.length
-        ? publishedCoverage.federalPermitMatchedOutfitters
-        : publishedCoverage.usfsPermitMatchedOutfitters
-    );
-    if (publishedNames.length) {
-      const lookup = new Map(outfitters.map(o => [safe(o.listingName).trim().toLowerCase(), o]));
-      const publishedMatches = publishedNames
-        .map(name => lookup.get(safe(name).trim().toLowerCase()))
-        .filter(Boolean)
-        .map(o => {
-          const matchReasons = [];
-          if (publishedCoverage.primaryUsfsForestName) {
-            matchReasons.push(`${publishedCoverage.primaryUsfsForestName} Permit Match`);
-          }
-          if (publishedCoverage.primaryBlmDistrictName) {
-            matchReasons.push(`${publishedCoverage.primaryBlmDistrictName} Permit Match`);
-          }
-          return { ...o, matchReasons: [...new Set(matchReasons)] };
-        });
-      if (publishedMatches.length) return publishedMatches.slice(0, 12);
-    }
-  }
   const species = normalizeBoundaryKey(getSpeciesDisplay(hunt));
   const unitCode = normalizeBoundaryKey(getUnitCode(hunt));
   const unitName = normalizeBoundaryKey(getUnitName(hunt));
@@ -1585,13 +1561,60 @@ function getMatchingOutfittersForHunt(hunt) {
     .filter(row => row.speciesMatch && row.unitMatch && row.forestMatch)
     .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
     .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
-  if (strongMatches.length) return strongMatches.slice(0, 12);
 
   const speciesOnlyMatches = evaluated
     .filter(row => row.speciesMatch && row.forestMatch)
     .sort((a, b) => b.confidence - a.confidence || a.outfitter.listingName.localeCompare(b.outfitter.listingName))
     .map(row => ({ ...row.outfitter, matchReasons: row.matchReasons }));
-  return speciesOnlyMatches.slice(0, 12);
+
+  const fallbackMatches = strongMatches.length ? strongMatches : speciesOnlyMatches;
+  if (publishedCoverage && publishedCoverage.federalCoverageEligible !== 'No') {
+    const publishedNames = normalizeListValues(
+      publishedCoverage.federalPermitMatchedOutfitters?.length
+        ? publishedCoverage.federalPermitMatchedOutfitters
+        : publishedCoverage.usfsPermitMatchedOutfitters
+    );
+    if (publishedNames.length) {
+      const lookup = new Map(outfitters.map(o => [safe(o.listingName).trim().toLowerCase(), o]));
+      const publishedMatches = publishedNames
+        .map(name => lookup.get(safe(name).trim().toLowerCase()))
+        .filter(Boolean)
+        .map(o => {
+          const matchReasons = [];
+          if (publishedCoverage.primaryUsfsForestName) {
+            matchReasons.push(`${publishedCoverage.primaryUsfsForestName} Permit Match`);
+          }
+          if (publishedCoverage.primaryBlmDistrictName) {
+            matchReasons.push(`${publishedCoverage.primaryBlmDistrictName} Permit Match`);
+          }
+          return { ...o, matchReasons: [...new Set(matchReasons)] };
+        });
+      const merged = [];
+      const mergedIndex = new Map();
+      const upsert = (candidate) => {
+        const key = safe(firstNonEmpty(candidate.id, candidate.slug, candidate.listingName)).trim().toLowerCase();
+        if (!key) return;
+        const existing = mergedIndex.get(key);
+        if (!existing) {
+          const normalized = {
+            ...candidate,
+            matchReasons: [...new Set(normalizeListValues(candidate.matchReasons))]
+          };
+          mergedIndex.set(key, normalized);
+          merged.push(normalized);
+          return;
+        }
+        existing.matchReasons = [...new Set([
+          ...normalizeListValues(existing.matchReasons),
+          ...normalizeListValues(candidate.matchReasons)
+        ])];
+      };
+      publishedMatches.forEach(upsert);
+      fallbackMatches.forEach(upsert);
+      if (merged.length) return merged.slice(0, 12);
+    }
+  }
+  return fallbackMatches.slice(0, 12);
 }
 
 function renderOutfitters() {
