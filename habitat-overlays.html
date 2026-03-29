@@ -241,6 +241,10 @@
             <input id="toggleStopovers" type="checkbox" />
             <span>Migration Stopovers<small>Mule deer stopover polygons</small></span>
           </label>
+          <label class="toggle">
+            <input id="toggleCorridors" type="checkbox" />
+            <span>Migration Corridors<small>Simplified wildlife corridor polygons</small></span>
+          </label>
         </section>
 
         <section class="section">
@@ -251,6 +255,7 @@
             <div class="legend-row"><span class="swatch" style="background:rgba(42,128,90,0.5);"></span> Elk habitat</div>
             <div class="legend-row"><span class="swatch" style="background:rgba(89,58,138,0.42);"></span> Black bear habitat</div>
             <div class="legend-row"><span class="swatch" style="background:rgba(30,112,196,0.55);"></span> Migration stopovers</div>
+            <div class="legend-row"><span class="swatch" style="background:rgba(44,86,201,0.28);"></span> Migration corridors</div>
           </div>
         </section>
 
@@ -284,11 +289,19 @@
     }).addTo(map);
 
     const sources = {
-      hunts: './data/hunt_boundaries.geojson',
-      mule: './data/utah-mule-deer-habitat.geojson',
-      elk: './data/utah-elk-habitat.geojson',
-      bear: './data/utah-black-bear-habitat.geojson',
-      stopovers: './data/utah-migration-stopovers.geojson'
+      hunts: ['./data/hunt_boundaries.geojson'],
+      mule: ['./data/utah-mule-deer-habitat.geojson'],
+      elk: ['./data/utah-elk-habitat.geojson'],
+      bear: ['./data/utah-black-bear-habitat.geojson'],
+      stopovers: [
+        './data/utah-migration-stopovers-lite.geojson',
+        './data/utah-migration-stopovers.geojson',
+        './data/migration_stopovers.geojson'
+      ],
+      corridors: [
+        './data/utah-migration-corridors-lite.geojson',
+        './data/utah-migration-corridors.geojson'
+      ]
     };
 
     const styles = {
@@ -331,6 +344,15 @@
         opacity: 0.9,
         fillColor: '#1e70c4',
         fillOpacity: 0.55
+      }),
+      corridors: feature => {
+        const type = String(feature.properties?.migratType || '').toLowerCase();
+        let color = '#365bc9';
+        let fillOpacity = 0.2;
+        if (type.includes('high')) { color = '#1c46c0'; fillOpacity = 0.28; }
+        if (type.includes('medium')) { color = '#5175d8'; fillOpacity = 0.2; }
+        if (type.includes('low')) { color = '#7fa0ea'; fillOpacity = 0.14; }
+        return { color, weight: 0.8, opacity: 0.75, fillColor: color, fillOpacity };
       })
     };
 
@@ -339,7 +361,8 @@
       mule: 'Mule Deer Habitat',
       elk: 'Elk Habitat',
       bear: 'Black Bear Habitat',
-      stopovers: 'Migration Stopovers'
+      stopovers: 'Migration Stopovers',
+      corridors: 'Migration Corridors'
     };
 
     const layers = {};
@@ -368,6 +391,15 @@
           <div><strong>Name:</strong> ${p.NAME || p.Name || ''}</div>
         `;
       }
+      if (type === 'corridors') {
+        return `
+          <div class="popup-title">${labels[type]}</div>
+          <div><strong>Species:</strong> ${p.Species || p.SPECIES || ''}</div>
+          <div><strong>Area:</strong> ${p.area_name || p.NAME || ''}</div>
+          <div><strong>Type:</strong> ${p.migratType || ''}</div>
+          <div><strong>Date Range:</strong> ${p.DateRange || ''}</div>
+        `;
+      }
       return `
         <div class="popup-title">${labels[type]}</div>
         <div><strong>Species:</strong> ${p.SPECIES || ''}</div>
@@ -380,9 +412,19 @@
     async function loadLayer(type) {
       if (layers[type]) return layers[type];
       setStatus(`Loading ${labels[type]}...`);
-      const response = await fetch(sources[type]);
-      if (!response.ok) {
-        throw new Error(`${labels[type]} fetch failed with ${response.status}`);
+      const candidateUrls = Array.isArray(sources[type]) ? sources[type] : [sources[type]];
+      let response = null;
+      let lastError = '';
+      for (const url of candidateUrls) {
+        const candidate = await fetch(url);
+        if (candidate.ok) {
+          response = candidate;
+          break;
+        }
+        lastError = `${url} -> ${candidate.status}`;
+      }
+      if (!response) {
+        throw new Error(`${labels[type]} fetch failed. Tried: ${lastError}`);
       }
       const geojson = await response.json();
       layerData[type] = geojson;
@@ -421,7 +463,8 @@
           mule: 'toggleMule',
           elk: 'toggleElk',
           bear: 'toggleBear',
-          stopovers: 'toggleStopovers'
+          stopovers: 'toggleStopovers',
+          corridors: 'toggleCorridors'
         };
         const toggle = document.getElementById(idMap[type]);
         if (toggle) toggle.checked = false;
@@ -455,6 +498,7 @@
     document.getElementById('toggleElk').addEventListener('change', e => toggleLayer('elk', e.target.checked));
     document.getElementById('toggleBear').addEventListener('change', e => toggleLayer('bear', e.target.checked));
     document.getElementById('toggleStopovers').addEventListener('change', e => toggleLayer('stopovers', e.target.checked));
+    document.getElementById('toggleCorridors').addEventListener('change', e => toggleLayer('corridors', e.target.checked));
     document.getElementById('searchBtn').addEventListener('click', zoomToUnit);
     document.getElementById('unitSearch').addEventListener('keydown', e => {
       if (e.key === 'Enter') {
