@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>U.O.G.A. Hunt Research</title>
+  <title>U.O.G.A. Hunt Intelligence</title>
   <style>
     :root {
       --bg: #141414;
@@ -17,12 +17,14 @@
       --shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
       --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --success: #4ade80;
+      --warning: #facc15;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
-      background: #141414 url('https://static.wixstatic.com/media/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg/v1/fill/w_1519,h_220,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg') center/cover fixed;
+      background: #141414 url('https://static.wixstatic.com/media/43f827_284b2a8baca14085b47565f566c97a75~mv2.jpg') center/cover fixed;
       color: var(--text);
       font-family: var(--font-ui);
     }
@@ -42,81 +44,96 @@
       border:1px solid var(--line); background:var(--panel2); color:var(--text); text-decoration:none; font-weight:800; letter-spacing:.04em; text-transform:uppercase; font-size:12px;
     }
     .nav a.active, .nav a:hover { border-color:var(--accent); background:rgba(214,106,31,0.16); }
+    
+    /* Search Intelligence Styles */
+    .search-panel { margin-top: 18px; padding: 25px; background: var(--panel); border: 1px solid var(--accent); border-radius: 18px; }
+    .search-row { display: flex; gap: 15px; margin-top: 15px; }
+    #unitInput { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2); color: white; }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 18px; }
+    
     .hero, .panel {
       margin-top:18px; padding:22px; border:1px solid var(--line); border-radius:18px; background:var(--panel); box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
     }
-    .hero h2 { margin:0; font-family:var(--font-display); font-size:48px; line-height:.95; }
-    .hero p { margin:14px 0 0; max-width:820px; color:var(--muted); font-size:18px; line-height:1.55; }
-    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:18px; margin-top:18px; }
     .panel h3 { margin:0 0 12px; font-family:var(--font-display); color:var(--accent); font-size:24px; }
-    .panel p, .panel li { color:var(--muted); line-height:1.55; }
-    .panel ul { margin:0; padding-left:18px; }
-    .callout {
-      margin-top:18px; padding:18px 20px; border-radius:16px; border:1px solid rgba(214,106,31,0.45); background:rgba(214,106,31,0.12);
-    }
-    .callout strong { color:var(--text); }
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: 1fr; }
-      .hero h2 { font-size:36px; }
-    }
+    .stat-card { background: var(--panel2); padding: 15px; border-radius: 12px; border-left: 4px solid var(--accent); }
+    .point-signal { font-weight: bold; color: var(--warning); }
+    .success-rate { font-weight: bold; color: var(--success); }
   </style>
 </head>
 <body>
   <div class="shell">
     <header class="topbar">
       <div class="brand">
-        <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. logo">
+        <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg" alt="U.O.G.A. logo">
         <div class="brand-copy">
           <h1>Hunt Research</h1>
-          <p>Utah Hunt Intelligence</p>
+          <p>Utah Draw Intelligence</p>
         </div>
       </div>
       <nav class="nav">
         <a href="./index.html">Hunt Planner</a>
         <a href="./hunt-research.html" class="active">Hunt Research</a>
-        <a href="./vetting.html">How Vetting Works</a>
+        <a href="./vetting.html">Vetting Process</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <h2>The Research Database We Need</h2>
-      <p>This page is the home for the Utah hunt research database. It should help a visitor move from "what hunts exist" to "which hunt is actually right for me" using official Utah DWR data, deadlines, and practical hunt-quality signals.</p>
-      <div class="callout"><strong>Next build targets:</strong> permit totals, success rates, harvest statistics, draw odds, regulation links, application deadlines, and a hunt-by-hunt calendar.</div>
+    <section class="search-panel">
+      <h3>Tactical Draw Search</h3>
+      <p>Enter a Unit or Hunt Code (e.g., "Wasatch" or "DB1000") to see Point Creep and Draw Difficulty.</p>
+      <div class="search-row">
+        <input type="text" id="unitInput" placeholder="Search Hunt Intelligence Database...">
+        <button onclick="searchHunts()" style="background: var(--accent); color: white; padding: 10px 25px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold;">ANALYZE UNIT</button>
+      </div>
+      <div id="results" class="results-grid"></div>
     </section>
 
-    <section class="grid">
+    <section class="grid" id="mainGrid">
       <article class="panel">
-        <h3>Planned Hunt Stats</h3>
+        <h3>Bonus vs. Preference</h3>
+        <p><strong>Limited Entry (Bonus):</strong> 50% of tags go to high points; 50% are random[cite: 98, 101]. Always apply to keep your "puncher's chance."</p>
+        <p><strong>General Season (Preference):</strong> Tags go strictly to high point holders. Burn these points as soon as you meet the 100% threshold.</p>
+      </article>
+
+      <article class="panel">
+        <h3>Intelligence Metrics</h3>
         <ul>
-          <li>Permits and quota totals</li>
-          <li>Hunters and harvest counts</li>
-          <li>Success percentage</li>
-          <li>Average days hunted</li>
-          <li>Satisfaction survey results</li>
-          <li>Trophy / premium hunt flags</li>
+          <li><strong>Resident Point Signal:</strong> Estimated points needed for a 100% draw[cite: 75].</li>
+          <li><strong>Draw Difficulty:</strong> Categorized as Low, Moderate, or High based on applicant volume[cite: 77, 103, 1129].</li>
+          <li><strong>Harvest Efficiency:</strong> Ratio of harvest success to hunter pressure[cite: 56, 59].</li>
         </ul>
-      </article>
-      <article class="panel">
-        <h3>Planned Research Tools</h3>
-        <ul>
-          <li>Draw-odds tables</li>
-          <li>Important regulation links</li>
-          <li>Season and application calendar</li>
-          <li>Unit comparison views</li>
-          <li>Weapon-specific hunt filters</li>
-          <li>Official Utah DWR source links for every hunt</li>
-        </ul>
-      </article>
-      <article class="panel">
-        <h3>Why This Matters</h3>
-        <p>Hunters need more than a map. They need a decision engine: what the hunt is, how hard it is to draw, how it has performed, and whether it fits their goals.</p>
-      </article>
-      <article class="panel">
-        <h3>Data Standard</h3>
-        <p>This research page should stay tied to official Utah DWR source material wherever possible, then add U.O.G.A. interpretation and outfitter context on top of that base.</p>
       </article>
     </section>
   </div>
+
+  <script>
+    // Logic for integrating your CSV data (placeholder for your actual data load)
+    function searchHunts() {
+      const input = document.getElementById('unitInput').value.toLowerCase();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      // Simplified logic representing your data structure
+      // In a live environment, you would fetch() your CSV/JSON here
+      const mockData = [
+        { name: "Wasatch Mtns (DB1556)", success: "28.2%", signal: "3 Points", difficulty: "Moderate" },
+        { name: "Henry Mtns (DB1000)", success: "100%", signal: "24 Points", difficulty: "High" },
+        { name: "Box Elder (DA1001)", success: "22.7%", signal: "1 Point", difficulty: "Low" }
+      ];
+
+      const filtered = mockData.filter(h => h.name.toLowerCase().includes(input));
+
+      filtered.forEach(h => {
+        resultsDiv.innerHTML += `
+          <div class="stat-card">
+            <h4>${h.name}</h4>
+            <p>Difficulty: <strong>${h.difficulty}</strong></p>
+            <p>100% Signal: <span class="point-signal">${h.signal}</span></p>
+            <p>Success Rate: <span class="success-rate">${h.success}</span></p>
+          </div>
+        `;
+      });
+    }
+  </script>
 </body>
 </html>
