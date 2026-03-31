@@ -318,7 +318,27 @@ function normalizeHuntTypeLabel(raw) {
   if (lower.includes('general')) return 'General Season';
   return value;
 }
-function getHuntType(h) { return normalizeHuntTypeLabel(firstNonEmpty(h.huntType, h.HuntType, h.type)); }
+function getHuntType(h) {
+  const raw = firstNonEmpty(h.huntType, h.HuntType, h.type);
+  const normalized = normalizeHuntTypeLabel(raw);
+  const code = normalizeHuntCode(getHuntCode(h));
+  const unit = safe(getUnitName(h)).toLowerCase();
+  const title = safe(getHuntTitle(h)).toLowerCase();
+  const category = safe(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)).toLowerCase();
+  const haystack = `${unit} ${title} ${category}`;
+
+  // DWR deer conservation/expo rows can arrive as premium LE in the raw data,
+  // but operationally they belong under the Conservation hunt-type matrix.
+  if (
+    code === 'DB0009' ||
+    haystack.includes('conservation/expo') ||
+    haystack.includes('conservation expo')
+  ) {
+    return 'Conservation';
+  }
+
+  return normalized;
+}
 function normalizeHuntCategoryLabel(raw) {
   const value = safe(raw).trim();
   const lower = value.toLowerCase();
