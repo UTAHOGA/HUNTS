@@ -10,7 +10,7 @@ window.UOGA_CONFIG = (() => {
   };
 
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
-  const HUNT_DATA_VERSION = '20260330-conservation-fix-1';
+  const HUNT_DATA_VERSION = '20260330-conservation-fix-3';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
 
@@ -27,6 +27,10 @@ window.UOGA_CONFIG = (() => {
   const OUTFITTER_FEDERAL_COVERAGE_SOURCES = [
     `./data/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`,
     `${CLOUDFLARE_BASE}/outfitter-federal-unit-coverage-review.json?v=${OUTFITTER_COVERAGE_VERSION}`
+  ];
+  const CONSERVATION_PERMIT_AREA_SOURCES = [
+    `./data/conservation-permit-areas.json?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/conservation-permit-areas.json?v=${HUNT_DATA_VERSION}`
   ];
 
   const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
@@ -145,6 +149,7 @@ window.UOGA_CONFIG = (() => {
     HUNT_BOUNDARY_SOURCES,
     OUTFITTERS_DATA_SOURCES,
     OUTFITTER_FEDERAL_COVERAGE_SOURCES,
+    CONSERVATION_PERMIT_AREA_SOURCES,
     LOGO_DNR,
     LOGO_DNR_ROOMY,
     LOGO_CWMU,
