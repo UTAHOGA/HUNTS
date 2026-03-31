@@ -415,7 +415,9 @@ function normalizeHuntCategoryLabel(raw) {
   return value;
 }
 function getHuntCategory(h) {
-  if (h?.syntheticConservationPermit) return '';
+  if (h?.syntheticConservationPermit) {
+    return firstNonEmpty(h.huntCategory, h.HuntCategory, h.category, 'Conservation');
+  }
   const raw = firstNonEmpty(h.huntCategory, h.HuntCategory, h.category);
   const normalized = normalizeHuntCategoryLabel(raw);
   const huntType = getHuntType(h);
@@ -469,8 +471,8 @@ function buildSyntheticConservationPermitHunts(records) {
       species,
       sex: firstNonEmpty(row?.sex),
       huntType: 'Conservation',
-      huntCategory: '',
-      weapon: firstNonEmpty(row?.condition),
+      huntCategory: firstNonEmpty(row?.huntClass, 'Conservation'),
+      weapon: firstNonEmpty(row?.weapon, row?.condition),
       unitCode,
       unitName: area,
       boundaryId: boundaryIds.length === 1 ? boundaryIds[0] : '',
@@ -976,10 +978,7 @@ function refreshSelectionMatrix() {
   huntTypeFilter.value = huntTypeOptions.includes(prevHuntType) ? prevHuntType : 'All';
 
   const categoryData = getFilteredHunts('huntCategory');
-  const forceFlatConservationCategory = (huntTypeFilter.value || 'All') === 'Conservation';
-  const categoryOptions = forceFlatConservationCategory
-    ? ['All']
-    : sortWithPreferredOrder(Array.from(new Set(['All', ...categoryData.map(getHuntCategory).filter(Boolean)])), ['All', ...HUNT_CLASS_ORDER]);
+  const categoryOptions = sortWithPreferredOrder(Array.from(new Set(['All', ...categoryData.map(getHuntCategory).filter(Boolean)])), ['All', ...HUNT_CLASS_ORDER]);
   const prevHuntCategory = huntCategoryFilter.value || 'All';
   huntCategoryFilter.innerHTML = categoryOptions.map(v => `<option value="${v}">${v}</option>`).join('');
   huntCategoryFilter.value = categoryOptions.includes(prevHuntCategory) ? prevHuntCategory : 'All';
