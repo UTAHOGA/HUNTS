@@ -2783,6 +2783,9 @@ function initGoogleBaseline() {
     clearTimeout(googleMapsLoadTimeoutId);
     googleMapsLoadTimeoutId = null;
   }
+  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
+    mapTypeSelect.value = 'terrain';
+  }
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
@@ -2806,6 +2809,7 @@ function initGoogleBaseline() {
   updateStateLayersSummary();
   updateFederalLayersSummary();
   updatePrivateLayersSummary();
+  applyMapMode();
   updateStatus('Map ready. Select filters or click a hunt unit.');
   bindControls();
 }
