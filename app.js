@@ -10,6 +10,7 @@ const {
   HUNT_BOUNDARY_SOURCES,
   OUTFITTERS_DATA_SOURCES,
   OUTFITTER_FEDERAL_COVERAGE_SOURCES,
+  CONSERVATION_PERMIT_AREA_SOURCES,
   LOGO_DNR,
   LOGO_DNR_ROOMY,
   LOGO_CWMU,
@@ -61,6 +62,11 @@ const {
 
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
+let conservationPermitAreas = [];
+const conservationPermitAreaCodeSet = new Set();
+const conservationPermitAreaSpeciesUnitNameSet = new Set();
+const conservationPermitAreaSpeciesUnitCodeSet = new Set();
+const conservationPermitAreaAllowedTypeMap = new Map();
 const outfitterGeocodeCache = new Map();
 const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
@@ -318,25 +324,80 @@ function normalizeHuntTypeLabel(raw) {
   if (lower.includes('general')) return 'General Season';
   return value;
 }
+function buildConservationSpeciesKey(species, value) {
+  const normalizedSpecies = normalizeBoundaryKey(species);
+  const normalizedValue = normalizeBoundaryKey(value);
+  if (!normalizedSpecies || !normalizedValue) return '';
+  return `${normalizedSpecies}|${normalizedValue}`;
+}
+function indexConservationPermitAreas(list) {
+  conservationPermitAreas = Array.isArray(list) ? list : [];
+  conservationPermitAreaCodeSet.clear();
+  conservationPermitAreaSpeciesUnitNameSet.clear();
+  conservationPermitAreaSpeciesUnitCodeSet.clear();
+  conservationPermitAreaAllowedTypeMap.clear();
+
+  conservationPermitAreas.forEach(entry => {
+    const species = safe(entry?.species).trim();
+    const allowedRawTypes = new Set((Array.isArray(entry?.allowedRawHuntTypes) ? entry.allowedRawHuntTypes : []).map(v => safe(v).trim().toLowerCase()).filter(Boolean));
+    (Array.isArray(entry?.huntCodes) ? entry.huntCodes : []).forEach(code => {
+      const normalizedCode = normalizeHuntCode(code);
+      if (!normalizedCode) return;
+      conservationPermitAreaCodeSet.add(normalizedCode);
+      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`code|${normalizedCode}`, allowedRawTypes);
+    });
+    (Array.isArray(entry?.unitNames) ? entry.unitNames : []).forEach(name => {
+      const key = buildConservationSpeciesKey(species, name);
+      if (!key) return;
+      conservationPermitAreaSpeciesUnitNameSet.add(key);
+      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`name|${key}`, allowedRawTypes);
+    });
+    (Array.isArray(entry?.unitCodes) ? entry.unitCodes : []).forEach(code => {
+      const key = buildConservationSpeciesKey(species, code);
+      if (!key) return;
+      conservationPermitAreaSpeciesUnitCodeSet.add(key);
+      if (allowedRawTypes.size) conservationPermitAreaAllowedTypeMap.set(`codekey|${key}`, allowedRawTypes);
+    });
+  });
+}
+async function loadConservationPermitAreas() {
+  const list = await loadFirstNormalizedList(CONSERVATION_PERMIT_AREA_SOURCES, json => Array.isArray(json) ? json : [], []);
+  indexConservationPermitAreas(list);
+}
+function isConservationPermitHunt(h) {
+  const code = normalizeHuntCode(getHuntCode(h));
+  const species = getSpeciesDisplay(h);
+  const rawType = safe(firstNonEmpty(h.huntType, h.HuntType, h.type)).trim().toLowerCase();
+  const unitNames = getBoundaryNamesForHunt(h);
+  const unitCode = getUnitCode(h);
+
+  const allowedFor = key => conservationPermitAreaAllowedTypeMap.get(key);
+  if (conservationPermitAreaCodeSet.has(code)) {
+    const allowed = allowedFor(`code|${code}`);
+    if (!allowed || allowed.has(rawType)) return true;
+  }
+
+  const speciesCodeKey = buildConservationSpeciesKey(species, unitCode);
+  if (speciesCodeKey && conservationPermitAreaSpeciesUnitCodeSet.has(speciesCodeKey)) {
+    const allowed = allowedFor(`codekey|${speciesCodeKey}`);
+    if (!allowed || allowed.has(rawType)) return true;
+  }
+
+  for (const name of unitNames) {
+    const speciesNameKey = buildConservationSpeciesKey(species, name);
+    if (!speciesNameKey || !conservationPermitAreaSpeciesUnitNameSet.has(speciesNameKey)) continue;
+    const allowed = allowedFor(`name|${speciesNameKey}`);
+    if (!allowed || allowed.has(rawType)) return true;
+  }
+
+  return false;
+}
 function getHuntType(h) {
   const raw = firstNonEmpty(h.huntType, h.HuntType, h.type);
   const normalized = normalizeHuntTypeLabel(raw);
-  const code = normalizeHuntCode(getHuntCode(h));
-  const unit = safe(getUnitName(h)).toLowerCase();
-  const title = safe(getHuntTitle(h)).toLowerCase();
-  const category = safe(firstNonEmpty(h.huntCategory, h.HuntCategory, h.category)).toLowerCase();
-  const haystack = `${unit} ${title} ${category}`;
-
-  // DWR deer conservation/expo rows can arrive as premium LE in the raw data,
-  // but operationally they belong under the Conservation hunt-type matrix.
-  if (
-    code === 'DB0009' ||
-    haystack.includes('conservation/expo') ||
-    haystack.includes('conservation expo')
-  ) {
+  if (isConservationPermitHunt(h)) {
     return 'Conservation';
   }
-
   return normalized;
 }
 function normalizeHuntCategoryLabel(raw) {
@@ -3082,6 +3143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }, 7000);
   
   // Load Data
+  await loadConservationPermitAreas();
   await loadHuntData();
   await loadOutfitters();
   await loadOutfitterFederalCoverage();
