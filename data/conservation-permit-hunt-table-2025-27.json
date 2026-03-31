@@ -1,0 +1,5926 @@
+[
+  {
+    "huntCode": "CP-BISON-BOOK-CLIFFS-BITTER-CREEK-HUNTER-S-CHOICE-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek, Hunter's Choice",
+    "unitCode": "book-cliffs-bitter-creek-hunter-s-choice",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek, Hunter's Choice"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 35000,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 65,
+    "sourceRowNumbers": [
+      "65"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BISON-BOOK-CLIFFS-LITTLE-CREEK-SOUTH-HUNTER-S-CHOICE-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Little Creek/South, Hunter's Choice",
+    "unitCode": "book-cliffs-little-creek-south-hunter-s-choice",
+    "unitNames": [
+      "Book Cliffs, Little Creek/South, Hunter's Choice"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 35000,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 66,
+    "sourceRowNumbers": [
+      "66"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BISON-HENRY-MTNS-COW-ONLY-LATE-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Henry Mtns, Cow Only (late)",
+    "unitCode": "henry-mtns-cow-only-late",
+    "unitNames": [
+      "Henry Mtns, Cow Only (late)"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 9166.67,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 68,
+    "sourceRowNumbers": [
+      "68"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BISON-HENRY-MTNS-HUNTER-S-CHOICE-EARLY-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Henry Mtns, Hunter's Choice (early)",
+    "unitCode": "henry-mtns-hunter-s-choice-early",
+    "unitNames": [
+      "Henry Mtns, Hunter's Choice (early)"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 68333.33,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 67,
+    "sourceRowNumbers": [
+      "67"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BISON-HENRY-MTNS-HUNTER-S-CHOICE-LATE-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Henry Mtns, Hunter's Choice (late)",
+    "unitCode": "henry-mtns-hunter-s-choice-late",
+    "unitNames": [
+      "Henry Mtns, Hunter's Choice (late)"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 40333.33,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 69,
+    "sourceRowNumbers": [
+      "69"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BISON-STATEWIDE-ANY-LEGAL-WEAPON",
+    "species": "Bison",
+    "sex": "",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Bison - Statewide Conservation"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 121666.67,
+    "sourceSpecies": "Bison",
+    "sourceRowStart": 70,
+    "sourceRowNumbers": [
+      "70"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Bison Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "BI6510"
+    ]
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-BEAVER-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver",
+    "unitCode": "beaver",
+    "unitNames": [
+      "Beaver"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 9500,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 21,
+    "sourceRowNumbers": [
+      "21"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-BOOK-CLIFFS-BITTER-CREEK-SOUTH-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek/South",
+    "unitCode": "book-cliffs-bitter-creek-south",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek/South"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 5283.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 22,
+    "sourceRowNumbers": [
+      "22",
+      "23",
+      "24",
+      "25"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-BOOK-CLIFFS-LITTLE-CREEK-ROADLESS-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Little Creek Roadless",
+    "unitCode": "book-cliffs-little-creek-roadless",
+    "unitNames": [
+      "Book Cliffs, Little Creek Roadless"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 3333.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 26,
+    "sourceRowNumbers": [
+      "26"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-BOULDER-KAIPAROWITS-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder/Kaiparowits",
+    "unitCode": "boulder-kaiparowits",
+    "unitNames": [
+      "Boulder/Kaiparowits"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 3983.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 27,
+    "sourceRowNumbers": [
+      "27",
+      "28",
+      "29",
+      "30"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-CHALK-CREEK-EAST-CANYON-MORGAN-SOUTH-RICH-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Chalk Creek/East Canyon/Morgan-South Rich",
+    "unitCode": "chalk-creek-east-canyon-morgan-south-rich",
+    "unitNames": [
+      "Chalk Creek/East Canyon/Morgan-South Rich"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "DSC"
+    ],
+    "averageValue": 2850,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 31,
+    "sourceRowNumbers": [
+      "31"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-DIAMOND-MTN-VERNAL-BONANZA-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn/Vernal/Bonanza",
+    "unitCode": "diamond-mtn-vernal-bonanza",
+    "unitNames": [
+      "Diamond Mtn/Vernal/Bonanza"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 4875,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 32,
+    "sourceRowNumbers": [
+      "32",
+      "33"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-FISHLAKE-THOUSAND-LAKES-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 13833.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 34,
+    "sourceRowNumbers": [
+      "34"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-KAMAS-NORTH-SLOPE-SUMMIT-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Kamas/North Slope, Summit",
+    "unitCode": "kamas-north-slope-summit",
+    "unitNames": [
+      "Kamas/North Slope, Summit"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 4750,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 35,
+    "sourceRowNumbers": [
+      "35"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-LA-SAL-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal",
+    "unitCode": "la-sal",
+    "unitNames": [
+      "La Sal"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW",
+      "UHA"
+    ],
+    "averageValue": 8370.83,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 36,
+    "sourceRowNumbers": [
+      "36",
+      "37",
+      "38",
+      "39"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-MANTI-NORTH-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti-North",
+    "unitCode": "manti-north",
+    "unitNames": [
+      "Manti-North"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 3,
+    "organizations": [
+      "MDF",
+      "SFW",
+      "UHA"
+    ],
+    "averageValue": 5133.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 40,
+    "sourceRowNumbers": [
+      "40",
+      "41",
+      "42"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-MANTI-SOUTH-SAN-RAFAEL-NORTH-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti-South/San Rafael, North",
+    "unitCode": "manti-south-san-rafael-north",
+    "unitNames": [
+      "Manti-South/San Rafael, North"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 3,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 9611.11,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 43,
+    "sourceRowNumbers": [
+      "43",
+      "44",
+      "45"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-NEBO-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo",
+    "unitCode": "nebo",
+    "unitNames": [
+      "Nebo"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "UHA"
+    ],
+    "averageValue": 5266.67,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 46,
+    "sourceRowNumbers": [
+      "46"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-NINE-MILE-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nine Mile",
+    "unitCode": "nine-mile",
+    "unitNames": [
+      "Nine Mile"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 2255.56,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 47,
+    "sourceRowNumbers": [
+      "47",
+      "48",
+      "49",
+      "50"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-PANGUITCH-LAKE-ZION-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Panguitch Lake/Zion",
+    "unitCode": "panguitch-lake-zion",
+    "unitNames": [
+      "Panguitch Lake/Zion"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 6166.67,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 51,
+    "sourceRowNumbers": [
+      "51"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-PAUNSAUGUNT-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Paunsaugunt",
+    "unitCode": "paunsaugunt",
+    "unitNames": [
+      "Paunsaugunt"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 4000,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 52,
+    "sourceRowNumbers": [
+      "52"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-SAN-JUAN-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan",
+    "unitCode": "san-juan",
+    "unitNames": [
+      "San Juan"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW",
+      "UHA"
+    ],
+    "averageValue": 5320.83,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 53,
+    "sourceRowNumbers": [
+      "53",
+      "54",
+      "55",
+      "56"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-STATEWIDE-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Black Bear Conservation - Statewide"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 15666.67,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 64,
+    "sourceRowNumbers": [
+      "64"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Black Bear Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "BR7319"
+    ]
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-WASATCH-MTNS-AVINTAQUIN-CURRANT-CREEK-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns, Avintaquin/Currant Creek",
+    "unitCode": "wasatch-mtns-avintaquin-currant-creek",
+    "unitNames": [
+      "Wasatch Mtns, Avintaquin/Currant Creek"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 4333.33,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 57,
+    "sourceRowNumbers": [
+      "57",
+      "58"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-WASATCH-MTNS-WEST-CENTRAL-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns, West-Central",
+    "unitCode": "wasatch-mtns-west-central",
+    "unitNames": [
+      "Wasatch Mtns, West-Central"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW",
+      "UAA"
+    ],
+    "averageValue": 4716.67,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 59,
+    "sourceRowNumbers": [
+      "59",
+      "60",
+      "61",
+      "62"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-BLACK-BEAR-YELLOWSTONE-MULTISEASON",
+    "species": "Black Bear",
+    "sex": "Either Sex",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Yellowstone",
+    "unitCode": "yellowstone",
+    "unitNames": [
+      "Yellowstone"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "WCF"
+    ],
+    "averageValue": 3500,
+    "sourceSpecies": "Bear",
+    "sourceRowStart": 63,
+    "sourceRowNumbers": [
+      "63"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-BOOK-CLIFFS-ARCHERY",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs",
+    "unitCode": "book-cliffs",
+    "unitNames": [
+      "Book Cliffs (North & South)",
+      "Book Cliffs",
+      "Book Cliffs, North",
+      "Book Cliffs, South"
+    ],
+    "condition": "Archery",
+    "permitCount": 2,
+    "organizations": [
+      "UAA",
+      "WCF"
+    ],
+    "averageValue": 8750,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 88,
+    "sourceRowNumbers": [
+      "88",
+      "89"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs Conservation Permit",
+    "boundaryIds": [
+      "7",
+      "714",
+      "15"
+    ],
+    "sourceHuntCodes": [
+      "DB1056",
+      "DB1075",
+      "DB1076"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-BOOK-CLIFFS-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs",
+    "unitCode": "book-cliffs",
+    "unitNames": [
+      "Book Cliffs (North & South)",
+      "Book Cliffs",
+      "Book Cliffs, North",
+      "Book Cliffs, South"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 20875,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 90,
+    "sourceRowNumbers": [
+      "90",
+      "91"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs Conservation Permit",
+    "boundaryIds": [
+      "7",
+      "714",
+      "15"
+    ],
+    "sourceHuntCodes": [
+      "DB1056",
+      "DB1075",
+      "DB1076"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-BOOK-CLIFFS-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs",
+    "unitCode": "book-cliffs",
+    "unitNames": [
+      "Book Cliffs (North & South)",
+      "Book Cliffs",
+      "Book Cliffs, North",
+      "Book Cliffs, South"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 23000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 92,
+    "sourceRowNumbers": [
+      "92",
+      "93"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs Conservation Permit",
+    "boundaryIds": [
+      "7",
+      "714",
+      "15"
+    ],
+    "sourceHuntCodes": [
+      "DB1056",
+      "DB1075",
+      "DB1076"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-BOOK-CLIFFS-MUZZLELOADER",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs",
+    "unitCode": "book-cliffs",
+    "unitNames": [
+      "Book Cliffs (North & South)",
+      "Book Cliffs",
+      "Book Cliffs, North",
+      "Book Cliffs, South"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 2,
+    "organizations": [
+      "UHA",
+      "WCF"
+    ],
+    "averageValue": 7375,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 94,
+    "sourceRowNumbers": [
+      "94",
+      "95"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs Conservation Permit",
+    "boundaryIds": [
+      "7",
+      "714",
+      "15"
+    ],
+    "sourceHuntCodes": [
+      "DB1056",
+      "DB1075",
+      "DB1076"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-DIAMOND-MTN-ARCHERY",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 11500,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 96,
+    "sourceRowNumbers": [
+      "96"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-DIAMOND-MTN-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "RMEF"
+    ],
+    "averageValue": 12666.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 97,
+    "sourceRowNumbers": [
+      "97",
+      "98"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-DIAMOND-MTN-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 14000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 99,
+    "sourceRowNumbers": [
+      "99",
+      "100"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-DIAMOND-MTN-MUZZLELOADER",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 9666.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 101,
+    "sourceRowNumbers": [
+      "101"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-FILLMORE-OAK-CREEK-LE-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Oak Creek LE",
+    "unitCode": "fillmore-oak-creek-le",
+    "unitNames": [
+      "Fillmore, Oak Creek LE"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 71250,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 102,
+    "sourceRowNumbers": [
+      "102"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Oak Creek LE Conservation Permit",
+    "boundaryIds": [
+      "85"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-FILLMORE-OAK-CREEK-LE-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Oak Creek LE",
+    "unitCode": "fillmore-oak-creek-le",
+    "unitNames": [
+      "Fillmore, Oak Creek LE"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 78000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 103,
+    "sourceRowNumbers": [
+      "103"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Oak Creek LE Conservation Permit",
+    "boundaryIds": [
+      "85"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-HENRY-MTNS-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Henry Mtns",
+    "unitCode": "henry-mtns",
+    "unitNames": [
+      "Henry Mtns"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 104166.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 79,
+    "sourceRowNumbers": [
+      "79"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Henry Mtns Conservation Permit",
+    "boundaryIds": [
+      "94"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-HENRY-MTNS-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Henry Mtns",
+    "unitCode": "henry-mtns",
+    "unitNames": [
+      "Henry Mtns"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 114500,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 80,
+    "sourceRowNumbers": [
+      "80"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Henry Mtns Conservation Permit",
+    "boundaryIds": [
+      "94"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-LA-SAL-DOLORES-TRIANGLE-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, Dolores Triangle",
+    "unitCode": "la-sal-dolores-triangle",
+    "unitNames": [
+      "La Sal, Dolores Triangle",
+      "La Sal Mtns",
+      "Dolores Triangle"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 30000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 104,
+    "sourceRowNumbers": [
+      "104"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal, Dolores Triangle Conservation Permit",
+    "boundaryIds": [
+      "617",
+      "108"
+    ],
+    "sourceHuntCodes": [
+      "DB1118"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-PAUNSAUGUNT-ARCHERY",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Paunsaugunt",
+    "unitCode": "paunsaugunt",
+    "unitNames": [
+      "Paunsaugunt"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 68333.33,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 81,
+    "sourceRowNumbers": [
+      "81"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Paunsaugunt Conservation Permit",
+    "boundaryIds": [
+      "163"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-PAUNSAUGUNT-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Paunsaugunt",
+    "unitCode": "paunsaugunt",
+    "unitNames": [
+      "Paunsaugunt"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 74666.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 82,
+    "sourceRowNumbers": [
+      "82",
+      "83"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Paunsaugunt Conservation Permit",
+    "boundaryIds": [
+      "163"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-PAUNSAUGUNT-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Paunsaugunt",
+    "unitCode": "paunsaugunt",
+    "unitNames": [
+      "Paunsaugunt"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 82000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 84,
+    "sourceRowNumbers": [
+      "84",
+      "85"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Paunsaugunt Conservation Permit",
+    "boundaryIds": [
+      "163"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-PAUNSAUGUNT-MUZZLELOADER",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Paunsaugunt",
+    "unitCode": "paunsaugunt",
+    "unitNames": [
+      "Paunsaugunt"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "NWTF"
+    ],
+    "averageValue": 40000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 86,
+    "sourceRowNumbers": [
+      "86",
+      "87"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Paunsaugunt Conservation Permit",
+    "boundaryIds": [
+      "163"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-SAN-JUAN-ELK-RIDGE-ARCHERY",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan, Elk Ridge",
+    "unitCode": "san-juan-elk-ridge",
+    "unitNames": [
+      "San Juan, Elk Ridge"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "UAA"
+    ],
+    "averageValue": 42000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 105,
+    "sourceRowNumbers": [
+      "105"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Juan, Elk Ridge Conservation Permit",
+    "boundaryIds": [
+      "185"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-SAN-JUAN-ELK-RIDGE-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan, Elk Ridge",
+    "unitCode": "san-juan-elk-ridge",
+    "unitNames": [
+      "San Juan, Elk Ridge"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 60666.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 106,
+    "sourceRowNumbers": [
+      "106"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Juan, Elk Ridge Conservation Permit",
+    "boundaryIds": [
+      "185"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-SAN-JUAN-ELK-RIDGE-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan, Elk Ridge",
+    "unitCode": "san-juan-elk-ridge",
+    "unitNames": [
+      "San Juan, Elk Ridge"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 67000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 107,
+    "sourceRowNumbers": [
+      "107"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Juan, Elk Ridge Conservation Permit",
+    "boundaryIds": [
+      "185"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-SAN-JUAN-ELK-RIDGE-MUZZLELOADER",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan, Elk Ridge",
+    "unitCode": "san-juan-elk-ridge",
+    "unitNames": [
+      "San Juan, Elk Ridge"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 42000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 108,
+    "sourceRowNumbers": [
+      "108"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Juan, Elk Ridge Conservation Permit",
+    "boundaryIds": [
+      "185"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-STATEWIDE-",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Statewide",
+      "Buck Deer - Statewide Permit"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 288333.33,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 117,
+    "sourceRowNumbers": [
+      "117"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Deer Conservation Permit",
+    "boundaryIds": [
+      "454"
+    ],
+    "sourceHuntCodes": [
+      "DB0007"
+    ]
+  },
+  {
+    "huntCode": "CP-DEER-WEST-DESERT-VERNON-ARCHERY",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Vernon",
+    "unitCode": "west-desert-vernon",
+    "unitNames": [
+      "West Desert, Vernon"
+    ],
+    "condition": "Archery",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 14350,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 109,
+    "sourceRowNumbers": [
+      "109",
+      "110"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "West Desert, Vernon Conservation Permit",
+    "boundaryIds": [
+      "248"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-WEST-DESERT-VERNON-HUNTER-S-CHOICE",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Vernon",
+    "unitCode": "west-desert-vernon",
+    "unitNames": [
+      "West Desert, Vernon"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 15416.67,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 111,
+    "sourceRowNumbers": [
+      "111",
+      "112"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "West Desert, Vernon Conservation Permit",
+    "boundaryIds": [
+      "248"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-WEST-DESERT-VERNON-MULTISEASON",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Vernon",
+    "unitCode": "west-desert-vernon",
+    "unitNames": [
+      "West Desert, Vernon"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 17000,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 113,
+    "sourceRowNumbers": [
+      "113",
+      "114"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "West Desert, Vernon Conservation Permit",
+    "boundaryIds": [
+      "248"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DEER-WEST-DESERT-VERNON-MUZZLELOADER",
+    "species": "Deer",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Vernon",
+    "unitCode": "west-desert-vernon",
+    "unitNames": [
+      "West Desert, Vernon"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 2,
+    "organizations": [
+      "DSC",
+      "MDF"
+    ],
+    "averageValue": 14083.33,
+    "sourceSpecies": "Deer",
+    "sourceRowStart": 115,
+    "sourceRowNumbers": [
+      "115",
+      "116"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "West Desert, Vernon Conservation Permit",
+    "boundaryIds": [
+      "248"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-KAIPAROWITS-EAST-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Kaiparowits, East",
+    "unitCode": "kaiparowits-east",
+    "unitNames": [
+      "Kaiparowits, East"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 88333.33,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 71,
+    "sourceRowNumbers": [
+      "71"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Kaiparowits East Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1002"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-KAIPAROWITS-ESCALANTE-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Kaiparowits, Escalante",
+    "unitCode": "kaiparowits-escalante",
+    "unitNames": [
+      "Kaiparowits, Escalante East/West"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 71666.67,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 72,
+    "sourceRowNumbers": [
+      "72"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Kaiparowits Escalante East/West Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1003"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-KAIPAROWITS-WEST-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Kaiparowits, West",
+    "unitCode": "kaiparowits-west",
+    "unitNames": [
+      "Kaiparowits, West"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 77500,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 73,
+    "sourceRowNumbers": [
+      "73"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Kaiparowits West Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1006"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-LA-SAL-POTASH-SOUTH-CISCO-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, Potash/South Cisco",
+    "unitCode": "la-sal-potash-south-cisco",
+    "unitNames": [
+      "San Rafael, Dirty Devil",
+      "Henry Mtns/La Sal, Potash/South Cisco/San Juan, Lockhart/San Juan, South/San Rafael, Dirty Devil Conservation"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 60833.33,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 74,
+    "sourceRowNumbers": [
+      "74"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Rafael Dirty Devil Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1004",
+      "DS6615"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-PINE-VALLEY-BEAVER-DAM-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Pine Valley, Beaver Dam",
+    "unitCode": "pine-valley-beaver-dam",
+    "unitNames": [
+      "Pine Valley, Beaver Dam"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 73214.29,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 75,
+    "sourceRowNumbers": [
+      "75"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Pine Valley Beaver Dam Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS6605"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-SAN-RAFAEL-DIRTY-DEVIL-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Rafael, Dirty Devil",
+    "unitCode": "san-rafael-dirty-devil",
+    "unitNames": [
+      "San Rafael, Dirty Devil",
+      "Henry Mtns/La Sal, Potash/South Cisco/San Juan, Lockhart/San Juan, South/San Rafael, Dirty Devil Conservation"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 73333.33,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 76,
+    "sourceRowNumbers": [
+      "76"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Rafael Dirty Devil Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1004",
+      "DS6615"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-SAN-RAFAEL-SOUTH-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Rafael, South",
+    "unitCode": "san-rafael-south",
+    "unitNames": [
+      "San Rafael, South",
+      "San Rafael North/South Conservation"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 60833.33,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 77,
+    "sourceRowNumbers": [
+      "77"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "San Rafael South Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS1007",
+      "DS6617"
+    ]
+  },
+  {
+    "huntCode": "CP-DESERT-BIGHORN-SHEEP-STATEWIDE-ANY-LEGAL-WEAPON",
+    "species": "Desert Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Bighorn Sheep - Statewide Conservation"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 140000,
+    "sourceSpecies": "Desert Bighorn Sheep",
+    "sourceRowStart": 78,
+    "sourceRowNumbers": [
+      "78"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Bighorn Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "DS6618"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-BEAVER-EAST-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver, East",
+    "unitCode": "beaver-east",
+    "unitNames": [
+      "Beaver, East"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 99000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 118,
+    "sourceRowNumbers": [
+      "118"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Beaver, East Conservation Permit",
+    "boundaryIds": [
+      "685"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BEAVER-EAST-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver, East",
+    "unitCode": "beaver-east",
+    "unitNames": [
+      "Beaver, East"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "UAA"
+    ],
+    "averageValue": 74000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 119,
+    "sourceRowNumbers": [
+      "119"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Beaver, East Conservation Permit",
+    "boundaryIds": [
+      "685"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BEAVER-EAST-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver, East",
+    "unitCode": "beaver-east",
+    "unitNames": [
+      "Beaver, East"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 123333.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 120,
+    "sourceRowNumbers": [
+      "120"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Beaver, East Conservation Permit",
+    "boundaryIds": [
+      "685"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BEAVER-EAST-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver, East",
+    "unitCode": "beaver-east",
+    "unitNames": [
+      "Beaver, East"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 184166.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 121,
+    "sourceRowNumbers": [
+      "121"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Beaver, East Conservation Permit",
+    "boundaryIds": [
+      "685"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOOK-CLIFFS-BITTER-CREEK-EAST-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek/East",
+    "unitCode": "book-cliffs-bitter-creek-east",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek/East"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 11500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 122,
+    "sourceRowNumbers": [
+      "122"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs, Bitter Creek/East Conservation Permit",
+    "boundaryIds": [
+      "747",
+      "899"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOOK-CLIFFS-BITTER-CREEK-EAST-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek/East",
+    "unitCode": "book-cliffs-bitter-creek-east",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek/East"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 15200,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 123,
+    "sourceRowNumbers": [
+      "123"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs, Bitter Creek/East Conservation Permit",
+    "boundaryIds": [
+      "747",
+      "899"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOOK-CLIFFS-BITTER-CREEK-EAST-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek/East",
+    "unitCode": "book-cliffs-bitter-creek-east",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek/East"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "DSC"
+    ],
+    "averageValue": 14250,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 124,
+    "sourceRowNumbers": [
+      "124"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs, Bitter Creek/East Conservation Permit",
+    "boundaryIds": [
+      "747",
+      "899"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOOK-CLIFFS-BITTER-CREEK-EAST-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek/East",
+    "unitCode": "book-cliffs-bitter-creek-east",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek/East"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "WCF"
+    ],
+    "averageValue": 17666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 125,
+    "sourceRowNumbers": [
+      "125"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs, Bitter Creek/East Conservation Permit",
+    "boundaryIds": [
+      "747",
+      "899"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 53500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 126,
+    "sourceRowNumbers": [
+      "126"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 46500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 127,
+    "sourceRowNumbers": [
+      "127"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 46000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 128,
+    "sourceRowNumbers": [
+      "128"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 66666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 129,
+    "sourceRowNumbers": [
+      "129"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 71666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 130,
+    "sourceRowNumbers": [
+      "130"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOULDER-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Boulder",
+    "unitCode": "boulder",
+    "unitNames": [
+      "Boulder"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 46000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 131,
+    "sourceRowNumbers": [
+      "131"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Boulder Conservation Permit",
+    "boundaryIds": [
+      "172",
+      "695",
+      "697",
+      "96"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOX-ELDER-GROUSE-CREEK-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Grouse Creek",
+    "unitCode": "box-elder-grouse-creek",
+    "unitNames": [
+      "Box Elder, Grouse Creek"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 13000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 132,
+    "sourceRowNumbers": [
+      "132"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-BOX-ELDER-PILOT-MTN-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Pilot Mtn",
+    "unitCode": "box-elder-pilot-mtn",
+    "unitNames": [
+      "Box Elder, Pilot Mtn"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 13000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 133,
+    "sourceRowNumbers": [
+      "133"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-ANY-LEGAL-WEAPON",
+    "species": "Elk",
+    "sex": "Antlerless",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache",
+    "unitCode": "cache",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "NWTF",
+      "RMEF",
+      "WCF"
+    ],
+    "averageValue": 800,
+    "sourceSpecies": "Antlerless Elk",
+    "sourceRowStart": 1,
+    "sourceRowNumbers": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-MEADOWVILLE-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache, Meadowville",
+    "unitCode": "cache-meadowville",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 6500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 134,
+    "sourceRowNumbers": [
+      "134"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-MEADOWVILLE-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache, Meadowville",
+    "unitCode": "cache-meadowville",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 8383.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 135,
+    "sourceRowNumbers": [
+      "135"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-MEADOWVILLE-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache, Meadowville",
+    "unitCode": "cache-meadowville",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 6000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 136,
+    "sourceRowNumbers": [
+      "136"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-SOUTH-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache, South",
+    "unitCode": "cache-south",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 27000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 137,
+    "sourceRowNumbers": [
+      "137"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-CACHE-SOUTH-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache, South",
+    "unitCode": "cache-south",
+    "unitNames": [
+      "Cache (Conservation)",
+      "Cache"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 23000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 138,
+    "sourceRowNumbers": [
+      "138"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Cache Antlerless Conservation Permit",
+    "boundaryIds": [
+      "29"
+    ],
+    "sourceHuntCodes": [
+      "EA2041"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-DIAMOND-MTN-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 17000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 139,
+    "sourceRowNumbers": [
+      "139"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "444",
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-DIAMOND-MTN-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 15000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 140,
+    "sourceRowNumbers": [
+      "140"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "444",
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-DIAMOND-MTN-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 13000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 141,
+    "sourceRowNumbers": [
+      "141"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "444",
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-DIAMOND-MTN-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 21166.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 142,
+    "sourceRowNumbers": [
+      "142"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "444",
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-DIAMOND-MTN-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Diamond Mtn",
+    "unitCode": "diamond-mtn",
+    "unitNames": [
+      "Diamond Mtn"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 24500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 143,
+    "sourceRowNumbers": [
+      "143"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Diamond Mtn Conservation Permit",
+    "boundaryIds": [
+      "444",
+      "206"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-FILLMORE-PAHVANT-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Pahvant",
+    "unitCode": "fillmore-pahvant",
+    "unitNames": [
+      "Fillmore, Pahvant"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 29000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 144,
+    "sourceRowNumbers": [
+      "144"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Pahvant Conservation Permit",
+    "boundaryIds": [
+      "88"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-FILLMORE-PAHVANT-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Pahvant",
+    "unitCode": "fillmore-pahvant",
+    "unitNames": [
+      "Fillmore, Pahvant"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 22000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 145,
+    "sourceRowNumbers": [
+      "145"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Pahvant Conservation Permit",
+    "boundaryIds": [
+      "88"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-FILLMORE-PAHVANT-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Pahvant",
+    "unitCode": "fillmore-pahvant",
+    "unitNames": [
+      "Fillmore, Pahvant"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 36416.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 146,
+    "sourceRowNumbers": [
+      "146"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Pahvant Conservation Permit",
+    "boundaryIds": [
+      "88"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-FILLMORE-PAHVANT-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Pahvant",
+    "unitCode": "fillmore-pahvant",
+    "unitNames": [
+      "Fillmore, Pahvant"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 45666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 147,
+    "sourceRowNumbers": [
+      "147"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fillmore, Pahvant Conservation Permit",
+    "boundaryIds": [
+      "88"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-ANY-LEGAL-WEAPON",
+    "species": "Elk",
+    "sex": "Antlerless",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake",
+    "unitCode": "fishlake",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "SCI",
+      "SFW"
+    ],
+    "averageValue": 2279.17,
+    "sourceSpecies": "Antlerless Elk",
+    "sourceRowStart": 5,
+    "sourceRowNumbers": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 21500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 148,
+    "sourceRowNumbers": [
+      "148"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 18500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 149,
+    "sourceRowNumbers": [
+      "149"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "UAA"
+    ],
+    "averageValue": 15500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 150,
+    "sourceRowNumbers": [
+      "150"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "RMEF",
+      "SFW"
+    ],
+    "averageValue": 26625,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 151,
+    "sourceRowNumbers": [
+      "151",
+      "152"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SCI"
+    ],
+    "averageValue": 34750,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 153,
+    "sourceRowNumbers": [
+      "153",
+      "154"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-FISHLAKE-THOUSAND-LAKES-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fishlake/Thousand Lakes",
+    "unitCode": "fishlake-thousand-lakes",
+    "unitNames": [
+      "Fishlake (Conservation)",
+      "Fishlake",
+      "Fishlake/Thousand Lakes"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 18666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 155,
+    "sourceRowNumbers": [
+      "155"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Fishlake Antlerless Conservation Permit",
+    "boundaryIds": [
+      "175"
+    ],
+    "sourceHuntCodes": [
+      "EA1270"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-ANY-LEGAL-WEAPON",
+    "species": "Elk",
+    "sex": "Antlerless",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal",
+    "unitCode": "la-sal",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "NWTF",
+      "UAA",
+      "WCF"
+    ],
+    "averageValue": 800,
+    "sourceSpecies": "Antlerless Elk",
+    "sourceRowStart": 9,
+    "sourceRowNumbers": [
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 15000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 156,
+    "sourceRowNumbers": [
+      "156"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 13500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 157,
+    "sourceRowNumbers": [
+      "157"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 15266.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 158,
+    "sourceRowNumbers": [
+      "158"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 19000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 159,
+    "sourceRowNumbers": [
+      "159",
+      "160"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "RMEF"
+    ],
+    "averageValue": 20833.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 161,
+    "sourceRowNumbers": [
+      "161",
+      "162"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-LA-SAL-LA-SAL-MTNS-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal (Conservation)",
+      "La Sal"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 16000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 163,
+    "sourceRowNumbers": [
+      "163"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "La Sal Antlerless Conservation Permit",
+    "boundaryIds": [
+      "684"
+    ],
+    "sourceHuntCodes": [
+      "EA1180"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-ANY-LEGAL-WEAPON",
+    "species": "Elk",
+    "sex": "Antlerless",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 2108.33,
+    "sourceSpecies": "Antlerless Elk",
+    "sourceRowStart": 13,
+    "sourceRowNumbers": [
+      "13",
+      "14",
+      "15",
+      "16"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 28000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 164,
+    "sourceRowNumbers": [
+      "164"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 24500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 165,
+    "sourceRowNumbers": [
+      "165"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 21033.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 166,
+    "sourceRowNumbers": [
+      "166"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "UWSF"
+    ],
+    "averageValue": 34875,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 167,
+    "sourceRowNumbers": [
+      "167",
+      "168"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "NWTF",
+      "RMEF"
+    ],
+    "averageValue": 45000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 169,
+    "sourceRowNumbers": [
+      "169",
+      "170"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MANTI-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Manti",
+    "unitCode": "manti",
+    "unitNames": [
+      "Manti (Conservation)",
+      "Manti"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 22000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 171,
+    "sourceRowNumbers": [
+      "171"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Manti Antlerless Conservation Permit",
+    "boundaryIds": [
+      "51"
+    ],
+    "sourceHuntCodes": [
+      "EA1271"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-MONROE-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Monroe",
+    "unitCode": "monroe",
+    "unitNames": [
+      "Monroe"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 52000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 172,
+    "sourceRowNumbers": [
+      "172"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Monroe Conservation Permit",
+    "boundaryIds": [
+      "629",
+      "115"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MONROE-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Monroe",
+    "unitCode": "monroe",
+    "unitNames": [
+      "Monroe"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 39000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 173,
+    "sourceRowNumbers": [
+      "173"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Monroe Conservation Permit",
+    "boundaryIds": [
+      "629",
+      "115"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MONROE-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Monroe",
+    "unitCode": "monroe",
+    "unitNames": [
+      "Monroe"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 65000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 174,
+    "sourceRowNumbers": [
+      "174"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Monroe Conservation Permit",
+    "boundaryIds": [
+      "629",
+      "115"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MONROE-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Monroe",
+    "unitCode": "monroe",
+    "unitNames": [
+      "Monroe"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 70333.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 175,
+    "sourceRowNumbers": [
+      "175"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Monroe Conservation Permit",
+    "boundaryIds": [
+      "629",
+      "115"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MT-DUTTON-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Mt Dutton",
+    "unitCode": "mt-dutton",
+    "unitNames": [
+      "Mt Dutton"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 38500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 176,
+    "sourceRowNumbers": [
+      "176"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MT-DUTTON-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Mt Dutton",
+    "unitCode": "mt-dutton",
+    "unitNames": [
+      "Mt Dutton"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 29000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 177,
+    "sourceRowNumbers": [
+      "177"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MT-DUTTON-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Mt Dutton",
+    "unitCode": "mt-dutton",
+    "unitNames": [
+      "Mt Dutton"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 48250,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 178,
+    "sourceRowNumbers": [
+      "178"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-MT-DUTTON-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Mt Dutton",
+    "unitCode": "mt-dutton",
+    "unitNames": [
+      "Mt Dutton"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 62500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 179,
+    "sourceRowNumbers": [
+      "179"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-NEBO-SAN-PITCH-MTNS-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo/San Pitch Mtns",
+    "unitCode": "nebo-san-pitch-mtns",
+    "unitNames": [
+      "Nebo/San Pitch Mtns"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 28500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 180,
+    "sourceRowNumbers": [
+      "180"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-NEBO-SAN-PITCH-MTNS-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo/San Pitch Mtns",
+    "unitCode": "nebo-san-pitch-mtns",
+    "unitNames": [
+      "Nebo/San Pitch Mtns"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 21500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 181,
+    "sourceRowNumbers": [
+      "181"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-NEBO-SAN-PITCH-MTNS-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo/San Pitch Mtns",
+    "unitCode": "nebo-san-pitch-mtns",
+    "unitNames": [
+      "Nebo/San Pitch Mtns"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 35500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 182,
+    "sourceRowNumbers": [
+      "182"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-NEBO-SAN-PITCH-MTNS-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo/San Pitch Mtns",
+    "unitCode": "nebo-san-pitch-mtns",
+    "unitNames": [
+      "Nebo/San Pitch Mtns"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 41666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 183,
+    "sourceRowNumbers": [
+      "183"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-NORTH-SLOPE-THREE-CORNERS-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "North Slope, Three Corners",
+    "unitCode": "north-slope-three-corners",
+    "unitNames": [
+      "North Slope, Three Corners"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 17666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 184,
+    "sourceRowNumbers": [
+      "184"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-PANGUITCH-LAKE-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Panguitch Lake",
+    "unitCode": "panguitch-lake",
+    "unitNames": [
+      "Panguitch Lake"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 48500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 185,
+    "sourceRowNumbers": [
+      "185"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-PANGUITCH-LAKE-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Panguitch Lake",
+    "unitCode": "panguitch-lake",
+    "unitNames": [
+      "Panguitch Lake"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 60833.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 186,
+    "sourceRowNumbers": [
+      "186"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-PANGUITCH-LAKE-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Panguitch Lake",
+    "unitCode": "panguitch-lake",
+    "unitNames": [
+      "Panguitch Lake"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 80666.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 187,
+    "sourceRowNumbers": [
+      "187"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SAN-JUAN-BULL-ELK-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan Bull Elk",
+    "unitCode": "san-juan-bull-elk",
+    "unitNames": [
+      "San Juan Bull Elk"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 53000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 188,
+    "sourceRowNumbers": [
+      "188"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SAN-JUAN-BULL-ELK-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan Bull Elk",
+    "unitCode": "san-juan-bull-elk",
+    "unitNames": [
+      "San Juan Bull Elk"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 46500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 189,
+    "sourceRowNumbers": [
+      "189"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SAN-JUAN-BULL-ELK-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan Bull Elk",
+    "unitCode": "san-juan-bull-elk",
+    "unitNames": [
+      "San Juan Bull Elk"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 40166.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 190,
+    "sourceRowNumbers": [
+      "190"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SAN-JUAN-BULL-ELK-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan Bull Elk",
+    "unitCode": "san-juan-bull-elk",
+    "unitNames": [
+      "San Juan Bull Elk"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 66250,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 191,
+    "sourceRowNumbers": [
+      "191"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SAN-JUAN-BULL-ELK-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Juan Bull Elk",
+    "unitCode": "san-juan-bull-elk",
+    "unitNames": [
+      "San Juan Bull Elk"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 64000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 192,
+    "sourceRowNumbers": [
+      "192"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 22500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 193,
+    "sourceRowNumbers": [
+      "193"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 20000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 194,
+    "sourceRowNumbers": [
+      "194"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "UAA"
+    ],
+    "averageValue": 20166.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 195,
+    "sourceRowNumbers": [
+      "195"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 28333.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 196,
+    "sourceRowNumbers": [
+      "196"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "RMEF"
+    ],
+    "averageValue": 38583.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 197,
+    "sourceRowNumbers": [
+      "197",
+      "198"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-SOUTHWEST-DESERT-SOUTH-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert, South",
+    "unitCode": "southwest-desert-south",
+    "unitNames": [
+      "Southwest Desert, South"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 23983.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 199,
+    "sourceRowNumbers": [
+      "199"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Southwest Desert, South Conservation Permit",
+    "boundaryIds": [
+      "872"
+    ],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ELK-STATEWIDE-",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Statewide",
+      "Elk - Statewide Permit"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 195000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 208,
+    "sourceRowNumbers": [
+      "208"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Elk Conservation Permit",
+    "boundaryIds": [
+      "12",
+      "17",
+      "33",
+      "36",
+      "41",
+      "51",
+      "108",
+      "128",
+      "140",
+      "163",
+      "175",
+      "183",
+      "206",
+      "222",
+      "241",
+      "449",
+      "455",
+      "616",
+      "617",
+      "622",
+      "625",
+      "629",
+      "630",
+      "634",
+      "683",
+      "685",
+      "88"
+    ],
+    "sourceHuntCodes": [
+      "EB1000"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-ANY-LEGAL-WEAPON",
+    "species": "Elk",
+    "sex": "Antlerless",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "RMEF",
+      "SFW"
+    ],
+    "averageValue": 2237.5,
+    "sourceSpecies": "Antlerless Elk",
+    "sourceRowStart": 17,
+    "sourceRowNumbers": [
+      "17",
+      "18",
+      "19",
+      "20"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-ANY-LEGAL-WEAPON-LATE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Any Legal Weapon, late",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 22500,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 200,
+    "sourceRowNumbers": [
+      "200"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-ANY-LEGAL-WEAPON-MID",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Any Legal Weapon, mid",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 20000,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 201,
+    "sourceRowNumbers": [
+      "201"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-ARCHERY",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "WCF"
+    ],
+    "averageValue": 8416.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 202,
+    "sourceRowNumbers": [
+      "202"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-HUNTER-S-CHOICE",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 28291.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 203,
+    "sourceRowNumbers": [
+      "203",
+      "204"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-MULTISEASON",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "RMEF"
+    ],
+    "averageValue": 33583.33,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 205,
+    "sourceRowNumbers": [
+      "205",
+      "206"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-ELK-WASATCH-MTNS-MUZZLELOADER",
+    "species": "Elk",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns",
+    "unitCode": "wasatch-mtns",
+    "unitNames": [
+      "Wasatch Mtns (Conservation)",
+      "Wasatch Mtns",
+      "Wasatch Mtns, East",
+      "Wasatch Mtns, West"
+    ],
+    "condition": "Muzzleloader",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 20166.67,
+    "sourceSpecies": "Elk",
+    "sourceRowStart": 207,
+    "sourceRowNumbers": [
+      "207"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Wasatch Mtns Antlerless Conservation Permit",
+    "boundaryIds": [
+      "222",
+      "234"
+    ],
+    "sourceHuntCodes": [
+      "EA2045"
+    ]
+  },
+  {
+    "huntCode": "CP-MOOSE-CACHE-ANY-LEGAL-WEAPON",
+    "species": "Moose",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Cache",
+    "unitCode": "cache",
+    "unitNames": [
+      "Cache"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UCWF"
+    ],
+    "averageValue": 44666.67,
+    "sourceSpecies": "Moose",
+    "sourceRowStart": 209,
+    "sourceRowNumbers": [
+      "209"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOOSE-NORTH-SLOPE-SUMMIT-ANY-LEGAL-WEAPON",
+    "species": "Moose",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "North Slope, Summit",
+    "unitCode": "north-slope-summit",
+    "unitNames": [
+      "North Slope, Summit"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "SCI",
+      "SFW"
+    ],
+    "averageValue": 32666.67,
+    "sourceSpecies": "Moose",
+    "sourceRowStart": 210,
+    "sourceRowNumbers": [
+      "210",
+      "211"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOOSE-STATEWIDE-",
+    "species": "Moose",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Moose - Statewide Conservation"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 64000,
+    "sourceSpecies": "Moose",
+    "sourceRowStart": 213,
+    "sourceRowNumbers": [
+      "213"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Moose Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "MB6260"
+    ]
+  },
+  {
+    "huntCode": "CP-MOOSE-WASATCH-MTNS-CENTRAL-MTNS-ANY-LEGAL-WEAPON",
+    "species": "Moose",
+    "sex": "Bull",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns/Central Mtns",
+    "unitCode": "wasatch-mtns-central-mtns",
+    "unitNames": [
+      "Wasatch Mtns/Central Mtns"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 35541.67,
+    "sourceSpecies": "Moose",
+    "sourceRowStart": 212,
+    "sourceRowNumbers": [
+      "212"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-BEAVER-EARLY-ANY-LEGAL-WEAPON-EARLY",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver (early)",
+    "unitCode": "beaver-early",
+    "unitNames": [
+      "Beaver (early)"
+    ],
+    "condition": "Any Legal Weapon, early",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 32000,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 214,
+    "sourceRowNumbers": [
+      "214"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-HIGH-UINTAS-WEST-ANY-LEGAL-WEAPON",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "High Uintas West",
+    "unitCode": "high-uintas-west",
+    "unitNames": [
+      "High Uintas West"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "RMEF"
+    ],
+    "averageValue": 31000,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 215,
+    "sourceRowNumbers": [
+      "215"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-LA-SAL-LA-SAL-MTNS-ANY-LEGAL-WEAPON",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, La Sal Mtns",
+    "unitCode": "la-sal-la-sal-mtns",
+    "unitNames": [
+      "La Sal, La Sal Mtns"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 22666.67,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 216,
+    "sourceRowNumbers": [
+      "216"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-NEBO-ANY-LEGAL-WEAPON",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo",
+    "unitCode": "nebo",
+    "unitNames": [
+      "Nebo"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 22666.67,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 217,
+    "sourceRowNumbers": [
+      "217"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-NEBO-ARCHERY",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nebo",
+    "unitCode": "nebo",
+    "unitNames": [
+      "Nebo"
+    ],
+    "condition": "Archery",
+    "permitCount": 1,
+    "organizations": [
+      "UAA"
+    ],
+    "averageValue": 16000,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 218,
+    "sourceRowNumbers": [
+      "218"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-STATEWIDE-",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Mountain Goat - Statewide Conservation"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 59166.67,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 220,
+    "sourceRowNumbers": [
+      "220"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Mountain Goat Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "GO6816"
+    ]
+  },
+  {
+    "huntCode": "CP-MOUNTAIN-GOAT-WASATCH-MTNS-TIMPANOGOS-ANY-LEGAL-WEAPON",
+    "species": "Mountain Goat",
+    "sex": "Hunter's Choice",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Wasatch Mtns, Timpanogos",
+    "unitCode": "wasatch-mtns-timpanogos",
+    "unitNames": [
+      "Wasatch Mtns, Timpanogos"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SCI"
+    ],
+    "averageValue": 21666.67,
+    "sourceSpecies": "Mountain Goat",
+    "sourceRowStart": 219,
+    "sourceRowNumbers": [
+      "219"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BEAVER-HUNTER-S-CHOICE",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Beaver",
+    "unitCode": "beaver",
+    "unitNames": [
+      "Beaver"
+    ],
+    "condition": "Hunter's Choice",
+    "permitCount": 2,
+    "organizations": [
+      "SFW",
+      "UAA"
+    ],
+    "averageValue": 5641.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 221,
+    "sourceRowNumbers": [
+      "221",
+      "222"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOOK-CLIFFS-BITTER-CREEK-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, Bitter Creek",
+    "unitCode": "book-cliffs-bitter-creek",
+    "unitNames": [
+      "Book Cliffs, Bitter Creek"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 3,
+    "organizations": [
+      "DSC",
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 3275,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 223,
+    "sourceRowNumbers": [
+      "223",
+      "224",
+      "225"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOOK-CLIFFS-SOUTH-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, South",
+    "unitCode": "book-cliffs-south",
+    "unitNames": [
+      "Book Cliffs, South"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "NWTF"
+    ],
+    "averageValue": 4833.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 226,
+    "sourceRowNumbers": [
+      "226",
+      "227"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOX-ELDER-PROMONTORY-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Promontory",
+    "unitCode": "box-elder-promontory",
+    "unitNames": [
+      "Box Elder, Promontory"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 3833.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 228,
+    "sourceRowNumbers": [
+      "228"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOX-ELDER-PUDDLE-VALLEY-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Puddle Valley",
+    "unitCode": "box-elder-puddle-valley",
+    "unitNames": [
+      "Box Elder, Puddle Valley"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 4916.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 229,
+    "sourceRowNumbers": [
+      "229"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOX-ELDER-SNOWVILLE-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Snowville",
+    "unitCode": "box-elder-snowville",
+    "unitNames": [
+      "Box Elder, Snowville"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 2858.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 230,
+    "sourceRowNumbers": [
+      "230",
+      "231"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-BOX-ELDER-WEST-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, West",
+    "unitCode": "box-elder-west",
+    "unitNames": [
+      "Box Elder, West"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "SFW",
+      "UHA"
+    ],
+    "averageValue": 2758.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 232,
+    "sourceRowNumbers": [
+      "232",
+      "233"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-FILLMORE-OAK-CREEK-SOUTH-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Oak Creek South",
+    "unitCode": "fillmore-oak-creek-south",
+    "unitNames": [
+      "Fillmore, Oak Creek South"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 3,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SFW"
+    ],
+    "averageValue": 10833.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 234,
+    "sourceRowNumbers": [
+      "234",
+      "235",
+      "236"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-LA-SAL-POTASH-SOUTH-CISCO-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "La Sal, Potash/South Cisco",
+    "unitCode": "la-sal-potash-south-cisco",
+    "unitNames": [
+      "La Sal, Potash/South Cisco"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UHA"
+    ],
+    "averageValue": 2750,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 237,
+    "sourceRowNumbers": [
+      "237"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-MT-DUTTON-PAUNSAUGUNT-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Mt Dutton/Paunsaugunt",
+    "unitCode": "mt-dutton-paunsaugunt",
+    "unitNames": [
+      "Mt Dutton/Paunsaugunt"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 3491.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 238,
+    "sourceRowNumbers": [
+      "238",
+      "239"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-NINE-MILE-ANTHRO-MYTON-BENCH-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nine Mile, Anthro-Myton Bench",
+    "unitCode": "nine-mile-anthro-myton-bench",
+    "unitNames": [
+      "Nine Mile, Anthro-Myton Bench"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 7,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SFW",
+      "WCF"
+    ],
+    "averageValue": 4133.330000000001,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 240,
+    "sourceRowNumbers": [
+      "240",
+      "241",
+      "242",
+      "243",
+      "244",
+      "245",
+      "246"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-NINE-MILE-RANGE-CREEK-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nine Mile, Range Creek",
+    "unitCode": "nine-mile-range-creek",
+    "unitNames": [
+      "Nine Mile, Range Creek"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "NWTF"
+    ],
+    "averageValue": 7416.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 247,
+    "sourceRowNumbers": [
+      "247"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-NORTH-SLOPE-SUMMIT-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "North Slope, Summit",
+    "unitCode": "north-slope-summit",
+    "unitNames": [
+      "North Slope, Summit"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 5000,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 248,
+    "sourceRowNumbers": [
+      "248"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-NORTH-SLOPE-THREE-CORNERS-WEST-DAGGETT-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "North Slope, Three Corners/West Daggett",
+    "unitCode": "north-slope-three-corners-west-daggett",
+    "unitNames": [
+      "North Slope, Three Corners/West Daggett"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 3,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 4791.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 249,
+    "sourceRowNumbers": [
+      "249",
+      "250",
+      "251"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-PANGUITCH-LAKE-ZION-NORTH-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Panguitch Lake/Zion, North",
+    "unitCode": "panguitch-lake-zion-north",
+    "unitNames": [
+      "Panguitch Lake/Zion, North"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 3583.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 252,
+    "sourceRowNumbers": [
+      "252",
+      "253"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-PARKER-MTN-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Parker Mtn",
+    "unitCode": "parker-mtn",
+    "unitNames": [
+      "Parker Mtn"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 5000,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 254,
+    "sourceRowNumbers": [
+      "254",
+      "255",
+      "256",
+      "257"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-PINE-VALLEY-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Pine Valley",
+    "unitCode": "pine-valley",
+    "unitNames": [
+      "Pine Valley"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 4416.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 258,
+    "sourceRowNumbers": [
+      "258",
+      "259"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-SAN-RAFAEL-NORTH-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "San Rafael, North",
+    "unitCode": "san-rafael-north",
+    "unitNames": [
+      "San Rafael, North"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 5,
+    "organizations": [
+      "NWTF",
+      "SFW"
+    ],
+    "averageValue": 10002.78,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 260,
+    "sourceRowNumbers": [
+      "260",
+      "261",
+      "262",
+      "263",
+      "264"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-SOUTHWEST-DESERT-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southwest Desert",
+    "unitCode": "southwest-desert",
+    "unitNames": [
+      "Southwest Desert"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 8,
+    "organizations": [
+      "DSC",
+      "MDF",
+      "NWTF",
+      "RMEF",
+      "SFW",
+      "UAA"
+    ],
+    "averageValue": 5777.080000000001,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 265,
+    "sourceRowNumbers": [
+      "265",
+      "266",
+      "267",
+      "268",
+      "269",
+      "270",
+      "271",
+      "272"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-STATEWIDE-",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Pronghorn - Statewide Conservation"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "MDF"
+    ],
+    "averageValue": 33666.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 289,
+    "sourceRowNumbers": [
+      "289"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Pronghorn Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "PB5057"
+    ]
+  },
+  {
+    "huntCode": "CP-PRONGHORN-VERNAL-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Vernal",
+    "unitCode": "vernal",
+    "unitNames": [
+      "Vernal"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 5,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SCI",
+      "WCF"
+    ],
+    "averageValue": 5388.89,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 273,
+    "sourceRowNumbers": [
+      "273",
+      "274",
+      "275",
+      "276",
+      "277"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-WEST-DESERT-RIVERBED-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Riverbed",
+    "unitCode": "west-desert-riverbed",
+    "unitNames": [
+      "West Desert, Riverbed"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 4,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SFW"
+    ],
+    "averageValue": 7458.33,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 278,
+    "sourceRowNumbers": [
+      "278",
+      "279",
+      "280",
+      "281"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-WEST-DESERT-RUSH-VALLEY-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Rush Valley",
+    "unitCode": "west-desert-rush-valley",
+    "unitNames": [
+      "West Desert, Rush Valley"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 2,
+    "organizations": [
+      "MDF",
+      "SFW"
+    ],
+    "averageValue": 4666.67,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 282,
+    "sourceRowNumbers": [
+      "282",
+      "283"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-PRONGHORN-WEST-DESERT-SNAKE-VALLEY-ANY-LEGAL-WEAPON",
+    "species": "Pronghorn",
+    "sex": "Buck",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "West Desert, Snake Valley",
+    "unitCode": "west-desert-snake-valley",
+    "unitNames": [
+      "West Desert, Snake Valley"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 5,
+    "organizations": [
+      "MDF",
+      "RMEF",
+      "SFW"
+    ],
+    "averageValue": 5755.56,
+    "sourceSpecies": "Pronghorn",
+    "sourceRowStart": 284,
+    "sourceRowNumbers": [
+      "284",
+      "285",
+      "286",
+      "287",
+      "288"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-BOOK-CLIFFS-SOUTH-ANY-LEGAL-WEAPON",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Book Cliffs, South",
+    "unitCode": "book-cliffs-south",
+    "unitNames": [
+      "Book Cliffs, South"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 208333.33,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 290,
+    "sourceRowNumbers": [
+      "290"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Book Cliffs South Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "RS1001"
+    ]
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-BOX-ELDER-NEWFOUNDLAND-MTNS-EARLY-ANY-LEGAL-WEAPON",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Newfoundland Mtns (early)",
+    "unitCode": "box-elder-newfoundland-mtns-early",
+    "unitNames": [
+      "Box Elder, Newfoundland Mtn"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 133333.33,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 291,
+    "sourceRowNumbers": [
+      "291"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Box Elder Newfoundland Mtn Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "RS1003"
+    ]
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-BOX-ELDER-NEWFOUNDLAND-MTNS-LATE-ANY-LEGAL-WEAPON",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Box Elder, Newfoundland Mtns (late)",
+    "unitCode": "box-elder-newfoundland-mtns-late",
+    "unitNames": [
+      "Box Elder, Newfoundland Mtn"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 117000,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 292,
+    "sourceRowNumbers": [
+      "292"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Box Elder Newfoundland Mtn Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "RS1003"
+    ]
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-FILLMORE-OAK-CREEK-LATE-ANY-LEGAL-WEAPON",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Fillmore, Oak Creek (late)",
+    "unitCode": "fillmore-oak-creek-late",
+    "unitNames": [
+      "Fillmore, Oak Creek (late)"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "UWSF"
+    ],
+    "averageValue": 105000,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 293,
+    "sourceRowNumbers": [
+      "293"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-NINE-MILE-GRAY-CANYON-ANY-LEGAL-WEAPON",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Nine Mile, Gray Canyon",
+    "unitCode": "nine-mile-gray-canyon",
+    "unitNames": [
+      "Nine Mile, Gray Canyon"
+    ],
+    "condition": "Any Legal Weapon",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 225000,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 294,
+    "sourceRowNumbers": [
+      "294"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Nine Mile Gray Canyon Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "RS1006"
+    ]
+  },
+  {
+    "huntCode": "CP-ROCKY-MOUNTAIN-BIGHORN-SHEEP-STATEWIDE-",
+    "species": "Rocky Mountain Bighorn Sheep",
+    "sex": "Ram",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Bighorn Sheep - Statewide Conservation"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 230000,
+    "sourceSpecies": "Rocky Mountain Bighorn Sheep",
+    "sourceRowStart": 295,
+    "sourceRowNumbers": [
+      "295"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Rocky Bighorn Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "RS6718"
+    ]
+  },
+  {
+    "huntCode": "CP-TURKEY-CENTRAL-AREA-MULTISEASON",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Central Area",
+    "unitCode": "central-area",
+    "unitNames": [
+      "Central Area"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 8,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SFW"
+    ],
+    "averageValue": 795.83,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 296,
+    "sourceRowNumbers": [
+      "296",
+      "297",
+      "298",
+      "299",
+      "300",
+      "301",
+      "302",
+      "303"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-TURKEY-NORTHEASTERN-AREA-MULTISEASON",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Northeastern Area",
+    "unitCode": "northeastern-area",
+    "unitNames": [
+      "Northeastern Area"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 8,
+    "organizations": [
+      "NWTF",
+      "SFW",
+      "WCF"
+    ],
+    "averageValue": 1038.54,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 304,
+    "sourceRowNumbers": [
+      "304",
+      "305",
+      "306",
+      "307",
+      "308",
+      "309",
+      "310",
+      "311"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-TURKEY-NORTHERN-AREA-MULTISEASON",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Northern Area",
+    "unitCode": "northern-area",
+    "unitNames": [
+      "Northern Area"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 8,
+    "organizations": [
+      "DSC",
+      "NWTF",
+      "SFW",
+      "UHA",
+      "WCF"
+    ],
+    "averageValue": 519.79,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 312,
+    "sourceRowNumbers": [
+      "312",
+      "313",
+      "314",
+      "315",
+      "316",
+      "317",
+      "318",
+      "319"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-TURKEY-SOUTHEASTERN-AREA-MULTISEASON",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southeastern Area",
+    "unitCode": "southeastern-area",
+    "unitNames": [
+      "Southeastern Area"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 8,
+    "organizations": [
+      "NWTF",
+      "SFW"
+    ],
+    "averageValue": 1037.5,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 320,
+    "sourceRowNumbers": [
+      "320",
+      "321",
+      "322",
+      "323",
+      "324",
+      "325",
+      "326",
+      "327"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-TURKEY-SOUTHERN-AREA-MULTISEASON",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Southern Area",
+    "unitCode": "southern-area",
+    "unitNames": [
+      "Southern Area"
+    ],
+    "condition": "Multiseason",
+    "permitCount": 8,
+    "organizations": [
+      "MDF",
+      "NWTF",
+      "SFW",
+      "UHA"
+    ],
+    "averageValue": 597.92,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 328,
+    "sourceRowNumbers": [
+      "328",
+      "329",
+      "330",
+      "331",
+      "332",
+      "333",
+      "334",
+      "335"
+    ],
+    "matchedPermitRegister": false,
+    "matchedRegisterLabel": "",
+    "boundaryIds": [],
+    "sourceHuntCodes": []
+  },
+  {
+    "huntCode": "CP-TURKEY-STATEWIDE-",
+    "species": "Turkey",
+    "sex": "Bearded",
+    "huntType": "Conservation",
+    "huntClass": "Conservation Permit",
+    "area": "Statewide",
+    "unitCode": "statewide",
+    "unitNames": [
+      "Turkey - Statewide Conservation"
+    ],
+    "condition": "",
+    "permitCount": 1,
+    "organizations": [
+      "SFW"
+    ],
+    "averageValue": 2450,
+    "sourceSpecies": "Turkey",
+    "sourceRowStart": 336,
+    "sourceRowNumbers": [
+      "336"
+    ],
+    "matchedPermitRegister": true,
+    "matchedRegisterLabel": "Statewide Turkey Conservation",
+    "boundaryIds": [],
+    "sourceHuntCodes": [
+      "TK1017"
+    ]
+  }
+]
