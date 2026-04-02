@@ -297,15 +297,27 @@ window.UOGA_UI = (() => {
         box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
       }
       .uoga-backpack-toggle:hover { transform: translateY(-1px); }
+      .uoga-backpack-mark-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 34px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.14);
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
+          linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
+        box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+        overflow: hidden;
+      }
       .uoga-backpack-mark {
         display: block;
-        width: 48px;
-        height: 32px;
-        border-radius: 12px;
-        object-fit: cover;
-        object-position: center top;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center center;
+        opacity: 0.96;
       }
       .uoga-backpack-labels { display: grid; gap: 2px; text-align: left; }
       .uoga-backpack-title {
@@ -379,14 +391,16 @@ window.UOGA_UI = (() => {
         overflow: hidden;
         border-radius: 16px;
         border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
-        background: rgba(0,0,0,0.18);
+        background:
+          radial-gradient(circle at top left, rgba(255,255,255,0.16), transparent 34%),
+          linear-gradient(180deg, rgba(51, 39, 31, 0.94), rgba(25, 19, 15, 0.98));
       }
       .uoga-backpack-hero-image {
         display: block;
         width: 100%;
         height: 118px;
-        object-fit: cover;
-        object-position: center 18%;
+        object-fit: contain;
+        object-position: center center;
       }
       .uoga-backpack-hero-kicker,
       .uoga-backpack-kicker {
@@ -546,7 +560,9 @@ window.UOGA_UI = (() => {
     trayShell.className = 'uoga-backpack-shell';
     trayShell.innerHTML = `
       <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
-        <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-mark">
+        <span class="uoga-backpack-mark-wrap">
+          <img src="./assets/hunt-pack.png" alt="Hunt Pack" class="uoga-backpack-mark">
+        </span>
         <span class="uoga-backpack-labels">
           <span class="uoga-backpack-title">Hunt Pack</span>
           <span class="uoga-backpack-subtitle">Recent + packed hunts</span>
