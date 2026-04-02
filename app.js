@@ -124,6 +124,16 @@ function isMobileViewport() {
   return typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches;
 }
 
+function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
+  const code = String(huntCode || '').trim().toUpperCase();
+
+  localStorage.setItem('selected_hunt_code', code);
+  localStorage.setItem('selected_hunt_research_residency', residency);
+  localStorage.setItem('selected_hunt_research_points', String(points));
+
+  window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
+}
+
 // --- DATA NORMALIZATION ---
 function normalizeSpeciesLabel(value) {
   const text = safe(value).trim().toLowerCase();
@@ -1073,6 +1083,24 @@ async function loadDerivedSpikeElkRecords(existingRecords) {
   });
 }
 
+function buildMatchingHuntCard(h, selectedKey) {
+  const selected = selectedKey && selectedKey === getHuntRecordKey(h);
+  const huntKey = escapeHtml(getHuntRecordKey(h));
+  const name = escapeHtml(firstNonEmpty(h.hunt_name, getHuntTitle(h), getUnitName(h), ''));
+  const code = escapeHtml(getHuntCode(h) || '');
+  const codeAttr = escapeHtml(getHuntCode(h) || '');
+  return `
+    <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
+      <div><strong>${name}</strong></div>
+      <div>${code}</div>
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="secondary" data-hunt-research-code="${codeAttr}">
+          Hunt Research
+        </button>
+      </div>
+    </div>`;
+}
+
 function renderMatchingHunts() {
   const container = document.getElementById('matchingHunts');
   if (!container) return;
@@ -1083,12 +1111,9 @@ function renderMatchingHunts() {
       ? 'Select filters or click a hunt unit to begin.'
       : `${list.length} matching hunt${list.length === 1 ? '' : 's'}`
   );
-  container.innerHTML = list.length ? list.map(h => `
-    <div class="hunt-card ${selectedKey && selectedKey === getHuntRecordKey(h) ? 'is-selected' : ''}" data-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
-      <div class="hunt-card-title">${getHuntTitle(h)}</div>
-      <div class="hunt-card-meta">${getUnitName(h)} | ${getWeapon(h)}</div>
-      <div class="hunt-card-meta">${getDates(h)}</div>
-    </div>`).join('') : '<div class="empty-note">Use the matrix or click a hunt unit to load matching hunts.</div>';
+  container.innerHTML = list.length
+    ? list.map(h => buildMatchingHuntCard(h, selectedKey)).join('')
+    : '<div class="empty-note">Use the matrix or click a hunt unit to load matching hunts.</div>';
 }
 
 function closeSelectionInfoWindow() {
@@ -1567,33 +1592,48 @@ window.selectHuntByCode = (code) => {
 };
 
 function renderSelectedHunt() {
-  const p = document.getElementById('selectedHuntPanel');
-  if (!selectedHunt) {
-    if (p) {
-      p.innerHTML = '<div class="empty-note">Select a hunt result or hunt unit to see details.</div>';
-    }
+  const panel = document.getElementById('selectedHuntPanel');
+  const hunt = selectedHunt;
+
+  if (!panel) return;
+
+  if (!hunt) {
+    panel.innerHTML = '<div class="empty-note">No hunt selected yet.</div>';
     closeSelectedHuntFloat();
     return;
   }
-  if (p) {
-    p.innerHTML = `
-      <div style="display:grid;gap:12px;">
-        <div style="display:grid;gap:8px;padding:12px;border:1px solid #d6c1ae;border-radius:12px;background:var(--panel);">
-          <div style="font-size:18px;font-weight:900;letter-spacing:.03em;text-transform:none;color:${DNR_ORANGE};line-height:1.06;">${escapeHtml(getPanelHeading(selectedHunt))}</div>
-          <div style="font-size:28px;font-weight:900;line-height:0.95;color:${DNR_BROWN};">${escapeHtml(getHuntCode(selectedHunt))}</div>
-          <div style="font-size:18px;font-weight:800;line-height:1.1;color:var(--text);">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt))}</div>
+
+  const name = escapeHtml(firstNonEmpty(hunt.hunt_name, getUnitName(hunt), getHuntTitle(hunt), 'Unknown Hunt'));
+  const code = escapeHtml(getHuntCode(hunt) || '');
+  const species = escapeHtml(getSpeciesDisplay(hunt) || '');
+  const weapon = escapeHtml(getWeapon(hunt) || '');
+  const huntType = escapeHtml(getHuntType(hunt) || '');
+
+  panel.innerHTML = `
+    <div class="selected-hunt-card">
+      <div style="display:grid; gap:10px;">
+        <div><strong>${name}</strong></div>
+        <div><strong>Hunt Code:</strong> ${code}</div>
+        <div><strong>Species:</strong> ${species}</div>
+        <div><strong>Weapon:</strong> ${weapon}</div>
+        <div><strong>Hunt Type:</strong> ${huntType}</div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+          <button
+            type="button"
+            class="secondary"
+            id="selectedHuntResearchBtn">
+            Open Hunt Research
+          </button>
         </div>
-        <div class="detail-grid">
-          <div><strong>Species</strong>${escapeHtml(getSpeciesDisplay(selectedHunt))}</div>
-          <div><strong>Sex</strong>${escapeHtml(getNormalizedSex(selectedHunt))}</div>
-          <div><strong>Hunt Type</strong>${escapeHtml(getHuntType(selectedHunt))}</div>
-          <div><strong>Weapon</strong>${escapeHtml(getWeapon(selectedHunt))}</div>
-          <div><strong>Hunt Class</strong>${escapeHtml(getHuntCategory(selectedHunt))}</div>
-          <div><strong>DWR Hunt Unit</strong>${escapeHtml(getUnitName(selectedHunt))}</div>
-          <div style="grid-column:1 / -1;"><strong>Dates</strong>${escapeHtml(getDates(selectedHunt) || 'See official hunt details')}</div>
-        </div>
-      </div>`;
-  }
+      </div>
+    </div>
+  `;
+
+  document.getElementById('selectedHuntResearchBtn')?.addEventListener('click', () => {
+    openHuntResearch(getHuntCode(hunt));
+  });
+
   openSelectedHuntFloat();
 }
 
@@ -3033,12 +3073,21 @@ function bindControls() {
   });
   clearFiltersBtn?.addEventListener('click', resetAllFilters);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
+    const researchBtn = event.target.closest('[data-hunt-research-code]');
+    if (researchBtn) {
+      event.stopPropagation();
+      event.preventDefault();
+      const code = researchBtn.getAttribute('data-hunt-research-code');
+      if (code) openHuntResearch(code);
+      return;
+    }
     const card = event.target.closest('[data-hunt-key]');
     if (!card) return;
     window.selectHuntByKey(card.getAttribute('data-hunt-key'));
   });
   document.getElementById('matchingHunts')?.addEventListener('keydown', event => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.target.closest('[data-hunt-research-code]')) return;
     const card = event.target.closest('[data-hunt-key]');
     if (!card) return;
     event.preventDefault();
