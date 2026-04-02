@@ -44,9 +44,10 @@
     }
 
     .research-shell {
-      max-width: 1420px;
+      width: min(1700px, calc(100vw - 28px));
+      max-width: none;
       margin: 0 auto;
-      padding: 18px 20px 38px;
+      padding: 18px 24px 38px;
       display: grid;
       gap: 18px;
     }
@@ -107,12 +108,12 @@
 
     .hero-grid {
       grid-template-columns: 1.15fr 0.85fr;
-      align-items: stretch;
+      align-items: start;
     }
 
     .hero-copy {
       display: grid;
-      gap: 12px;
+      gap: 10px;
       align-content: start;
     }
 
@@ -120,9 +121,9 @@
       margin: 0;
       color: #fff8f1;
       font-family: var(--font-display);
-      font-size: clamp(32px, 4vw, 58px);
-      line-height: 0.92;
-      max-width: 12ch;
+      font-size: clamp(14px, 1.35vw, 16px);
+      line-height: 1.05;
+      max-width: 34ch;
     }
 
     .hero-copy p,
@@ -160,6 +161,11 @@
       flex-wrap: wrap;
     }
 
+    .hero-card .card-body {
+      padding-top: 16px;
+      padding-bottom: 12px;
+    }
+
     .research-btn,
     .research-link,
     .mini-btn {
@@ -195,7 +201,26 @@
     }
 
     .helper-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .formula-card {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03)),
+        rgba(17, 14, 11, 0.72);
+    }
+
+    .formula-line {
+      display: block;
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(224, 116, 41, 0.34);
+      background: rgba(0, 0, 0, 0.26);
+      color: #fff0e4;
+      font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     .helper-card,
@@ -222,10 +247,24 @@
       display: block;
       margin-bottom: 6px;
       color: #ddb089;
-      font-size: 11px;
+      font-size: 16px;
       font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .helper-card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--research-muted);
+      line-height: 1.64;
+    }
+
+    .helper-card li + li {
+      margin-top: 6px;
+    }
+
+    .helper-card li::marker {
+      color: var(--research-accent);
     }
 
     .helper-card strong,
@@ -539,7 +578,7 @@
 
       .hero-copy h2 {
         max-width: none;
-        font-size: clamp(28px, 8vw, 40px);
+        font-size: clamp(14px, 4.5vw, 16px);
       }
 
       .chip .value,
@@ -605,15 +644,28 @@
         <div class="helper-grid" style="margin-top:14px;">
           <div class="helper-card">
             <span class="label">What the engine does</span>
-            <p>It removes last year's successful permittees from the applicant pool, rolls remaining applicants forward, applies current permit numbers, and then runs the selected hunt through the correct Utah draw method.</p>
+            <ul>
+              <li>Starts with the same hunt's accepted 2025 draw results.</li>
+              <li>Removes the hunters who already drew from that applicant pool.</li>
+              <li>Rolls the remaining hunters forward one point where the draw family requires it.</li>
+              <li>Applies current permit numbers and runs the hunt through the correct Utah draw method.</li>
+            </ul>
           </div>
           <div class="helper-card">
             <span class="label">Why that matters</span>
-            <p>You are not just seeing generic chances at your point level. You are seeing the current hunt re-read against the hunters most likely to be competing directly with you for that same permit.</p>
+            <ul>
+              <li>You are not just seeing generic chances at your point level.</li>
+              <li>You are seeing the current hunt re-read against the hunters most likely to be competing directly with you for that same permit.</li>
+            </ul>
           </div>
           <div class="helper-card">
             <span class="label">Guaranteed line explained</span>
             <p><strong>Minimum Bonus Points for 100% Initial Draw</strong> means the lowest point line that fully clears the max-point allocation before the random side begins.</p>
+          </div>
+          <div class="helper-card formula-card">
+            <span class="label">Projection Formula</span>
+            <p>We show the logic on purpose so the result feels earned, not magical. This is the short version of the engine that powers the report.</p>
+            <code class="formula-line">2026 draw read = (2025 actual applicants - 2025 successful draw hunters) + one-point carry-forward + current permits + Utah draw-lane simulation</code>
           </div>
         </div>
       </div>

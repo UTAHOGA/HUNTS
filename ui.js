@@ -269,15 +269,20 @@ window.UOGA_UI = (() => {
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      .uoga-backpack-shell { position: relative; }
+      .uoga-backpack-shell {
+        position: relative;
+        flex: 0 0 auto;
+        margin-left: 10px;
+        z-index: 8;
+      }
       .uoga-backpack-toggle {
         position: relative;
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        min-height: 50px;
-        padding: 7px 14px 7px 8px;
-        border-radius: 18px 18px 24px 18px;
+        min-height: 46px;
+        padding: 6px 14px 6px 8px;
+        border-radius: 18px 18px 22px 18px;
         border: 1px solid var(--line);
         background:
           radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 38%),
@@ -294,8 +299,8 @@ window.UOGA_UI = (() => {
       .uoga-backpack-toggle:hover { transform: translateY(-1px); }
       .uoga-backpack-mark {
         display: block;
-        width: 56px;
-        height: 36px;
+        width: 48px;
+        height: 32px;
         border-radius: 12px;
         object-fit: cover;
         object-position: center top;
@@ -328,13 +333,13 @@ window.UOGA_UI = (() => {
       }
       .uoga-backpack-panel {
         position: absolute;
-        top: calc(100% + 16px);
-        right: -24px;
-        width: min(500px, calc(100vw - 28px));
+        top: calc(100% + 12px);
+        right: -10px;
+        width: min(430px, calc(100vw - 28px));
         max-height: min(72vh, 760px);
         display: none;
         overflow: auto;
-        padding: 14px;
+        padding: 12px;
         border: 1px solid var(--line);
         border-radius: 28px 28px 24px 24px;
         background:
@@ -342,13 +347,14 @@ window.UOGA_UI = (() => {
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
         z-index: 30;
+        transform-origin: top right;
       }
       .uoga-backpack-panel::before {
         content: "";
         position: absolute;
         top: -16px;
-        right: 70px;
-        width: 156px;
+        right: 52px;
+        width: 132px;
         height: 28px;
         border: 1px solid var(--line);
         border-bottom: 0;
@@ -362,7 +368,7 @@ window.UOGA_UI = (() => {
       .uoga-backpack-hero {
         display: grid;
         gap: 8px;
-        padding: 16px;
+        padding: 14px;
         border-radius: 22px;
         border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
         background:
@@ -378,7 +384,7 @@ window.UOGA_UI = (() => {
       .uoga-backpack-hero-image {
         display: block;
         width: 100%;
-        height: 168px;
+        height: 118px;
         object-fit: cover;
         object-position: center 18%;
       }
@@ -411,7 +417,7 @@ window.UOGA_UI = (() => {
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        margin: 4px 2px 0;
+        margin: 2px 2px 0;
         color: var(--text);
         font-size: 12px;
         font-weight: 900;
@@ -438,8 +444,8 @@ window.UOGA_UI = (() => {
       .uoga-backpack-item,
       .uoga-backpack-empty {
         display: grid;
-        gap: 8px;
-        padding: 14px;
+        gap: 7px;
+        padding: 12px;
         border-radius: 18px;
         border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
         background: color-mix(in srgb, var(--panel2) 94%, transparent);
@@ -493,6 +499,7 @@ window.UOGA_UI = (() => {
       @media (max-width: 900px) {
         .uoga-backpack-shell {
           width: 100%;
+          margin-left: 0;
         }
         .uoga-backpack-toggle {
           width: 100%;
