@@ -539,25 +539,27 @@
     }
 
     .report-table tbody tr.is-user-row {
-      background: rgba(120, 211, 255, 0.12);
-      box-shadow: inset 3px 0 0 #78cbff;
-    }
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: inset 3px 0 0 #f4c542;
+        color: #2f1d12;
+      }
 
     .report-table tbody tr.is-cutoff-row {
       background: rgba(246, 210, 120, 0.08);
     }
 
     .report-table tbody tr.is-user-row.is-cutoff-row {
-      background: linear-gradient(90deg, rgba(120, 211, 255, 0.16), rgba(246, 210, 120, 0.12));
-    }
+        background: rgba(255, 255, 255, 0.98);
+      }
 
     .report-table tbody tr.is-guaranteed-row {
-      background: rgba(127, 214, 142, 0.08);
-    }
+        background: rgba(255, 255, 255, 0.98);
+        color: #2f1d12;
+      }
 
     .report-table tbody tr.is-user-row.is-guaranteed-row {
-      background: linear-gradient(90deg, rgba(120, 211, 255, 0.16), rgba(127, 214, 142, 0.12));
-    }
+        background: rgba(255, 255, 255, 0.99);
+      }
 
     .marker-stack {
       display: flex;
@@ -581,10 +583,10 @@
     }
 
     .marker-pill.user {
-      border-color: rgba(120, 211, 255, 0.7);
-      background: rgba(120, 211, 255, 0.14);
-      color: #dff6ff;
-    }
+        border-color: rgba(244, 197, 66, 0.95);
+        background: rgba(255, 249, 222, 0.98);
+        color: #a06c00;
+      }
 
     .marker-pill.cutoff {
       border-color: rgba(246, 210, 120, 0.7);
@@ -593,10 +595,96 @@
     }
 
     .marker-pill.guaranteed {
-      border-color: rgba(127, 214, 142, 0.7);
-      background: rgba(127, 214, 142, 0.14);
-      color: #d8ffe0;
-    }
+        border-color: rgba(224, 116, 41, 0.92);
+        background: rgba(255, 246, 240, 0.98);
+        color: #e07429;
+      }
+
+    .marker-pill.sources {
+        border-color: rgba(224, 116, 41, 0.92);
+        background: transparent;
+        color: #e07429;
+        cursor: pointer;
+      }
+
+    .marker-pill.sources:hover {
+        background: rgba(224, 116, 41, 0.12);
+      }
+
+    .source-modal[hidden] {
+        display: none;
+      }
+
+    .source-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: rgba(12, 8, 6, 0.76);
+      }
+
+    .source-modal-card {
+        width: min(700px, 100%);
+        padding: 24px;
+        border-radius: 22px;
+        border: 1px solid rgba(170, 124, 84, 0.42);
+        background: linear-gradient(180deg, rgba(39, 27, 21, 0.98), rgba(21, 15, 12, 0.98));
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+      }
+
+    .source-modal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 18px;
+      }
+
+    .source-modal-head h3 {
+        margin: 0;
+        color: #fff3e7;
+        font-size: 1.3rem;
+      }
+
+    .source-modal-head p {
+        margin: 6px 0 0;
+        color: rgba(255, 243, 231, 0.72);
+      }
+
+    .source-close {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid rgba(170, 124, 84, 0.42);
+        background: rgba(255,255,255,0.06);
+        color: #fff8f1;
+        cursor: pointer;
+      }
+
+    .source-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+      }
+
+    .source-box {
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(170, 124, 84, 0.28);
+        background: rgba(255,255,255,0.04);
+      }
+
+    .source-box .label {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+    .source-box .value {
+        color: #fff3e7;
+        font-weight: 700;
+      }
 
     .quick-grid,
     .proof-grid {
@@ -937,6 +1025,19 @@
       </aside>
     </div>
   </main>
+
+  <div id="sourceModal" class="source-modal" hidden>
+    <div class="source-modal-card" role="dialog" aria-modal="true" aria-labelledby="sourceModalTitle">
+      <div class="source-modal-head">
+        <div>
+          <h3 id="sourceModalTitle">DWR Source Snapshot</h3>
+          <p id="sourceModalSubtitle">Reference details for this hunt row.</p>
+        </div>
+        <button id="sourceModalClose" class="source-close" type="button" aria-label="Close sources">X</button>
+      </div>
+      <div id="sourceModalGrid" class="source-grid"></div>
+    </div>
+  </div>
 
   <script src="./config.js?v=20260402-hunt-research-clean-1"></script>
   <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>

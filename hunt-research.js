@@ -30,7 +30,7 @@
     masterByCode: new Map(),
   };
 
-  const els = {
+    const els = {
     huntCodeInput: document.getElementById('huntCodeInput'),
     residencySelect: document.getElementById('residencySelect'),
     pointsInput: document.getElementById('pointsInput'),
@@ -58,13 +58,18 @@
     summaryRecommendation: document.getElementById('summaryRecommendation'),
     ladderTableEmpty: document.getElementById('ladderTableEmpty'),
     ladderTableWrap: document.getElementById('ladderTableWrap'),
-    ladderTableBody: document.getElementById('ladderTableBody'),
-    ladderPrimaryHeader: document.getElementById('ladderPrimaryHeader'),
-    ladderSecondaryHeader: document.getElementById('ladderSecondaryHeader'),
-    basketCount: document.getElementById('basketCount'),
-    basketList: document.getElementById('basketList'),
-    clearBasketButton: document.getElementById('clearBasketButton'),
-  };
+      ladderTableBody: document.getElementById('ladderTableBody'),
+      ladderPrimaryHeader: document.getElementById('ladderPrimaryHeader'),
+      ladderSecondaryHeader: document.getElementById('ladderSecondaryHeader'),
+      sourceModal: document.getElementById('sourceModal'),
+      sourceModalTitle: document.getElementById('sourceModalTitle'),
+      sourceModalSubtitle: document.getElementById('sourceModalSubtitle'),
+      sourceModalGrid: document.getElementById('sourceModalGrid'),
+      sourceModalClose: document.getElementById('sourceModalClose'),
+      basketCount: document.getElementById('basketCount'),
+      basketList: document.getElementById('basketList'),
+      clearBasketButton: document.getElementById('clearBasketButton'),
+    };
 
   function normalizeKey(value) {
     return String(value || '').trim().toUpperCase();
@@ -460,10 +465,67 @@
     }
   }
 
-  function markerHtml(markers) {
-    if (!markers.length) return '<span class="marker-pill">Reference</span>';
-    return `<div class="marker-stack">${markers.map((marker) => `<span class="marker-pill ${marker.kind}">${escapeHtml(marker.label)}</span>`).join('')}</div>`;
-  }
+    function hasMeaningfulValue(value) {
+      const text = String(value ?? '').trim();
+      return !!text && text.toUpperCase() !== 'N/A' && text.toUpperCase() !== 'NOT AVAILABLE';
+    }
+
+    function hasSourceData(meta, row) {
+      if (!meta || !row) return false;
+      return [
+        row.odds_2025_actual,
+        meta.success_percent,
+        meta.success_hunters,
+        meta.success_harvest,
+        meta.public_permits_2025,
+        meta.public_permits_2026,
+      ].some(hasMeaningfulValue);
+    }
+
+    function buildSourceBoxes(meta, row) {
+      const boxes = [
+        ['2025 Draw Odds', row?.odds_2025_actual || 'Not available'],
+        ['2025 Harvest Success', hasMeaningfulValue(meta?.success_percent) ? `${meta.success_percent}%` : 'Not available'],
+        ['Harvest / Hunters', hasMeaningfulValue(meta?.success_harvest) || hasMeaningfulValue(meta?.success_hunters)
+          ? `${meta?.success_harvest || '0'} / ${meta?.success_hunters || '0'}`
+          : 'Not available'],
+        ['2025 Public Permits', meta?.public_permits_2025 || 'Not available'],
+        ['2026 Public Permits', meta?.public_permits_2026 || 'Not available'],
+        ['Source', 'DWR draw odds + harvest results'],
+      ];
+      return boxes.map(([label, value]) => `
+        <section class="source-box">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </section>
+      `).join('');
+    }
+
+    function openSourceModal(meta, row, residency) {
+      if (!els.sourceModal || !els.sourceModalGrid || !els.sourceModalTitle || !els.sourceModalSubtitle) return;
+      const pointLabel = formatInteger(row?.points);
+      els.sourceModalTitle.textContent = 'DWR Source Snapshot';
+      els.sourceModalSubtitle.textContent = `${meta?.hunt_code || ''} · ${meta?.hunt_name || ''} · ${residency || ''} · ${pointLabel} points`;
+      els.sourceModalGrid.innerHTML = buildSourceBoxes(meta, row);
+      els.sourceModal.hidden = false;
+      document.body.classList.add('modal-open');
+    }
+
+    function closeSourceModal() {
+      if (!els.sourceModal) return;
+      els.sourceModal.hidden = true;
+      document.body.classList.remove('modal-open');
+    }
+
+    function markerHtml(markers) {
+      if (!markers.length) return '';
+      return `<div class="marker-stack">${markers.map((marker) => {
+        if (marker.kind === 'sources') {
+          return `<button type="button" class="marker-pill sources" data-source-pill="true" data-point="${escapeHtml(marker.point)}">${escapeHtml(marker.label)}</button>`;
+        }
+        return `<span class="marker-pill ${marker.kind}">${escapeHtml(marker.label)}</span>`;
+      }).join('')}</div>`;
+    }
 
   function renderLadder(meta, huntCode, residency, points) {
     if (!els.ladderTableWrap || !els.ladderTableEmpty || !els.ladderTableBody) return;
@@ -476,20 +538,23 @@
       return;
     }
 
-    els.ladderTableBody.innerHTML = rows.map((row) => {
-      const markers = [];
-      const classes = [];
-      if (row.points === points) {
-        markers.push({ kind: 'user', label: 'You' });
+      els.ladderTableBody.innerHTML = rows.map((row) => {
+        const markers = [];
+        const classes = [];
+        if (row.points === points) {
+          markers.push({ kind: 'user', label: 'You' });
         classes.push('is-user-row');
       }
-      if (row.guaranteed_marker === 'TRUE') {
-        markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
-        classes.push('is-guaranteed-row');
-      }
-      const primaryValue = isPreferenceAntlerless(meta)
-        ? formatProbability(row.odds_2026_projected)
-        : formatProbability(row.max_pool_projection_2026);
+        if (row.guaranteed_marker === 'TRUE') {
+          markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
+          classes.push('is-guaranteed-row');
+        }
+        if (hasSourceData(meta, row)) {
+          markers.push({ kind: 'sources', label: 'Sources', point: row.points });
+        }
+        const primaryValue = isPreferenceAntlerless(meta)
+          ? formatProbability(row.odds_2026_projected)
+          : formatProbability(row.max_pool_projection_2026);
       const secondaryCell = isPreferenceAntlerless(meta)
         ? ''
         : `<td>${formatProbability(row.random_draw_projection_2026)}</td>`;
@@ -499,9 +564,9 @@
           <td>${escapeHtml(row.odds_2025_actual || 'Not available')}</td>
           <td>${primaryValue}</td>
           ${secondaryCell}
-          <td>${markerHtml(markers)}</td>
-        </tr>`;
-    }).join('');
+            <td>${markerHtml(markers)}</td>
+          </tr>`;
+      }).join('');
 
     els.ladderTableEmpty.hidden = true;
     els.ladderTableWrap.hidden = false;
@@ -675,7 +740,7 @@
     runResearch();
   }
 
-  function bindEvents() {
+    function bindEvents() {
     els.runResearchButton?.addEventListener('click', runResearch);
     els.clearFiltersButton?.addEventListener('click', clearFilters);
     els.addToBasketButton?.addEventListener('click', () => {
@@ -693,10 +758,32 @@
       el?.addEventListener('change', runResearch);
     });
 
-    [els.huntCodeInput, els.pointsInput].forEach((el) => {
-      el?.addEventListener('input', runResearch);
-    });
-  }
+      [els.huntCodeInput, els.pointsInput].forEach((el) => {
+        el?.addEventListener('input', runResearch);
+      });
+
+      els.ladderTableBody?.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-source-pill="true"]');
+        if (!trigger || !state.selectedMeta || !state.selectedFilters) return;
+        const point = Number.parseInt(trigger.getAttribute('data-point') || '', 10);
+        const row = getLadderRows(state.selectedFilters.huntCode, state.selectedFilters.residency)
+          .find((candidate) => candidate.points === point);
+        if (!row) return;
+        openSourceModal(state.selectedMeta, row, state.selectedFilters.residency);
+      });
+
+      els.sourceModalClose?.addEventListener('click', closeSourceModal);
+      els.sourceModal?.addEventListener('click', (event) => {
+        if (event.target === els.sourceModal) {
+          closeSourceModal();
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeSourceModal();
+        }
+      });
+    }
 
   async function init() {
     try {
