@@ -294,9 +294,17 @@
   }
 
   function getDisplayedOdds(row) {
-    if (!row) return 'Not available';
-    if (row.status === 'MAX POOL') return '100%';
-    return formatProbability(row.random_draw_odds_2026);
+    if (!row) return { value: 'Not available', source: 'unavailable' };
+    if (row.status === 'MAX POOL') return { value: '100%', source: 'guaranteed' };
+    const projectedOdds = formatProbability(row.odds_2026_projected);
+    if (projectedOdds !== 'Not available') {
+      return { value: projectedOdds, source: 'projected_total' };
+    }
+    const randomOdds = formatProbability(row.random_draw_odds_2026);
+    if (randomOdds !== 'Not available') {
+      return { value: randomOdds, source: 'random_pool' };
+    }
+    return { value: 'Not available', source: 'unavailable' };
   }
 
   function getRecommendation(row) {
@@ -334,11 +342,13 @@
       return;
     }
 
+    const displayedOdds = getDisplayedOdds(row);
+    const oddsSuffix = displayedOdds.source === 'random_pool' ? ' (random pool fallback)' : '';
     els.selectedOutlook.textContent = row.draw_outlook || 'Not available';
     els.summaryGuaranteed.textContent = `Guaranteed At: ${formatInteger(row.guaranteed_at_2026)} pts`;
     els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
     els.summaryStatus.textContent = `Status: ${formatGapStatus(row.gap)}`;
-    els.summaryOdds.textContent = `Estimated Draw Odds: ${getDisplayedOdds(row)} from remaining pool`;
+    els.summaryOdds.textContent = `Predicted 2026 Draw Odds: ${displayedOdds.value}${oddsSuffix}`;
     els.summaryTrend.textContent = `Trend: ${row.trend || 'Not available'}`;
     els.summaryRecommendation.textContent = getRecommendation(row);
 
