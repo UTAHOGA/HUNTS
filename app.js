@@ -3249,11 +3249,8 @@ function zoomToDisplayHuntsBounds() {
 
 function bootstrapPendingHuntSelection() {
   const params = new URLSearchParams(window.location.search || '');
-  const pendingCode = safe(params.get('hunt_code') || localStorage.getItem('selected_hunt_code')).trim().toUpperCase();
+  const pendingCode = safe(params.get('hunt_code')).trim().toUpperCase();
   if (!pendingCode) return;
-  if (searchInput) {
-    searchInput.value = pendingCode;
-  }
   const match = huntData.find((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase() === pendingCode);
   if (!match) return;
   selectedHunt = match;
