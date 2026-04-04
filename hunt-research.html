@@ -884,7 +884,7 @@
         <div class="hero-grid">
           <div class="hero-copy">
             <span class="eyebrow">Production engine read</span>
-            <h2>Enter a hunt code, set residency and points, and get the answer in seconds.</h2>
+            <h2>Enter hunt code, residency, and points.</h2>
             <p>One summary, one ladder, one recommendation.</p>
             <div class="hero-actions">
               <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
@@ -894,7 +894,7 @@
 
           <div class="note-box">
             <span class="label">What this page shows</span>
-            <p>Guaranteed line, your point position, remaining-pool odds, and whether the hunt is realistically catchable.</p>
+            <p>Guaranteed line, draw odds, and catchability.</p>
           </div>
         </div>
       </div>
@@ -905,7 +905,7 @@
         <section class="research-card controls-card">
           <div class="card-head">
             <p>Hunter Inputs</p>
-            <h2>Choose a hunt and get the answer</h2>
+            <h2>Choose a hunt</h2>
           </div>
           <div class="card-body">
             <div class="control-grid">
@@ -932,8 +932,8 @@
             </div>
 
             <div class="status-grid">
-              <div id="filterReadout" class="status-box">Waiting for the Hunt Research bundle to load.</div>
-              <div id="plannerReadout" class="status-box">If a hunt was selected on Hunt Planner, this page will try to pick it up and make it available inside your Hunt Backpack.</div>
+              <div id="filterReadout" class="status-box">Loading hunt research data.</div>
+              <div id="plannerReadout" class="status-box">Selected hunts from Hunt Planner appear in your Hunt Backpack.</div>
             </div>
           </div>
         </section>
@@ -946,7 +946,7 @@
           <div class="card-body">
               <div id="detailEmpty" class="empty-note">
                 <strong style="display:block;margin-bottom:8px;color:#fff8f1;font-size:16px;">No hunt selected yet</strong>
-              Load a hunt from the Hunt Backpack, use the Hunt Planner handoff, or type a hunt code directly. Once a hunt is selected, the page will show the summary first, then one point ladder and one short recommendation.
+              Load a hunt from Hunt Backpack or enter a hunt code.
             </div>
 
             <div id="detailContent" hidden>
@@ -1016,7 +1016,7 @@
               <section class="report-info-card">
                 <div class="report-info-head">
                   <h3>Recommendation</h3>
-                  <p>One short call on whether this hunt is realistically catchable.</p>
+                  <p>Quick recommendation.</p>
                 </div>
                 <div class="proof-grid" style="grid-template-columns:1fr;">
                   <div class="note-box">
@@ -1029,9 +1029,9 @@
               <section class="report-table-card">
                 <div class="report-table-head">
                   <h3>Point ladder</h3>
-                  <p>Blue = you. Green = guaranteed.</p>
+                  <p>Yellow = you. Orange = guaranteed.</p>
                 </div>
-                <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No modeled ladder rows are attached for this hunt and residency yet.</div>
+                <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No ladder rows for this hunt and residency yet.</div>
                 <div id="ladderTableWrap" class="report-table-wrap" hidden>
                   <table class="report-table">
                     <thead>
@@ -1059,7 +1059,7 @@
             <h3>Recent Hunts</h3>
           </div>
           <div class="card-body">
-            <p class="proof-note" style="margin-bottom:12px;">Hunts carried over from Hunt Planner or saved on this page stay here so the hunter can load the next unit without starting over.</p>
+            <p class="proof-note" style="margin-bottom:12px;">Saved hunts stay here for quick reload.</p>
             <div class="backpack-actions" style="margin-bottom:12px;">
               <button id="clearBasketButton" class="mini-btn" type="button">Clear Hunt Backpack</button>
             </div>
@@ -1076,7 +1076,7 @@
       <div class="source-modal-head">
         <div>
           <h3 id="sourceModalTitle">DWR Source Snapshot</h3>
-          <p id="sourceModalSubtitle">Reference details for this hunt row.</p>
+          <p id="sourceModalSubtitle">Source details for this hunt row.</p>
         </div>
         <button id="sourceModalClose" class="source-close" type="button" aria-label="Close sources">X</button>
       </div>
