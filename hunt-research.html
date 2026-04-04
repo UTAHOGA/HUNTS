@@ -125,7 +125,8 @@
       font-family: var(--font-display);
       font-size: clamp(21px, 2vw, 24px);
       line-height: 1.08;
-      max-width: 26ch;
+      max-width: none;
+      white-space: nowrap;
     }
 
     .hero-copy p,
@@ -913,6 +914,7 @@
       .hero-copy h2 {
         max-width: none;
         font-size: clamp(14px, 4.5vw, 16px);
+        white-space: normal;
       }
 
       .chip .value,
@@ -962,7 +964,7 @@
             <div class="hero-copy">
               <span class="eyebrow">Production engine read</span>
               <h2>Enter hunt code, residency, and points.</h2>
-              <p>Guaranteed line, draw odds, and catchability.</p>
+              <p>See the line, your odds, and whether the hunt is realistically in reach.</p>
               <div class="hero-actions">
                 <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
                 <button class="research-btn" type="button" onclick="document.getElementById('basketList').scrollIntoView({ behavior: 'smooth', block: 'start' })">Open Hunt Backpack</button>
@@ -971,7 +973,7 @@
 
             <div class="note-box">
               <span class="label">What this page shows</span>
-              <p>How your point level compares to the line, the draw odds, and whether the hunt is realistically in reach.</p>
+              <p>Where your point level sits against the line, what the modeled draw odds look like, and how realistic the hunt is.</p>
             </div>
         </div>
       </div>
