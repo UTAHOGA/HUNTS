@@ -59,6 +59,8 @@
     ladderTableEmpty: document.getElementById('ladderTableEmpty'),
     ladderTableWrap: document.getElementById('ladderTableWrap'),
     ladderTableBody: document.getElementById('ladderTableBody'),
+    ladderPrimaryHeader: document.getElementById('ladderPrimaryHeader'),
+    ladderSecondaryHeader: document.getElementById('ladderSecondaryHeader'),
     basketCount: document.getElementById('basketCount'),
     basketList: document.getElementById('basketList'),
     clearBasketButton: document.getElementById('clearBasketButton'),
@@ -310,8 +312,27 @@
     return { value: 'Not available', source: 'unavailable' };
   }
 
-  function getRecommendation(row) {
+  function isPreferenceAntlerless(meta) {
+    const huntType = String(meta?.hunt_type || '').trim().toLowerCase();
+    const species = String(meta?.species || '').trim().toLowerCase();
+    if (!huntType.includes('antlerless')) return false;
+    return species.includes('deer') || species.includes('elk') || species.includes('pronghorn');
+  }
+
+  function getRecommendation(meta, row) {
     if (!row) return 'Modeled recommendation not available for this hunt and residency yet.';
+    if (isPreferenceAntlerless(meta)) {
+      if (row.status === 'MAX POOL') {
+        return 'This hunt is currently inside the preference-point line at your selected point level.';
+      }
+      if (row.draw_outlook === 'POINT CREEP DEFEAT') {
+        return 'The preference line is moving away faster than your point gain. This is not a realistic catch-up hunt.';
+      }
+      if (row.draw_outlook === 'MAY DRAW IN 5-10 YEARS') {
+        return 'You are still behind the preference line, but the hunt remains potentially catchable if pressure stabilizes.';
+      }
+      return 'You are below the current preference line and need the line to soften or more permits to appear.';
+    }
     switch (row.draw_outlook) {
       case 'GREEN LIGHT':
         return 'This hunt is currently inside the max-point pool at your selected point level.';
@@ -322,6 +343,15 @@
       default:
         return 'You are outside the guaranteed line and relying on the remaining random pool.';
     }
+  }
+
+  function getPrimaryOddsLabel(meta, row, displayedOdds) {
+    if (isPreferenceAntlerless(meta)) {
+      return `2026 Preference Draw: ${formatProbability(row?.odds_2026_projected)}`;
+    }
+    return displayedOdds.source === 'guaranteed'
+      ? '2026 Max Pool: 100%'
+      : `2026 Random Draw: ${displayedOdds.value}`;
   }
 
   function getOutlookSignal(meta, row) {
@@ -367,6 +397,18 @@
     els.summaryTrend.setAttribute('aria-label', `${active} trend`);
   }
 
+  function setLadderHeaders(meta) {
+    if (!els.ladderPrimaryHeader || !els.ladderSecondaryHeader) return;
+    if (isPreferenceAntlerless(meta)) {
+      els.ladderPrimaryHeader.textContent = '2026 Preference Draw';
+      els.ladderSecondaryHeader.hidden = true;
+    } else {
+      els.ladderPrimaryHeader.textContent = '2026 Max Pool';
+      els.ladderSecondaryHeader.textContent = '2026 Random Draw';
+      els.ladderSecondaryHeader.hidden = false;
+    }
+  }
+
   function renderFilterReadout(filters) {
     els.filterReadout.textContent = filters.huntCode
       ? `${filters.huntCode} · ${filters.residency} · ${filters.points} point${filters.points === 1 ? '' : 's'}.`
@@ -397,15 +439,15 @@
 
     const displayedOdds = getDisplayedOdds(row);
     renderOutlookLight(getOutlookSignal(meta, row));
-    els.summaryGuaranteed.textContent = `Guaranteed At: ${formatInteger(row.guaranteed_at_2026)} pts`;
+    els.summaryGuaranteed.textContent = isPreferenceAntlerless(meta)
+      ? `Preference Line: ${formatInteger(row.guaranteed_at_2026)} pts`
+      : `Guaranteed At: ${formatInteger(row.guaranteed_at_2026)} pts`;
     els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
     els.summaryStatus.textContent = `Status: ${formatGapStatus(row.gap)}`;
-      els.summaryOdds.textContent = displayedOdds.source === 'guaranteed'
-        ? '2026 Max Pool: 100%'
-        : `2026 Random Draw: ${displayedOdds.value}`;
+    els.summaryOdds.textContent = getPrimaryOddsLabel(meta, row, displayedOdds);
     renderTrendLight(getTrendSignal(row));
     if (els.summaryTrendText) els.summaryTrendText.textContent = row.trend || 'Not available';
-    els.summaryRecommendation.textContent = getRecommendation(row);
+    els.summaryRecommendation.textContent = getRecommendation(meta, row);
 
     if (els.selectedHuntCodeRead) {
       els.selectedHuntCodeRead.textContent = meta?.hunt_code || filters.huntCode || 'Not loaded';
@@ -423,8 +465,9 @@
     return `<div class="marker-stack">${markers.map((marker) => `<span class="marker-pill ${marker.kind}">${escapeHtml(marker.label)}</span>`).join('')}</div>`;
   }
 
-  function renderLadder(huntCode, residency, points) {
+  function renderLadder(meta, huntCode, residency, points) {
     if (!els.ladderTableWrap || !els.ladderTableEmpty || !els.ladderTableBody) return;
+    setLadderHeaders(meta);
     const rows = getLadderRows(huntCode, residency);
     if (!rows.length) {
       els.ladderTableWrap.hidden = true;
@@ -444,12 +487,18 @@
         markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
         classes.push('is-guaranteed-row');
       }
+      const primaryValue = isPreferenceAntlerless(meta)
+        ? formatProbability(row.odds_2026_projected)
+        : formatProbability(row.max_pool_projection_2026);
+      const secondaryCell = isPreferenceAntlerless(meta)
+        ? ''
+        : `<td>${formatProbability(row.random_draw_projection_2026)}</td>`;
       return `
         <tr class="${classes.join(' ')}">
           <td>${formatInteger(row.points)}</td>
           <td>${escapeHtml(row.odds_2025_actual || 'Not available')}</td>
-            <td>${formatProbability(row.max_pool_projection_2026)}</td>
-          <td>${formatProbability(row.random_draw_projection_2026)}</td>
+          <td>${primaryValue}</td>
+          ${secondaryCell}
           <td>${markerHtml(markers)}</td>
         </tr>`;
     }).join('');
@@ -493,7 +542,7 @@
     }
 
     renderSummary(meta, engineRow, filters, coverageMessage);
-    renderLadder(filters.huntCode, filters.residency, filters.points);
+    renderLadder(meta, filters.huntCode, filters.residency, filters.points);
 
     state.selectedMeta = meta;
     state.selectedFilters = filters;
