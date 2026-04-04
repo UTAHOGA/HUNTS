@@ -206,9 +206,23 @@ window.UOGA_UI = (() => {
     trayPanel.setAttribute('aria-hidden', 'true');
   }
 
+  function positionBackpackTray() {
+    if (!trayButton || !trayPanel) return;
+    const rect = trayButton.getBoundingClientRect();
+    const panelWidth = Math.min(430, Math.max(320, window.innerWidth - 28));
+    const right = Math.max(14, window.innerWidth - rect.right);
+    const left = Math.min(window.innerWidth - panelWidth - 14, Math.max(14, rect.right - panelWidth));
+    trayPanel.style.top = `${rect.bottom + 12}px`;
+    trayPanel.style.left = `${left}px`;
+    trayPanel.style.right = 'auto';
+    trayPanel.style.width = `min(430px, calc(100vw - 28px))`;
+    trayPanel.style.maxHeight = `min(72vh, 760px)`;
+  }
+
   function openBackpackTray() {
     if (!trayShell || !trayButton || !trayPanel) return;
     renderBackpackTray();
+    positionBackpackTray();
     trayOpen = true;
     trayShell.classList.add('is-open');
     trayButton.setAttribute('aria-expanded', 'true');
@@ -362,9 +376,10 @@ window.UOGA_UI = (() => {
         text-align: center;
       }
       .uoga-backpack-panel {
-        position: absolute;
-        top: calc(100% + 12px);
-        right: -10px;
+        position: fixed;
+        top: 78px;
+        left: calc(100vw - 444px);
+        right: auto;
         width: min(430px, calc(100vw - 28px));
         max-height: min(72vh, 760px);
         display: none;
@@ -376,16 +391,16 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 30;
+        z-index: 2000;
         transform-origin: top right;
       }
       .uoga-backpack-panel::before {
-        content: "";
-        position: absolute;
-        top: -16px;
-        right: 52px;
-        width: 132px;
-        height: 28px;
+          content: "";
+          position: absolute;
+          top: -16px;
+          right: 36px;
+          width: 132px;
+          height: 28px;
         border: 1px solid var(--line);
         border-bottom: 0;
         border-radius: 18px 18px 0 0;
@@ -568,13 +583,12 @@ window.UOGA_UI = (() => {
           justify-content: space-between;
         }
         .uoga-backpack-panel {
-          right: auto;
-          left: 0;
+          left: 14px;
           width: min(100%, calc(100vw - 28px));
         }
         .uoga-backpack-panel::before {
-          left: 32px;
-          right: auto;
+          left: auto;
+          right: 36px;
           width: 120px;
         }
       }
@@ -629,24 +643,32 @@ window.UOGA_UI = (() => {
       toggleBackpackTray();
     });
 
-    document.addEventListener('click', (event) => {
-      if (!trayShell || trayShell.contains(event.target)) return;
-      closeBackpackTray();
-    });
+      document.addEventListener('click', (event) => {
+        if (!trayShell || trayShell.contains(event.target)) return;
+        closeBackpackTray();
+      });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') closeBackpackTray();
     });
 
-    window.addEventListener('storage', (event) => {
-      if ([BASKET_KEY, LEGACY_BASKET_KEY, RECENTS_KEY, SELECTED_HUNT_KEY].includes(event.key || '')) {
-        renderBackpackTray();
-      }
-    });
+      window.addEventListener('storage', (event) => {
+        if ([BASKET_KEY, LEGACY_BASKET_KEY, RECENTS_KEY, SELECTED_HUNT_KEY].includes(event.key || '')) {
+          renderBackpackTray();
+        }
+      });
 
-    document.addEventListener(BACKPACK_CHANGED_EVENT, renderBackpackTray);
-    renderBackpackTray();
-  }
+      window.addEventListener('resize', () => {
+        if (trayOpen) positionBackpackTray();
+      });
+
+      window.addEventListener('scroll', () => {
+        if (trayOpen) positionBackpackTray();
+      }, { passive: true });
+
+      document.addEventListener(BACKPACK_CHANGED_EVENT, renderBackpackTray);
+      renderBackpackTray();
+    }
 
   function notifyBackpackChanged() {
     document.dispatchEvent(new CustomEvent(BACKPACK_CHANGED_EVENT));
