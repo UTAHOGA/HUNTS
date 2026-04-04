@@ -5,9 +5,12 @@
   const LADDER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES.length)
     ? window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES
     : ['./processed_data/point_ladder_view.csv'];
-  const MASTER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES.length)
-    ? window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES
-    : ['./processed_data/hunt_master_enriched.csv'];
+    const MASTER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES.length)
+      ? window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES
+      : ['./processed_data/hunt_master_enriched.csv'];
+    const REFERENCE_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES.length)
+      ? window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES
+      : ['./processed_data/hunt_unit_reference_linked.csv'];
   const SELECTED_HUNT_KEY = 'selected_hunt_code';
   const SELECTED_RESIDENCY_KEY = 'selected_hunt_research_residency';
   const SELECTED_POINTS_KEY = 'selected_hunt_research_points';
@@ -20,15 +23,17 @@
     selectedHuntCode: '',
     selectedFilters: null,
     selectedMeta: null,
-    engineRows: [],
-    ladderRows: [],
-    masterRows: [],
-    engineByKey: new Map(),
-    engineGroups: new Map(),
-    ladderGroups: new Map(),
-    masterByResidency: new Map(),
-    masterByCode: new Map(),
-  };
+      engineRows: [],
+      ladderRows: [],
+      masterRows: [],
+      referenceRows: [],
+      engineByKey: new Map(),
+      engineGroups: new Map(),
+      ladderGroups: new Map(),
+      masterByResidency: new Map(),
+      masterByCode: new Map(),
+      referenceByKey: new Map(),
+    };
 
     const els = {
     huntCodeInput: document.getElementById('huntCodeInput'),
@@ -229,15 +234,17 @@
     throw lastError || new Error('No data source could be loaded.');
   }
 
-  function indexData(engineRows, ladderRows, masterRows) {
-    state.engineRows = engineRows;
-    state.ladderRows = ladderRows;
-    state.masterRows = masterRows;
-    state.engineByKey = new Map();
-    state.engineGroups = new Map();
-    state.ladderGroups = new Map();
-    state.masterByResidency = new Map();
-    state.masterByCode = new Map();
+    function indexData(engineRows, ladderRows, masterRows, referenceRows) {
+      state.engineRows = engineRows;
+      state.ladderRows = ladderRows;
+      state.masterRows = masterRows;
+      state.referenceRows = referenceRows;
+      state.engineByKey = new Map();
+      state.engineGroups = new Map();
+      state.ladderGroups = new Map();
+      state.masterByResidency = new Map();
+      state.masterByCode = new Map();
+      state.referenceByKey = new Map();
 
     engineRows.forEach((row) => {
       const residency = normalizeResidencyLabel(row.residency);
@@ -258,17 +265,23 @@
       state.ladderGroups.get(group).push(normalized);
     });
 
-    masterRows.forEach((row) => {
-      const residency = normalizeResidencyLabel(row.residency);
-      const group = groupKey(row.hunt_code, residency);
-      const normalized = { ...row, residency };
-      if (!state.masterByResidency.has(group)) {
+      masterRows.forEach((row) => {
+        const residency = normalizeResidencyLabel(row.residency);
+        const group = groupKey(row.hunt_code, residency);
+        const normalized = { ...row, residency };
+        if (!state.masterByResidency.has(group)) {
         state.masterByResidency.set(group, normalized);
       }
       if (!state.masterByCode.has(normalizeKey(row.hunt_code))) {
-        state.masterByCode.set(normalizeKey(row.hunt_code), normalized);
-      }
-    });
+          state.masterByCode.set(normalizeKey(row.hunt_code), normalized);
+        }
+      });
+
+      referenceRows.forEach((row) => {
+        const residency = normalizeResidencyLabel(row.residency);
+        const group = groupKey(row.hunt_code, residency);
+        state.referenceByKey.set(group, { ...row, residency });
+      });
 
     state.engineGroups.forEach((rows) => rows.sort((a, b) => (b.points ?? 0) - (a.points ?? 0)));
     state.ladderGroups.forEach((rows) => rows.sort((a, b) => (b.points ?? 0) - (a.points ?? 0)));
@@ -293,9 +306,13 @@
     return state.engineByKey.get(rowKey(huntCode, residency, points)) || null;
   }
 
-  function getLadderRows(huntCode, residency) {
-    return state.ladderGroups.get(groupKey(huntCode, residency)) || [];
-  }
+    function getLadderRows(huntCode, residency) {
+      return state.ladderGroups.get(groupKey(huntCode, residency)) || [];
+    }
+
+    function getReferenceRow(huntCode, residency) {
+      return state.referenceByKey.get(groupKey(huntCode, residency)) || null;
+    }
 
   function getModeledCoverageStatus(meta, hasEngineGroup) {
     if (hasEngineGroup) return '';
@@ -470,11 +487,12 @@
       return !!text && text.toUpperCase() !== 'N/A' && text.toUpperCase() !== 'NOT AVAILABLE';
     }
 
-    function hasSourceData(meta, row) {
-      if (!meta || !row) return false;
-      return [
-        row.odds_2025_actual,
-        meta.success_percent,
+    function hasSourceData(meta, row, referenceRow) {
+        if (referenceRow) return true;
+        if (!meta || !row) return false;
+        return [
+          row.odds_2025_actual,
+          meta.success_percent,
         meta.success_hunters,
         meta.success_harvest,
         meta.public_permits_2025,
@@ -482,17 +500,28 @@
       ].some(hasMeaningfulValue);
     }
 
-    function buildSourceBoxes(meta, row) {
-      const boxes = [
-        ['2025 Draw Odds', row?.odds_2025_actual || 'Not available'],
-        ['2025 Harvest Success', hasMeaningfulValue(meta?.success_percent) ? `${meta.success_percent}%` : 'Not available'],
-        ['Harvest / Hunters', hasMeaningfulValue(meta?.success_harvest) || hasMeaningfulValue(meta?.success_hunters)
-          ? `${meta?.success_harvest || '0'} / ${meta?.success_hunters || '0'}`
-          : 'Not available'],
-        ['2025 Public Permits', meta?.public_permits_2025 || 'Not available'],
-        ['2026 Public Permits', meta?.public_permits_2026 || 'Not available'],
-        ['Source', 'DWR draw odds + harvest results'],
-      ];
+    function buildSourceBoxes(meta, row, referenceRow) {
+        const boxes = [
+          ['2025 Draw Odds', row?.odds_2025_actual || 'Not available'],
+          ['2025 Harvest Success', hasMeaningfulValue(referenceRow?.harvest_success_percent_2025)
+            ? `${referenceRow.harvest_success_percent_2025}%`
+            : (hasMeaningfulValue(meta?.success_percent) ? `${meta.success_percent}%` : 'Not available')],
+          ['Harvest / Hunters', hasMeaningfulValue(referenceRow?.harvest_2025) || hasMeaningfulValue(referenceRow?.harvest_hunters_2025)
+            ? `${referenceRow?.harvest_2025 || '0'} / ${referenceRow?.harvest_hunters_2025 || '0'}`
+            : (hasMeaningfulValue(meta?.success_harvest) || hasMeaningfulValue(meta?.success_hunters)
+            ? `${meta?.success_harvest || '0'} / ${meta?.success_hunters || '0'}`
+            : 'Not available')],
+          ['2025 Public Permits', referenceRow?.permits_2025_total || meta?.public_permits_2025 || 'Not available'],
+          ['2026 Public Permits', referenceRow?.permits_2026_total || meta?.public_permits_2026 || 'Not available'],
+          ['Odds Source', referenceRow?.has_bg_odds_page === 'TRUE'
+            ? `Big Game Odds p. ${referenceRow.bg_odds_printed_page || referenceRow.bg_odds_pdf_page_index || ''}`.trim()
+            : (referenceRow?.has_antlerless_odds_page === 'TRUE'
+              ? `Antlerless Odds row ${referenceRow.antlerless_odds_row_start || ''}`.trim()
+              : 'Not available')],
+          ['RAC Source', hasMeaningfulValue(referenceRow?.rac_page)
+            ? `${referenceRow?.source_pdf || 'RAC packet'} p. ${referenceRow.rac_page}`
+            : 'Not available'],
+        ];
       return boxes.map(([label, value]) => `
         <section class="source-box">
           <span>${escapeHtml(label)}</span>
@@ -501,12 +530,12 @@
       `).join('');
     }
 
-    function openSourceModal(meta, row, residency) {
+    function openSourceModal(meta, row, referenceRow, residency) {
       if (!els.sourceModal || !els.sourceModalGrid || !els.sourceModalTitle || !els.sourceModalSubtitle) return;
       const pointLabel = formatInteger(row?.points);
       els.sourceModalTitle.textContent = 'DWR Source Snapshot';
       els.sourceModalSubtitle.textContent = `${meta?.hunt_code || ''} · ${meta?.hunt_name || ''} · ${residency || ''} · ${pointLabel} points`;
-      els.sourceModalGrid.innerHTML = buildSourceBoxes(meta, row);
+      els.sourceModalGrid.innerHTML = buildSourceBoxes(meta, row, referenceRow);
       els.sourceModal.hidden = false;
       document.body.classList.add('modal-open');
     }
@@ -541,15 +570,16 @@
       els.ladderTableBody.innerHTML = rows.map((row) => {
         const markers = [];
         const classes = [];
+        const referenceRow = getReferenceRow(huntCode, residency);
         if (row.points === points) {
           markers.push({ kind: 'user', label: 'You' });
-        classes.push('is-user-row');
+          classes.push('is-user-row');
       }
         if (row.guaranteed_marker === 'TRUE') {
           markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
           classes.push('is-guaranteed-row');
         }
-        if (hasSourceData(meta, row)) {
+        if (hasSourceData(meta, row, referenceRow)) {
           markers.push({ kind: 'sources', label: 'Sources', point: row.points });
         }
         const primaryValue = isPreferenceAntlerless(meta)
@@ -581,11 +611,12 @@
     if (els.ladderTableBody) els.ladderTableBody.innerHTML = '';
   }
 
-  function renderDetail(filters) {
-    const meta = findMeta(filters.huntCode, filters.residency);
-    const engineRows = state.engineGroups.get(groupKey(filters.huntCode, filters.residency)) || [];
-    const engineRow = getEngineRow(filters.huntCode, filters.residency, filters.points);
-    const coverageMessage = getModeledCoverageStatus(meta, engineRows.length > 0);
+    function renderDetail(filters) {
+      const meta = findMeta(filters.huntCode, filters.residency);
+      const engineRows = state.engineGroups.get(groupKey(filters.huntCode, filters.residency)) || [];
+      const engineRow = getEngineRow(filters.huntCode, filters.residency, filters.points);
+      const referenceRow = getReferenceRow(filters.huntCode, filters.residency);
+      const coverageMessage = getModeledCoverageStatus(meta, engineRows.length > 0);
 
     if (!filters.huntCode || (!meta && !engineRows.length)) {
       renderEmpty(filters, coverageMessage || 'Type a hunt code or load one from Hunt Pack.');
@@ -601,10 +632,14 @@
     if (els.openPlannerLink) {
       els.openPlannerLink.href = `./index.html?hunt_code=${encodeURIComponent(filters.huntCode)}`;
     }
-    if (els.openDwrLink) {
-      els.openDwrLink.href = '#';
-      els.openDwrLink.setAttribute('aria-disabled', 'true');
-    }
+      if (els.openDwrLink) {
+        els.openDwrLink.href = '#';
+        if (referenceRow?.has_any_odds_source === 'TRUE') {
+          els.openDwrLink.removeAttribute('aria-disabled');
+        } else {
+          els.openDwrLink.setAttribute('aria-disabled', 'true');
+        }
+      }
 
     renderSummary(meta, engineRow, filters, coverageMessage);
     renderLadder(meta, filters.huntCode, filters.residency, filters.points);
@@ -684,15 +719,16 @@
     });
   }
 
-  async function loadData() {
-    const [engine, ladder, master] = await Promise.all([
-      loadFirstAvailable(ENGINE_SOURCES),
-      loadFirstAvailable(LADDER_SOURCES),
-      loadFirstAvailable(MASTER_SOURCES),
-    ]);
-    indexData(parseCsv(engine.text), parseCsv(ladder.text), parseCsv(master.text));
-    return { engine: engine.source, ladder: ladder.source, master: master.source };
-  }
+    async function loadData() {
+      const [engine, ladder, master, reference] = await Promise.all([
+        loadFirstAvailable(ENGINE_SOURCES),
+        loadFirstAvailable(LADDER_SOURCES),
+        loadFirstAvailable(MASTER_SOURCES),
+        loadFirstAvailable(REFERENCE_SOURCES),
+      ]);
+      indexData(parseCsv(engine.text), parseCsv(ladder.text), parseCsv(master.text), parseCsv(reference.text));
+      return { engine: engine.source, ladder: ladder.source, master: master.source, reference: reference.source };
+    }
 
   function bootstrapSelection() {
     const params = new URLSearchParams(window.location.search);
@@ -769,7 +805,8 @@
         const row = getLadderRows(state.selectedFilters.huntCode, state.selectedFilters.residency)
           .find((candidate) => candidate.points === point);
         if (!row) return;
-        openSourceModal(state.selectedMeta, row, state.selectedFilters.residency);
+        const referenceRow = getReferenceRow(state.selectedFilters.huntCode, state.selectedFilters.residency);
+        openSourceModal(state.selectedMeta, row, referenceRow, state.selectedFilters.residency);
       });
 
       els.sourceModalClose?.addEventListener('click', closeSourceModal);
