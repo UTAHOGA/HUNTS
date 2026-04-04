@@ -13,6 +13,7 @@ const {
   CONSERVATION_PERMIT_AREA_SOURCES,
   CONSERVATION_PERMIT_HUNT_TABLE_SOURCES,
   LOGO_DNR,
+  LOGO_DWR_SELECTOR,
   LOGO_DNR_ROOMY,
   LOGO_CWMU,
   LOGO_DWR_WMA,
@@ -1025,20 +1026,15 @@ function refreshSelectionMatrix() {
   ].filter(Boolean).length > 0;
 
   const unitsMap = new Map();
-  getFilteredHunts('unit').forEach(h => {
+  const unitSource = hasNonUnitSelections ? getFilteredHunts('unit') : huntData;
+  unitSource.forEach(h => {
     const unitValue = getUnitValue(h);
     if (unitValue) unitsMap.set(unitValue, getUnitName(h) || unitValue);
   });
   const unitOptions = Array.from(unitsMap.entries()).sort((a, b) => a[1].localeCompare(b[1]));
   const prevUnit = unitFilter.value || '';
-  const hasUnitSelection = !!prevUnit;
-  if (!hasNonUnitSelections && !hasUnitSelection) {
-    unitFilter.innerHTML = `<option value="">Select filters first</option>`;
-    unitFilter.value = '';
-  } else {
-    unitFilter.innerHTML = `<option value="">All DWR Hunt Units</option>` + unitOptions.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
-    unitFilter.value = unitOptions.some(([v]) => v === prevUnit) ? prevUnit : '';
-  }
+  unitFilter.innerHTML = `<option value="">All DWR Hunt Units</option>` + unitOptions.map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+  unitFilter.value = unitOptions.some(([v]) => v === prevUnit) ? prevUnit : '';
 }
 
 // --- CORE APP LOGIC ---
@@ -1095,7 +1091,7 @@ function buildMatchingHuntCard(h, selectedKey) {
   return `
     <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
       <div class="hunt-card-head">
-        <img src="${LOGO_DNR}" alt="Utah DWR" class="hunt-card-logo">
+        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR" class="hunt-card-logo">
         <div>
           <div class="hunt-card-code">${code}</div>
           <div class="hunt-card-title">${name}</div>
@@ -1225,7 +1221,7 @@ function openSelectedHuntFloat() {
       </div>
       <div class="selected-unit-placard-body">
         <div class="selected-unit-placard-top">
-          <img src="${LOGO_DNR}" alt="Utah DWR logo" class="selected-unit-placard-logo">
+          <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" class="selected-unit-placard-logo">
           <div>
             <div class="selected-unit-placard-code">Utah DWR hunt</div>
             <div class="selected-unit-placard-name">${name}</div>
@@ -2266,7 +2262,7 @@ function buildPopupListForMatches(matches) {
   return `
     <div style="display:grid;gap:10px;min-width:320px;max-width:380px;">
       <div style="display:flex;align-items:center;gap:10px;">
-        <img src="${LOGO_DNR}" alt="Utah DNR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
+        <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
         <div>
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
           <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Matching Hunts</div>
