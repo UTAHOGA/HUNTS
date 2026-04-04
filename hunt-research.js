@@ -343,12 +343,13 @@
     }
 
     const displayedOdds = getDisplayedOdds(row);
-    const oddsSuffix = displayedOdds.source === 'random_pool' ? ' (random pool fallback)' : '';
     els.selectedOutlook.textContent = row.draw_outlook || 'Not available';
     els.summaryGuaranteed.textContent = `Guaranteed At: ${formatInteger(row.guaranteed_at_2026)} pts`;
     els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
     els.summaryStatus.textContent = `Status: ${formatGapStatus(row.gap)}`;
-    els.summaryOdds.textContent = `Predicted 2026 Draw Odds: ${displayedOdds.value}${oddsSuffix}`;
+    els.summaryOdds.textContent = displayedOdds.source === 'guaranteed'
+      ? '2026 Max Pool: 1 in 1.0'
+      : `2026 Random Draw: ${displayedOdds.value}`;
     els.summaryTrend.textContent = `Trend: ${row.trend || 'Not available'}`;
     els.summaryRecommendation.textContent = getRecommendation(row);
 
@@ -387,7 +388,8 @@
         <tr class="${classes.join(' ')}">
           <td>${formatInteger(row.points)}</td>
           <td>${escapeHtml(row.odds_2025_actual || 'Not available')}</td>
-          <td>${formatProbability(row.odds_2026_projected)}</td>
+          <td>${escapeHtml(row.max_pool_projection_2026 || 'N/A')}</td>
+          <td>${formatProbability(row.random_draw_projection_2026)}</td>
           <td>${markerHtml(markers)}</td>
         </tr>`;
     }).join('');
@@ -435,6 +437,10 @@
 
     state.selectedMeta = meta;
     state.selectedFilters = filters;
+
+    if (meta) {
+      upsertBasketItem(meta, filters, engineRow);
+    }
   }
 
   function upsertBasketItem(meta, filters, engineRow) {
