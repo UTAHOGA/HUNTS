@@ -5,9 +5,12 @@
   const LADDER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES.length)
     ? window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES
     : ['./processed_data/point_ladder_view.csv'];
-  const MASTER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES.length)
-    ? window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES
-    : ['./processed_data/hunt_master_enriched.csv'];
+    const MASTER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES.length)
+      ? window.UOGA_CONFIG.HUNT_RESEARCH_MASTER_SOURCES
+      : ['./processed_data/hunt_master_enriched.csv'];
+    const REFERENCE_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES.length)
+      ? window.UOGA_CONFIG.HUNT_RESEARCH_REFERENCE_SOURCES
+      : ['./processed_data/hunt_unit_reference_linked.csv'];
   const SELECTED_HUNT_KEY = 'selected_hunt_code';
   const SELECTED_RESIDENCY_KEY = 'selected_hunt_research_residency';
   const SELECTED_POINTS_KEY = 'selected_hunt_research_points';
@@ -20,17 +23,19 @@
     selectedHuntCode: '',
     selectedFilters: null,
     selectedMeta: null,
-    engineRows: [],
-    ladderRows: [],
-    masterRows: [],
-    engineByKey: new Map(),
-    engineGroups: new Map(),
-    ladderGroups: new Map(),
-    masterByResidency: new Map(),
-    masterByCode: new Map(),
-  };
+      engineRows: [],
+      ladderRows: [],
+      masterRows: [],
+      referenceRows: [],
+      engineByKey: new Map(),
+      engineGroups: new Map(),
+      ladderGroups: new Map(),
+      masterByResidency: new Map(),
+      masterByCode: new Map(),
+      referenceByKey: new Map(),
+    };
 
-  const els = {
+    const els = {
     huntCodeInput: document.getElementById('huntCodeInput'),
     residencySelect: document.getElementById('residencySelect'),
     pointsInput: document.getElementById('pointsInput'),
@@ -41,6 +46,9 @@
     addToBasketButton: document.getElementById('addToBasketButton'),
     selectedOutlook: document.getElementById('selectedOutlook'),
     selectedHuntCodeRead: document.getElementById('selectedHuntCodeRead'),
+    selectedHarvestSuccess: document.getElementById('selectedHarvestSuccess'),
+    selectedResidentPermits: document.getElementById('selectedResidentPermits'),
+    selectedNonresidentPermits: document.getElementById('selectedNonresidentPermits'),
     detailTitle: document.getElementById('detailTitle'),
     detailSubtitle: document.getElementById('detailSubtitle'),
     detailEmpty: document.getElementById('detailEmpty'),
@@ -52,14 +60,22 @@
     summaryStatus: document.getElementById('summaryStatus'),
     summaryOdds: document.getElementById('summaryOdds'),
     summaryTrend: document.getElementById('summaryTrend'),
+    summaryTrendText: document.getElementById('summaryTrendText'),
     summaryRecommendation: document.getElementById('summaryRecommendation'),
     ladderTableEmpty: document.getElementById('ladderTableEmpty'),
     ladderTableWrap: document.getElementById('ladderTableWrap'),
-    ladderTableBody: document.getElementById('ladderTableBody'),
-    basketCount: document.getElementById('basketCount'),
-    basketList: document.getElementById('basketList'),
-    clearBasketButton: document.getElementById('clearBasketButton'),
-  };
+      ladderTableBody: document.getElementById('ladderTableBody'),
+      ladderPrimaryHeader: document.getElementById('ladderPrimaryHeader'),
+      ladderSecondaryHeader: document.getElementById('ladderSecondaryHeader'),
+      sourceModal: document.getElementById('sourceModal'),
+      sourceModalTitle: document.getElementById('sourceModalTitle'),
+      sourceModalSubtitle: document.getElementById('sourceModalSubtitle'),
+      sourceModalGrid: document.getElementById('sourceModalGrid'),
+      sourceModalClose: document.getElementById('sourceModalClose'),
+      basketCount: document.getElementById('basketCount'),
+      basketList: document.getElementById('basketList'),
+      clearBasketButton: document.getElementById('clearBasketButton'),
+    };
 
   function normalizeKey(value) {
     return String(value || '').trim().toUpperCase();
@@ -111,6 +127,13 @@
     if (parsed > 0) return `${parsed} pts short of guaranteed`;
     if (parsed === 0) return 'At guaranteed';
     return `${Math.abs(parsed)} pts above guaranteed`;
+  }
+
+  function isRandomOnlyBonusCase(meta, row) {
+    if (isPreferenceAntlerless(meta)) return false;
+    const maxPointPermits = num(row?.max_point_permits_2026);
+    const randomPermits = num(row?.random_permits_2026);
+    return maxPointPermits !== null && maxPointPermits <= 0 && randomPermits !== null && randomPermits > 0;
   }
 
   function getCurrentPoints() {
@@ -219,15 +242,17 @@
     throw lastError || new Error('No data source could be loaded.');
   }
 
-  function indexData(engineRows, ladderRows, masterRows) {
-    state.engineRows = engineRows;
-    state.ladderRows = ladderRows;
-    state.masterRows = masterRows;
-    state.engineByKey = new Map();
-    state.engineGroups = new Map();
-    state.ladderGroups = new Map();
-    state.masterByResidency = new Map();
-    state.masterByCode = new Map();
+    function indexData(engineRows, ladderRows, masterRows, referenceRows) {
+      state.engineRows = engineRows;
+      state.ladderRows = ladderRows;
+      state.masterRows = masterRows;
+      state.referenceRows = referenceRows;
+      state.engineByKey = new Map();
+      state.engineGroups = new Map();
+      state.ladderGroups = new Map();
+      state.masterByResidency = new Map();
+      state.masterByCode = new Map();
+      state.referenceByKey = new Map();
 
     engineRows.forEach((row) => {
       const residency = normalizeResidencyLabel(row.residency);
@@ -248,17 +273,23 @@
       state.ladderGroups.get(group).push(normalized);
     });
 
-    masterRows.forEach((row) => {
-      const residency = normalizeResidencyLabel(row.residency);
-      const group = groupKey(row.hunt_code, residency);
-      const normalized = { ...row, residency };
-      if (!state.masterByResidency.has(group)) {
+      masterRows.forEach((row) => {
+        const residency = normalizeResidencyLabel(row.residency);
+        const group = groupKey(row.hunt_code, residency);
+        const normalized = { ...row, residency };
+        if (!state.masterByResidency.has(group)) {
         state.masterByResidency.set(group, normalized);
       }
       if (!state.masterByCode.has(normalizeKey(row.hunt_code))) {
-        state.masterByCode.set(normalizeKey(row.hunt_code), normalized);
-      }
-    });
+          state.masterByCode.set(normalizeKey(row.hunt_code), normalized);
+        }
+      });
+
+      referenceRows.forEach((row) => {
+        const residency = normalizeResidencyLabel(row.residency);
+        const group = groupKey(row.hunt_code, residency);
+        state.referenceByKey.set(group, { ...row, residency });
+      });
 
     state.engineGroups.forEach((rows) => rows.sort((a, b) => (b.points ?? 0) - (a.points ?? 0)));
     state.ladderGroups.forEach((rows) => rows.sort((a, b) => (b.points ?? 0) - (a.points ?? 0)));
@@ -283,9 +314,13 @@
     return state.engineByKey.get(rowKey(huntCode, residency, points)) || null;
   }
 
-  function getLadderRows(huntCode, residency) {
-    return state.ladderGroups.get(groupKey(huntCode, residency)) || [];
-  }
+    function getLadderRows(huntCode, residency) {
+      return state.ladderGroups.get(groupKey(huntCode, residency)) || [];
+    }
+
+    function getReferenceRow(huntCode, residency) {
+      return state.referenceByKey.get(groupKey(huntCode, residency)) || null;
+    }
 
   function getModeledCoverageStatus(meta, hasEngineGroup) {
     if (hasEngineGroup) return '';
@@ -294,13 +329,43 @@
   }
 
   function getDisplayedOdds(row) {
-    if (!row) return 'Not available';
-    if (row.status === 'MAX POOL') return '100%';
-    return formatProbability(row.random_draw_odds_2026);
+    if (!row) return { value: 'Not available', source: 'unavailable' };
+    if (row.status === 'MAX POOL') return { value: '100%', source: 'guaranteed' };
+    const projectedOdds = formatProbability(row.odds_2026_projected);
+    if (projectedOdds !== 'Not available') {
+      return { value: projectedOdds, source: 'projected_total' };
+    }
+    const randomOdds = formatProbability(row.random_draw_odds_2026);
+    if (randomOdds !== 'Not available') {
+      return { value: randomOdds, source: 'random_pool' };
+    }
+    return { value: 'Not available', source: 'unavailable' };
   }
 
-  function getRecommendation(row) {
+  function isPreferenceAntlerless(meta) {
+    const huntType = String(meta?.hunt_type || '').trim().toLowerCase();
+    const species = String(meta?.species || '').trim().toLowerCase();
+    if (!huntType.includes('antlerless')) return false;
+    return species.includes('deer') || species.includes('elk') || species.includes('pronghorn');
+  }
+
+  function getRecommendation(meta, row) {
     if (!row) return 'Modeled recommendation not available for this hunt and residency yet.';
+    if (isRandomOnlyBonusCase(meta, row)) {
+      return 'This hunt has no meaningful max-pool path at this residency. Your outcome depends on weighted random draw only.';
+    }
+    if (isPreferenceAntlerless(meta)) {
+      if (row.status === 'MAX POOL') {
+        return 'This hunt is currently inside the preference-point line at your selected point level.';
+      }
+      if (row.draw_outlook === 'POINT CREEP DEFEAT') {
+        return 'The preference line is moving away faster than your point gain. This is not a realistic catch-up hunt.';
+      }
+      if (row.draw_outlook === 'MAY DRAW IN 5-10 YEARS') {
+        return 'You are still behind the preference line, but the hunt remains potentially catchable if pressure stabilizes.';
+      }
+      return 'You are below the current preference line and need the line to soften or more permits to appear.';
+    }
     switch (row.draw_outlook) {
       case 'GREEN LIGHT':
         return 'This hunt is currently inside the max-point pool at your selected point level.';
@@ -313,6 +378,73 @@
     }
   }
 
+  function getPrimaryOddsLabel(meta, row, displayedOdds) {
+    if (isPreferenceAntlerless(meta)) {
+      return `2026 Preference Draw: ${formatProbability(row?.odds_2026_projected)}`;
+    }
+    if (isRandomOnlyBonusCase(meta, row)) {
+      return `2026 Random Draw: ${displayedOdds.value}`;
+    }
+    return displayedOdds.source === 'guaranteed'
+      ? '2026 Max Pool: 100%'
+      : `2026 Random Draw: ${displayedOdds.value}`;
+  }
+
+  function getOutlookSignal(meta, row) {
+    const maxPointPermits = num(row?.max_point_permits_2026);
+    if (maxPointPermits !== null && maxPointPermits <= 0) return 'red';
+    if (row?.status === 'MAX POOL') return 'green';
+    const maxPoolChance = num(row?.max_pool_projection_2026);
+    if (maxPoolChance !== null && maxPoolChance > 0) return 'yellow';
+    const nonresidentPermits = num(meta?.public_nonresident_permits);
+    const residentPermits = num(meta?.public_resident_permits);
+    if ((nonresidentPermits !== null || residentPermits !== null) && maxPointPermits === 0) return 'red';
+    if (row?.draw_outlook === 'MAY DRAW IN 5-10 YEARS' || num(row?.gap) === 1) return 'yellow';
+    if (row?.draw_outlook === 'GREEN LIGHT') return 'green';
+    return 'red';
+  }
+
+  function renderOutlookLight(signal) {
+    if (!els.selectedOutlook) return;
+    const active = signal || 'red';
+    els.selectedOutlook.innerHTML = `
+      <span class="outlook-light red${active === 'red' ? ' is-active' : ''}"></span>
+      <span class="outlook-light yellow${active === 'yellow' ? ' is-active' : ''}"></span>
+      <span class="outlook-light green${active === 'green' ? ' is-active' : ''}"></span>
+    `;
+    els.selectedOutlook.setAttribute('aria-label', `${active} outlook`);
+  }
+
+  function getTrendSignal(row) {
+    const trend = String(row?.trend || '').trim().toUpperCase();
+    if (trend === 'GREEN') return 'green';
+    if (trend === 'YELLOW') return 'yellow';
+    return 'red';
+  }
+
+  function renderTrendLight(signal) {
+    if (!els.summaryTrend) return;
+    const active = signal || 'red';
+    els.summaryTrend.innerHTML = `
+      <span class="outlook-light red${active === 'red' ? ' is-active' : ''}"></span>
+      <span class="outlook-light yellow${active === 'yellow' ? ' is-active' : ''}"></span>
+      <span class="outlook-light green${active === 'green' ? ' is-active' : ''}"></span>
+    `;
+    els.summaryTrend.setAttribute('aria-label', `${active} trend`);
+  }
+
+  function setLadderHeaders(meta) {
+    if (!els.ladderPrimaryHeader || !els.ladderSecondaryHeader) return;
+    if (isPreferenceAntlerless(meta)) {
+      els.ladderPrimaryHeader.textContent = '2026 Preference Draw';
+      els.ladderSecondaryHeader.hidden = true;
+    } else {
+      els.ladderPrimaryHeader.textContent = '2026 Max Pool';
+      els.ladderSecondaryHeader.textContent = '2026 Random Draw';
+      els.ladderSecondaryHeader.hidden = false;
+    }
+  }
+
   function renderFilterReadout(filters) {
     els.filterReadout.textContent = filters.huntCode
       ? `${filters.huntCode} · ${filters.residency} · ${filters.points} point${filters.points === 1 ? '' : 's'}.`
@@ -322,38 +454,143 @@
       : 'Planner handoff ready.';
   }
 
-  function renderSummary(meta, row, filters, coverageMessage) {
-    if (!row) {
-      els.selectedOutlook.textContent = coverageMessage ? 'Coverage gap' : 'Not loaded';
-      els.summaryGuaranteed.textContent = 'Guaranteed At: Not available';
-      els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
-      els.summaryStatus.textContent = `Status: ${coverageMessage || 'No modeled row available.'}`;
-      els.summaryOdds.textContent = 'Estimated Draw Odds: Not available';
-      els.summaryTrend.textContent = 'Trend: Not available';
-      els.summaryRecommendation.textContent = coverageMessage || 'Recommendation not available.';
-      return;
+  function getHarvestSuccessDisplay(meta, referenceRow) {
+    if (referenceRow?.harvest_success_percent_2025 !== undefined && referenceRow?.harvest_success_percent_2025 !== null && String(referenceRow.harvest_success_percent_2025).trim() !== '') {
+      return `${referenceRow.harvest_success_percent_2025}%`;
     }
+    if (meta?.success_percent !== undefined && meta?.success_percent !== null && String(meta.success_percent).trim() !== '') {
+      return `${meta.success_percent}%`;
+    }
+    return 'Not loaded';
+  }
 
-    els.selectedOutlook.textContent = row.draw_outlook || 'Not available';
-    els.summaryGuaranteed.textContent = `Guaranteed At: ${formatInteger(row.guaranteed_at_2026)} pts`;
-    els.summaryPoints.textContent = `Your Points: ${formatInteger(filters.points)} pts`;
-    els.summaryStatus.textContent = `Status: ${formatGapStatus(row.gap)}`;
-    els.summaryOdds.textContent = `Estimated Draw Odds: ${getDisplayedOdds(row)} from remaining pool`;
-    els.summaryTrend.textContent = `Trend: ${row.trend || 'Not available'}`;
-    els.summaryRecommendation.textContent = getRecommendation(row);
+  function renderSummary(meta, row, filters, coverageMessage, referenceRow) {
+    if (!row) {
+        renderOutlookLight('red');
+        els.summaryGuaranteed.textContent = 'Not available';
+        els.summaryPoints.textContent = `${formatInteger(filters.points)} pts`;
+          els.summaryStatus.textContent = coverageMessage || 'No modeled row available.';
+      els.summaryOdds.textContent = 'Not available';
+      renderTrendLight('red');
+        if (els.summaryTrendText) els.summaryTrendText.textContent = 'Not available';
+      els.summaryRecommendation.textContent = coverageMessage || 'Recommendation not available.';
+        if (els.selectedResidentPermits) {
+          els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+        }
+        if (els.selectedNonresidentPermits) {
+          els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+        }
+        if (els.selectedHarvestSuccess) {
+          els.selectedHarvestSuccess.textContent = getHarvestSuccessDisplay(meta, referenceRow);
+        }
+        return;
+      }
+
+    const displayedOdds = getDisplayedOdds(row);
+    renderOutlookLight(getOutlookSignal(meta, row));
+    els.summaryGuaranteed.textContent = isRandomOnlyBonusCase(meta, row)
+      ? 'Not applicable'
+      : `${formatInteger(row.guaranteed_at_2026)} pts`;
+    els.summaryPoints.textContent = `${formatInteger(filters.points)} pts`;
+    els.summaryStatus.textContent = isRandomOnlyBonusCase(meta, row)
+      ? 'Random draw only'
+      : formatGapStatus(row.gap);
+    els.summaryOdds.textContent = getPrimaryOddsLabel(meta, row, displayedOdds);
+    renderTrendLight(getTrendSignal(row));
+    if (els.summaryTrendText) els.summaryTrendText.textContent = isRandomOnlyBonusCase(meta, row) ? 'Not applicable' : (row.trend || 'Not available');
+    els.summaryRecommendation.textContent = getRecommendation(meta, row);
 
     if (els.selectedHuntCodeRead) {
       els.selectedHuntCodeRead.textContent = meta?.hunt_code || filters.huntCode || 'Not loaded';
     }
+    if (els.selectedResidentPermits) {
+      els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+      }
+    if (els.selectedNonresidentPermits) {
+      els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+      }
+    if (els.selectedHarvestSuccess) {
+      els.selectedHarvestSuccess.textContent = getHarvestSuccessDisplay(meta, referenceRow);
+    }
   }
 
-  function markerHtml(markers) {
-    if (!markers.length) return '<span class="marker-pill">Reference</span>';
-    return `<div class="marker-stack">${markers.map((marker) => `<span class="marker-pill ${marker.kind}">${escapeHtml(marker.label)}</span>`).join('')}</div>`;
-  }
+    function hasMeaningfulValue(value) {
+      const text = String(value ?? '').trim();
+      return !!text && text.toUpperCase() !== 'N/A' && text.toUpperCase() !== 'NOT AVAILABLE';
+    }
 
-  function renderLadder(huntCode, residency, points) {
+    function hasSourceData(meta, row, referenceRow) {
+        if (referenceRow) return true;
+        if (!meta || !row) return false;
+        return [
+          row.odds_2025_actual,
+          meta.success_percent,
+        meta.success_hunters,
+        meta.success_harvest,
+        meta.public_permits_2025,
+        meta.public_permits_2026,
+      ].some(hasMeaningfulValue);
+    }
+
+    function buildSourceBoxes(meta, row, referenceRow) {
+        const boxes = [
+          ['2025 Draw Odds', row?.odds_2025_actual || 'Not available'],
+          ['2025 Harvest Success', hasMeaningfulValue(referenceRow?.harvest_success_percent_2025)
+            ? `${referenceRow.harvest_success_percent_2025}%`
+            : (hasMeaningfulValue(meta?.success_percent) ? `${meta.success_percent}%` : 'Not available')],
+          ['Harvest / Hunters', hasMeaningfulValue(referenceRow?.harvest_2025) || hasMeaningfulValue(referenceRow?.harvest_hunters_2025)
+            ? `${referenceRow?.harvest_2025 || '0'} / ${referenceRow?.harvest_hunters_2025 || '0'}`
+            : (hasMeaningfulValue(meta?.success_harvest) || hasMeaningfulValue(meta?.success_hunters)
+            ? `${meta?.success_harvest || '0'} / ${meta?.success_hunters || '0'}`
+            : 'Not available')],
+          ['2025 Public Permits', referenceRow?.permits_2025_total || meta?.public_permits_2025 || 'Not available'],
+          ['2026 Public Permits', referenceRow?.permits_2026_total || meta?.public_permits_2026 || 'Not available'],
+          ['Odds Source', referenceRow?.has_bg_odds_page === 'TRUE'
+            ? `Big Game Odds p. ${referenceRow.bg_odds_printed_page || referenceRow.bg_odds_pdf_page_index || ''}`.trim()
+            : (referenceRow?.has_antlerless_odds_page === 'TRUE'
+              ? `Antlerless Odds row ${referenceRow.antlerless_odds_row_start || ''}`.trim()
+              : 'Not available')],
+          ['RAC Source', hasMeaningfulValue(referenceRow?.rac_page)
+            ? `${referenceRow?.source_pdf || 'RAC packet'} p. ${referenceRow.rac_page}`
+            : 'Not available'],
+        ];
+      return boxes.map(([label, value]) => `
+        <section class="source-box">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </section>
+      `).join('');
+    }
+
+    function openSourceModal(meta, row, referenceRow, residency) {
+      if (!els.sourceModal || !els.sourceModalGrid || !els.sourceModalTitle || !els.sourceModalSubtitle) return;
+      const pointLabel = formatInteger(row?.points);
+      els.sourceModalTitle.textContent = 'DWR Source Snapshot';
+      els.sourceModalSubtitle.textContent = `${meta?.hunt_code || ''} · ${meta?.hunt_name || ''} · ${residency || ''} · ${pointLabel} points`;
+      els.sourceModalGrid.innerHTML = buildSourceBoxes(meta, row, referenceRow);
+      els.sourceModal.hidden = false;
+      document.body.classList.add('modal-open');
+    }
+
+    function closeSourceModal() {
+      if (!els.sourceModal) return;
+      els.sourceModal.hidden = true;
+      document.body.classList.remove('modal-open');
+    }
+
+    function markerHtml(markers) {
+      if (!markers.length) return '';
+      return `<div class="marker-stack">${markers.map((marker) => {
+        if (marker.kind === 'sources') {
+          return `<button type="button" class="marker-pill sources" data-source-pill="true" data-point="${escapeHtml(marker.point)}">${escapeHtml(marker.label)}</button>`;
+        }
+        return `<span class="marker-pill ${marker.kind}">${escapeHtml(marker.label)}</span>`;
+      }).join('')}</div>`;
+    }
+
+  function renderLadder(meta, huntCode, residency, points) {
     if (!els.ladderTableWrap || !els.ladderTableEmpty || !els.ladderTableBody) return;
+    setLadderHeaders(meta);
     const rows = getLadderRows(huntCode, residency);
     if (!rows.length) {
       els.ladderTableWrap.hidden = true;
@@ -362,25 +599,36 @@
       return;
     }
 
-    els.ladderTableBody.innerHTML = rows.map((row) => {
-      const markers = [];
-      const classes = [];
-      if (row.points === points) {
-        markers.push({ kind: 'user', label: 'You' });
-        classes.push('is-user-row');
+      els.ladderTableBody.innerHTML = rows.map((row) => {
+        const markers = [];
+        const classes = [];
+        const referenceRow = getReferenceRow(huntCode, residency);
+        if (row.points === points) {
+          markers.push({ kind: 'user', label: 'You' });
+          classes.push('is-user-row');
       }
-      if (row.guaranteed_marker === 'TRUE') {
-        markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
-        classes.push('is-guaranteed-row');
-      }
+        if (row.guaranteed_marker === 'TRUE') {
+          markers.push({ kind: 'guaranteed', label: 'Guaranteed' });
+          classes.push('is-guaranteed-row');
+        }
+        if (hasSourceData(meta, row, referenceRow)) {
+          markers.push({ kind: 'sources', label: 'Sources', point: row.points });
+        }
+        const primaryValue = isPreferenceAntlerless(meta)
+          ? formatProbability(row.odds_2026_projected)
+          : formatProbability(row.max_pool_projection_2026);
+      const secondaryCell = isPreferenceAntlerless(meta)
+        ? ''
+        : `<td>${formatProbability(row.random_draw_projection_2026)}</td>`;
       return `
         <tr class="${classes.join(' ')}">
           <td>${formatInteger(row.points)}</td>
           <td>${escapeHtml(row.odds_2025_actual || 'Not available')}</td>
-          <td>${formatProbability(row.odds_2026_projected)}</td>
-          <td>${markerHtml(markers)}</td>
-        </tr>`;
-    }).join('');
+          <td>${primaryValue}</td>
+          ${secondaryCell}
+            <td>${markerHtml(markers)}</td>
+          </tr>`;
+      }).join('');
 
     els.ladderTableEmpty.hidden = true;
     els.ladderTableWrap.hidden = false;
@@ -395,14 +643,15 @@
     if (els.ladderTableBody) els.ladderTableBody.innerHTML = '';
   }
 
-  function renderDetail(filters) {
-    const meta = findMeta(filters.huntCode, filters.residency);
-    const engineRows = state.engineGroups.get(groupKey(filters.huntCode, filters.residency)) || [];
-    const engineRow = getEngineRow(filters.huntCode, filters.residency, filters.points);
-    const coverageMessage = getModeledCoverageStatus(meta, engineRows.length > 0);
+    function renderDetail(filters) {
+      const meta = findMeta(filters.huntCode, filters.residency);
+      const engineRows = state.engineGroups.get(groupKey(filters.huntCode, filters.residency)) || [];
+      const engineRow = getEngineRow(filters.huntCode, filters.residency, filters.points);
+      const referenceRow = getReferenceRow(filters.huntCode, filters.residency);
+      const coverageMessage = getModeledCoverageStatus(meta, engineRows.length > 0);
 
     if (!filters.huntCode || (!meta && !engineRows.length)) {
-      renderEmpty(filters, coverageMessage || 'Type a hunt code or load one from Hunt Pack.');
+      renderEmpty(filters, coverageMessage || 'Type a hunt code or load one from Hunt Backpack.');
       return;
     }
 
@@ -415,16 +664,24 @@
     if (els.openPlannerLink) {
       els.openPlannerLink.href = `./index.html?hunt_code=${encodeURIComponent(filters.huntCode)}`;
     }
-    if (els.openDwrLink) {
-      els.openDwrLink.href = '#';
-      els.openDwrLink.setAttribute('aria-disabled', 'true');
-    }
+      if (els.openDwrLink) {
+        els.openDwrLink.href = '#';
+        if (referenceRow?.has_any_odds_source === 'TRUE') {
+          els.openDwrLink.removeAttribute('aria-disabled');
+        } else {
+          els.openDwrLink.setAttribute('aria-disabled', 'true');
+        }
+      }
 
-    renderSummary(meta, engineRow, filters, coverageMessage);
-    renderLadder(filters.huntCode, filters.residency, filters.points);
+      renderSummary(meta, engineRow, filters, coverageMessage, referenceRow);
+    renderLadder(meta, filters.huntCode, filters.residency, filters.points);
 
     state.selectedMeta = meta;
     state.selectedFilters = filters;
+
+    if (meta) {
+      upsertBasketItem(meta, filters, engineRow);
+    }
   }
 
   function upsertBasketItem(meta, filters, engineRow) {
@@ -494,15 +751,16 @@
     });
   }
 
-  async function loadData() {
-    const [engine, ladder, master] = await Promise.all([
-      loadFirstAvailable(ENGINE_SOURCES),
-      loadFirstAvailable(LADDER_SOURCES),
-      loadFirstAvailable(MASTER_SOURCES),
-    ]);
-    indexData(parseCsv(engine.text), parseCsv(ladder.text), parseCsv(master.text));
-    return { engine: engine.source, ladder: ladder.source, master: master.source };
-  }
+    async function loadData() {
+      const [engine, ladder, master, reference] = await Promise.all([
+        loadFirstAvailable(ENGINE_SOURCES),
+        loadFirstAvailable(LADDER_SOURCES),
+        loadFirstAvailable(MASTER_SOURCES),
+        loadFirstAvailable(REFERENCE_SOURCES),
+      ]);
+      indexData(parseCsv(engine.text), parseCsv(ladder.text), parseCsv(master.text), parseCsv(reference.text));
+      return { engine: engine.source, ladder: ladder.source, master: master.source, reference: reference.source };
+    }
 
   function bootstrapSelection() {
     const params = new URLSearchParams(window.location.search);
@@ -550,7 +808,7 @@
     runResearch();
   }
 
-  function bindEvents() {
+    function bindEvents() {
     els.runResearchButton?.addEventListener('click', runResearch);
     els.clearFiltersButton?.addEventListener('click', clearFilters);
     els.addToBasketButton?.addEventListener('click', () => {
@@ -568,10 +826,33 @@
       el?.addEventListener('change', runResearch);
     });
 
-    [els.huntCodeInput, els.pointsInput].forEach((el) => {
-      el?.addEventListener('input', runResearch);
-    });
-  }
+      [els.huntCodeInput, els.pointsInput].forEach((el) => {
+        el?.addEventListener('input', runResearch);
+      });
+
+      els.ladderTableBody?.addEventListener('click', (event) => {
+        const trigger = event.target.closest('[data-source-pill="true"]');
+        if (!trigger || !state.selectedMeta || !state.selectedFilters) return;
+        const point = Number.parseInt(trigger.getAttribute('data-point') || '', 10);
+        const row = getLadderRows(state.selectedFilters.huntCode, state.selectedFilters.residency)
+          .find((candidate) => candidate.points === point);
+        if (!row) return;
+        const referenceRow = getReferenceRow(state.selectedFilters.huntCode, state.selectedFilters.residency);
+        openSourceModal(state.selectedMeta, row, referenceRow, state.selectedFilters.residency);
+      });
+
+      els.sourceModalClose?.addEventListener('click', closeSourceModal);
+      els.sourceModal?.addEventListener('click', (event) => {
+        if (event.target === els.sourceModal) {
+          closeSourceModal();
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeSourceModal();
+        }
+      });
+    }
 
   async function init() {
     try {

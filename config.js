@@ -13,7 +13,7 @@ window.UOGA_CONFIG = (() => {
   const HUNT_DATA_VERSION = '20260404-selection-matrix-fix-1';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
-  const HUNT_RESEARCH_DATA_VERSION = '20260404-selection-matrix-fix-1';
+  const HUNT_RESEARCH_DATA_VERSION = '20260404-hunt-reference-link-1';
 
   const HUNT_BOUNDARY_SOURCES = [
     `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
@@ -53,6 +53,10 @@ window.UOGA_CONFIG = (() => {
   const HUNT_RESEARCH_MASTER_SOURCES = [
     `./processed_data/hunt_master_enriched.csv?v=${HUNT_RESEARCH_DATA_VERSION}`,
     `${CLOUDFLARE_BASE}/hunt_master_enriched.csv?v=${HUNT_RESEARCH_DATA_VERSION}`
+  ];
+  const HUNT_RESEARCH_REFERENCE_SOURCES = [
+    `./processed_data/hunt_unit_reference_linked.csv?v=${HUNT_RESEARCH_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/hunt_unit_reference_linked.csv?v=${HUNT_RESEARCH_DATA_VERSION}`
   ];
 
   const LOGO_DNR = 'https://static.wixstatic.com/media/43f827_34cd9f26f53f4b9ebcb200f6d878bea2~mv2.jpg';
@@ -179,6 +183,7 @@ window.UOGA_CONFIG = (() => {
     HUNT_RESEARCH_ENGINE_SOURCES,
     HUNT_RESEARCH_LADDER_SOURCES,
     HUNT_RESEARCH_MASTER_SOURCES,
+    HUNT_RESEARCH_REFERENCE_SOURCES,
     LOGO_DNR,
     LOGO_DWR_SELECTOR,
     LOGO_DNR_ROOMY,
