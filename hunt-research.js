@@ -35,7 +35,12 @@
       referenceByKey: new Map(),
     };
 
-    const els = {
+  // els is populated by grabEls() inside init() so the SPA can render the
+  // hunt-research template before this module is activated.
+  let els = {};
+
+  function grabEls() {
+    els = {
     huntCodeInput: document.getElementById('huntCodeInput'),
     residencySelect: document.getElementById('residencySelect'),
     pointsInput: document.getElementById('pointsInput'),
@@ -76,6 +81,7 @@
       basketList: document.getElementById('basketList'),
       clearBasketButton: document.getElementById('clearBasketButton'),
     };
+  }
 
   function normalizeKey(value) {
     return String(value || '').trim().toUpperCase();
@@ -855,6 +861,7 @@
     }
 
   async function init() {
+    grabEls();
     try {
       renderBasket();
       bootstrapSelection();
@@ -864,10 +871,18 @@
       runResearch();
     } catch (error) {
       console.error(error);
-      els.filterReadout.textContent = error.message || 'Hunt Research data failed to load.';
-      els.plannerReadout.textContent = 'Page loaded. Production data did not.';
+      if (els.filterReadout) els.filterReadout.textContent = error.message || 'Hunt Research data failed to load.';
+      if (els.plannerReadout) els.plannerReadout.textContent = 'Page loaded. Production data did not.';
     }
   }
 
-  init();
+  // Expose init for the SPA router to call after rendering the hunt-research template.
+  // Falls back to auto-init when not running under the SPA (e.g. direct HTML file load).
+  window.UOGA_RESEARCH = window.UOGA_RESEARCH || {};
+  window.UOGA_RESEARCH.init = init;
+
+  if (!document.getElementById('app')) {
+    // Legacy direct-file load: auto-initialize immediately.
+    init();
+  }
 })();
