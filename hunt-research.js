@@ -1,4 +1,4 @@
-(function () {
+window.UOGA_HUNT_RESEARCH = (function () {
   const ENGINE_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES.length)
     ? window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES
     : ['./processed_data/draw_reality_engine.csv'];
@@ -869,5 +869,9 @@
     }
   }
 
-  init();
+  return { init };
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.UOGA_HUNT_RESEARCH) window.UOGA_HUNT_RESEARCH.init();
+});
