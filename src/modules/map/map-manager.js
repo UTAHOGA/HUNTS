@@ -42,7 +42,6 @@ const {
 // --- State ---
 let huntUnitsLayer = null;
 let googleApiReady = false;
-let googleMapsLoadTimeoutId = null;
 
 export function getHuntUnitsLayer() { return huntUnitsLayer; }
 export function isGoogleApiReady() { return googleApiReady; }
@@ -295,10 +294,6 @@ export function openStreetViewAtFocus() {
 }
 
 export function initGoogleBaseline() {
-  if (googleMapsLoadTimeoutId) {
-    clearTimeout(googleMapsLoadTimeoutId);
-    googleMapsLoadTimeoutId = null;
-  }
   const mapTypeSelect = document.getElementById('mapTypeSelect');
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
     mapTypeSelect.value = 'terrain';
