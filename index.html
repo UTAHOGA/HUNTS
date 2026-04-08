@@ -9,8 +9,123 @@
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
 </head>
 <body class="theme-dark">
-  <!-- Single app mount point — all page content is rendered here by the SPA router -->
-  <main id="app"></main>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo-lockup">
+        <a href="https://www.uoga.org" target="_blank" title="Go to U.O.G.A. Home">
+          <img src="https://static.wixstatic.com/media/43f827_24f00cd070494533955d4910eef3a2fb~mv2.jpg/v1/fill/w_207,h_105,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Group%20945%20(1).jpg" alt="U.O.G.A. Logo">
+        </a>
+        <div>
+          <h1>U.O.G.A. Hunt Planner</h1>
+          <p>Verified Outfitters</p>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <nav class="utility-nav" aria-label="Site sections">
+        <a class="utility-link" href="#/" data-route="/" aria-current="page">Hunt Planner</a>
+        <a class="utility-link" href="./hunt-research.html" data-route="research">Hunt Research</a>
+        <a class="utility-link" href="./vetting.html" data-route="vetting">Outfitter Verification</a>
+      </nav>
+      <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
+      <div class="control-group">
+        <label for="mapTypeSelect">Map</label>
+        <select id="mapTypeSelect">
+          <option value="terrain" selected>Terrain</option>
+          <option value="roadmap">Roadmap</option>
+          <option value="hybrid">Hybrid</option>
+          <option value="satellite">Satellite</option>
+          <option value="globe">Globe</option>
+        </select>
+      </div>
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+        <details class="toggle-menu">
+          <summary id="federalLayersSummary">Federal</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="stateLayersSummary">State</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="privateLayersSummary">Private</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+          </div>
+        </details>
+      </div>
+      <button id="streetViewBtn" type="button" class="secondary">Street View</button>
+      <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Find a Hunt</h2>
+        <div class="panel-body">
+          <div class="field">
+            <label for="searchInput">Search by hunt number</label>
+            <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
+          </div>
+          <div class="field">
+            <label for="speciesFilter">Species</label>
+            <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
+          </div>
+          <div class="field">
+            <label for="sexFilter">Sex</label>
+            <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntTypeFilter">Hunt Type</label>
+            <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntCategoryFilter">Hunt Class</label>
+            <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="weaponFilter">Weapon Type</label>
+            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="unitFilter">DWR Hunt Units</label>
+            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
+          </div>
+          <div class="filter-actions">
+            <button id="applyFiltersBtn" type="button">Apply Filters</button>
+            <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
+          </div>
+          <div id="status" class="status">Loading map...</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Matching Hunts</h2>
+        <div class="panel-body">
+          <div id="matchingHunts" class="hunt-list">
+            <div class="empty-note">Use filters or click a unit to load hunts.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Selected Hunt</h2>
+        <div class="panel-body" id="selectedHuntPanel">
+          <div class="empty-note">No hunt selected yet.</div>
+        </div>
+      </section>
+    </aside>
 
   <!-- Shared third-party libraries -->
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
@@ -34,9 +149,20 @@
        so the route template is rendered before those modules query the DOM. -->
   <script src="./app-spa.js"></script>
 
-  <!-- Page-specific logic — initialised by app-spa.js after template render -->
-  <script src="./app.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="./hunt-research.js?v=20260402-hunt-research-clean-1"></script>
+  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
+  <script src="./config.js?v=20260404-selection-matrix-fix-1"></script>
+  <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
+  <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
+  <script src="./src/state.js"></script>
+  <script src="./src/modules/storage.js"></script>
+  <script src="./src/modules/api.js"></script>
+  <script src="./src/modules/hunts.js"></script>
+  <script src="./src/modules/outfitters.js"></script>
+  <script src="./src/modules/map.js"></script>
+  <script src="./src/router.js"></script>
+  <script src="./src/constants.js"></script>
+  <script src="app.js?v=20260404-selection-matrix-fix-1"></script>
 </body>
 </html>
 

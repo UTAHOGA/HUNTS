@@ -1,5 +1,4 @@
-(function () {
-  const ENGINE_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES.length)
+GINE_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES.length)
     ? window.UOGA_CONFIG.HUNT_RESEARCH_ENGINE_SOURCES
     : ['./processed_data/draw_reality_engine.csv'];
   const LADDER_SOURCES = (window.UOGA_CONFIG && Array.isArray(window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES) && window.UOGA_CONFIG.HUNT_RESEARCH_LADDER_SOURCES.length)
@@ -13,7 +12,8 @@
       : ['./processed_data/hunt_unit_reference_linked.csv'];
   const SELECTED_HUNT_KEY = 'selected_hunt_code';
   const SELECTED_RESIDENCY_KEY = 'selected_hunt_research_residency';
-  const SELECTED_POINTS_KEY = 'selected_hunt_research_points';
+  const SELECTED_POIwindow.UOGA_HUNT_RESEARCH = (function () {
+  const ENNTS_KEY = 'selected_hunt_research_points';
   const BASKET_KEY = 'uoga_hunt_basket_v1';
   const LEGACY_BASKET_KEY = 'hunt_research_recent_hunts';
   // Public draw permits already account for Expo permits. Conservation permits are not part of draw odds.
@@ -876,13 +876,9 @@
     }
   }
 
-  // Expose init for the SPA router to call after rendering the hunt-research template.
-  // Falls back to auto-init when not running under the SPA (e.g. direct HTML file load).
-  window.UOGA_RESEARCH = window.UOGA_RESEARCH || {};
-  window.UOGA_RESEARCH.init = init;
-
-  if (!document.getElementById('app')) {
-    // Legacy direct-file load: auto-initialize immediately.
-    init();
-  }
+  return { init };
 })();
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.UOGA_HUNT_RESEARCH) window.UOGA_HUNT_RESEARCH.init();
+});
