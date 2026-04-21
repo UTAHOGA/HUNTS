@@ -96,6 +96,26 @@
       border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2; 
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
+
+    /* Planner header aligns with left rail (Hunt Builder), map, and right rail (Outfitters). */
+    .topbar.topbar-planner {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr) 320px;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+    }
+    .topbar.topbar-planner .topbar-left,
+    .topbar.topbar-planner .topbar-center,
+    .topbar.topbar-planner .controls {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .topbar.topbar-planner .controls {
+      justify-content: center; /* centers backpack over Outfitters rail */
+    }
     .brand { min-width: 0; }
     .brand-plain h1 {
       margin: 0;
@@ -114,14 +134,12 @@
     .brand p { margin: 4px 0 0; color: var(--accent); font-family: var(--font-display); font-size: 24px; line-height: 1; font-weight: 700; letter-spacing: 0; text-transform: none; text-align: center; }
     
     /* --- CONTROLS --- */
-    .utility-nav { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .utility-nav { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .controls {
       display: flex;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
-      flex: 1 1 auto;
-      width: 100%;
       justify-content: flex-end;
       margin-left: 0;
       min-width: 0;
@@ -135,11 +153,19 @@
       flex: 1 1 auto;
       min-width: 0;
     }
-    .controls > :not(.controls-center) { flex: 0 0 auto; }
+    .controls > * { flex: 0 0 auto; }
+    :root {
+      --nav-pill-w: 144px; /* ~1.5in at 96dpi */
+      --nav-pill-gap: 8px;
+      --nav-case-pad-side: 36px; /* 0.75in total wider than pills => 0.375in each side */
+      --nav-pill-h: 28px; /* ~0.29in */
+      --nav-pill-inner-h: 22px; /* ~0.23in */
+    }
+
     .page-nav-strip {
       display: flex;
       justify-content: center;
-      padding: 10px 16px 12px;
+      padding: 8px 14px 10px;
       background: transparent;
     }
 
@@ -149,7 +175,7 @@
       max-width: 100%;
       display: flex;
       justify-content: center;
-      padding: 10px 10px;
+      padding: 6px 6px;
       border: 1px solid var(--line);
       border-radius: 18px 18px 22px 18px;
       background:
@@ -162,18 +188,18 @@
       width: 100%;
       max-width: 1100px;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      justify-content: stretch;
+      grid-template-columns: repeat(4, var(--nav-pill-w));
+      gap: var(--nav-pill-gap);
+      justify-content: center;
       align-items: center;
     }
     /* Approx 1.5in per pill at 96dpi (144px) on desktop. */
     @media (min-width: 820px) {
-      .page-nav-strip .utility-nav { max-width: 606px; } /* (4 * 144) + (3 * 10 gap) */
+      .page-nav-strip .utility-nav { max-width: calc((4 * var(--nav-pill-w)) + (3 * var(--nav-pill-gap))); }
     }
     /* Pillowcase width: ~3/8in extra on each side beyond the outer pills. */
     @media (min-width: 820px) {
-      .page-nav-case { max-width: 678px; } /* 606 + (2 * 36) */
+      .page-nav-case { max-width: calc((4 * var(--nav-pill-w)) + (3 * var(--nav-pill-gap)) + (2 * var(--nav-case-pad-side))); }
     }
 
     @media (max-width: 780px) {
@@ -186,21 +212,22 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height: 38px;
-      width: 100%;
-      padding:0 16px;
+      min-height: var(--nav-pill-h);
+      width: var(--nav-pill-w);
+      padding: 3px; /* centers inner pill inside outer */
       border: 1px solid var(--line);
       border-radius:999px;
       background:
         radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 38%),
         linear-gradient(180deg, color-mix(in srgb, var(--panel2) 70%, transparent), color-mix(in srgb, var(--panel) 92%, transparent));
       color: var(--text);
-      font-size:12px;
+      font-size:11px;
       font-weight:800;
-      letter-spacing:.10em;
+      letter-spacing:.08em;
       text-transform:uppercase;
       text-decoration:none;
       white-space:nowrap;
+      overflow: hidden;
       transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
     }
     .utility-link-inner {
@@ -208,15 +235,15 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 32px;
-      padding: 0 14px;
+      min-height: var(--nav-pill-inner-h);
+      padding: 0 10px;
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
-        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
+        radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 40%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.70));
       color: var(--accent);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.26);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.22);
     }
     .utility-link:hover {
       background:
@@ -236,6 +263,17 @@
       background: linear-gradient(180deg, var(--accent), var(--accent-dark));
       color: #2f1d12;
       box-shadow: 0 10px 22px rgba(82, 44, 20, 0.30);
+    }
+    /* Orange dot when selected. */
+    .utility-link.active .utility-link-inner::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      margin-left: 10px;
+      background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(47, 29, 18, 0.70);
+      flex: 0 0 auto;
     }
     .utility-link.active:hover {
       border-color: var(--accent);
@@ -292,8 +330,8 @@
       cursor: pointer;
     }
     .control-group select option { color: #14100c; }
-    .toggle-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); flex-wrap: wrap; max-width: 100%; }
-    .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer;}
+    .toggle-row { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 18px 18px 22px 18px; background: var(--panel2); flex-wrap: wrap; max-width: 100%; }
+    .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 11px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; cursor: pointer;}
     .toggle-chip input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;}
     .toggle-chip-label { display: inline-block; line-height: 1.05; text-align: center; white-space: normal; }
     .toggle-menu { position: relative; }
@@ -302,14 +340,15 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px;
+      min-height: 28px;
+      padding: 0 10px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--panel);
+      background: rgba(0,0,0,0.10);
       color: var(--text);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .04em;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
       text-transform: uppercase;
       cursor: pointer;
       user-select: none;
@@ -414,6 +453,22 @@
     }
     .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
     .panel h2 { margin: 0; padding: 12px 14px; font-family: var(--font-display); font-size: 19px; line-height: 1.05; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; letter-spacing: 0.02em; }
+
+    /* Sidebar/Outfitter headers: ALL CAPS, centered, orange surround (border), clean. */
+    .sidebar .panel > h2,
+    .rightbar .panel > h2 {
+      margin: 12px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--text);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 14px;
+      line-height: 1.05;
+    }
     .panel-body { padding: 14px; }
     .helper, .empty-note { color: var(--muted); line-height: 1.45; font-size: 14px; margin: 0; }
     .status { margin-top: 12px; color: var(--text); font-size: 13px; font-weight: 700; padding: 8px; background: var(--panel); border-radius: 6px; border: 1px dashed var(--accent); text-align: center;}

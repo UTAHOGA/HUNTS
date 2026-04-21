@@ -3122,13 +3122,14 @@ function installPageScrollOnMap(containerId) {
   if (el.__uogaWheelScrollInstalled) return;
   el.__uogaWheelScrollInstalled = true;
 
+  // Capture phase so we see the wheel before map libraries can swallow it.
   el.addEventListener('wheel', (e) => {
     // With Google Maps cooperative mode, Ctrl+wheel is the intentional zoom gesture.
     // Default (no Ctrl) should scroll the page.
     if (e.ctrlKey) return;
     e.preventDefault();
     window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
-  }, { passive: false });
+  }, { passive: false, capture: true });
 }
 // --- MAP ENGINE ---
 function initGoogleBaseline() {

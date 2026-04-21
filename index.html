@@ -8,48 +8,49 @@
   <link rel="stylesheet" href="./style.css?v=20260330-conservation-fix-8" />
  </head>
   <body class="theme-dark">
-  <header class="topbar">
-    <div class="controls">
-      <div class="controls-center">
-        <div class="control-group">
-          <label for="mapTypeSelect">Map</label>
-          <select id="mapTypeSelect">
-            <option value="terrain" selected>Terrain</option>
-            <option value="roadmap">Roadmap</option>
-            <option value="hybrid">Hybrid</option>
-            <option value="satellite">Satellite</option>
-            <option value="dwr">Utah DWR</option>
-            <option value="globe">Globe</option>
-          </select>
-        </div>
-        <div class="toggle-row">
-          <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-          <details class="toggle-menu">
-            <summary id="federalLayersSummary">Federal</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-              <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-              <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
-            </div>
-          </details>
-          <details class="toggle-menu">
-            <summary id="stateLayersSummary">State</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-              <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-              <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
-            </div>
-          </details>
-          <details class="toggle-menu">
-            <summary id="privateLayersSummary">Private</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
-              <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-            </div>
-          </details>
-        </div>
+  <header class="topbar topbar-planner">
+    <div class="topbar-left">
+      <div class="control-group">
+        <label for="mapTypeSelect">Map</label>
+        <select id="mapTypeSelect">
+          <option value="terrain" selected>Terrain</option>
+          <option value="roadmap">Roadmap</option>
+          <option value="hybrid">Hybrid</option>
+          <option value="satellite">Satellite</option>
+          <option value="dwr">Utah DWR</option>
+          <option value="globe">Globe</option>
+        </select>
       </div>
     </div>
+    <div class="topbar-center">
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+        <details class="toggle-menu">
+          <summary id="federalLayersSummary">Federal</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="stateLayersSummary">State</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="privateLayersSummary">Private</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+          </div>
+        </details>
+      </div>
+    </div>
+    <div class="controls"></div>
   </header>
 
   <div class="planner-body">
