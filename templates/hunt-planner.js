@@ -6,7 +6,6 @@ window.UOGA_TEMPLATES = window.UOGA_TEMPLATES || {};
 
 window.UOGA_TEMPLATES.huntPlanner = function huntPlanner() {
   const topbarControls = `
-    <button id="themeToggleBtn" type="button" class="secondary">Light Mode</button>
     <div class="control-group">
       <label for="mapTypeSelect">Map</label>
       <select id="mapTypeSelect">
@@ -42,9 +41,7 @@ window.UOGA_TEMPLATES.huntPlanner = function huntPlanner() {
           <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
         </div>
       </details>
-    </div>
-    <button id="streetViewBtn" type="button" class="secondary">Street View</button>
-    <button id="resetViewBtn" type="button" class="secondary">Reset Utah</button>
+    </div>  
   `;
 
   return `
