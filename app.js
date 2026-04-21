@@ -76,75 +76,38 @@ const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
 
-// DOM element references — assigned lazily via grabDomRefs() inside the
-// DOMContentLoaded handler so the SPA can render the template first.
-let searchInput,
-  speciesFilter,
-  sexFilter,
-  huntTypeFilter,
-  weaponFilter,
-  huntCategoryFilter,
-  unitFilter,
-  mapTypeSelect,
-  globeBasemapSelect,
-  globeBasemapGrid,
-  streetViewBtn,
-  resetViewBtn,
-  applyFiltersBtn,
-  clearFiltersBtn,
-  statusEl,
-  toggleDwrUnits,
-  toggleUSFS,
-  toggleBLM,
-  toggleBLMDetail,
-  federalLayersSummary,
-  toggleSITLA,
-  toggleStateParks,
-  toggleWma,
-  toggleCwmu,
-  togglePrivate,
-  stateLayersSummary,
-  privateLayersSummary,
-  mapChooser,
-  mapChooserTitle,
-  mapChooserKicker,
-  mapChooserBody,
-  selectedHuntFloat;
-
-function grabDomRefs() {
-  searchInput = document.getElementById('searchInput');
-  speciesFilter = document.getElementById('speciesFilter');
-  sexFilter = document.getElementById('sexFilter');
-  huntTypeFilter = document.getElementById('huntTypeFilter');
-  weaponFilter = document.getElementById('weaponFilter');
-  huntCategoryFilter = document.getElementById('huntCategoryFilter');
-  unitFilter = document.getElementById('unitFilter');
-  mapTypeSelect = document.getElementById('mapTypeSelect');
-  globeBasemapSelect = document.getElementById('globeBasemapSelect');
-  globeBasemapGrid = document.getElementById('globeBasemapGrid');
-  streetViewBtn = document.getElementById('streetViewBtn');
-  resetViewBtn = document.getElementById('resetViewBtn');
-  applyFiltersBtn = document.getElementById('applyFiltersBtn');
-  clearFiltersBtn = document.getElementById('clearFiltersBtn');
-  statusEl = document.getElementById('status');
-  toggleDwrUnits = document.getElementById('toggleDwrUnits');
-  toggleUSFS = document.getElementById('toggleUSFS');
-  toggleBLM = document.getElementById('toggleBLM');
-  toggleBLMDetail = document.getElementById('toggleBLMDetail');
-  federalLayersSummary = document.getElementById('federalLayersSummary');
-  toggleSITLA = document.getElementById('toggleSITLA');
-  toggleStateParks = document.getElementById('toggleStateParks');
-  toggleWma = document.getElementById('toggleWma');
-  toggleCwmu = document.getElementById('toggleCwmu');
-  togglePrivate = document.getElementById('togglePrivate');
-  stateLayersSummary = document.getElementById('stateLayersSummary');
-  privateLayersSummary = document.getElementById('privateLayersSummary');
-  mapChooser = document.getElementById('mapChooser');
-  mapChooserTitle = document.getElementById('mapChooserTitle');
-  mapChooserKicker = document.getElementById('mapChooserKicker');
-  mapChooserBody = document.getElementById('mapChooserBody');
+const searchInput = document.getElementById('searchInput'),
+  speciesFilter = document.getElementById('speciesFilter'),
+  sexFilter = document.getElementById('sexFilter'),
+  huntTypeFilter = document.getElementById('huntTypeFilter'),
+  weaponFilter = document.getElementById('weaponFilter'),
+  huntCategoryFilter = document.getElementById('huntCategoryFilter'),
+  unitFilter = document.getElementById('unitFilter'),
+  mapTypeSelect = document.getElementById('mapTypeSelect'),
+  globeBasemapSelect = document.getElementById('globeBasemapSelect'),
+  globeBasemapGrid = document.getElementById('globeBasemapGrid'),
+  streetViewBtn = document.getElementById('streetViewBtn'),
+  resetViewBtn = document.getElementById('resetViewBtn'),
+  applyFiltersBtn = document.getElementById('applyFiltersBtn'),
+  clearFiltersBtn = document.getElementById('clearFiltersBtn'),
+  statusEl = document.getElementById('status'),
+  toggleDwrUnits = document.getElementById('toggleDwrUnits'),
+  toggleUSFS = document.getElementById('toggleUSFS'),
+  toggleBLM = document.getElementById('toggleBLM'),
+  toggleBLMDetail = document.getElementById('toggleBLMDetail'),
+  federalLayersSummary = document.getElementById('federalLayersSummary'),
+  toggleSITLA = document.getElementById('toggleSITLA'),
+  toggleStateParks = document.getElementById('toggleStateParks'),
+  toggleWma = document.getElementById('toggleWma'),
+  toggleCwmu = document.getElementById('toggleCwmu'),
+  togglePrivate = document.getElementById('togglePrivate'),
+  stateLayersSummary = document.getElementById('stateLayersSummary'),
+  privateLayersSummary = document.getElementById('privateLayersSummary'),
+  mapChooser = document.getElementById('mapChooser'),
+  mapChooserTitle = document.getElementById('mapChooserTitle'),
+  mapChooserKicker = document.getElementById('mapChooserKicker'),
+  mapChooserBody = document.getElementById('mapChooserBody'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat');
-}
 
 // --- UTILITIES ---
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -173,13 +136,7 @@ function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
   localStorage.setItem('selected_hunt_research_residency', normalizedResidency);
   localStorage.setItem('selected_hunt_research_points', String(points));
 
-  // Use SPA routing when the app container is present, otherwise fall back to
-  // a direct page navigation for legacy HTML file loads.
-  if (document.getElementById('app') && window.UOGA_ROUTER) {
-    window.UOGA_ROUTER.navigate(`/research?hunt_code=${encodeURIComponent(code)}`);
-  } else {
-    window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
-  }
+  window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
 }
 
 // --- DATA NORMALIZATION ---
@@ -1229,7 +1186,7 @@ function openSelectedUnitsChooser() {
       renderOutfitters();
       const hunts = getDisplayHunts().filter(h => getUnitValue(h) === unitValue);
       const unitTitle = firstNonEmpty(hunts[0] && getUnitName(hunts[0]), unitValue);
-      showHuntMatchesChooser(unitTitle, hunts, 'Matching Hunts');
+      showHuntMatchesChooser(unitTitle, hunts, 'Available Hunts');
     };
     card.addEventListener('click', select);
     card.addEventListener('keydown', event => {
@@ -1669,7 +1626,9 @@ window.selectHuntByKey = (key) => {
   }
 };
 window.selectHuntByCode = (code) => {
-  const h = huntData.find(x => getHuntCode(x) === code);
+  const want = safe(code).trim().toUpperCase();
+  if (!want) return;
+  const h = huntData.find(x => safe(getHuntCode(x)).trim().toUpperCase() === want);
   if (h) window.selectHuntByKey(getHuntRecordKey(h));
 };
 
@@ -1680,7 +1639,7 @@ function renderSelectedHunt() {
   if (!panel) return;
 
   if (!hunt) {
-    panel.innerHTML = '<div class="empty-note">No hunt selected yet.</div>';
+    panel.innerHTML = '<div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>';
     closeSelectedHuntFloat();
     return;
   }
@@ -2309,7 +2268,7 @@ function buildPopupListForMatches(matches) {
         <img src="${LOGO_DWR_SELECTOR}" alt="Utah DWR logo" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;border:1px solid #d6c1ae;">
         <div>
           <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${DNR_ORANGE};">DWR Hunt Unit</div>
-          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Matching Hunts</div>
+          <div style="font-size:15px;font-weight:900;color:#2b1c12;">Multiple Available Hunts</div>
         </div>
       </div>
       ${matches.slice(0, 8).map(h => `
@@ -2321,12 +2280,12 @@ function buildPopupListForMatches(matches) {
     </div>`;
 }
 
-function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
+function showHuntMatchesChooser(title, matches, kicker = 'Available Hunts') {
   if (!mapChooser || !mapChooserBody || !mapChooserTitle || !mapChooserKicker) return;
   closeSelectedHuntFloat();
   selectedBoundaryMatches = matches.slice();
   mapChooserKicker.textContent = kicker;
-  mapChooserTitle.textContent = firstNonEmpty(title, 'Matching Hunts');
+  mapChooserTitle.textContent = firstNonEmpty(title, 'Available Hunts');
   mapChooserBody.innerHTML = matches.length ? matches.slice(0, 12).map(h => `
     <div class="map-chooser-card" data-popup-hunt-key="${escapeHtml(getHuntRecordKey(h))}" role="button" tabindex="0">
       <div class="hunt-card-title">${escapeHtml(getHuntCode(h))} | ${escapeHtml(getUnitName(h) || getHuntTitle(h))}</div>
@@ -2352,7 +2311,7 @@ function showHuntMatchesChooser(title, matches, kicker = 'Matching Hunts') {
 }
 function openMapChooser(feature, matches) {
   const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
-  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Matching Hunts' : 'Selected Unit');
+  showHuntMatchesChooser(boundaryName, matches, hasActiveMatrixSelections() || selectedHunt ? 'Available Hunts' : 'Selected Unit');
 }
 
 function openBoundaryPopup(feature, latLng) {
@@ -2365,7 +2324,7 @@ function openBoundaryPopup(feature, latLng) {
   fitDataFeatureBounds(feature, 11);
   const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
   if (matches.length) {
-    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
   } else {
     updateStatus(`Zoomed to ${boundaryName}.`);
   }
@@ -2866,7 +2825,7 @@ function ensureCesiumViewer() {
       'Selected Unit'
     );
     if (matches.length) {
-      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Matching Hunts to choose one.`);
+      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
     } else {
       updateStatus(`Zoomed to ${boundaryName}.`);
     }
@@ -3130,8 +3089,8 @@ function bindControls() {
       }
       const chooserTitle = selectedUnitValue
         ? firstNonEmpty(selectedUnitGroups[0]?.unitName, selectedUnitValue)
-        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Matching Hunts');
-      showHuntMatchesChooser(chooserTitle, results, 'Matching Hunts');
+        : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Available Hunts');
+      showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
   });
@@ -3309,14 +3268,6 @@ function bootstrapPendingHuntSelection() {
 
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
-  // In SPA mode the hunt-planner template is rendered before this fires.
-  // grabDomRefs() assigns all element references after the template is in the DOM.
-  grabDomRefs();
-
-  // Only initialise if the Hunt Planner elements are actually present (SPA routing
-  // may have loaded a different page on first load).
-  if (!document.getElementById('map')) return;
-
   // Load Map
   const script = document.createElement('script');
   script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;
@@ -3359,74 +3310,3 @@ function sortWithPreferredOrder(arr, pref) {
     const map = new Map(pref.map((v, i) => [v, i]));
     return arr.sort((a, b) => (map.has(a) ? map.get(a) : 99) - (map.has(b) ? map.get(b) : 99));
 }
-
-/**
- * Exposed initializer for SPA routing.
- * Called by app-spa.js after rendering the hunt-planner template.
- * Supports re-entry: skips Google Maps script injection if the API is already ready.
- */
-window.initHuntPlanner = async function initHuntPlanner() {
-  grabDomRefs();
-  if (!document.getElementById('map')) return;
-
-  if (!googleApiReady) {
-    const existing = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
-    if (!existing) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&loading=async&callback=initGoogleBaseline`;
-      script.async = true;
-      script.defer = true;
-      script.onerror = () => {
-        console.error('Google Maps API failed to load.');
-        fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
-      };
-      document.head.appendChild(script);
-      googleMapsLoadTimeoutId = setTimeout(() => {
-        if (!googleApiReady) {
-          console.error('Google Maps API load timed out.');
-          fallbackToGlobeMode('Google map timed out. Switched to globe view.');
-        }
-      }, 7000);
-    }
-  } else {
-    initGoogleBaseline();
-  }
-
-  await loadConservationPermitAreas();
-  await loadConservationPermitHuntTable();
-  await loadHuntData();
-  await loadOutfitters();
-  await loadOutfitterFederalCoverage();
-  try {
-    huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
-    if (googleApiReady) buildBoundaryLayer();
-    if (cesiumViewer) {
-      ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
-      ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
-    }
-  } catch (e) { console.error('GeoJSON load failed', e); }
-
-  refreshSelectionMatrix();
-  renderMatchingHunts();
-  bootstrapPendingHuntSelection();
-  applyMapMode();
-};
-
-/**
- * Re-attach DOM references and restore the planner UI after a template re-render
- * (navigation back to the planner from another page). Data is already loaded,
- * so only the DOM wiring and map need refreshing.
- */
-window.reinitHuntPlanner = function reinitHuntPlanner() {
-  grabDomRefs();
-  if (!document.getElementById('map')) return;
-  // Re-create the map in the fresh #map container using the already-loaded API.
-  if (googleApiReady) {
-    initGoogleBaseline();
-    if (huntBoundaryGeoJson) buildBoundaryLayer();
-  }
-  refreshSelectionMatrix();
-  renderMatchingHunts();
-  bootstrapPendingHuntSelection();
-  applyMapMode();
-};
