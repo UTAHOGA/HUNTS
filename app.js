@@ -481,6 +481,64 @@ function getHuntCategory(h) {
 
   return normalized;
 }
+function getHuntCodeDigits(h) {
+  const code = normalizeHuntCode(getHuntCode(h));
+  const match = code.match(/(\d{4})$/);
+  return match ? match[1] : '';
+}
+function isPrivateLandOnlyRecord(h) {
+  const huntType = safe(getHuntType(h)).toLowerCase();
+  const huntCategory = safe(getHuntCategory(h)).toLowerCase();
+  const dates = safe(getDates(h)).toLowerCase();
+  const unitName = safe(getUnitName(h)).toLowerCase();
+  const title = safe(getHuntTitle(h)).toLowerCase();
+  return (
+    huntType.includes('private land') ||
+    huntCategory.includes('private land') ||
+    dates.includes('private land') ||
+    unitName.includes('private land') ||
+    title.includes('private land')
+  );
+}
+function isLegitPrivateLandException(h) {
+  const species = safe(getSpeciesDisplay(h)).toLowerCase();
+  const sex = safe(getNormalizedSex(h)).toLowerCase();
+  const weapon = safe(getWeapon(h)).toLowerCase();
+  const huntType = safe(getHuntType(h)).toLowerCase();
+  const title = safe(getHuntTitle(h)).toLowerCase();
+  return (
+    species === 'elk' &&
+    sex === 'antlerless' &&
+    weapon === 'any legal weapon' &&
+    (huntType.includes('private land') || title.includes('private land')) &&
+    (
+      huntType.includes('otc') ||
+      huntType.includes('over-the-counter') ||
+      title.includes('otc') ||
+      title.includes('over-the-counter')
+    )
+  );
+}
+function getPrivateTwinKey(h) {
+  return [
+    getHuntCodeDigits(h),
+    normalizeBoundaryKey(getSpeciesDisplay(h)),
+    normalizeBoundaryKey(getNormalizedSex(h)),
+    normalizeBoundaryKey(getWeapon(h)),
+    normalizeBoundaryKey(getUnitName(h)),
+    normalizeBoundaryKey(getHuntType(h).replace(/private lands? only/gi, '').trim())
+  ].join('|');
+}
+function buildPublicTwinKeySet(records) {
+  const keys = new Set();
+  records.forEach(record => {
+    if (isPrivateLandOnlyRecord(record)) return;
+    const digits = getHuntCodeDigits(record);
+    if (!digits) return;
+    keys.add(getPrivateTwinKey(record));
+  });
+  return keys;
+}
 function buildSyntheticConservationPermitHunts(records) {
   void records;
   if (!Array.isArray(conservationPermitHuntTable) || !conservationPermitHuntTable.length) return [];
@@ -616,6 +674,7 @@ function getFilteredHunts(excludeKey = '') {
   const weapon = safe(weaponFilter?.value || 'All');
   const huntCategory = safe(huntCategoryFilter?.value || 'All');
   const unit = safe(unitFilter?.value || '');
+  const publicTwinKeys = buildPublicTwinKeySet(huntData);
 
   return huntData.filter(h => {
     const sDisplay = getSpeciesDisplay(h);
@@ -636,8 +695,14 @@ function getFilteredHunts(excludeKey = '') {
     const huntCategoryOk = excludeKey === 'huntCategory' || huntCategory === 'All' || hHuntCategory === huntCategory;
     const unitOk = excludeKey === 'unit' || !unit || hUnit === unit;
     const conservationDisplayOk = huntType !== 'Conservation' || !!h?.syntheticConservationPermit;
+    const duplicatedPrivateTwinHidden = !(
+      isPrivateLandOnlyRecord(h) &&
+      !isLegitPrivateLandException(h) &&
+      getHuntCodeDigits(h) &&
+      publicTwinKeys.has(getPrivateTwinKey(h))
+    );
 
-    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk && conservationDisplayOk;
+    return searchOk && speciesOk && sexOk && huntTypeOk && weaponOk && huntCategoryOk && unitOk && conservationDisplayOk && duplicatedPrivateTwinHidden;
   });
 }
 
