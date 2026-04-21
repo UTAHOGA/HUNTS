@@ -6,50 +6,80 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>Utah Hunt Planner</title>
   <link rel="stylesheet" href="./style.css?v=20260330-conservation-fix-8" />
- </head>
-  <body>
-  <header class="topbar topbar-planner">
-    <div class="topbar-left">
-      <div class="control-group">
-        <label for="mapTypeSelect">Map</label>
-        <select id="mapTypeSelect">
-          <option value="globe" selected>Globe</option>
-          <option value="dwr">Utah DWR</option>
-        </select>
+</head>
+<body class="theme-dark">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-plain">
+        <h1>Hunt Planner</h1>
       </div>
     </div>
-    <div class="topbar-center">
-      <div class="control-group" id="globeBasemapControl">
-        <label for="globeBasemapSelect">Basemap</label>
-        <select id="globeBasemapSelect">
-          <option value="osm">OpenStreetMap</option>
-          <option value="esriImagery" selected>Esri World Imagery</option>
-          <option value="esriTopo">Esri World Topo</option>
-          <option value="esriStreet">Esri World Street</option>
-          <option value="esriNatGeo">Esri NatGeo</option>
-          <option value="usgsImagery">USGS Imagery</option>
-          <option value="usgsTopo">USGS Topo</option>
-          <option value="openTopo">OpenTopoMap</option>
-          <option value="cartoLight">Carto Light</option>
-          <option value="cartoDark">Carto Dark</option>
-        </select>
-      </div>
+    
+    <!-- 1. BASEMAP PILLOW MOVED HERE (Replaced Navigation) -->
+    <div class="control-group">
+      <label for="mapTypeSelect">Map</label>
+      <select id="mapTypeSelect">
+        <option value="terrain" selected>Terrain</option>
+        <option value="roadmap">Roadmap</option>
+        <option value="hybrid">Hybrid</option>
+        <option value="satellite">Satellite</option>
+        <option value="dwr">Utah DWR</option>
+        <option value="globe">Globe</option>
+      </select>
     </div>
-    <div class="controls"></div>
+
+    <!-- 2. PAGE NAVIGATION MOVED HERE (Between Basemap and other controls) -->
+    <nav class="utility-nav" aria-label="Site sections">
+      <a class="utility-link active" href="./index.html" aria-current="page">Hunt Planner</a>
+      <a class="utility-link" href="./hunt-research.html">Hunt Research</a>
+      <a class="utility-link" href="./vetting.html">Outfitter Verification</a>
+    </nav>
+
+    <!-- OTHER CONTROLS REMAIN ON THE RIGHT -->
+    <div class="controls">
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+        <details class="toggle-menu">
+          <summary id="federalLayersSummary">Federal</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="stateLayersSummary">State</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="privateLayersSummary">Private</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+          </div>
+        </details>
+      </div>
+      <button id="streetViewBtn" type="button" class="secondary">Street View</button>
+    </div>
   </header>
 
-  <section class="page-nav-strip" aria-label="Site navigation">
-    <div class="page-nav-case">
-      <nav class="utility-nav">
-        <a class="utility-link active" href="./index.html" aria-current="page">PLANNER</a>
-        <a class="utility-link" href="./hunt-research.html">RESEARCH</a>
-        <a class="utility-link" href="./vetting.html">VERIFY ~ CONNECT</a>
-        <a class="utility-link" href="./hard-data.html">HARD DATA</a>
-      </nav>
-    </div>
+  <div class="planner-body">
+  <section class="hero" aria-label="Introduction">
+    <h1>Plan Your Hunt Like a Professional</h1>
+    <p>Then map it, analyze it, and hunt it right.</p>
   </section>
 
-  <div class="planner-body">
+  <section class="quick-start" aria-label="Quick start steps">
+    <div class="qs-step">1. Select a hunt unit or filter</div>
+    <div class="qs-step">2. Choose a hunt</div>
+    <div class="qs-step">3. Analyze draw odds</div>
+    <div class="qs-step">4. Match with outfitters</div>
+  </section>
+
   <main class="layout">
     <aside class="sidebar">
       <section class="panel">
@@ -119,6 +149,7 @@
 
       <section class="map-wrap">
         <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
           <div id="globeMap" aria-label="Cesium globe view"></div>
           <iframe
             id="dwrMapFrame"
@@ -147,6 +178,18 @@
       <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
         <div class="globe-basemap-title">Globe Basemap</div>
         <p class="globe-basemap-note">Switch globe backgrounds.</p>
+        <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
+          <option value="osm">OpenStreetMap</option>
+          <option value="esriImagery">Esri World Imagery</option>
+          <option value="esriTopo">Esri World Topo</option>
+          <option value="esriStreet">Esri World Street</option>
+          <option value="esriNatGeo">Esri NatGeo</option>
+          <option value="usgsImagery">USGS Imagery</option>
+          <option value="usgsTopo">USGS Topo</option>
+          <option value="openTopo">OpenTopoMap</option>
+          <option value="cartoLight">Carto Light</option>
+          <option value="cartoDark">Carto Dark</option>
+        </select>
         <div id="globeBasemapGrid" class="globe-basemap-grid">
           <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
           <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
@@ -163,6 +206,10 @@
     </section>
 
     <aside class="rightbar">
+      <div class="rightbar-header">
+        <h2 class="rightbar-header-title">U.O.G.A.</h2>
+        <p class="rightbar-header-subtitle">Verified Outfitters</p>
+      </div>
       <section class="panel">
         <h2>Outfitters</h2>
         <div class="panel-body">
@@ -200,8 +247,5 @@
   <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="app.js?v=20260404-selection-matrix-fix-1"></script>
-  <!-- deploy-touch: 2026-04-21 -->
 </body>
 </html>
-
-
