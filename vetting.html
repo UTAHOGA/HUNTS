@@ -40,16 +40,19 @@
       padding: 20px 0 40px;
     }
 
-     .topbar {\n      display: flex;\n      align-items: center;\n      justify-content: flex-start;
-      gap: 18px;
-      flex-wrap: wrap;
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
+     .topbar {
+       display: flex;
+       align-items: center;
+       justify-content: flex-start;
+       gap: 18px;
+       flex-wrap: wrap;
+       padding: 16px 18px;
+       border: 1px solid var(--line);
+       border-radius: 18px;
+       background: var(--panel);
+       box-shadow: var(--shadow);
+       backdrop-filter: blur(10px);
+     }
 
     .brand {
       display: flex;
@@ -73,7 +76,15 @@
       text-transform: uppercase;
     }
 
-     .brand-plain h1 {\n      margin: 0;\n      font-family: var(--font-display);\n      font-size: 22px;\n      line-height: 1;\n      text-transform: uppercase;\n    }\n\n    .brand-copy p {
+     .brand-plain h1 {
+       margin: 0;
+       font-family: var(--font-display);
+       font-size: 22px;
+       line-height: 1;
+       text-transform: uppercase;
+     }
+
+    .brand-copy p {
       margin: 6px 0 0;
       color: var(--accent);
       font-size: 22px;
@@ -82,11 +93,55 @@
       text-transform: none;
     }
 
-    .nav {\n      display: flex;\n      align-items: center;\n      gap: 10px;\n      flex-wrap: wrap;\n    }\n\n    .controls {\n      margin-left: auto;\n      display: flex;\n      align-items: center;\n      gap: 10px;\n      flex-wrap: wrap;\n    }
+     .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    .nav a {\n      display: inline-flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 38px;\n      padding: 0 16px;\n      border-radius: 999px;\n      border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);\n      background:\n        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),\n        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));\n      color: var(--accent);\n      text-decoration: none;\n      font-weight: 900;\n      letter-spacing: .10em;\n      text-transform: uppercase;\n      font-size: 12px;\n      white-space: nowrap;\n      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;\n    }
+    .controls {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-    .nav a.active,\n    .nav a:hover {\n      border-color: var(--accent);\n      box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);\n      transform: translateY(-1px);\n    }\n\n    .nav a.active {\n      border-color: #d1ab83;\n      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));\n      color: #2f1d12;\n      box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);\n    }
+     .nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
+        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      white-space: nowrap;
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+    }
+
+     .nav a.active,
+    .nav a:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
+      transform: translateY(-1px);
+    }
+
+    .nav a.active {
+      border-color: #d1ab83;
+      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
+      color: #2f1d12;
+      box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
+    }
 
     .nav-icon-link {
       display: inline-flex;
@@ -353,7 +408,15 @@
         font-size: 26px;
       }
 
-       .brand-plain h1 {\n      margin: 0;\n      font-family: var(--font-display);\n      font-size: 22px;\n      line-height: 1;\n      text-transform: uppercase;\n    }\n\n    .brand-copy p {
+      .brand-plain h1 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 22px;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .brand-copy p {
         font-size: 18px;
       }
 
@@ -372,9 +435,13 @@
     <header class="topbar">
       <div class="brand"><div class="brand-plain"><h1>Outfitter Verification</h1></div></div>
 
-      <nav class="nav"><a href="./index.html">Hunt Planner</a>
+      <nav class="nav">
+        <a href="./index.html">Hunt Planner</a>
         <a href="./hunt-research.html">Hunt Research</a>
-        <a href="./vetting.html" class="active">Outfitter Verification</a></nav>\n\n      <div class="controls"><a
+        <a href="./vetting.html" class="active">Outfitter Verification</a>
+      </nav>
+
+      <div class="controls"><a
           href="#dwr-registration-floor"
           class="nav-icon-link"
           title="Jump to Utah DWR registration note"
