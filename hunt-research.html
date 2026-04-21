@@ -8,20 +8,21 @@
   <link rel="stylesheet" href="./style.css?v=20260402-hunt-research-clean-1" />
   <style>
     :root {
-      --research-bg: #0f0b09;
-      --research-panel: rgba(28, 21, 17, 0.92);
-      --research-panel-strong: rgba(35, 25, 19, 0.97);
-      --research-line: rgba(170, 124, 84, 0.52);
-      --research-line-soft: rgba(255, 255, 255, 0.08);
-      --research-text: #f7efe7;
-      --research-muted: #d2b9a4;
-      --research-accent: #e07429;
-      --research-accent-dark: #a94d1a;
-      --research-good: #7fd68e;
-      --research-warn: #f1c56a;
-      --research-bad: #f29c82;
-      --research-info: #8ec6ff;
-      --research-shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+      /* Light theme alignment (single theme site-wide). */
+      --research-bg: var(--bg);
+      --research-panel: var(--panel);
+      --research-panel-strong: var(--panel2);
+      --research-line: var(--line);
+      --research-line-soft: rgba(255, 255, 255, 0.22);
+      --research-text: var(--text);
+      --research-muted: var(--muted);
+      --research-accent: var(--accent);
+      --research-accent-dark: var(--accent-dark);
+      --research-good: #2f7f4a;
+      --research-warn: #9a6a00;
+      --research-bad: #a63b2b;
+      --research-info: #1b5fb5;
+      --research-shadow: var(--shadow);
       --research-radius: 22px;
       --research-pill: 999px;
     }
@@ -30,9 +31,9 @@
       min-height: 100vh;
       color: var(--research-text);
       background:
-          linear-gradient(180deg, rgba(10, 8, 7, 0.78), rgba(10, 8, 7, 0.86)),
-          url('./assets/logos/backgrounds/topo-black-white-line-001.jpg') center top / 100% auto repeat-y,
-          #110d0b;
+          linear-gradient(180deg, rgba(246, 240, 231, 0.92), rgba(246, 240, 231, 0.96)),
+          url('./assets/logos/logos/White-Topo-2-1920.png') center top / 1920px 1082px repeat,
+          #f6f0e7;
     }
 
     .topbar,
@@ -55,7 +56,7 @@
     .side-card {
       border: 1px solid var(--research-line);
       border-radius: var(--research-radius);
-      background: linear-gradient(180deg, rgba(31, 24, 19, 0.95), rgba(18, 14, 11, 0.97));
+      background: var(--research-panel);
       box-shadow: var(--research-shadow);
       overflow: hidden;
       backdrop-filter: blur(10px);
@@ -942,7 +943,7 @@
     }
   </style>
 </head>
-<body class="theme-dark research-page">
+<body class="research-page">
   <header class="topbar">
     <div class="controls"><div class="controls-center"></div></div>
   </header>
