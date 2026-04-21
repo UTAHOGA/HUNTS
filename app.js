@@ -2992,6 +2992,8 @@ function applyMapMode() {
     }
     mapWrap.classList.remove('is-globe-mode');
     mapWrap.classList.add('is-dwr-mode');
+    // Bring the active map into view (under the header) when switching modes.
+    mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     updateStatus('Utah DWR map active.');
     return;
   }
@@ -3002,6 +3004,7 @@ function applyMapMode() {
     updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
     ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
+    mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => {
       if (cesiumViewer) {
         cesiumViewer.resize();

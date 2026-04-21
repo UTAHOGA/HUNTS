@@ -214,13 +214,13 @@
       justify-content:center;
       min-height: var(--nav-pill-h);
       width: var(--nav-pill-w);
-      padding: 3px; /* centers inner pill inside outer */
-      border: 1px solid var(--line);
+      padding: 0 10px;
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
       border-radius:999px;
       background:
         radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 38%),
         linear-gradient(180deg, color-mix(in srgb, var(--panel2) 70%, transparent), color-mix(in srgb, var(--panel) 92%, transparent));
-      color: var(--text);
+      color: var(--accent);
       font-size:11px;
       font-weight:800;
       letter-spacing:.08em;
@@ -230,50 +230,15 @@
       overflow: hidden;
       transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
     }
-    .utility-link-inner {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: var(--nav-pill-inner-h);
-      padding: 0 10px;
-      border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 40%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.70));
-      color: var(--accent);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.22);
-    }
     .utility-link:hover {
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 36%),
-        linear-gradient(180deg, color-mix(in srgb, var(--panel2) 86%, transparent), color-mix(in srgb, var(--panel) 96%, transparent));
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16);
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 2px rgba(250, 120, 0, 0.18);
     }
     .utility-link.active {
-      border-color: color-mix(in srgb, var(--accent) 55%, #d1ab83);
-      background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
-      box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
-    }
-    .utility-link.active .utility-link-inner {
-      border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #2f1d12;
-      box-shadow: 0 10px 22px rgba(82, 44, 20, 0.30);
-    }
-    /* Orange dot when selected. */
-    .utility-link.active .utility-link-inner::after {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      margin-left: 10px;
-      background: var(--accent);
-      box-shadow: 0 0 0 2px rgba(47, 29, 18, 0.70);
-      flex: 0 0 auto;
+      color: #ffffff;
+      border-color: var(--accent);
+      /* Selected = orange inner ring */
+      box-shadow: inset 0 0 0 2px var(--accent), 0 10px 24px rgba(82, 44, 20, 0.28);
     }
     .utility-link.active:hover {
       border-color: var(--accent);
@@ -316,14 +281,14 @@
     }
     .control-group label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
     .control-group select {
-      min-height: 38px;
+      min-height: 28px;
       padding: 0 14px;
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.12), transparent 40%),
-        linear-gradient(180deg, var(--accent), var(--accent-dark));
-      color: #2f1d12;
+        radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 40%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.70));
+      color: var(--accent);
       font-weight: 900;
       letter-spacing: .10em;
       text-transform: uppercase;
