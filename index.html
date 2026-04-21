@@ -27,6 +27,7 @@
           <option value="roadmap">Roadmap</option>
           <option value="hybrid">Hybrid</option>
           <option value="satellite">Satellite</option>
+          <option value="dwr">Utah DWR</option>
           <option value="globe">Globe</option>
         </select>
       </div>
@@ -140,11 +141,19 @@
       </section>
     </aside>
 
-    <section class="map-wrap">
-      <div class="map-stage">
-        <div id="map" aria-label="Google DWR mirror map"></div>
-        <div id="globeMap" aria-label="Cesium globe view"></div>
-      </div>
+      <section class="map-wrap">
+        <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
+          <div id="globeMap" aria-label="Cesium globe view"></div>
+          <iframe
+            id="dwrMapFrame"
+            class="dwr-map-frame"
+            title="Utah DWR Hunt Boundary Map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            hidden
+          ></iframe>
+        </div>
 
       <div id="mapChooser" class="map-chooser" aria-hidden="true">
         <div class="map-chooser-head">

@@ -107,7 +107,8 @@ const searchInput = document.getElementById('searchInput'),
   mapChooserTitle = document.getElementById('mapChooserTitle'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
   mapChooserBody = document.getElementById('mapChooserBody'),
-  selectedHuntFloat = document.getElementById('selectedHuntFloat');
+  selectedHuntFloat = document.getElementById('selectedHuntFloat'),
+  dwrMapFrame = document.getElementById('dwrMapFrame');
 
 // --- UTILITIES ---
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -1749,6 +1750,10 @@ function renderSelectedHunt() {
     openHuntResearch(getHuntCode(hunt));
   });
 
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'dwr') {
+    updateDwrMapFrame(hunt);
+  }
+
   openSelectedHuntFloat();
 }
 
@@ -2872,6 +2877,16 @@ function ensureCesiumViewer() {
   cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
   cesiumViewer.scene.requestRenderMode = false;
   cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
+  // Page-first scrolling: keep the mouse wheel available to scroll the page rather than zooming the globe.
+  // Zoom is still available via right-drag (desktop) and pinch (touch/trackpad).
+  try {
+    const ssc = cesiumViewer.scene.screenSpaceCameraController;
+    if (ssc && Cesium?.CameraEventType) {
+      ssc.zoomEventTypes = [Cesium.CameraEventType.RIGHT_DRAG, Cesium.CameraEventType.PINCH];
+    }
+  } catch (err) {
+    console.warn('Could not update Cesium zoom event types', err);
+  }
   container.style.background = '#d7e7f5';
   if (huntBoundaryGeoJson) {
     ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
@@ -2897,6 +2912,22 @@ function ensureCesiumViewer() {
   }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 }
 
+function getDwrBoundaryUrl(hunt = selectedHunt) {
+  const huntCode = safe(hunt ? getHuntCode(hunt) : '').trim().toUpperCase();
+  if (huntCode) {
+    return `https://dwrapps.utah.gov/huntboundary/hbstart?HN=${encodeURIComponent(huntCode)}`;
+  }
+  return 'https://dwrapps.utah.gov/huntboundary/hbstart';
+}
+
+function updateDwrMapFrame(hunt = selectedHunt) {
+  if (!dwrMapFrame) return;
+  const src = getDwrBoundaryUrl(hunt);
+  if (dwrMapFrame.getAttribute('src') !== src) {
+    dwrMapFrame.setAttribute('src', src);
+  }
+}
+
 function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2918,6 +2949,24 @@ function applyMapMode() {
   const value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
+
+  mapWrap.classList.remove('is-dwr-mode');
+  if (dwrMapFrame) {
+    dwrMapFrame.hidden = true;
+  }
+
+  if (value === 'dwr') {
+    googleBaselineMap?.getStreetView?.()?.setVisible(false);
+    clearOutfitterMarkers();
+    updateDwrMapFrame(selectedHunt);
+    if (dwrMapFrame) {
+      dwrMapFrame.hidden = false;
+    }
+    mapWrap.classList.remove('is-globe-mode');
+    mapWrap.classList.add('is-dwr-mode');
+    updateStatus('Utah DWR map active.');
+    return;
+  }
 
   if (value === 'globe') {
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
@@ -3051,6 +3100,9 @@ function initGoogleBaseline() {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
     mapTypeId: 'terrain',
+    // Page-first scrolling: don't let the mouse wheel get "stuck" zooming the map.
+    // Zoom still works with trackpad gestures or by using the map controls.
+    gestureHandling: 'cooperative',
     streetViewControl: true,
     fullscreenControl: true,
     mapTypeControl: false
