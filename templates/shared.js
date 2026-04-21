@@ -15,12 +15,7 @@ window.UOGA_TEMPLATES.topbar = function topbar(activePage, options = {}) {
 
   return `
     <header class="topbar">
-      <div class="brand">
-        <div class="brand-plain">
-          <h1>Hunt Planner</h1>
-        </div>
-      </div>
-      <nav class="utility-nav" aria-label="Site sections">
+<nav class="utility-nav" aria-label="Site sections">
         <a class="utility-link${activePage === 'planner' ? ' active' : ''}"
            href="#/"
            data-spa-link="/"

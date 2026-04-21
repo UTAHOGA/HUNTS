@@ -2914,6 +2914,7 @@ function ensureCesiumViewer() {
     console.warn('Could not update Cesium zoom event types', err);
   }
   container.style.background = '#d7e7f5';
+  installPageScrollOnMap('globeMap');
   if (huntBoundaryGeoJson) {
     ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
   }
@@ -3113,6 +3114,21 @@ function openStreetViewAtFocus() {
   tryRadius(0);
 }
 
+
+function installPageScrollOnMap(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (el.__uogaWheelScrollInstalled) return;
+  el.__uogaWheelScrollInstalled = true;
+
+  el.addEventListener('wheel', (e) => {
+    // With Google Maps cooperative mode, Ctrl+wheel is the intentional zoom gesture.
+    // Default (no Ctrl) should scroll the page.
+    if (e.ctrlKey) return;
+    e.preventDefault();
+    window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+  }, { passive: false });
+}
 // --- MAP ENGINE ---
 function initGoogleBaseline() {
   if (googleMapsLoadTimeoutId) {
@@ -3134,6 +3150,7 @@ function initGoogleBaseline() {
     mapTypeControl: false
   });
   googleApiReady = true;
+  installPageScrollOnMap('map');
   if (huntBoundaryGeoJson) buildBoundaryLayer();
   ensureUtahOutlineLayer().catch(err => console.error('Utah outline failed', err));
   if (toggleBLM?.checked) ensureBlmLayer().catch(err => console.error('BLM layer failed', err));
