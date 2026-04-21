@@ -2908,7 +2908,8 @@ function ensureCesiumViewer() {
   try {
     const ssc = cesiumViewer.scene.screenSpaceCameraController;
     if (ssc && Cesium?.CameraEventType) {
-      ssc.zoomEventTypes = [Cesium.CameraEventType.RIGHT_DRAG, Cesium.CameraEventType.PINCH];
+      // Keep WHEEL enabled so Ctrl+wheel can zoom; our wheel handler prevents zoom when Ctrl is not held.
+      ssc.zoomEventTypes = [Cesium.CameraEventType.WHEEL, Cesium.CameraEventType.RIGHT_DRAG, Cesium.CameraEventType.PINCH];
     }
   } catch (err) {
     console.warn('Could not update Cesium zoom event types', err);
