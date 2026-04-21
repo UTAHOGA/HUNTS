@@ -6,8 +6,8 @@
       --line: #c9a27f;
       --text: #2b1c12;
       --muted: #6b5646;
-      --accent: #ff6600;
-      --accent-dark: #cc5200;
+      --accent: rgb(250, 120, 0);
+      --accent-dark: rgb(210, 92, 0);
       --selected-fill: #e07429;
       --selected-fill-dark: #b75920;
       --selected-text: #2f1d12;
@@ -27,8 +27,8 @@
       --line: #5c412d;
       --text: #f4efe4;
       --muted: #a89483;
-      --accent: #ff6600;
-      --accent-dark: #cc5200;
+      --accent: rgb(250, 120, 0);
+      --accent-dark: rgb(210, 92, 0);
       --selected-fill: #e07429;
       --selected-fill-dark: #b75920;
       --selected-text: #2b1b12;
@@ -167,6 +167,14 @@
       justify-content: stretch;
       align-items: center;
     }
+    /* Approx 1.5in per pill at 96dpi (144px) on desktop. */
+    @media (min-width: 820px) {
+      .page-nav-strip .utility-nav { max-width: 606px; } /* (4 * 144) + (3 * 10 gap) */
+    }
+    /* Pillowcase width: ~3/8in extra on each side beyond the outer pills. */
+    @media (min-width: 820px) {
+      .page-nav-case { max-width: 678px; } /* 606 + (2 * 36) */
+    }
 
     @media (max-width: 780px) {
       .page-nav-strip .utility-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -184,8 +192,8 @@
       border: 1px solid var(--line);
       border-radius:999px;
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.16), transparent 36%),
-        linear-gradient(180deg, color-mix(in srgb, var(--panel2) 86%, transparent), color-mix(in srgb, var(--panel) 96%, transparent));
+        radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 38%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel2) 70%, transparent), color-mix(in srgb, var(--panel) 92%, transparent));
       color: var(--text);
       font-size:12px;
       font-weight:800;
@@ -194,6 +202,21 @@
       text-decoration:none;
       white-space:nowrap;
       transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
+    }
+    .utility-link-inner {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 32px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
+        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
+      color: var(--accent);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.26);
     }
     .utility-link:hover {
       background:
@@ -204,10 +227,15 @@
       transform: translateY(-1px);
     }
     .utility-link.active {
-      border-color: #d1ab83;
-      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
-      color: #2f1d12;
+      border-color: color-mix(in srgb, var(--accent) 55%, #d1ab83);
+      background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
       box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
+    }
+    .utility-link.active .utility-link-inner {
+      border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #2f1d12;
+      box-shadow: 0 10px 22px rgba(82, 44, 20, 0.30);
     }
     .utility-link.active:hover {
       border-color: var(--accent);
@@ -255,14 +283,15 @@
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
-        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
-      color: var(--accent);
+        radial-gradient(circle at top left, rgba(255,255,255,0.12), transparent 40%),
+        linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #2f1d12;
       font-weight: 900;
       letter-spacing: .10em;
       text-transform: uppercase;
       cursor: pointer;
     }
+    .control-group select option { color: #14100c; }
     .toggle-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel2); flex-wrap: wrap; max-width: 100%; }
     .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--text); font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; cursor: pointer;}
     .toggle-chip input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;}
@@ -461,7 +490,7 @@
     .hunt-card:hover, .map-chooser-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
     .hunt-card.is-selected {
       border-color: var(--selected-outline);
-      background: linear-gradient(180deg, rgba(224, 116, 41, 0.95), rgba(183, 89, 32, 0.96));
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
       color: var(--selected-text);
       box-shadow: var(--selected-shadow);
       transform: translateY(-2px);
@@ -583,7 +612,7 @@
       padding: 10px 11px;
       border-radius: 12px;
       border: 1px solid var(--selected-outline);
-      background: linear-gradient(180deg, rgba(224, 116, 41, 0.96), rgba(183, 89, 32, 0.94));
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
       color: var(--selected-text);
       box-shadow: var(--selected-shadow);
       transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
