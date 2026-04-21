@@ -2328,7 +2328,33 @@ function getFeatureMatches(feature) {
 }
 
 function buildPopupCardForHunt(hunt) {
-  return buildDnrPlate(hunt, true);
+  // Keep map popups clean: no large branding plates/logos. Hunters want the code + unit + key details fast.
+  const code = escapeHtml(getHuntCode(hunt) || '');
+  const unit = escapeHtml(getUnitName(hunt) || getHuntTitle(hunt));
+  const species = escapeHtml(getSpeciesDisplay(hunt) || 'N/A');
+  const sex = escapeHtml(getNormalizedSex(hunt) || 'N/A');
+  const huntType = escapeHtml(getHuntType(hunt) || 'N/A');
+  const weapon = escapeHtml(getWeapon(hunt) || 'N/A');
+  const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
+  const heading = escapeHtml(getPanelHeading(hunt));
+  const boundaryLink = getBoundaryLink(hunt);
+
+  return `
+    <div style="min-width:320px;max-width:420px;border:1px solid rgba(92,65,45,.75);border-radius:14px;overflow:hidden;background:rgba(35,30,26,.96);color:#f4efe4;box-shadow:0 12px 34px rgba(0,0,0,.35);">
+      <div style="padding:12px 14px;border-bottom:1px solid rgba(244,239,228,.12);background:linear-gradient(180deg, rgba(255,102,0,.20), rgba(255,102,0,.06));">
+        <div style="font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#ff6600;">${heading}</div>
+        <div style="margin-top:4px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <div style="font-size:18px;font-weight:900;line-height:1.1;">${unit}</div>
+          <div style="font-size:16px;font-weight:900;letter-spacing:.02em;">${code}</div>
+        </div>
+      </div>
+      <div style="padding:12px 14px;display:grid;gap:8px;">
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${species} | ${sex} | ${huntType}</div>
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${weapon}</div>
+        <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${dates}</div>
+        ${boundaryLink ? `<button type="button" data-inline-hunt-details class="secondary" style="justify-self:start;">Official Utah DWR Hunt Details</button>` : ''}
+      </div>
+    </div>`;
 }
 
 function buildPopupListForMatches(matches) {
