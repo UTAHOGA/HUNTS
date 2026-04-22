@@ -8,18 +8,7 @@
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
   <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-4" />
   <style>
-    /* Ensure the basemap popup works in both Google and Globe modes. */
-    #globeBasemapPanel {
-      display: none;
-      position: fixed;
-      z-index: 2147482000;
-    }
-    #globeBasemapPanel[aria-hidden="false"] {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      pointer-events: auto !important;
-    }
+    /* Basemap popover is styled in style.css; keep index.html free of positioning rules. */
   </style>
 </head>
 <body class="theme-dark">
