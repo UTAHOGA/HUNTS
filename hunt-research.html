@@ -19,9 +19,10 @@
       --research-muted: var(--muted);
       --research-accent: var(--accent);
       --research-accent-dark: var(--accent-dark);
-      --research-good: #2f7f4a;
-      --research-warn: #9a6a00;
-      --research-bad: #a63b2b;
+      /* Sharper traffic-light colors (no muddy auburn/brown). */
+      --research-good: #00a650;
+      --research-warn: #f2b400;
+      --research-bad: #e53935;
       --research-info: #1b5fb5;
       --research-shadow: var(--shadow);
       --research-radius: 22px;
@@ -557,6 +558,34 @@
         box-shadow: 0 0 0 4px rgba(82,179,106,0.16), 0 0 18px rgba(82,179,106,0.42);
       }
 
+    .likelihood-guaranteed,
+    .likelihood-live,
+    .likelihood-longshot,
+    .likelihood-unknown {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      background: color-mix(in srgb, currentColor 12%, transparent);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    .likelihood-guaranteed::before,
+    .likelihood-live::before,
+    .likelihood-longshot::before,
+    .likelihood-unknown::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
+    }
     .likelihood-guaranteed { color: var(--research-good); }
     .likelihood-live { color: var(--research-warn); }
     .likelihood-longshot { color: var(--research-bad); }
