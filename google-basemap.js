@@ -12,6 +12,14 @@
     return document.getElementById('globeBasemapPanel');
   }
 
+  function getGoogleGrid() {
+    return document.getElementById('googleBasemapGrid');
+  }
+
+  function getGlobeGrid() {
+    return document.getElementById('globeBasemapGrid');
+  }
+
   function readPreferredType() {
     const raw = (localStorage.getItem(STORAGE_KEY) || '').trim();
     return VALID_TYPES.has(raw) ? raw : DEFAULT_TYPE;
@@ -37,16 +45,23 @@
     const panel = getBasemapPanel();
     if (!panel) return;
     const show = isGoogleMode() || isGlobeMode();
-    panel.setAttribute('aria-hidden', show ? 'false' : 'true');
-    // Hard override so page CSS/app logic can't accidentally keep it hidden.
-    if (show) {
-      panel.style.display = 'block';
-      panel.style.visibility = 'visible';
-      panel.style.opacity = '1';
-      panel.style.pointerEvents = 'auto';
-    } else {
-      panel.style.display = 'none';
-    }
+    const should = show ? 'false' : 'true';
+    if (panel.getAttribute('aria-hidden') !== should) panel.setAttribute('aria-hidden', should);
+
+    // Inline layout so other CSS can't push it offscreen when map mode changes.
+    panel.style.position = 'fixed';
+    panel.style.right = '24px';
+    panel.style.top = '160px';
+    panel.style.zIndex = '2147482000';
+
+    // Keep a mode flag for optional CSS/debugging.
+    panel.dataset.mapMode = isGoogleMode() ? 'google' : isGlobeMode() ? 'globe' : 'dwr';
+
+    // Reduce confusion: highlight only the relevant grid.
+    const googleGrid = getGoogleGrid();
+    const globeGrid = getGlobeGrid();
+    if (googleGrid) googleGrid.style.opacity = isGlobeMode() ? '0.45' : '1';
+    if (globeGrid) globeGrid.style.opacity = isGoogleMode() ? '0.45' : '1';
   }
 
   function applyToGoogleMap() {
@@ -86,11 +101,44 @@
     applyToGoogleMap();
   }
 
+  function protectPanelFromOtherScripts() {
+    const panel = getBasemapPanel();
+    if (!panel || panel.__uogaBasemapProtected) return;
+    panel.__uogaBasemapProtected = true;
+
+    const obs = new MutationObserver(() => {
+      // If another script hides it while it should be visible, immediately revert.
+      const shouldShow = isGoogleMode() || isGlobeMode();
+      if (!shouldShow) return;
+      if (panel.getAttribute('aria-hidden') === 'true') {
+        panel.setAttribute('aria-hidden', 'false');
+      }
+    });
+
+    obs.observe(panel, { attributes: true, attributeFilter: ['aria-hidden', 'style', 'class'] });
+  }
+
+  function wrapApplyMapMode() {
+    // Some code paths switch modes without firing <select> change.
+    const fn = window.applyMapMode;
+    if (typeof fn !== 'function' || fn.__uogaWrapped) return;
+    function wrapped(...args) {
+      const res = fn.apply(this, args);
+      syncPanelVisibility();
+      window.setTimeout(syncPanelVisibility, 0);
+      return res;
+    }
+    wrapped.__uogaWrapped = true;
+    window.applyMapMode = wrapped;
+  }
+
   function init() {
     syncPanelVisibility();
     syncButtons();
     document.addEventListener('click', onClick, { passive: true });
     document.addEventListener('change', onChange, { passive: true });
+    protectPanelFromOtherScripts();
+    wrapApplyMapMode();
 
     // Google map loads async; apply preference once it's available.
     let tries = 0;
@@ -103,9 +151,9 @@
       }
       if (tries > 60) window.clearInterval(t);
     }, 250);
-
-    // Map mode can change via code paths that don't fire a <select> change event.
-    window.setInterval(syncPanelVisibility, 500);
+    // Give the rest of the page time to initialize its own UI, then re-assert.
+    window.setTimeout(syncPanelVisibility, 250);
+    window.setTimeout(syncPanelVisibility, 1000);
   }
 
   if (document.readyState === 'loading') {
