@@ -347,8 +347,7 @@ window.UOGA_UI = (() => {
         position: relative;
         flex: 0 0 auto;
         margin-left: 10px;
-        z-index: 2147483000;
-        isolation: isolate;
+        z-index: 6000;
       }
       .uoga-backpack-toggle {
         position: relative;
@@ -369,14 +368,14 @@ window.UOGA_UI = (() => {
       }
         .uoga-backpack-shell.is-open .uoga-backpack-toggle {
           border-color: #d1ab83;
-          background: linear-gradient(180deg, rgba(240, 120, 0, 0.98), rgba(240, 120, 0, 0.98));
+          background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
           color: #2f1d12;
           box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
         }
         .uoga-backpack-toggle:hover {
           transform: translateY(-2px);
           border-color: var(--accent);
-          box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
+          box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
         }
       .uoga-backpack-mark-wrap {
         display: inline-flex;
@@ -448,7 +447,7 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 2147483646;
+        z-index: 7000;
         transform-origin: top right;
       }
       .uoga-backpack-panel::before {
@@ -475,7 +474,7 @@ window.UOGA_UI = (() => {
         border-radius: 22px;
         border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
         background:
-          radial-gradient(circle at top left, rgba(240, 120, 0, 0.18), transparent 42%),
+          radial-gradient(circle at top left, rgba(255, 102, 0, 0.18), transparent 42%),
           linear-gradient(180deg, color-mix(in srgb, var(--panel2) 92%, transparent), color-mix(in srgb, var(--panel) 98%, transparent));
       }
       .uoga-backpack-hero-media {
@@ -760,4 +759,3 @@ window.UOGA_UI = (() => {
 })();
 
 window.UOGA_UI.initShell();
-

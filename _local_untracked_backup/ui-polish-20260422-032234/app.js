@@ -111,11 +111,7 @@ const searchInput = document.getElementById('searchInput'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
   mapChooserBody = document.getElementById('mapChooserBody'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat'),
-  dwrMapFrame = document.getElementById('dwrMapFrame'),
-  plannerDnrLogoLink = document.getElementById('plannerDnrLogoLink'),
-  instructionsTab = document.getElementById('instructionsTab'),
-  instructionsPanel = document.getElementById('instructionsPanel'),
-  instructionsReadBtn = document.getElementById('instructionsReadBtn');
+  dwrMapFrame = document.getElementById('dwrMapFrame');
 
 // --- UTILITIES ---
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -123,24 +119,6 @@ function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
   function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
-function setInstructionsOpen(isOpen) {
-  if (!instructionsPanel || !instructionsTab) return;
-  instructionsPanel.hidden = !isOpen;
-  instructionsTab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-}
-function readInstructionsAudio() {
-  if (typeof window === 'undefined' || !window.speechSynthesis) {
-    updateStatus('Audio instructions are not supported in this browser.');
-    return;
-  }
-  const text = 'Choose map mode and land layers. Filter species, sex, hunt type, and units. Click a unit or hunt card to inspect odds and details. Save hunts to Hunt Backpack for cross page workflow.';
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.rate = 1.0;
-  utterance.pitch = 1.0;
-  utterance.lang = 'en-US';
-  window.speechSynthesis.speak(utterance);
-}
 function assetUrl(path) {
   try {
     return new URL(path, window.location.href).href;
@@ -2271,7 +2249,7 @@ async function focusOutfitter(outfitter) {
   }
   noteOutfitterInteraction();
   if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'google';
+    mapTypeSelect.value = 'terrain';
     applyMapMode();
   }
   googleBaselineMap.panTo(location);
@@ -2991,7 +2969,7 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
       dwrMapFrame.hidden = true;
     }
     if (mapTypeSelect) {
-      mapTypeSelect.value = 'google';
+      mapTypeSelect.value = 'terrain';
     }
     updateStatus(`${reason} (Google-only debug mode enabled.)`);
     return;
@@ -3015,11 +2993,11 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
 }
 
 function applyMapMode() {
-  let value = safe(mapTypeSelect?.value || 'google').toLowerCase();
+  let value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
   if (FORCE_GOOGLE_ONLY_DEBUG && value === 'globe') {
-    value = 'google';
+    value = 'terrain';
     if (mapTypeSelect) {
-      mapTypeSelect.value = 'google';
+      mapTypeSelect.value = 'terrain';
     }
   }
   const mapWrap = document.querySelector('.map-wrap');
@@ -3086,13 +3064,13 @@ function applyMapMode() {
 
   if (basemapControl) basemapControl.hidden = false;
   mapWrap.classList.remove('is-globe-mode');
-  googleBaselineMap.setMapTypeId(value === 'google' ? 'terrain' : value);
+  googleBaselineMap.setMapTypeId(value);
   googleBaselineMap.getStreetView()?.setVisible(false);
   styleBoundaryLayer();
   if (selectedHunt) {
     updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
   }
-  updateStatus(`${value === 'google' ? 'Google' : titleCaseWords(value)} map active.`);
+  updateStatus(`${titleCaseWords(value)} map active.`);
 }
 
 function resetMapView() {
@@ -3127,7 +3105,7 @@ function getSelectedHuntCenter() {
 function openStreetViewAtFocus() {
   if (!googleBaselineMap || typeof google === 'undefined' || !google.maps?.StreetViewService) return;
   if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'google';
+    mapTypeSelect.value = 'terrain';
     applyMapMode();
   }
   const pano = googleBaselineMap.getStreetView();
@@ -3188,7 +3166,7 @@ function initGoogleBaseline() {
     googleMapsLoadTimeoutId = null;
   }
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
-    mapTypeSelect.value = 'google';
+    mapTypeSelect.value = 'terrain';
   }
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
@@ -3419,24 +3397,6 @@ function bindControls() {
     if (togglePrivate.checked) await ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
     setLayerVisibility(privateLayer, !!togglePrivate.checked);
     updatePrivateLayersSummary();
-  });
-  instructionsTab?.addEventListener('click', () => {
-    setInstructionsOpen(instructionsPanel?.hidden ?? true);
-  });
-  instructionsReadBtn?.addEventListener('click', readInstructionsAudio);
-  plannerDnrLogoLink?.addEventListener('click', (event) => {
-    event.preventDefault();
-    if (mapTypeSelect) {
-      mapTypeSelect.value = 'dwr';
-      applyMapMode();
-    }
-  });
-  document.addEventListener('click', (event) => {
-    if (!instructionsPanel || !instructionsTab || instructionsPanel.hidden) return;
-    const target = event.target;
-    if (!(target instanceof Node)) return;
-    if (instructionsPanel.contains(target) || instructionsTab.contains(target)) return;
-    setInstructionsOpen(false);
   });
 }
 

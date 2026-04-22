@@ -5,28 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>Utah Hunt Planner</title>
-  <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-4" />
+  <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-1" />
 </head>
 <body class="theme-dark">
-  <section class="page-nav-strip" aria-label="Site navigation">
-    <div class="page-nav-case">
-      <nav class="utility-nav">
-        <a class="utility-link active" href="./index.html" aria-current="page">PLANNER</a>
-        <a class="utility-link" href="./hunt-research.html">RESEARCH</a>
-        <a class="utility-link" href="./vetting.html">VERIFY ~ CONNECT</a>
-        <a class="utility-link" href="./hard-data.html">HUNT DATA</a>
-      </nav>
-    </div>
-  </section>
-
   <header class="topbar topbar-planner">
     <div class="topbar-left">
       <div class="control-group">
         <label for="mapTypeSelect">Map</label>
         <select id="mapTypeSelect">
-          <option value="dwr">DWR Map</option>
-          <option value="google" selected>Google Map</option>
-          <option value="globe">ESRI Globe</option>
+          <option value="terrain" selected>Terrain</option>
+          <option value="roadmap">Roadmap</option>
+          <option value="hybrid">Hybrid</option>
+          <option value="satellite">Satellite</option>
+          <option value="dwr">Utah DWR</option>
+          <option value="globe">Globe</option>
         </select>
       </div>
     </div>
@@ -58,32 +50,31 @@
         </details>
       </div>
     </div>
-    <div class="controls">
-      <div class="controls-center">
-        <a id="plannerDnrLogoLink" class="header-dnr-link" href="#" aria-label="Open Utah DWR Map">
-          <img src="./assets/logos/DWR-LOGO.png" alt="Utah DWR logo" />
-        </a>
-      </div>
-    </div>
-    <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
-    <section id="instructionsPanel" class="instructions-panel" hidden>
-      <div class="instructions-head">
-        <h3>Quick Instructions</h3>
-        <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
-      </div>
-      <ol>
-        <li>Choose map mode and land layers.</li>
-        <li>Filter species, sex, hunt type, and units.</li>
-        <li>Click a unit or hunt card to inspect odds and details.</li>
-        <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
-      </ol>
-    </section>
+    <div class="controls"><div class="controls-center"></div></div>
   </header>
+
+  <section class="page-nav-strip" aria-label="Site navigation">
+    <div class="page-nav-case">
+      <nav class="utility-nav">
+        <a class="utility-link active" href="./index.html" aria-current="page">PLANNER</a>
+        <a class="utility-link" href="./hunt-research.html">RESEARCH</a>
+        <a class="utility-link" href="./vetting.html">VERIFY ~ CONNECT</a>
+        <a class="utility-link" href="./hard-data.html">HUNT DATA</a>
+      </nav>
+    </div>
+  </section>
 
   <div class="planner-body">
   <section class="hero" aria-label="Introduction">
     <h1>Plan Your Hunt Like a Professional</h1>
     <p>Then map it, analyze it, and hunt it right.</p>
+  </section>
+
+  <section class="quick-start" aria-label="Quick start steps">
+    <div class="qs-step">1. Select a hunt unit or filter</div>
+    <div class="qs-step">2. Choose a hunt</div>
+    <div class="qs-step">3. Analyze draw odds</div>
+    <div class="qs-step">4. Match with outfitters</div>
   </section>
 
   <main class="layout">
@@ -184,6 +175,18 @@
       <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
         <div class="globe-basemap-title">Globe Basemap</div>
         <p class="globe-basemap-note">Switch globe backgrounds.</p>
+        <select id="globeBasemapSelect" class="hunt-select globe-basemap-select">
+          <option value="osm">OpenStreetMap</option>
+          <option value="esriImagery">Esri World Imagery</option>
+          <option value="esriTopo">Esri World Topo</option>
+          <option value="esriStreet">Esri World Street</option>
+          <option value="esriNatGeo">Esri NatGeo</option>
+          <option value="usgsImagery">USGS Imagery</option>
+          <option value="usgsTopo">USGS Topo</option>
+          <option value="openTopo">OpenTopoMap</option>
+          <option value="cartoLight">Carto Light</option>
+          <option value="cartoDark">Carto Dark</option>
+        </select>
         <div id="globeBasemapGrid" class="globe-basemap-grid">
           <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
           <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
@@ -238,8 +241,8 @@
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
   <script src="./config.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="./ui.js?v=20260422-backpack-front-1"></script>
+  <script src="./ui.js?v=20260422-backpack-label-sync-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260422-mapmode-trim-1"></script>
+  <script src="app.js?v=20260422-dwr-globe-fix-1"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Outfitter Verification</title>
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
-  <link rel="stylesheet" href="./style.css?v=20260421-light-uniform-1" />
+  <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-4" />
   <style>
     :root {
       /* Align page-local tones with the shared light theme. */
@@ -17,8 +17,8 @@
       --line-soft: rgba(0, 0, 0, 0.08);
       --text: #2b1c12;
       --muted: #6b5646;
-      --accent: rgb(250, 120, 0);
-      --accent-dark: rgb(210, 92, 0);
+      --accent: rgb(240, 120, 0);
+      --accent-dark: rgb(240, 120, 0);
       --shadow: 0 10px 28px rgba(58, 37, 18, 0.16);
       --font-display: "Arial Black", "Segoe UI Black", Impact, sans-serif;
       --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
@@ -112,13 +112,13 @@
      .nav a.active,
     .nav a:hover {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
+      box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
       transform: translateY(-1px);
     }
 
     .nav a.active {
       border-color: #d1ab83;
-      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
+      background: linear-gradient(180deg, rgba(240, 120, 0, 0.98), rgba(240, 120, 0, 0.98));
       color: #2f1d12;
       box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
     }
@@ -157,7 +157,7 @@
       border: 1px solid var(--line);
       border-radius: 22px;
       background:
-        linear-gradient(135deg, rgba(255, 102, 0, 0.14), rgba(255, 102, 0, 0) 44%),
+        linear-gradient(135deg, rgba(240, 120, 0, 0.14), rgba(240, 120, 0, 0) 44%),
         var(--panel-strong);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
@@ -235,8 +235,8 @@
       min-height: 38px;
       padding: 8px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 102, 0, 0.28);
-      background: rgba(255, 102, 0, 0.12);
+      border: 1px solid rgba(240, 120, 0, 0.28);
+      background: rgba(240, 120, 0, 0.12);
       color: var(--text);
       font-size: 12px;
       font-weight: 900;
@@ -319,8 +319,8 @@
     .callout {
       padding: 18px 20px;
       border-radius: 18px;
-      border: 1px solid rgba(255, 102, 0, 0.32);
-      background: rgba(255, 102, 0, 0.12);
+      border: 1px solid rgba(240, 120, 0, 0.32);
+      background: rgba(240, 120, 0, 0.12);
     }
 
     .callout p,
@@ -411,31 +411,26 @@
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="controls">
-      <div class="controls-center">
-        <a
-          href="#dwr-registration-floor"
-          class="nav-icon-link"
-          title="Jump to Utah DWR registration note"
-          aria-label="Jump to Utah DWR registration note"
-        >
-          <img src="./assets/logos/DWR-CWMU-LOGO.png" alt="Utah DWR" />
-        </a>
-      </div>
-    </div>
-  </header>
-
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
       <nav class="utility-nav">
         <a class="utility-link" href="./index.html">PLANNER</a>
         <a class="utility-link" href="./hunt-research.html">RESEARCH</a>
         <a class="utility-link active" href="./vetting.html" aria-current="page">VERIFY ~ CONNECT</a>
-        <a class="utility-link" href="./hard-data.html">HARD DATA</a>
+        <a class="utility-link" href="./hard-data.html">HUNT DATA</a>
       </nav>
     </div>
   </section>
+
+  <header class="topbar">
+    <div class="controls">
+      <div class="controls-center">
+        <a class="header-dnr-link header-dnr-center" href="./index.html" aria-label="Utah DWR">
+          <img src="./assets/logos/DWR-LOGO.png" alt="Utah DWR logo" />
+        </a>
+      </div>
+    </div>
+  </header>
 
   <main class="shell">
 
@@ -443,11 +438,6 @@
       <h2>Reviewed outfitters. Clearer trust signal.</h2>
       <p class="hero-sub">Verified identity. Reviewed operations. Public standing.</p>
 
-      <div class="status-chips">
-        <span class="status-chip">Verified</span>
-        <span class="status-chip">Verified</span>
-        <span class="status-chip">C.P.O.</span>
-      </div>
     </section>
 
     <section class="layout">
@@ -602,7 +592,57 @@
       </ul>
     </section>
   </main>
-  <script src="./ui.js?v=20260402-hunt-backpack-tray-1"></script>
+  <div id="dwrOutfitterModal" class="source-modal" hidden>
+    <div class="source-modal-card" role="dialog" aria-modal="true" aria-labelledby="dwrOutfitterModalTitle">
+      <div class="source-modal-head">
+        <div>
+          <h3 id="dwrOutfitterModalTitle">Utah DWR Outfitter Resources</h3>
+          <p>Embedded DWR page. If blocked, use the fallback link below.</p>
+        </div>
+        <button id="dwrOutfitterCloseBtn" class="source-close" type="button" aria-label="Close">X</button>
+      </div>
+      <div style="padding: 10px;">
+        <iframe
+          id="dwrOutfitterFrame"
+          title="Utah DWR Outfitter Resources"
+          style="width:100%;height:min(70vh,760px);border:1px solid rgba(163,120,83,0.45);border-radius:12px;background:#fff;"
+          referrerpolicy="no-referrer-when-downgrade"
+          loading="lazy"
+        ></iframe>
+        <p class="helper" style="margin-top:10px;">
+          Fallback:
+          <a id="dwrOutfitterFallback" href="https://wildlife.utah.gov/" target="_blank" rel="noopener noreferrer">Open Utah DWR in a new tab</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script src="./ui.js?v=20260422-backpack-front-1"></script>
+  <script>
+    (function () {
+      const link = document.querySelector('.header-dnr-link');
+      const modal = document.getElementById('dwrOutfitterModal');
+      const frame = document.getElementById('dwrOutfitterFrame');
+      const closeBtn = document.getElementById('dwrOutfitterCloseBtn');
+      const fallback = document.getElementById('dwrOutfitterFallback');
+      const dwrUrl = 'https://wildlife.utah.gov/guide/outfitter.html';
+      if (!link || !modal || !frame || !closeBtn || !fallback) return;
+      link.setAttribute('href', '#');
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        frame.setAttribute('src', dwrUrl);
+        fallback.setAttribute('href', dwrUrl);
+        modal.hidden = false;
+      });
+      closeBtn.addEventListener('click', function () { modal.hidden = true; });
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) modal.hidden = true;
+      });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') modal.hidden = true;
+      });
+    })();
+  </script>
 </body>
 </html>
+
 

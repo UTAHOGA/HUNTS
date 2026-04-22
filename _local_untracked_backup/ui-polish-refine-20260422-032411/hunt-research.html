@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Hunt Research</title>
-  <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-4" />
+  <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-1" />
   <style>
     :root {
       /* Light theme alignment (single theme site-wide). */
@@ -46,7 +46,7 @@
       width: min(1700px, calc(100vw - 28px));
       max-width: none;
       margin: 0 auto;
-      padding: 8px 24px 24px;
+      padding: 18px 24px 38px;
       display: grid;
       gap: 18px;
     }
@@ -65,7 +65,7 @@
     .card-head {
       padding: 16px 18px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: linear-gradient(180deg, rgba(240, 120, 0, 0.96), rgba(240, 120, 0, 0.98));
+      background: linear-gradient(180deg, rgba(224, 116, 41, 0.96), rgba(169, 77, 26, 0.98));
       color: #fff8f1;
     }
 
@@ -120,7 +120,7 @@
 
     .hero-copy h2 {
       margin: 0;
-      color: var(--text);
+      color: #fff8f1;
       font-family: var(--font-display);
       font-size: clamp(21px, 2vw, 24px);
       line-height: 1.08;
@@ -148,9 +148,9 @@
           min-height: 44px;
           padding: 12px 24px;
           border-radius: var(--research-pill);
-          border: 1px solid rgba(240, 120, 0, 0.4);
-          background: rgba(240, 120, 0, 0.1);
-          color: var(--accent);
+          border: 1px solid rgba(224, 116, 41, 0.4);
+          background: rgba(224, 116, 41, 0.1);
+          color: #fff8f1;
           font-family: var(--font-display);
           font-size: 16px;
           font-weight: 900;
@@ -171,8 +171,8 @@
     }
 
     .hero-card .card-body {
-      padding-top: 10px;
-      padding-bottom: 10px;
+      padding-top: 16px;
+      padding-bottom: 12px;
     }
 
     .research-btn,
@@ -185,10 +185,8 @@
       padding: 11px 15px;
       border-radius: 14px;
       border: 1px solid rgba(170, 124, 84, 0.84);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 34%),
-        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
-      color: var(--accent);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff8f1;
       text-decoration: none;
       font-size: 12px;
       font-weight: 900;
@@ -202,23 +200,23 @@
     .research-link:hover,
     .mini-btn:hover {
       transform: translateY(-1px);
-      background: rgba(240, 120, 0, 0.14);
-      border-color: rgba(240, 120, 0, 0.92);
-      box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16);
+      background: rgba(224, 116, 41, 0.14);
+      border-color: rgba(224, 116, 41, 0.92);
+      box-shadow: 0 0 0 2px rgba(224, 116, 41, 0.16);
     }
 
     .research-btn.primary {
       border-color: #d1ab83;
-      background: linear-gradient(180deg, rgba(240, 120, 0, 0.98), rgba(240, 120, 0, 0.98));
+      background: linear-gradient(180deg, rgba(224, 116, 41, 0.98), rgba(183, 89, 32, 0.98));
       color: #2f1d12;
       box-shadow: 0 10px 24px rgba(82, 44, 20, 0.28);
     }
 
     .research-btn.primary:hover {
-      border-color: rgba(240, 120, 0, 0.98);
-      background: linear-gradient(180deg, rgba(240, 120, 0, 0.98), rgba(240, 120, 0, 0.98));
+      border-color: rgba(224, 116, 41, 0.98);
+      background: linear-gradient(180deg, rgba(233, 126, 52, 0.98), rgba(194, 95, 35, 0.98));
       color: #2f1d12;
-      box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.18), 0 12px 28px rgba(82, 44, 20, 0.30);
+      box-shadow: 0 0 0 2px rgba(224, 116, 41, 0.18), 0 12px 28px rgba(82, 44, 20, 0.30);
       transform: translateY(-2px);
     }
 
@@ -228,10 +226,10 @@
 
     .formula-card {
       background:
-        radial-gradient(circle at top right, rgba(240, 120, 0, 0.14), transparent 34%),
+        radial-gradient(circle at top right, rgba(224, 116, 41, 0.14), transparent 34%),
         linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03)),
         rgba(17, 14, 11, 0.72);
-      border-color: rgba(240, 120, 0, 0.32);
+      border-color: rgba(224, 116, 41, 0.32);
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
@@ -247,8 +245,8 @@
       align-items: center;
       padding: 4px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(240, 120, 0, 0.42);
-      background: rgba(240, 120, 0, 0.12);
+      border: 1px solid rgba(224, 116, 41, 0.42);
+      background: rgba(224, 116, 41, 0.12);
       color: #ffd9bf;
       font-size: 10px;
       font-weight: 900;
@@ -314,7 +312,7 @@
     }
 
     .signal-list strong {
-      color: var(--text);
+      color: #fff8f1;
     }
 
     .signal-list strong.signal-word-green {
@@ -390,7 +388,7 @@
 
     .science-caption {
       margin-top: 10px;
-      color: var(--research-muted);
+      color: #f1cdb2;
       font-size: 12px;
       line-height: 1.45;
     }
@@ -404,7 +402,7 @@
     .quick-card .value,
     .chip .value,
     .backpack-card strong {
-      color: var(--text);
+      color: #fff8f1;
     }
 
     .layout-grid {
@@ -429,7 +427,7 @@
     }
 
     .control-field label {
-      color: var(--research-muted);
+      color: #ebd4c3;
       font-size: 11px;
       font-weight: 900;
       letter-spacing: 0.08em;
@@ -443,8 +441,8 @@
       padding: 13px 14px;
       border-radius: 14px;
       border: 1px solid rgba(170, 124, 84, 0.78);
-      background: rgba(255, 253, 249, 0.98);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff8f1;
       font: inherit;
     }
 
@@ -586,7 +584,7 @@
     .report-table-head h3,
     .report-info-head h3 {
       margin: 0;
-      color: var(--text);
+      color: #fff8f1;
       font-family: var(--font-display);
       font-size: 24px;
       line-height: 0.98;
@@ -616,8 +614,8 @@
       z-index: 1;
       padding: 11px 10px;
       text-align: left;
-      background: rgba(255, 253, 249, 0.98);
-      color: var(--text);
+      background: rgba(29, 23, 19, 0.98);
+      color: #ead7c8;
       font-size: 11px;
       font-weight: 900;
       letter-spacing: 0.08em;
@@ -627,7 +625,7 @@
     .report-table tbody td {
       padding: 11px 10px;
       border-top: 1px solid rgba(170, 124, 84, 0.24);
-      color: var(--text);
+      color: #f6ede6;
       font-size: 13px;
       line-height: 1.45;
       vertical-align: top;
@@ -653,9 +651,9 @@
 
     .report-table tbody tr.is-guaranteed-row {
           background:
-            linear-gradient(90deg, rgba(240, 120, 0, 0.18) 0, rgba(240, 120, 0, 0.08) 28px, rgba(255, 248, 241, 0.96) 28px, rgba(255, 248, 241, 0.96) 100%);
+            linear-gradient(90deg, rgba(224, 116, 41, 0.18) 0, rgba(224, 116, 41, 0.08) 28px, rgba(255, 248, 241, 0.96) 28px, rgba(255, 248, 241, 0.96) 100%);
           color: #2f1d12;
-          box-shadow: inset 0 0 0 1px rgba(240, 120, 0, 0.38);
+          box-shadow: inset 0 0 0 1px rgba(224, 116, 41, 0.38);
         }
 
     .report-table tbody tr.is-user-row {
@@ -667,9 +665,9 @@
 
     .report-table tbody tr.is-user-row.is-guaranteed-row {
           background:
-            linear-gradient(90deg, rgba(255, 214, 64, 0.22) 0, rgba(255, 214, 64, 0.10) 18px, rgba(240, 120, 0, 0.16) 18px, rgba(255, 248, 241, 0.98) 38px, rgba(255, 248, 241, 0.98) 100%);
+            linear-gradient(90deg, rgba(255, 214, 64, 0.22) 0, rgba(255, 214, 64, 0.10) 18px, rgba(224, 116, 41, 0.16) 18px, rgba(255, 248, 241, 0.98) 38px, rgba(255, 248, 241, 0.98) 100%);
           color: #2f1d12;
-          box-shadow: inset 0 0 0 1px rgba(240, 120, 0, 0.40);
+          box-shadow: inset 0 0 0 1px rgba(224, 116, 41, 0.40);
         }
 
     .report-table tbody tr.is-guaranteed-row td,
@@ -698,8 +696,8 @@
       padding: 4px 8px;
       border-radius: 999px;
       border: 1px solid rgba(170, 124, 84, 0.58);
-      background: rgba(255, 253, 249, 0.98);
-      color: var(--accent);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff8f1;
       font-size: 10px;
       font-weight: 900;
       letter-spacing: 0.05em;
@@ -720,10 +718,10 @@
     }
 
     .marker-pill.guaranteed {
-          border-color: rgba(240, 120, 0, 0.96);
+          border-color: rgba(224, 116, 41, 0.96);
           background: rgba(255, 246, 240, 0.98);
-          color: #f07800;
-          box-shadow: 0 0 0 1px rgba(240, 120, 0, 0.22);
+          color: #e07429;
+          box-shadow: 0 0 0 1px rgba(224, 116, 41, 0.22);
         }
 
     .marker-pill.user {
@@ -734,14 +732,14 @@
         }
 
     .marker-pill.sources {
-        border-color: rgba(240, 120, 0, 0.92);
+        border-color: rgba(224, 116, 41, 0.92);
         background: transparent;
-        color: #f07800;
+        color: #e07429;
         cursor: pointer;
       }
 
     .marker-pill.sources:hover {
-        background: rgba(240, 120, 0, 0.12);
+        background: rgba(224, 116, 41, 0.12);
       }
 
     .source-modal[hidden] {
@@ -946,6 +944,10 @@
   </style>
 </head>
 <body class="research-page">
+  <header class="topbar">
+    <div class="controls"><div class="controls-center"></div></div>
+  </header>
+
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
       <nav class="utility-nav">
@@ -957,16 +959,6 @@
     </div>
   </section>
 
-  <header class="topbar">
-    <div class="controls">
-      <div class="controls-center">
-        <a class="header-dnr-link header-dnr-center" href="./index.html" aria-label="Utah DWR">
-          <img src="./assets/logos/DWR-LOGO.png" alt="Utah DWR logo" />
-        </a>
-      </div>
-    </div>
-  </header>
-
   <main class="research-shell">
     <section class="research-card hero-card">
       <div class="card-body">
@@ -975,6 +967,10 @@
               <span class="eyebrow">U.O.G.A. Hunt Prediction Engine</span>
               <h2>Enter hunt code, residency, and points.</h2>
               <p>See the line, your odds, and whether the hunt is realistically in reach.</p>
+              <div class="hero-actions">
+                <button class="research-btn primary" type="button" onclick="document.getElementById('huntCodeInput').focus()">Run Hunt Research</button>
+                <button class="research-btn" type="button" onclick="(function(){var t=document.querySelector(\x27.uoga-backpack-toggle\x27); if(t){t.click();}})()">Open Hunt Backpack</button>
+              </div>
             </div>
 
             <div class="note-box">
@@ -1030,7 +1026,7 @@
           </div>
           <div class="card-body">
               <div id="detailEmpty" class="empty-note">
-                <strong style="display:block;margin-bottom:8px;color:var(--text);font-size:16px;">No hunt selected yet</strong>
+                <strong style="display:block;margin-bottom:8px;color:#fff8f1;font-size:16px;">No hunt selected yet</strong>
               Load a hunt from Hunt Backpack or enter a hunt code.
             </div>
 
@@ -1041,7 +1037,10 @@
                   <h2 id="detailTitle">Choose a hunt</h2>
                   <div id="detailSubtitle" class="report-copy"></div>
                 </div>
-                <div class="report-actions" hidden></div>
+                <div class="report-actions">
+                  <a id="openPlannerLink" class="research-link" href="./index.html">Open Planner</a>
+                  <a id="openDwrLink" class="research-link" href="#" target="_blank" rel="noopener noreferrer">Open DWR Hunt</a>
+                </div>
               </div>
 
               <div class="chip-grid">
@@ -1168,11 +1167,10 @@
   </div>
 
   <script src="./config.js?v=20260422-research-refresh-1"></script>
-  <script src="./ui.js?v=20260422-backpack-front-1"></script>
-  <script src="./hunt-research.js?v=20260422-research-refresh-3"></script>
+  <script src="./ui.js?v=20260422-backpack-label-sync-1"></script>
+  <script src="./hunt-research.js?v=20260422-research-refresh-1"></script>
 </body>
 </html>
-
 
 
 

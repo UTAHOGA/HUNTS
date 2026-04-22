@@ -876,7 +876,7 @@
     if (!items.length) {
       els.basketList.innerHTML = `
         <div class="backpack-card">
-          <strong style="display:block;margin-bottom:8px;color:#2b1c12;">No hunts saved yet</strong>
+          <strong style="display:block;margin-bottom:8px;color:#fff8f1;">No hunts saved yet</strong>
           <p>Add a selected hunt to keep it moving between Hunt Planner and Hunt Research.</p>
         </div>`;
       return;
