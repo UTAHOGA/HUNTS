@@ -369,7 +369,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 8px 4px 10px;
+      min-height: 46px; /* match Hunt Backpack control height */
+      padding: 6px 12px 6px 14px;
       border: 1px solid var(--line);
       border-radius: 18px 18px 22px 18px;
       background:
@@ -377,17 +378,15 @@
         linear-gradient(180deg, color-mix(in srgb, var(--panel2) 74%, transparent), color-mix(in srgb, var(--panel) 92%, transparent));
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
     }
-    .control-group label { font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .control-group label { font-size: 12px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: rgba(22, 14, 10, 0.52); }
     .control-group select {
-      min-height: 24px;
-      padding: 0 12px;
+      min-height: 38px;
+      padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 40%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.50), rgba(0, 0, 0, 0.70));
-      color: var(--accent);
-      font-size: 10px;
+      border: 1px solid rgba(24, 18, 12, 0.18);
+      background: #ffffff;
+      color: rgb(240, 120, 0);
+      font-size: 12px;
       font-weight: 900;
       letter-spacing: .10em;
       text-transform: uppercase;
@@ -1108,6 +1107,34 @@ html, body {
    Keep the functional tool header (map selector, landownership, backpack) visible. */
 html.embed .page-nav-strip {
   display: none !important;
+}
+
+/* Primary nav pillow: exact same location on every page (non-embed).
+   We anchor it dead-center inside the topbar so page-to-page header markup differences
+   don't change its position. */
+html:not(.embed) header.topbar {
+  position: relative;
+  min-height: 74px; /* keep nav pillow vertically consistent across pages */
+}
+
+html:not(.embed) header.topbar .page-nav-strip {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 6;
+}
+
+html:not(.embed) header.topbar .page-nav-case {
+  margin: 0 auto !important;
+}
+
+/* Planner header has a center cell; make sure it doesn't become the positioning ancestor. */
+html:not(.embed) header.topbar.topbar-planner .topbar-center {
+  position: static !important;
+  padding: 0 !important;
 }
 
 /* When embedded, reclaim the vertical space that the nav strip used to take. */
