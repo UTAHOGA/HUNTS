@@ -1,0 +1,342 @@
+{
+  "hunt_code": "DA1018",
+  "species": "Deer",
+  "hunt_name": "Pine Valley, New Harmony",
+  "hunt_type": "Antlerless",
+  "weapon": "Archery, Muzzleloader, Shotgun",
+  "sex_type": "Female Only",
+  "access_type": "Public",
+  "permits_total": 18,
+  "hunters": 15,
+  "harvest": 8,
+  "percent_success": 53.3,
+  "avg_days": 5.1,
+  "satisfaction": 3.4,
+  "has_harvest": true,
+  "has_bonus_draw": false,
+  "has_antlerless_draw": true,
+  "draw_family": "preference_draw",
+  "draw_presence_flag": "yes",
+  "score_family": "public_preference",
+  "public_rank_eligible": "yes",
+  "draw_difficulty_flag": "moderate",
+  "resident_point_signal": 5,
+  "nonresident_point_signal": 6,
+  "harvest_success_score": 53.3,
+  "harvest_pressure_score": 0.8333,
+  "harvest_efficiency_score": 0.5333,
+  "scoring_notes": "Public hunt with preference-draw source; success=53.3; pressure=hunters/permits=0.8333; efficiency=harvest/hunters=0.5333; preference resident signal=5 nonresident signal=6; score_family=public_preference",
+  "draw_access_score": 2,
+  "verified_outfitter_count": 37,
+  "cpo_outfitter_count": 0,
+  "dwr_boundary_link": "https://dwrapps.utah.gov/huntboundary/hbstart?HN=DA1018",
+  "dwr_source_guide": "Deer either sex and antlerless workbook",
+  "dwr_unit_name": "Pine Valley, New Harmony",
+  "recommended_permits": {
+    "recommendation_year": 2026,
+    "permit_category": "2026 Antlerless Deer Permit Recommendations",
+    "section_title": "Antlerless Deer",
+    "hunt_name": "Pine Valley, New Harmony",
+    "weapon": "Archery, Muzzleloader, Shotgun",
+    "sex_type": "Antlerless",
+    "access_class": "Public",
+    "resident_permits": null,
+    "nonresident_permits": null,
+    "total_permits": 20,
+    "resident_permits_prior": null,
+    "nonresident_permits_prior": null,
+    "total_permits_prior": null,
+    "source_page_number": null,
+    "source_type": "antlerless_deer_workbook",
+    "source_authority_level": "updated_current_permits"
+  },
+  "bonus_draw": null,
+  "antlerless_draw": {
+    "land_type": "public",
+    "resident": [
+      {
+        "point_level": 19,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 18,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 17,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 16,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 15,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 14,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 13,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 12,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 11,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 10,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 9,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 8,
+        "applicants": 1,
+        "permits_awarded": 1,
+        "success_ratio_text": "1 in 1.0",
+        "land_type": "public"
+      },
+      {
+        "point_level": 7,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 6,
+        "applicants": 4,
+        "permits_awarded": 4,
+        "success_ratio_text": "1 in 1.0",
+        "land_type": "public"
+      },
+      {
+        "point_level": 5,
+        "applicants": 19,
+        "permits_awarded": 10,
+        "success_ratio_text": "1 in 1.9",
+        "land_type": "public"
+      },
+      {
+        "point_level": 4,
+        "applicants": 29,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 3,
+        "applicants": 32,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 2,
+        "applicants": 28,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 1,
+        "applicants": 41,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 0,
+        "applicants": 40,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      }
+    ],
+    "nonresident": [
+      {
+        "point_level": 19,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 18,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 17,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 16,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 15,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 14,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 13,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 12,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 11,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 10,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 9,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 8,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 7,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 6,
+        "applicants": 1,
+        "permits_awarded": 1,
+        "success_ratio_text": "1 in 1.0",
+        "land_type": "public"
+      },
+      {
+        "point_level": 5,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 4,
+        "applicants": 0,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 3,
+        "applicants": 2,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 2,
+        "applicants": 3,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 1,
+        "applicants": 5,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      },
+      {
+        "point_level": 0,
+        "applicants": 2,
+        "permits_awarded": 0,
+        "success_ratio_text": "N/A",
+        "land_type": "public"
+      }
+    ]
+  },
+  "projected_bonus_draw": null
+}

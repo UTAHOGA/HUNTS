@@ -1,0 +1,116 @@
+*** Begin Patch
+*** Update File: router.js
+@@
+ window.UOGA_ROUTER = (() => {
+   const routes = new Map();
+   const callbacks = [];
+-
+-  // Route-to-URL map for external pages (used when SPA cannot render inline)
+-  const externalRoutes = new Map([
+-    ['research', './hunt-research.html'],
+-    ['vetting', './vetting.html']
+-  ]);
+
+   function navigate(path) {
+-    const segment = path.replace(/^[#/]+/, '');
+-    if (externalRoutes.has(segment)) {
+-      window.location.href = externalRoutes.get(segment);
+-      return;
+-    }
+-    const normalizedHash = segment ? segment : '';
+-    window.location.hash = normalizedHash;
++    const route = String(path || '').trim();
++    const normalizedRoute = route === '/' ? '/' : `/${route.replace(/^[#/]+/, '')}`;
++    window.location.hash = normalizedRoute === '/' ? '#/' : `#${normalizedRoute}`;
+     handleRouteChange();
+   }
+
+   function getCurrentRoute() {
+-    const hash = window.location.hash.replace(/^#\/?/, '');
+-    return hash || '/';
++    const hash = window.location.hash.replace(/^#/, '').trim();
++    if (!hash || hash === '/') return '/';
++    return hash.startsWith('/') ? hash : `/${hash}`;
+   }
+@@
+   function updateNavActiveState(route) {
+-    document.querySelectorAll('[data-route]').forEach(link => {
+-      const linkRoute = (link.getAttribute('data-route') || '').replace(/^\//, '') || '/';
+-      const currentSegment = (route || '/').replace(/^\//, '') || '/';
+-      const isActive = linkRoute === currentSegment;
++    document.querySelectorAll('[data-spa-link]').forEach(link => {
++      const linkRoute = link.getAttribute('data-spa-link') || '/';
++      const isActive = (linkRoute || '/') === (route || '/');
+       link.classList.toggle('active', isActive);
+       if (isActive) {
+         link.setAttribute('aria-current', 'page');
+@@
+   window.addEventListener('hashchange', handleRouteChange);
+
+-  // Intercept clicks on [data-route] links.
+-  // Only use hash routing when staying on the same HTML document; otherwise follow the href directly.
++  // Intercept clicks on [data-spa-link] links and keep navigation in the SPA.
+   document.addEventListener('click', (event) => {
+-    const link = event.target.closest('[data-route]');
++    const link = event.target.closest('[data-spa-link]');
+     if (!link) return;
+-    const route = link.getAttribute('data-route');
+-    if (route === null) return;
+-    const href = link.getAttribute('href') || '';
+-    // If href points to a different HTML file, let the browser navigate naturally
+-    if (href && !href.startsWith('#') && href.includes('.html')) {
+-      return;
+-    }
++    const route = link.getAttribute('data-spa-link');
++    if (!route) return;
+     event.preventDefault();
+     navigate(route);
+   });
+*** Update File: ui-renderer.js
+@@
+ export function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
+   const code = String(huntCode || '').trim().toUpperCase();
+   const normalizedResidency = String(residency || '').trim().toLowerCase().replace(/[\s_-]+/g, '') === 'nonresident'
+     ? 'Nonresident'
+     : 'Resident';
+@@
+   localStorage.setItem('selected_hunt_code', code);
+   localStorage.setItem('selected_hunt_research_residency', normalizedResidency);
+   localStorage.setItem('selected_hunt_research_points', String(points));
+-
+-  window.location.href = `./hunt-research.html?hunt_code=${encodeURIComponent(code)}`;
++  const researchHash = `#/research?hunt_code=${encodeURIComponent(code)}`;
++  if (window.UOGA_ROUTER?.navigate) {
++    window.UOGA_ROUTER.navigate('/research');
++    window.location.hash = researchHash;
++    return;
++  }
++  window.location.hash = researchHash;
+ }
+*** Update File: preferences.js
+@@
+-// Stub implementations - not yet in app.js
+-export function getTheme() { return localStorage.getItem('uoga_theme') || 'light'; }
+-export function setTheme(v) { localStorage.setItem('uoga_theme', v); }
+-export function getMapType() { return localStorage.getItem('uoga_map_type') || 'google'; }
+-export function setMapType(v) { localStorage.setItem('uoga_map_type', v); }
++// Compatibility wrapper around the real storage module.
++export function getTheme() {
++  return window.UOGA_STORAGE?.getStoredTheme?.() || localStorage.getItem('uoga_theme') || 'theme-dark';
++}
++export function setTheme(v) {
++  if (window.UOGA_STORAGE?.setStoredTheme) return window.UOGA_STORAGE.setStoredTheme(v);
++  localStorage.setItem('uoga_theme', v);
++}
++export function getMapType() {
++  return window.UOGA_STORAGE?.getStoredMapType?.() || localStorage.getItem('uoga_map_type') || 'terrain';
++}
++export function setMapType(v) {
++  if (window.UOGA_STORAGE?.setStoredMapType) return window.UOGA_STORAGE.setStoredMapType(v);
++  localStorage.setItem('uoga_map_type', v);
++}
+ export function getSidebarState() { return localStorage.getItem('uoga_sidebar') || 'open'; }
+ export function setSidebarState(v) { localStorage.setItem('uoga_sidebar', v); }
+ export function getLayerVisibility(key) { return localStorage.getItem(`uoga_layer_${key}`); }
+ export function setLayerVisibility(key, v) { localStorage.setItem(`uoga_layer_${key}`, v); }
+*** End Patch

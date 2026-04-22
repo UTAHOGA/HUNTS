@@ -64,6 +64,7 @@ const {
 
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
+let controlsBound = false;
 let conservationPermitAreas = [];
 let conservationPermitHuntTable = [];
 const conservationPermitAreaCodeSet = new Set();
@@ -75,6 +76,8 @@ const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
+// Temporary debug guard: keep Google map as the active mode while we validate key/referrer setup.
+const FORCE_GOOGLE_ONLY_DEBUG = true;
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -2959,6 +2962,14 @@ function updateDwrMapFrame(hunt = selectedHunt) {
 function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
+  if (FORCE_GOOGLE_ONLY_DEBUG) {
+    mapWrap.classList.remove('is-globe-mode');
+    if (mapTypeSelect) {
+      mapTypeSelect.value = 'terrain';
+    }
+    updateStatus(`${reason} (Google-only debug mode enabled.)`);
+    return;
+  }
   if (mapTypeSelect) {
     mapTypeSelect.value = 'globe';
   }
@@ -2974,44 +2985,63 @@ function fallbackToGlobeMode(reason = 'Google map unavailable.') {
 }
 
 function applyMapMode() {
-  const value = safe(mapTypeSelect?.value || 'globe').toLowerCase();
+  let value = safe(mapTypeSelect?.value || 'terrain').toLowerCase();
+  if (FORCE_GOOGLE_ONLY_DEBUG && value === 'globe') {
+    value = 'terrain';
+    if (mapTypeSelect) {
+      mapTypeSelect.value = 'terrain';
+    }
+  }
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
-  const basemapControl = document.getElementById('globeBasemapControl');
-  if (basemapControl) basemapControl.toggleAttribute('hidden', value === 'dwr');
 
-  mapWrap.classList.remove('is-dwr-mode');
-  if (dwrMapFrame) {
-    dwrMapFrame.hidden = true;
-  }
-
-  if (value === 'dwr') {
+  if (value === 'globe') {
+    googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
-    updateDwrMapFrame(selectedHunt);
-    if (dwrMapFrame) {
-      dwrMapFrame.hidden = false;
+    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
+    ensureCesiumViewer();
+    mapWrap.classList.add('is-globe-mode');
+    setTimeout(() => {
+      if (cesiumViewer) {
+        cesiumViewer.resize();
+        cesiumViewer.scene.requestRender();
+      }
+    }, 0);
+    if (selectedHunt && cesiumViewer) {
+      const boundaryId = firstNonEmpty(selectedHunt.boundaryId, selectedHunt.boundaryID, getUnitCode(selectedHunt));
+      if (boundaryId && huntUnitsLayer) {
+        const bounds = new google.maps.LatLngBounds();
+        let found = false;
+        huntUnitsLayer.forEach(f => {
+          if (safe(f.getProperty('BoundaryID')) === safe(boundaryId)) {
+            f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
+          }
+        });
+        if (found) {
+          const center = bounds.getCenter();
+          cesiumViewer.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(center.lng(), center.lat(), 250000)
+          });
+        }
+      }
     }
-    mapWrap.classList.remove('is-globe-mode');
-    mapWrap.classList.add('is-dwr-mode');
-    // Bring the active map into view (under the header) when switching modes.
-    mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    updateStatus('Utah DWR map active.');
+    updateCesiumBoundaryStyles();
     return;
   }
 
-  // Default to globe mode (Google Maps removed).
-  clearOutfitterMarkers();
-  ensureCesiumViewer();
-  mapWrap.classList.add('is-globe-mode');
-  mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  setTimeout(() => {
-    if (cesiumViewer) {
-      cesiumViewer.resize();
-      cesiumViewer.scene.requestRender();
-    }
-  }, 0);
-  updateCesiumBoundaryStyles();
-  updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
+  if (!googleBaselineMap) {
+    fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
+    return;
+  }
+
+  mapWrap.classList.remove('is-globe-mode');
+  googleBaselineMap.setMapTypeId(value);
+  googleBaselineMap.getStreetView()?.setVisible(false);
+  styleBoundaryLayer();
+  if (selectedHunt) {
+    updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
+  }
+  updateStatus(`${titleCaseWords(value)} map active.`);
 }
 
 function resetMapView() {
@@ -3186,6 +3216,9 @@ function styleBoundaryLayer() {
 }
 
 function bindControls() {
+  if (controlsBound) return;
+  controlsBound = true;
+
   [searchInput, speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
     el?.addEventListener('change', handleFilterChange);
     el?.addEventListener('input', handleFilterChange);
@@ -3404,12 +3437,26 @@ function bootstrapPendingHuntSelection() {
 
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
-  // Map engines:
-  // - Globe (Cesium) is the primary interactive map.
-  // - Utah DWR map is available via iframe mode.
-  // Google Maps has been removed to reduce complexity and failure points.
-  if (mapTypeSelect) mapTypeSelect.value = safe(mapTypeSelect.value).trim() ? mapTypeSelect.value : 'globe';
-  ensureCesiumViewer();
+  // Load Google Maps API with fallback to globe mode.
+  window.gm_authFailure = () => {
+    console.error('Google Maps API authentication failed.');
+    fallbackToGlobeMode('Google map authentication failed. Switched to globe view.');
+  };
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&v=weekly&callback=initGoogleBaseline`;
+  script.async = true;
+  script.defer = true;
+  script.onerror = () => {
+    console.error('Google Maps API failed to load.');
+    fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
+  };
+  document.head.appendChild(script);
+  googleMapsLoadTimeoutId = setTimeout(() => {
+    if (!googleApiReady) {
+      console.error('Google Maps API load timed out.');
+      fallbackToGlobeMode('Google map timed out. Switched to globe view.');
+    }
+  }, 12000);
   
   // Load Data
   await loadConservationPermitAreas();
@@ -3419,6 +3466,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOutfitterFederalCoverage();
   try {
       huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
+      if (googleApiReady) buildBoundaryLayer();
       if (cesiumViewer) {
         ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
         ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));

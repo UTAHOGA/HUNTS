@@ -15,7 +15,7 @@ window.UOGA_CONFIG = (() => {
     EXTERNAL SERVICES / API KEYS
     ============================================================================
   */
-  const GOOGLE_MAPS_API_KEY = 'AIzaSyBlxyY6T31oqQ7sBvGGm-Q23QU5zInRo0I';
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyC49dXQ4FOyXqaUey4ASKlnDXWiwBHDlRM';
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 
   /*
