@@ -38,8 +38,15 @@
     if (!panel) return;
     const show = isGoogleMode() || isGlobeMode();
     panel.setAttribute('aria-hidden', show ? 'false' : 'true');
-    // Some pages/styles also gate visibility via display; keep it in sync.
-    panel.style.display = show ? '' : 'none';
+    // Hard override so page CSS/app logic can't accidentally keep it hidden.
+    if (show) {
+      panel.style.display = 'block';
+      panel.style.visibility = 'visible';
+      panel.style.opacity = '1';
+      panel.style.pointerEvents = 'auto';
+    } else {
+      panel.style.display = 'none';
+    }
   }
 
   function applyToGoogleMap() {
@@ -74,6 +81,8 @@
     if (!e.target || e.target.id !== 'mapTypeSelect') return;
     // When the user returns to Google mode, re-apply their preferred basemap.
     syncPanelVisibility();
+    // If other scripts toggle the panel after this handler, re-assert on the next tick.
+    window.setTimeout(syncPanelVisibility, 50);
     applyToGoogleMap();
   }
 
@@ -94,6 +103,9 @@
       }
       if (tries > 60) window.clearInterval(t);
     }, 250);
+
+    // Map mode can change via code paths that don't fire a <select> change event.
+    window.setInterval(syncPanelVisibility, 500);
   }
 
   if (document.readyState === 'loading') {
