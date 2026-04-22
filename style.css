@@ -1090,3 +1090,42 @@
 
 
 
+/* === Header + Pill Centering Overrides (2026-04-22) ======================= */
+/* Goal: dead-center the 4-pill nav + the land-ownership pill row on every page,
+   without requiring markup changes. These are additive overrides. */
+
+/* Remove any stray top gaps. */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the land-ownership chips row (Planner header). */
+.topbar .topbar-center {
+  display: flex;
+  justify-content: center;
+}
+
+.topbar .toggle-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-inline: auto;
+}
+
+/* Center the 4-pill site nav wherever it lives in the header. */
+.topbar :where(.pill-nav, .nav-pills, .uoga-nav-pills, .site-nav, .primary-nav, .topbar-nav) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-inline: auto;
+}
+
+/* If the nav pills are plain links in a wrapper, center that wrapper too. */
+.topbar :where(.utility-nav, .utility-links, .utility-row) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-inline: auto;
+}
