@@ -1239,7 +1239,8 @@ html.embed header.topbar .topbar-right {
   width: 100% !important;
   max-width: var(--uoga-case-max) !important;
   min-height: calc(var(--nav-pill-h) + 12px) !important;
-  padding: 10px var(--nav-case-pad-side) !important;
+  /* Match the nav pillowcase interior spacing. */
+  padding: 6px 10px !important;
   border-radius: 18px 18px 22px 18px !important;
   box-sizing: border-box;
 }
@@ -1328,6 +1329,10 @@ html.embed header.topbar .topbar-right {
   bottom: auto !important;
   transform: none !important;
   margin: 0 !important;
+  /* Remove the extra inner capsule so the outer pillowcase matches nav. */
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
 }
 
 /* Make the ownership pills a bit larger (dock only). */
