@@ -1137,6 +1137,101 @@ html.embed header.topbar .topbar-right {
   align-items: center;
 }
 
+/* Compact the ESRI/Google basemap popup: no headings/notes, tighter padding,
+   and center the pill grids both horizontally and vertically. */
+.globe-basemap-panel .globe-basemap-title,
+.globe-basemap-panel .globe-basemap-note {
+  display: none !important;
+}
+
+.globe-basemap-panel {
+  padding: 14px 16px !important;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.globe-basemap-panel .globe-basemap-grid {
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  place-items: center;
+}
+
+/* === Pillow Rows Visual Unification (2026-04-22) ========================== */
+/* Make the primary nav pillow + ownership pillow match exactly:
+   - solid (not translucent) case background
+   - no brown tint
+   - orange inner-ring on hover
+   - persistent highlight on selected */
+
+:root {
+  --uoga-case-bg: #f5f1ea;
+  --uoga-case-border: rgba(60, 46, 34, 0.18);
+  --uoga-case-shadow: 0 12px 28px rgba(32, 18, 10, 0.16);
+  --uoga-pill-bg: #ffffff;
+  --uoga-pill-border: rgba(60, 46, 34, 0.20);
+  --uoga-pill-text: rgba(22, 14, 10, 0.78);
+  --uoga-ring: rgb(240, 120, 0);
+}
+
+/* Pillow cases */
+.page-nav-case,
+.ownership-case {
+  background: var(--uoga-case-bg) !important;
+  border: 1px solid var(--uoga-case-border) !important;
+  box-shadow: var(--uoga-case-shadow) !important;
+}
+
+/* Base pill visuals (nav + ownership) */
+.page-nav-strip .utility-link,
+.ownership-dock .toggle-chip-label,
+.ownership-dock .toggle-menu > summary {
+  background: var(--uoga-pill-bg) !important;
+  border: 1px solid var(--uoga-pill-border) !important;
+  color: var(--uoga-pill-text) !important;
+}
+
+/* Orange ring on hover (inner pill highlight) */
+.page-nav-strip .utility-link:hover,
+.ownership-dock .toggle-chip:hover .toggle-chip-label,
+.ownership-dock .toggle-menu > summary:hover {
+  box-shadow:
+    0 10px 16px rgba(24, 14, 9, 0.14),
+    inset 0 0 0 2px var(--uoga-ring) !important;
+}
+
+/* Selected state: persistent orange ring */
+.page-nav-strip .utility-link.active,
+.page-nav-strip .utility-link[aria-current="page"],
+.ownership-dock .toggle-chip input:checked + .toggle-chip-label {
+  box-shadow:
+    0 10px 18px rgba(24, 14, 9, 0.16),
+    inset 0 0 0 2px var(--uoga-ring) !important;
+  border-color: rgba(240, 120, 0, 0.35) !important;
+}
+
+/* Remove brown-ish "selected" backgrounds if any */
+.page-nav-strip .utility-link.active,
+.page-nav-strip .utility-link[aria-current="page"],
+.ownership-dock .toggle-chip input:checked + .toggle-chip-label,
+.ownership-dock .toggle-menu[open] > summary {
+  background: var(--uoga-pill-bg) !important;
+  color: rgba(18, 12, 9, 0.88) !important;
+}
+
+/* Never flip selected pill text to white (keep readable dark text). */
+.page-nav-strip .utility-link.active,
+.page-nav-strip .utility-link[aria-current="page"],
+.ownership-dock .toggle-chip input:checked + .toggle-chip-label,
+.ownership-dock .toggle-menu[open] > summary {
+  color: rgba(18, 12, 9, 0.88) !important;
+}
+
 /* Ownership controls dock (Planner): lives in the camo/terrain gap under the header. */
 .ownership-dock {
   display: flex;
