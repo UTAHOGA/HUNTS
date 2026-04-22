@@ -1170,13 +1170,21 @@ html.embed header.topbar .topbar-right {
    - persistent highlight on selected */
 
 :root {
-  --uoga-case-bg: #f5f1ea;
-  --uoga-case-border: rgba(60, 46, 34, 0.18);
-  --uoga-case-shadow: 0 12px 28px rgba(32, 18, 10, 0.16);
+  /* Pure white base (no tan/off-white). */
+  --uoga-case-bg: #ffffff;
+  --uoga-case-border: rgba(24, 18, 12, 0.16);
+  --uoga-case-shadow: 0 12px 28px rgba(32, 18, 10, 0.14);
   --uoga-pill-bg: #ffffff;
-  --uoga-pill-border: rgba(60, 46, 34, 0.20);
-  --uoga-pill-text: rgba(22, 14, 10, 0.78);
+  --uoga-pill-border: rgba(24, 18, 12, 0.18);
+  /* Pill text stays orange (never white). */
+  --uoga-pill-text: rgb(240, 120, 0);
   --uoga-ring: rgb(240, 120, 0);
+}
+
+/* Normalize any lingering accent variables to the required orange. */
+:root {
+  --accent: rgb(240, 120, 0);
+  --accent-dark: rgb(240, 120, 0);
 }
 
 /* Pillow cases */
@@ -1221,7 +1229,7 @@ html.embed header.topbar .topbar-right {
 .ownership-dock .toggle-chip input:checked + .toggle-chip-label,
 .ownership-dock .toggle-menu[open] > summary {
   background: var(--uoga-pill-bg) !important;
-  color: rgba(18, 12, 9, 0.88) !important;
+  color: var(--uoga-pill-text) !important;
 }
 
 /* Never flip selected pill text to white (keep readable dark text). */
@@ -1229,7 +1237,7 @@ html.embed header.topbar .topbar-right {
 .page-nav-strip .utility-link[aria-current="page"],
 .ownership-dock .toggle-chip input:checked + .toggle-chip-label,
 .ownership-dock .toggle-menu[open] > summary {
-  color: rgba(18, 12, 9, 0.88) !important;
+  color: var(--uoga-pill-text) !important;
 }
 
 /* Ownership controls dock (Planner): lives in the camo/terrain gap under the header. */
