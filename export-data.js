@@ -22,6 +22,7 @@ const OUT_DIR = path.join(ROOT, '_exports');
 const DATASETS = [
   { id: 'draw_reality_engine', input: path.join(ROOT, 'processed_data', 'draw_reality_engine.csv') },
   { id: 'point_ladder_view', input: path.join(ROOT, 'processed_data', 'point_ladder_view.csv') },
+  { id: 'harvest_metrics_2025_preliminary', input: path.join(ROOT, 'processed_data', 'harvest-metrics-extract.csv') },
   { id: 'hunt_master_canonical_2026', input: path.join(ROOT, 'hunt_master_canonical_2026_built.csv') },
   { id: 'hunt_history_2025_2026', input: path.join(ROOT, 'hunt_history_2025_2026_dwr_aligned.csv') }
 ];
@@ -147,4 +148,3 @@ run().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
-

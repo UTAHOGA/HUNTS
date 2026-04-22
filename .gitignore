@@ -1,4 +1,5 @@
-.gitignore
-
-point_ladder_view.csv
+node_modules/
+.npm-cache/
 _exports/
+_local_untracked_backup/
+*.log
