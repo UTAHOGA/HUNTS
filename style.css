@@ -1125,10 +1125,20 @@ html:not(.embed) header.topbar .page-nav-strip {
   margin: 0 !important;
   padding: 0 !important;
   z-index: 6;
+  width: auto !important;
+  height: auto !important;
+  /* Avoid blocking clicks/scrolling on the map below the header. */
+  pointer-events: none;
 }
 
 html:not(.embed) header.topbar .page-nav-case {
   margin: 0 auto !important;
+  pointer-events: auto;
+}
+
+html:not(.embed) header.topbar .page-nav-strip .utility-nav,
+html:not(.embed) header.topbar .page-nav-strip .utility-link {
+  pointer-events: auto;
 }
 
 /* Planner header has a center cell; make sure it doesn't become the positioning ancestor. */
