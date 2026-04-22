@@ -40,6 +40,11 @@
     return (sel && sel.value === 'globe') || false;
   }
 
+  function isBackpackOpen() {
+    // Backpack UI is injected by ui.js; it uses .uoga-backpack-shell.is-open when expanded.
+    return !!document.querySelector('.uoga-backpack-shell.is-open');
+  }
+
   function syncPanelVisibility() {
     // We want the basemap popup available for both Google and Globe.
     const panel = getBasemapPanel();
@@ -50,9 +55,17 @@
 
     // Inline layout so other CSS can't push it offscreen when map mode changes.
     panel.style.position = 'fixed';
-    panel.style.right = '24px';
     panel.style.top = '160px';
     panel.style.zIndex = '2147482000';
+
+    // If Hunt Backpack is open, don't let it cover the basemap panel.
+    if (isBackpackOpen()) {
+      panel.style.left = '24px';
+      panel.style.right = 'auto';
+    } else {
+      panel.style.left = 'auto';
+      panel.style.right = '24px';
+    }
 
     // Keep a mode flag for optional CSS/debugging.
     panel.dataset.mapMode = isGoogleMode() ? 'google' : isGlobeMode() ? 'globe' : 'dwr';
@@ -154,6 +167,8 @@
     // Give the rest of the page time to initialize its own UI, then re-assert.
     window.setTimeout(syncPanelVisibility, 250);
     window.setTimeout(syncPanelVisibility, 1000);
+    // Backpack can open/close without triggering map change; keep position synced.
+    window.setInterval(syncPanelVisibility, 500);
   }
 
   if (document.readyState === 'loading') {

@@ -185,8 +185,8 @@
       --nav-pill-w: 132px;
       --nav-pill-gap: 8px;
       --nav-case-pad-side: 36px; /* 0.75in total wider than pills => 0.375in each side */
-      --nav-pill-h: 28px; /* ~0.29in */
-      --nav-pill-inner-h: 22px; /* ~0.23in */
+      --nav-pill-h: 34px; /* larger pills */
+      --nav-pill-inner-h: 26px;
     }
 
     .page-nav-strip {
@@ -396,13 +396,12 @@
     .control-group select:hover { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select option { color: #14100c; }
-    .toggle-row { display: flex; align-items: center; gap: 4px; padding: 3px 6px; border: 1px solid var(--line); border-radius: 18px 18px 22px 18px; background: transparent; flex-wrap: wrap; max-width: 100%; }
-    .toggle-chip { display: inline-flex; align-items: center; gap: 5px; color: var(--accent); font-size: 10px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; cursor: pointer; border-radius: 999px; padding: 0 7px; min-height: 24px; border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76)); }
+    .toggle-row { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 18px 18px 22px 18px; background: transparent; flex-wrap: wrap; max-width: 100%; }
+    .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; cursor: pointer; border-radius: 999px; padding: 0 10px; min-height: var(--nav-pill-h); border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); background: #ffffff; }
     .toggle-chip input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;}
     .toggle-chip-label { display: inline-block; line-height: 1.05; text-align: center; white-space: normal; }
-    /* Selected = inner ring orange + white text (matches main pills). */
+    /* Selected = inner ring orange (text stays orange via overrides below). */
     label.toggle-chip:has(input:checked) {
-      color: #ffffff;
       border-color: var(--accent);
       box-shadow: inset 0 0 0 2px var(--accent);
     }
@@ -412,13 +411,13 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      min-height: 24px;
-      padding: 0 8px;
+      min-height: var(--nav-pill-h);
+      padding: 0 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.76));
+      background: #ffffff;
       color: var(--accent);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 900;
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -427,7 +426,6 @@
     }
     .toggle-menu summary:hover { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .toggle-menu[open] summary {
-      color: #ffffff;
       border-color: var(--accent);
       box-shadow: inset 0 0 0 2px var(--accent), 0 10px 24px rgba(82, 44, 20, 0.18);
     }
@@ -1098,6 +1096,12 @@
 html, body {
   margin: 0;
   padding: 0;
+}
+
+/* Remove the center "tongue" (instructions tab) globally. */
+.instructions-tab,
+.instructions-panel {
+  display: none !important;
 }
 
 /* Wix/iframe embed mode: Wix owns the global header/nav, so hide the internal 4-pill nav strip.
