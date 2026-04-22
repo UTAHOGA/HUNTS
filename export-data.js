@@ -22,7 +22,8 @@ const OUT_DIR = path.join(ROOT, '_exports');
 const DATASETS = [
   { id: 'draw_reality_engine', input: path.join(ROOT, 'processed_data', 'draw_reality_engine.csv') },
   { id: 'point_ladder_view', input: path.join(ROOT, 'processed_data', 'point_ladder_view.csv') },
-  { id: 'harvest_metrics_2025_preliminary', input: path.join(ROOT, 'processed_data', 'harvest-metrics-extract.csv') },
+  { id: 'harvest_metrics_2025_preliminary', input: path.join(ROOT, 'processed_data', 'harvest-metrics-2025-prelim.csv') },
+  { id: 'harvest_metrics_2024_report', input: path.join(ROOT, 'processed_data', 'harvest-metrics-2024-bg-report.csv') },
   { id: 'hunt_join_2025', input: path.join(ROOT, 'processed_data', 'hunt_join_2025.csv') },
   { id: 'hunt_permits_rac_2025_2026', input: path.join(ROOT, 'processed_data', 'hunt_permits_rac_2025_2026.csv') },
   { id: 'sleeper_report_elk_deer_2025', input: path.join(ROOT, 'processed_data', 'sleeper-report-elk-deer-2025.csv') },

@@ -25,8 +25,15 @@ const path = require('path');
 const pdfParse = require('pdf-parse');
 
 const OUT_DIR = path.join(__dirname, 'processed_data');
-const OUT_JSON = path.join(OUT_DIR, 'harvest-metrics-extract.json');
-const OUT_CSV = path.join(OUT_DIR, 'harvest-metrics-extract.csv');
+
+function defaultIdFromPath(pdfPath) {
+  const base = path.basename(pdfPath).replace(/\.[^.]+$/, '');
+  return base
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80) || 'harvest';
+}
 
 function ensureDir(p) {
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
@@ -111,9 +118,17 @@ function parseChunk(chunk) {
 }
 
 async function main() {
-  const pdfPath = process.argv.slice(2).join(' ').trim().replace(/^\"|\"$/g, '');
+  const args = process.argv.slice(2);
+  const idFlag = args.findIndex((a) => a === '--id');
+  let id = null;
+  if (idFlag >= 0 && args[idFlag + 1]) {
+    id = String(args[idFlag + 1]).trim();
+    args.splice(idFlag, 2);
+  }
+
+  const pdfPath = args.join(' ').trim().replace(/^\"|\"$/g, '');
   if (!pdfPath) {
-    console.error('Usage: node extract-harvest-metrics.js \"C:\\\\path\\\\harvest.pdf\"');
+    console.error('Usage: node extract-harvest-metrics.js \"C:\\\\path\\\\harvest.pdf\" [--id harvest-2025]');
     process.exit(2);
   }
   if (!fs.existsSync(pdfPath)) {
@@ -122,6 +137,9 @@ async function main() {
   }
 
   ensureDir(OUT_DIR);
+  const outId = (id && id.replace(/[^a-z0-9_-]+/gi, '-')) || defaultIdFromPath(pdfPath);
+  const outJson = path.join(OUT_DIR, `harvest-metrics-${outId}.json`);
+  const outCsv = path.join(OUT_DIR, `harvest-metrics-${outId}.csv`);
 
   const pages = await readPages(pdfPath);
   const allChunks = pages.flatMap(extractRowsFromText);
@@ -152,20 +170,19 @@ async function main() {
     rejects: rejects.slice(0, 80)
   };
 
-  fs.writeFileSync(OUT_JSON, JSON.stringify({ report, rows: finalRows }, null, 2));
-  fs.writeFileSync(OUT_CSV, toCsv(finalRows));
+  fs.writeFileSync(outJson, JSON.stringify({ report, rows: finalRows }, null, 2));
+  fs.writeFileSync(outCsv, toCsv(finalRows));
 
   console.log(`PDF: ${pdfPath}`);
   console.log(`Pages: ${pages.length}`);
   console.log(`Row chunks detected: ${allChunks.length}`);
   console.log(`Rows parsed: ${rows.length}`);
   console.log(`Unique rows (by huntCode): ${finalRows.length}`);
-  console.log(`Saved: ${OUT_CSV}`);
-  console.log(`Saved: ${OUT_JSON}`);
+  console.log(`Saved: ${outCsv}`);
+  console.log(`Saved: ${outJson}`);
 }
 
 main().catch((err) => {
   console.error(err && err.stack ? err.stack : err);
   process.exit(1);
 });
-
