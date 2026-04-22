@@ -1220,6 +1220,7 @@ html.embed header.topbar .topbar-right {
   /* Pill text stays orange (never white). */
   --uoga-pill-text: rgb(240, 120, 0);
   --uoga-ring: rgb(240, 120, 0);
+  --uoga-case-max: calc((4 * var(--nav-pill-w)) + (3 * var(--nav-pill-gap)) + (2 * var(--nav-case-pad-side)));
 }
 
 /* Normalize any lingering accent variables to the required orange. */
@@ -1234,6 +1235,13 @@ html.embed header.topbar .topbar-right {
   background: var(--uoga-case-bg) !important;
   border: 1px solid var(--uoga-case-border) !important;
   box-shadow: var(--uoga-case-shadow) !important;
+  /* Exact same physical size/shape for both pillow rows. */
+  width: 100% !important;
+  max-width: var(--uoga-case-max) !important;
+  min-height: calc(var(--nav-pill-h) + 12px) !important;
+  padding: 10px var(--nav-case-pad-side) !important;
+  border-radius: 18px 18px 22px 18px !important;
+  box-sizing: border-box;
 }
 
 /* Base pill visuals (nav + ownership) */
@@ -1290,7 +1298,7 @@ html.embed header.topbar .topbar-right {
   margin: 0;
   background: transparent;
   /* Match the visual width of the 4-pill nav pillow. */
-  max-width: calc((4 * var(--nav-pill-w)) + (3 * var(--nav-pill-gap)) + (2 * var(--nav-case-pad-side)));
+  max-width: var(--uoga-case-max);
   margin-inline: auto;
 }
 
