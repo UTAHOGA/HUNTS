@@ -270,7 +270,7 @@
       border: 1px solid var(--research-line-soft);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.04);
-      padding: 15px;
+      padding: 12px;
     }
 
     .chip,
@@ -294,9 +294,9 @@
     .backpack-card .label,
     .note-box .label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       color: #ddb089;
-      font-size: 16px;
+      font-size: 13px;
       font-weight: 900;
       line-height: 1.15;
       text-align: center;
@@ -632,6 +632,102 @@
 
     .report-table-wrap {
       overflow: auto;
+      /* Keep the ladder from becoming a 30+ line wall-of-text. */
+      max-height: 360px;
+    }
+
+    /* Compact accordions for dense sections (human-eyes-first). */
+    .report-accordion {
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .report-accordion-summary {
+      list-style: none;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--research-line-soft);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .report-accordion-summary::-webkit-details-marker { display: none; }
+
+    .report-accordion-summary span:first-child {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--text);
+    }
+
+    .report-accordion-hint {
+      color: var(--research-muted);
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .report-accordion[open] > .report-accordion-summary {
+      box-shadow: inset 0 0 0 2px rgba(240, 120, 0, 0.22);
+      border-color: rgba(240, 120, 0, 0.26);
+    }
+
+    .report-accordion > .report-table-card {
+      margin-top: 10px;
+    }
+
+    /* Signal legends: collapse the text by default, show on click. */
+    .signal-legend {
+      margin: 0;
+      padding: 0;
+      justify-self: start;
+    }
+
+    .signal-legend summary {
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 30px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(240, 120, 0, 0.18);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgb(240, 120, 0);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .signal-legend summary::-webkit-details-marker { display: none; }
+
+    .signal-legend summary::after {
+      content: "▾";
+      color: rgba(240, 120, 0, 0.72);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .signal-legend[open] summary::after { content: "▴"; }
+
+    .signal-legend[open] summary {
+      box-shadow: inset 0 0 0 2px rgba(240, 120, 0, 0.22);
+      border-color: rgba(240, 120, 0, 0.28);
+    }
+
+    .signal-legend .signal-list {
+      margin-top: 10px;
     }
 
     table.report-table {
@@ -972,6 +1068,15 @@
       .research-link {
         width: 100%;
       }
+
+      /* Mobile: keep dense sections from becoming a full-page scroll. */
+      .report-table-wrap {
+        max-height: 52vh;
+      }
+
+      .report-accordion-hint {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -1120,11 +1225,14 @@
                         <span class="outlook-light green"></span>
                       </div>
                     </div>
-                    <ul class="signal-list">
-                      <li><strong class="signal-word-green">Green:</strong> Guaranteed draw.</li>
-                      <li><strong class="signal-word-yellow">Yellow:</strong> Live on the split draw line.</li>
-                      <li><strong class="signal-word-red">Red:</strong> Random pool draw only.</li>
-                    </ul>
+                    <details class="signal-legend">
+                      <summary>Legend</summary>
+                      <ul class="signal-list">
+                        <li><strong class="signal-word-green">Green:</strong> Guaranteed draw.</li>
+                        <li><strong class="signal-word-yellow">Yellow:</strong> Live on the split draw line.</li>
+                        <li><strong class="signal-word-red">Red:</strong> Random pool draw only.</li>
+                      </ul>
+                    </details>
                   </div>
                 </div>
                 <div class="summary-card signal-card">
@@ -1138,11 +1246,14 @@
                       </div>
                       <span id="summaryTrendText" class="subvalue">Not available</span>
                     </div>
-                    <ul class="signal-list">
-                      <li><strong class="signal-word-green">Green:</strong> You are catching up.</li>
-                      <li><strong class="signal-word-yellow">Yellow:</strong> The line is holding pace.</li>
-                      <li><strong class="signal-word-red">Red:</strong> Point creep is outrunning you.</li>
-                    </ul>
+                    <details class="signal-legend">
+                      <summary>Legend</summary>
+                      <ul class="signal-list">
+                        <li><strong class="signal-word-green">Green:</strong> You are catching up.</li>
+                        <li><strong class="signal-word-yellow">Yellow:</strong> The line is holding pace.</li>
+                        <li><strong class="signal-word-red">Red:</strong> Point creep is outrunning you.</li>
+                      </ul>
+                    </details>
                   </div>
                 </div>
               </div>
@@ -1156,27 +1267,29 @@
                 </div>
               </section>
 
-              <section class="report-table-card">
-                <div class="report-table-head">
-                  <h3>Point ladder</h3>
-                  <p>Yellow = you. Orange = guaranteed.</p>
-                </div>
-                <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No ladder rows for this hunt and residency yet.</div>
-                <div id="ladderTableWrap" class="report-table-wrap" hidden>
-                  <table class="report-table">
-                    <thead>
-                        <tr id="ladderHeaderRow">
-                          <th>Point</th>
-                          <th>2025 Actual Odds</th>
-                          <th id="ladderPrimaryHeader">2026 Max Pool</th>
-                          <th id="ladderSecondaryHeader">2026 Random Draw</th>
-                          <th>Markers</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ladderTableBody"></tbody>
-                  </table>
-                </div>
-              </section>
+              <details class="report-accordion">
+                <summary class="report-accordion-summary">
+                  <span>Point ladder</span>
+                  <span class="report-accordion-hint">Yellow = you. Orange = guaranteed.</span>
+                </summary>
+                <section class="report-table-card">
+                  <div id="ladderTableEmpty" class="empty-note" style="margin:14px;">No ladder rows for this hunt and residency yet.</div>
+                  <div id="ladderTableWrap" class="report-table-wrap" hidden>
+                    <table class="report-table">
+                      <thead>
+                          <tr id="ladderHeaderRow">
+                            <th>Point</th>
+                            <th>2025 Actual Odds</th>
+                            <th id="ladderPrimaryHeader">2026 Max Pool</th>
+                            <th id="ladderSecondaryHeader">2026 Random Draw</th>
+                            <th>Markers</th>
+                          </tr>
+                      </thead>
+                      <tbody id="ladderTableBody"></tbody>
+                    </table>
+                  </div>
+                </section>
+              </details>
             </div>
           </div>
         </section>

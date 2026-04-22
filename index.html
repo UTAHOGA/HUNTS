@@ -12,8 +12,6 @@
     #globeBasemapPanel {
       display: none;
       position: fixed;
-      right: 24px;
-      top: 160px;
       z-index: 2147482000;
     }
     #globeBasemapPanel[aria-hidden="false"] {
@@ -200,28 +198,26 @@
       </div>
 
       <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
-      <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="false">
-        <div class="globe-basemap-title">Globe Basemap</div>
-        <p class="globe-basemap-note">Switch globe backgrounds.</p>
-        <div id="globeBasemapGrid" class="globe-basemap-grid">
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriStreet">Esri Street</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="esriNatGeo">Esri NatGeo</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="openTopo">OpenTopoMap</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="osm">OpenStreetMap</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoLight">Carto Light</button>
-          <button type="button" class="globe-basemap-btn" data-globe-basemap="cartoDark">Carto Dark</button>
-        </div>
-        <div class="globe-basemap-title" style="margin-top: 12px;">Google Basemap</div>
-        <p class="globe-basemap-note">Switch Google map type.</p>
-        <div id="googleBasemapGrid" class="globe-basemap-grid">
-          <button type="button" class="globe-basemap-btn" data-google-basemap="roadmap">Road</button>
-          <button type="button" class="globe-basemap-btn" data-google-basemap="terrain">Terrain</button>
-          <button type="button" class="globe-basemap-btn" data-google-basemap="hybrid">Hybrid</button>
-          <button type="button" class="globe-basemap-btn" data-google-basemap="satellite">Satellite</button>
+
+      <!-- Collapsible basemap controls (lives on top of the map, not in the right sidebar). -->
+      <div id="basemapPopover" class="basemap-pop" aria-hidden="true">
+        <button id="basemapToggleBtn" type="button" class="basemap-toggle" aria-expanded="false">
+          Basemap
+        </button>
+        <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
+          <div id="globeBasemapGrid" class="globe-basemap-grid" aria-label="Globe basemap">
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
+            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
+          </div>
+          <div class="globe-basemap-divider" aria-hidden="true"></div>
+          <div id="googleBasemapGrid" class="globe-basemap-grid" aria-label="Google basemap">
+            <button type="button" class="globe-basemap-btn" data-google-basemap="roadmap">Road</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="terrain">Terrain</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="hybrid">Hybrid</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="satellite">Satellite</button>
+          </div>
         </div>
       </div>
     </section>

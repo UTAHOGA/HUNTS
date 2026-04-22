@@ -344,6 +344,29 @@
       cursor: pointer;
     }
 
+    /* Crop the top nav/URL chrome from embedded agency pages (we can't style inside the iframe). */
+    .iframe-crop {
+      --iframe-crop: 74px;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: min(70vh, 760px);
+      border: 1px solid rgba(240, 120, 0, 0.22);
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .iframe-crop-frame {
+      position: absolute;
+      top: calc(-1 * var(--iframe-crop));
+      left: 0;
+      width: 100%;
+      height: calc(100% + var(--iframe-crop));
+      border: 0;
+      background: #fff;
+    }
+
     /* --- DWR MAP MODE --- */
     .dwr-map-frame {
       position: absolute;
@@ -357,6 +380,7 @@
     .map-wrap.is-dwr-mode #map,
     .map-wrap.is-dwr-mode #globeMap,
     .map-wrap.is-dwr-mode #globeBasemapPanel,
+    .map-wrap.is-dwr-mode #basemapPopover,
     .map-wrap.is-dwr-mode #selectedHuntFloat,
     .map-wrap.is-dwr-mode #mapChooser {
       display: none !important;
@@ -365,33 +389,70 @@
     .map-wrap.is-dwr-mode #dwrMapFrame {
       display: block !important;
     }
+    /* Map selector: match Hunt Backpack look/size. */
     .control-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       min-height: 46px; /* match Hunt Backpack control height */
-      padding: 6px 12px 6px 14px;
-      border: 1px solid var(--line);
+      padding: 6px 14px 6px 10px;
       border-radius: 18px 18px 22px 18px;
+      border: 1px solid var(--line);
       background:
-        radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), transparent 40%),
-        linear-gradient(180deg, color-mix(in srgb, var(--panel2) 74%, transparent), color-mix(in srgb, var(--panel) 92%, transparent));
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 38%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel2) 78%, transparent), color-mix(in srgb, var(--panel) 90%, transparent));
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+      transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
     }
-    .control-group label { font-size: 12px; font-weight: 900; letter-spacing: .06em; text-transform: uppercase; color: rgba(22, 14, 10, 0.52); }
-    .control-group select {
+    .control-group:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16), 0 12px 28px rgba(82, 44, 20, 0.30);
+    }
+    /* Keep the label for accessibility but hide visually to match Backpack’s clean pill. */
+    .control-group label[for="mapTypeSelect"] {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .control-group:has(#mapTypeSelect) {
+      padding: 6px 14px 6px 8px; /* match backpack toggle */
+      gap: 0;
+    }
+
+    .control-group select#mapTypeSelect {
       min-height: 38px;
-      padding: 0 14px;
+      min-width: 176px; /* match backpack inner pill width */
+      padding: 0 40px 0 16px;
       border-radius: 999px;
-      border: 1px solid rgba(24, 18, 12, 0.18);
-      background: #ffffff;
+      border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
+        linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
+      box-shadow: 0 8px 18px rgba(0,0,0,0.28);
       color: rgb(240, 120, 0);
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: .10em;
+      letter-spacing: .14em;
       text-transform: uppercase;
       cursor: pointer;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 12px 8px;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(240,120,0,0.95) 50%),
+        linear-gradient(135deg, rgba(240,120,0,0.95) 50%, transparent 50%);
     }
+    .control-group select#mapTypeSelect:hover { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16), 0 8px 18px rgba(0,0,0,0.28); }
+    .control-group select#mapTypeSelect:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 2px rgba(240,120,0,0.35), 0 0 0 2px rgba(240, 120, 0, 0.16), 0 8px 18px rgba(0,0,0,0.28); }
     .control-group select:hover { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select option { color: #14100c; }
@@ -1203,6 +1264,77 @@ html.embed header.topbar .topbar-right {
   place-items: center;
 }
 
+/* Basemap popover: collapsible + pinned on top of the map (never in the right sidebar). */
+#basemapPopover[aria-hidden="true"] { display: none !important; }
+
+.basemap-pop {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 40;
+  display: grid;
+  gap: 10px;
+  align-items: start;
+  justify-items: end;
+  pointer-events: auto;
+}
+
+.basemap-toggle {
+  min-height: 46px;
+  padding: 6px 16px;
+  border-radius: 18px 18px 22px 18px;
+  border: 1px solid var(--uoga-case-border);
+  background: var(--uoga-case-bg);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  color: var(--accent);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.basemap-toggle:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 2px rgba(240, 120, 0, 0.16),
+    0 12px 28px rgba(82, 44, 20, 0.24);
+}
+
+.basemap-toggle[aria-expanded="true"] {
+  border-color: var(--accent);
+  box-shadow:
+    0 10px 18px rgba(24, 14, 9, 0.16),
+    inset 0 0 0 2px rgba(240, 120, 0, 0.55);
+}
+
+/* Override earlier globe-mode rules: panel is shown only when expanded. */
+.globe-basemap-panel { display: none !important; }
+.globe-basemap-panel[aria-hidden="false"] { display: grid !important; }
+
+.basemap-pop .globe-basemap-panel {
+  position: absolute;
+  top: calc(46px + 10px);
+  right: 0;
+  width: min(320px, calc(100vw - 42px));
+  padding: 14px 16px !important;
+  border-radius: 18px 18px 22px 18px;
+  border: 1px solid var(--uoga-case-border) !important;
+  background: var(--uoga-case-bg) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.globe-basemap-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(24, 18, 12, 0.14);
+}
+
 /* === Pillow Rows Visual Unification (2026-04-22) ========================== */
 /* Make the primary nav pillow + ownership pillow match exactly:
    - solid (not translucent) case background
@@ -1247,7 +1379,7 @@ html.embed header.topbar .topbar-right {
 
 /* Base pill visuals (nav + ownership) */
 .page-nav-strip .utility-link,
-.ownership-dock .toggle-chip-label,
+.ownership-dock label.toggle-chip,
 .ownership-dock .toggle-menu > summary {
   background: var(--uoga-pill-bg) !important;
   border: 1px solid var(--uoga-pill-border) !important;
@@ -1256,7 +1388,7 @@ html.embed header.topbar .topbar-right {
 
 /* Orange ring on hover (inner pill highlight) */
 .page-nav-strip .utility-link:hover,
-.ownership-dock .toggle-chip:hover .toggle-chip-label,
+.ownership-dock label.toggle-chip:hover,
 .ownership-dock .toggle-menu > summary:hover {
   box-shadow:
     0 10px 16px rgba(24, 14, 9, 0.14),
@@ -1266,7 +1398,7 @@ html.embed header.topbar .topbar-right {
 /* Selected state: persistent orange ring */
 .page-nav-strip .utility-link.active,
 .page-nav-strip .utility-link[aria-current="page"],
-.ownership-dock .toggle-chip input:checked + .toggle-chip-label {
+.ownership-dock label.toggle-chip:has(input:checked) {
   box-shadow:
     0 10px 18px rgba(24, 14, 9, 0.16),
     inset 0 0 0 2px var(--uoga-ring) !important;
@@ -1276,7 +1408,7 @@ html.embed header.topbar .topbar-right {
 /* Remove brown-ish "selected" backgrounds if any */
 .page-nav-strip .utility-link.active,
 .page-nav-strip .utility-link[aria-current="page"],
-.ownership-dock .toggle-chip input:checked + .toggle-chip-label,
+.ownership-dock label.toggle-chip:has(input:checked),
 .ownership-dock .toggle-menu[open] > summary {
   background: var(--uoga-pill-bg) !important;
   color: var(--uoga-pill-text) !important;
@@ -1285,7 +1417,7 @@ html.embed header.topbar .topbar-right {
 /* Never flip selected pill text to white (keep readable dark text). */
 .page-nav-strip .utility-link.active,
 .page-nav-strip .utility-link[aria-current="page"],
-.ownership-dock .toggle-chip input:checked + .toggle-chip-label,
+.ownership-dock label.toggle-chip:has(input:checked),
 .ownership-dock .toggle-menu[open] > summary {
   color: var(--uoga-pill-text) !important;
 }
@@ -1303,23 +1435,6 @@ html.embed header.topbar .topbar-right {
   margin-inline: auto;
 }
 
-/* Pillowcase wrapper behind the ownership row (same vibe as the 4-pill nav case). */
-.ownership-case {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(var(--nav-pill-h) + 10px);
-  padding: 10px var(--nav-case-pad-side);
-  border-radius: 999px;
-  border: 1px solid rgba(87, 68, 52, 0.28);
-  background:
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.80), rgba(255, 255, 255, 0.42));
-  box-shadow:
-    0 10px 26px rgba(32, 18, 10, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.70);
-}
-
 /* When the ownership controls are docked, reset any header-specific positioning rules. */
 .ownership-dock .toggle-row {
   position: static !important;
@@ -1335,13 +1450,6 @@ html.embed header.topbar .topbar-right {
   background: transparent !important;
 }
 
-/* Make the ownership pills a bit larger (dock only). */
-.ownership-dock .toggle-chip,
-.ownership-dock .toggle-menu > summary {
-  transform: scale(1.06);
-  transform-origin: center;
-}
-
 .ownership-dock .toggle-row {
   gap: 12px;
 }
@@ -1350,9 +1458,45 @@ html.embed header.topbar .topbar-right {
   .ownership-dock {
     padding: 12px 10px 10px;
   }
-  .ownership-case {
-    padding: 12px 18px;
-  }
+}
+
+/* Ownership pills: same physical pill size/width as the main 4-pill nav. */
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary {
+  width: var(--nav-pill-w) !important;
+  min-height: var(--nav-pill-h) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+}
+
+/* Basemap popup buttons: use the same pill system (white + orange text, orange ring on hover/active). */
+.globe-basemap-btn {
+  border-radius: 999px !important;
+  min-height: var(--nav-pill-h) !important;
+  padding: 0 12px !important;
+  background: var(--uoga-pill-bg) !important;
+  border: 1px solid var(--uoga-pill-border) !important;
+  color: var(--uoga-pill-text) !important;
+  box-shadow: none !important;
+}
+
+.globe-basemap-btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 16px rgba(24, 14, 9, 0.14),
+    inset 0 0 0 2px var(--uoga-ring) !important;
+}
+
+.globe-basemap-btn.is-active,
+.globe-basemap-btn[aria-pressed="true"] {
+  border-color: var(--uoga-ring) !important;
+  box-shadow:
+    0 10px 18px rgba(24, 14, 9, 0.16),
+    inset 0 0 0 2px var(--uoga-ring) !important;
 }
 
 /* Stack the nav pillow + land-ownership row tightly in the header. */

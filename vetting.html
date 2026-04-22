@@ -603,13 +603,15 @@
         <button id="dwrOutfitterCloseBtn" class="source-close" type="button" aria-label="Close">X</button>
       </div>
       <div style="padding: 10px;">
-        <iframe
-          id="dwrOutfitterFrame"
-          title="Utah DWR Outfitter Resources"
-          style="width:100%;height:min(70vh,760px);border:1px solid rgba(163,120,83,0.45);border-radius:12px;background:#fff;"
-          referrerpolicy="no-referrer-when-downgrade"
-          loading="lazy"
-        ></iframe>
+        <div class="iframe-crop" style="--iframe-crop: 74px;">
+          <iframe
+            id="dwrOutfitterFrame"
+            class="iframe-crop-frame"
+            title="Utah DWR Outfitter Resources"
+            referrerpolicy="no-referrer-when-downgrade"
+            loading="lazy"
+          ></iframe>
+        </div>
         <p class="helper" style="margin-top:10px;">
           Fallback:
           <a id="dwrOutfitterFallback" href="https://wildlife.utah.gov/" target="_blank" rel="noopener noreferrer">Open Utah DWR in a new tab</a>
