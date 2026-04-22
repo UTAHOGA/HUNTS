@@ -10,7 +10,8 @@
     // If already moved, don't do it again.
     if (dock.contains(row)) return;
 
-    dock.appendChild(row);
+    const target = dock.querySelector('.ownership-case') || dock;
+    target.appendChild(row);
   }
 
   function init() {
@@ -23,4 +24,3 @@
     init();
   }
 })();
-
