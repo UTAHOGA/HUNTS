@@ -24,6 +24,7 @@ const DATASETS = [
   { id: 'point_ladder_view', input: path.join(ROOT, 'processed_data', 'point_ladder_view.csv') },
   { id: 'harvest_metrics_2025_preliminary', input: path.join(ROOT, 'processed_data', 'harvest-metrics-extract.csv') },
   { id: 'hunt_join_2025', input: path.join(ROOT, 'processed_data', 'hunt_join_2025.csv') },
+  { id: 'hunt_permits_rac_2025_2026', input: path.join(ROOT, 'processed_data', 'hunt_permits_rac_2025_2026.csv') },
   { id: 'sleeper_report_elk_deer_2025', input: path.join(ROOT, 'processed_data', 'sleeper-report-elk-deer-2025.csv') },
   { id: 'hunt_master_canonical_2026', input: path.join(ROOT, 'hunt_master_canonical_2026_built.csv') },
   { id: 'hunt_history_2025_2026', input: path.join(ROOT, 'hunt_history_2025_2026_dwr_aligned.csv') }
