@@ -4,6 +4,11 @@
   "version": "1.0.0",
   "description": "Local static server for the U.O.G.A. Hunt Planner",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "export:data": "node export-data.js"
+  },
+  "devDependencies": {
+    "pdfkit": "^0.17.2",
+    "xlsx": "^0.18.5"
   }
 }
