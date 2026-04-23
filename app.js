@@ -1054,6 +1054,14 @@ function handleFilterChange(event) {
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
+  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
+    mapTypeSelect.value = 'google';
+    applyMapMode();
+  }
+  if (!googleBaselineMap) {
+    updateStatus('Google map is still loading. Filter selection saved; boundaries will appear when the map is ready.');
+    return;
+  }
   const changedId = safe(event?.target?.id);
   if (changedId === 'speciesFilter') {
     if (sexFilter) sexFilter.value = 'All';
