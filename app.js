@@ -1,8 +1,11 @@
-// === SIMPLE MAP MODE CONTROLLER (CLEAN) ===
+// ================================
+// UOGA MAP CONTROLLER (CLEAN BUILD)
+// ================================
 
 let googleMap = null;
 let cesiumViewer = null;
 
+// --- GOOGLE INIT ---
 function initGoogleMap() {
   if (googleMap) return;
 
@@ -10,55 +13,77 @@ function initGoogleMap() {
     center: { lat: 39.3, lng: -111.7 },
     zoom: 7,
     mapTypeId: "terrain",
+    streetViewControl: false,
   });
 }
 
+// --- CESIUM INIT ---
 function initCesium() {
   if (cesiumViewer) return;
 
   cesiumViewer = new Cesium.Viewer("globeMap", {
     terrainProvider: Cesium.createWorldTerrain(),
+    animation: false,
+    timeline: false,
   });
 }
 
+// --- MODE SWITCH ---
 function applyMapMode() {
-  const value = document.getElementById("mapTypeSelect").value;
+  const select = document.getElementById("mapTypeSelect");
+  const value = (select?.value || "terrain").toLowerCase();
+
   const mapWrap = document.querySelector(".map-wrap");
   const dwrFrame = document.getElementById("dwrMapFrame");
 
-  // RESET
+  if (!mapWrap) return;
+
+  // RESET EVERYTHING
   mapWrap.classList.remove("is-globe-mode");
   mapWrap.classList.remove("is-dwr-mode");
-  dwrFrame.hidden = true;
 
-  // === GLOBE ===
+  if (dwrFrame) {
+    dwrFrame.hidden = true;
+  }
+
+  // =================
+  // GLOBE MODE
+  // =================
   if (value === "globe") {
     initCesium();
     mapWrap.classList.add("is-globe-mode");
     return;
   }
 
-  // === DWR ===
+  // =================
+  // DWR MODE (IFRAME)
+  // =================
   if (value === "dwr") {
     mapWrap.classList.add("is-dwr-mode");
-    dwrFrame.hidden = false;
 
-    if (!dwrFrame.src) {
-      dwrFrame.src = "https://dwrapps.utah.gov/huntboundary/hbstart";
+    if (dwrFrame) {
+      dwrFrame.hidden = false;
+
+      if (!dwrFrame.src) {
+        dwrFrame.src =
+          "https://dwrapps.utah.gov/huntboundary/hbstart";
+      }
     }
 
     return;
   }
 
-  // === GOOGLE (4 VALID TYPES ONLY) ===
-  const valid = ["terrain", "roadmap", "hybrid", "satellite"];
-  const mapType = valid.includes(value) ? value : "terrain";
+  // =================
+  // GOOGLE BASEMAPS
+  // =================
+  const validTypes = ["terrain", "roadmap", "hybrid", "satellite"];
+  const mapType = validTypes.includes(value) ? value : "terrain";
 
   initGoogleMap();
   googleMap.setMapTypeId(mapType);
 }
 
-// === INIT ===
+// --- INIT ---
 window.addEventListener("load", () => {
   const select = document.getElementById("mapTypeSelect");
 
@@ -66,5 +91,5 @@ window.addEventListener("load", () => {
     select.addEventListener("change", applyMapMode);
   }
 
-  applyMapMode(); // default load
+  applyMapMode();
 });
