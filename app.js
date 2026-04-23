@@ -3050,9 +3050,10 @@ function bindControls() {
   if (controlsBound) return;
   controlsBound = true;
 
-  [searchInput, speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
+  searchInput?.addEventListener('input', handleFilterChange);
+  searchInput?.addEventListener('change', handleFilterChange);
+  [speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
     el?.addEventListener('change', handleFilterChange);
-    el?.addEventListener('input', handleFilterChange);
   });
   applyFiltersBtn?.addEventListener('click', () => {
     closeSelectedHuntPopup();
