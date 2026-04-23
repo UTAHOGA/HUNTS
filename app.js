@@ -1029,6 +1029,35 @@ function updateStatus(message) {
   if (statusEl) statusEl.textContent = message;
 }
 
+function normalizeMapModeHash(value) {
+  const hash = safe(value).trim().toLowerCase().replace(/^#/, '');
+  if (hash === 'google-earth' || hash === 'earth') return 'earth';
+  if (hash === 'google-maps' || hash === 'google-map' || hash === 'google') return 'google';
+  if (hash === 'dwr' || hash === 'dwr-map') return 'dwr';
+  return '';
+}
+
+function getMapModeHash(value) {
+  const mode = safe(value).trim().toLowerCase();
+  if (mode === 'earth') return '#google-earth';
+  if (mode === 'dwr') return '#dwr';
+  return '#google-maps';
+}
+
+function syncMapModeFromHash() {
+  const hashMode = normalizeMapModeHash(typeof window !== 'undefined' ? window.location.hash : '');
+  if (!hashMode || !mapTypeSelect || safe(mapTypeSelect.value).toLowerCase() === hashMode) return;
+  mapTypeSelect.value = hashMode;
+  applyMapMode();
+}
+
+function syncHashFromMapMode() {
+  if (typeof window === 'undefined' || !mapTypeSelect) return;
+  const nextHash = getMapModeHash(mapTypeSelect.value);
+  if (window.location.hash === nextHash) return;
+  history.replaceState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`);
+}
+
 function forceGoogleMapVisible() {
   const mapWrap = document.querySelector('.map-wrap');
   const mapEl = document.getElementById('map');
@@ -1050,6 +1079,7 @@ function forceGoogleMapVisible() {
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
     mapTypeSelect.value = 'google';
   }
+  syncHashFromMapMode();
   if (googleBaselineMap && typeof google !== 'undefined') {
     google.maps.event.trigger(googleBaselineMap, 'resize');
   }
@@ -2814,6 +2844,7 @@ function applyMapMode() {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   const basemapControl = document.getElementById('globeBasemapControl');
+  syncHashFromMapMode();
 
   mapWrap.classList.remove('is-dwr-mode');
   mapWrap.classList.remove('is-earth-mode');
@@ -3271,6 +3302,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   installGoogleAuthErrorMonitor();
   initDwrFrameEvents();
   initGoogleEarthFrameEvents();
+  window.addEventListener('hashchange', syncMapModeFromHash);
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
   const activeGoogleMapsKey = resolveGoogleMapsApiKey();
@@ -3299,6 +3331,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderMatchingHunts();
   bootstrapPendingHuntSelection();
   bindControls();
+  syncMapModeFromHash();
   applyMapMode();
 });
 

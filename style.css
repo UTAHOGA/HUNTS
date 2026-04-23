@@ -56,6 +56,7 @@
     body { display: block; min-height: 100%; }
 
     .planner-body { display: block; min-width: 0; }
+    .planner-body > .hero { display: none; }
 
     .hero {
       text-align: center;
@@ -95,10 +96,10 @@
     /* Planner header aligns with left rail (Hunt Builder), map, and right rail (Outfitters). */
     .topbar.topbar-planner {
       display: grid;
-      grid-template-columns: 300px minmax(0, 1fr) 280px;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
-      gap: 10px;
-      padding: 4px 12px;
+      gap: 18px;
+      padding: 10px 18px 8px;
     }
     .topbar.topbar-planner .topbar-left,
     .topbar.topbar-planner .topbar-center,
@@ -108,13 +109,18 @@
       align-items: center;
       justify-content: center;
     }
-    .topbar.topbar-planner .controls {
-      justify-content: center; /* centers backpack over Outfitters rail */
-    }
+    .topbar.topbar-planner .controls { justify-content: flex-end; }
     .topbar.topbar-planner .topbar-left {
       position: relative;
       z-index: 30;
       justify-content: flex-start;
+    }
+    .topbar.topbar-planner .controls-center {
+      justify-content: flex-end;
+      flex: 0 0 auto;
+    }
+    .topbar.topbar-planner .header-dnr-link {
+      display: none;
     }
     .topbar.topbar-planner .topbar-left .control-group,
     .topbar.topbar-planner .topbar-left #mapTypeSelect {
@@ -200,6 +206,8 @@
       --nav-pill-inner-h: 26px;
       --uoga-shell-min-h: 46px;
       --uoga-shell-pad: 6px 14px 6px 8px;
+      --uoga-shell-inner-w: 176px;
+      --uoga-shell-inner-h: 38px;
       --uoga-case-pad-y: 6px;
       --uoga-case-pad-x: 10px;
     }
@@ -1500,7 +1508,7 @@ html.embed header.topbar .topbar-right {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 12px 8px;
+  padding: 4px 12px 4px;
   margin: 0;
   background: transparent;
   /* Match the visual width of the 4-pill nav pillow. */
@@ -1557,10 +1565,10 @@ html.embed header.topbar .topbar-right {
 }
 
 .topbar.topbar-planner .control-group select#mapTypeSelect {
-  width: 176px !important;
-  min-width: 176px !important;
-  height: 38px !important;
-  min-height: 38px !important;
+  width: var(--uoga-shell-inner-w) !important;
+  min-width: var(--uoga-shell-inner-w) !important;
+  height: var(--uoga-shell-inner-h) !important;
+  min-height: var(--uoga-shell-inner-h) !important;
   border-radius: 999px !important;
   text-align: center;
   text-align-last: center;
@@ -1644,21 +1652,30 @@ header.topbar.topbar-planner {
 }
 
 header.topbar.topbar-planner .topbar-center {
-  position: relative;
+  position: static !important;
   padding-bottom: 0 !important;
 }
 
 header.topbar.topbar-planner .topbar-center > .toggle-row {
-  position: absolute !important;
-  left: 50%;
-  bottom: -14px !important;
-  transform: translateX(-50%) !important;
-  margin: 0;
+  display: none !important;
 }
 
 @media (max-width: 820px) {
-  header.topbar.topbar-planner .topbar-center { padding-bottom: 0 !important; }
-  header.topbar.topbar-planner .topbar-center > .toggle-row { bottom: -18px; }
+  .topbar.topbar-planner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+    padding: 10px 12px 6px;
+  }
+  .topbar.topbar-planner .topbar-left,
+  .topbar.topbar-planner .controls,
+  .topbar.topbar-planner .controls-center {
+    justify-content: center;
+    width: 100%;
+  }
+  .ownership-dock {
+    padding: 4px 10px 8px;
+  }
 }
 
 /* Center the 4-pill site nav wherever it lives in the header. */

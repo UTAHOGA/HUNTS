@@ -359,17 +359,15 @@ window.UOGA_UI = (() => {
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        min-height: 46px;
-        padding: 6px 14px 6px 8px;
+        min-height: var(--uoga-shell-min-h, 46px);
+        padding: var(--uoga-shell-pad, 6px 14px 6px 8px);
         border-radius: 18px 18px 22px 18px;
-        border: 1px solid var(--line);
-        background:
-          radial-gradient(circle at top left, rgba(255, 255, 255, 0.15), transparent 38%),
-          linear-gradient(180deg, color-mix(in srgb, var(--panel2) 78%, transparent), color-mix(in srgb, var(--panel) 90%, transparent));
+        border: 1px solid var(--uoga-case-border, var(--line));
+        background: var(--uoga-case-bg, linear-gradient(180deg, color-mix(in srgb, var(--panel2) 78%, transparent), color-mix(in srgb, var(--panel) 90%, transparent)));
         color: var(--text);
         font: inherit;
         cursor: pointer;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+        box-shadow: var(--uoga-case-shadow, 0 10px 24px rgba(0, 0, 0, 0.14));
       }
         .uoga-backpack-shell.is-open .uoga-backpack-toggle {
           border-color: #d1ab83;
@@ -386,8 +384,8 @@ window.UOGA_UI = (() => {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 176px;
-        height: 38px;
+        min-width: var(--uoga-shell-inner-w, 176px);
+        height: var(--uoga-shell-inner-h, 38px);
         padding: 0 16px;
         border-radius: 999px;
         border: 1px solid color-mix(in srgb, var(--accent) 52%, transparent);
