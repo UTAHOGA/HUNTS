@@ -62,7 +62,7 @@ const {
   loadFirstNormalizedList
 } = window.UOGA_DATA;
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'osm', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleFailurePrompted = false;
@@ -80,6 +80,8 @@ const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
 const LOCAL_DEV_KEY_STORAGE = 'UOGA_GOOGLE_MAPS_API_KEY_DEV';
+const PROD_KEY_STORAGE = 'UOGA_GOOGLE_MAPS_API_KEY_PROD';
+const RUNTIME_GOOGLE_KEY_FIELD = '__UOGA_GOOGLE_MAPS_API_KEY_RUNTIME';
 // Temporary debug guard: keep Google map as the active mode while we validate key/referrer setup.
 const FORCE_GOOGLE_ONLY_DEBUG = false;
 
@@ -2909,6 +2911,10 @@ function ensureCesiumViewer() {
   const container = document.getElementById('globeMap');
   if (!container) return;
   // Do not depend on Cesium ion defaults (can 401 when token is missing/expired).
+  // Explicitly disable Ion terrain and imagery.
+  if (Cesium?.Ion) {
+    Cesium.Ion.defaultAccessToken = '';
+  }
   cesiumViewer = new Cesium.Viewer(container, {
     animation: false,
     timeline: false,
@@ -2921,7 +2927,8 @@ function ensureCesiumViewer() {
     selectionIndicator: false,
     infoBox: false,
     baseLayer: false,
-    terrain: new Cesium.EllipsoidTerrainProvider()
+    imageryProvider: false,
+    terrainProvider: new Cesium.EllipsoidTerrainProvider()
   });
   applyGlobeBasemap(currentGlobeBasemap);
   cesiumViewer.scene.globe.enableLighting = false;
@@ -3388,7 +3395,7 @@ function bindControls() {
   document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
   mapTypeSelect?.addEventListener('change', applyMapMode);
   globeBasemapSelect?.addEventListener('change', () => {
-    currentGlobeBasemap = safe(globeBasemapSelect.value || 'osm');
+    currentGlobeBasemap = safe(globeBasemapSelect.value || 'esriImagery');
     applyGlobeBasemap(currentGlobeBasemap);
     updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
   });
@@ -3558,39 +3565,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   initDwrFrameEvents();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
-  // Localhost requires a valid local dev key before loading the Maps script.
-  if (isLocalDevHost()) {
-    const localKey = readLocalDevGoogleKey();
-    if (!isLikelyGoogleApiKey(localKey)) {
-      const prompted = promptForLocalDevGoogleKey('Localhost Google map key is missing or invalid.');
-      if (prompted) return;
-      updateStatus('Google map disabled: missing valid localhost key. Using globe view.');
-      fallbackToGlobeMode('Google map disabled on localhost until a valid local key is provided.');
-      return;
+  // Require a valid key for the current origin before loading Maps script.
+  let activeGoogleMapsKey = resolveGoogleMapsApiKey();
+  if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
+    const prompted = promptForGoogleKey('Google map key is missing or invalid for this origin.');
+    if (isLikelyGoogleApiKey(prompted)) {
+      activeGoogleMapsKey = prompted;
     }
   }
-
+  if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
+    updateStatus('Google map disabled: missing valid key. Using globe view.');
+    fallbackToGlobeMode('Google map disabled until a valid key is provided.');
+  }
   // Load Google Maps API with fallback to globe mode.
   window.gm_authFailure = () => {
     console.error('Google Maps API authentication failed.');
     handleGoogleMapsFailure('Google map authentication failed.');
   };
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&v=weekly&loading=async&callback=initGoogleBaseline`;
-  script.async = true;
-  script.defer = true;
-  googleApiLoading = true;
-  script.onerror = () => {
-    console.error('Google Maps API failed to load.');
-    handleGoogleMapsFailure('Google map failed to load.');
-  };
-  document.head.appendChild(script);
-  googleMapsLoadTimeoutId = setTimeout(() => {
-    if (!googleApiReady) {
-      console.error('Google Maps API load timed out.');
-      handleGoogleMapsFailure('Google map timed out.');
-    }
-  }, 12000);
+  loadGoogleMapsApiScript(activeGoogleMapsKey);
   
   // Load Data
   await loadConservationPermitAreas();
@@ -3633,8 +3625,17 @@ function buildGoogleReferrerHint() {
 
 function isLocalDevHost() {
   if (typeof window === 'undefined') return false;
+  if (window.location?.protocol === 'file:') return true;
   const host = String(window.location?.hostname || '').toLowerCase();
-  return host === 'localhost' || host === '127.0.0.1';
+  return host === 'localhost'
+    || host === '127.0.0.1'
+    || host === '::1'
+    || host === '[::1]'
+    || host.endsWith('.local')
+    || host.endsWith('.lan')
+    || /^10\./.test(host)
+    || /^192\.168\./.test(host)
+    || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
 }
 
 function readLocalDevGoogleKey() {
@@ -3651,43 +3652,131 @@ function isLikelyGoogleApiKey(value) {
   return /^AIza[0-9A-Za-z_-]{35}$/.test(key);
 }
 
-function getGoogleKeySourceLabel() {
-  if (!isLocalDevHost()) return 'production config key';
-  const localKey = readLocalDevGoogleKey();
-  if (!localKey) return 'missing local dev key';
-  return isLikelyGoogleApiKey(localKey) ? 'local dev key' : 'invalid local dev key';
+function getActiveGoogleStorageKey() {
+  return isLocalDevHost() ? LOCAL_DEV_KEY_STORAGE : PROD_KEY_STORAGE;
 }
 
-function promptForLocalDevGoogleKey(failureReason) {
-  if (!isLocalDevHost()) return false;
+function readActiveRuntimeGoogleKey() {
+  if (typeof window === 'undefined') return '';
+  try {
+    return String(window.localStorage?.getItem(getActiveGoogleStorageKey()) || '').trim();
+  } catch {
+    return '';
+  }
+}
+
+function readStoredGoogleKey(storageKey) {
+  if (typeof window === 'undefined') return '';
+  try {
+    return String(window.localStorage?.getItem(storageKey) || '').trim();
+  } catch {
+    return '';
+  }
+}
+
+function readInjectedGoogleKey() {
+  if (typeof window === 'undefined') return '';
+  const runtimeKey = String(window[RUNTIME_GOOGLE_KEY_FIELD] || '').trim();
+  if (runtimeKey) return runtimeKey;
+  return String(window.__UOGA_GOOGLE_MAPS_API_KEY || '').trim();
+}
+
+function resolveGoogleMapsApiKey() {
+  const candidates = [
+    GOOGLE_MAPS_API_KEY,
+    readInjectedGoogleKey(),
+    readActiveRuntimeGoogleKey(),
+    readStoredGoogleKey(LOCAL_DEV_KEY_STORAGE),
+    readStoredGoogleKey(PROD_KEY_STORAGE),
+  ];
+  for (const candidate of candidates) {
+    if (isLikelyGoogleApiKey(candidate)) return String(candidate).trim();
+  }
+  return '';
+}
+
+function getGoogleKeySourceLabel() {
+  const resolvedKey = resolveGoogleMapsApiKey();
+  if (resolvedKey) {
+    const masked = `${resolvedKey.slice(0, 6)}...${resolvedKey.slice(-4)}`;
+    return `${isLocalDevHost() ? 'dev/runtime key' : 'production/runtime key'} (${masked})`;
+  }
+  return isLocalDevHost() ? 'missing local dev key' : 'missing production key';
+}
+
+function promptForGoogleKey(failureReason) {
   if (googleFailurePrompted) return false;
   googleFailurePrompted = true;
 
-  const currentValue = readLocalDevGoogleKey();
+  const storageKey = getActiveGoogleStorageKey();
+  const currentValue = readActiveRuntimeGoogleKey();
+  const keyScopeLabel = isLocalDevHost() ? 'local dev (localhost/LAN)' : 'this site';
   const entered = window.prompt(
-    `${failureReason}\n\nPaste your local Google Maps API key to save for this browser:`,
+    `${failureReason}\n\nPaste your Google Maps API key for ${keyScopeLabel}:`,
     currentValue
   );
   const nextValue = String(entered || '').trim();
-  if (!nextValue) return false;
+  if (!nextValue) {
+    googleFailurePrompted = false;
+    return false;
+  }
   if (!isLikelyGoogleApiKey(nextValue)) {
     updateStatus('Google key format looks invalid. Expected a key that starts with AIza.');
     googleFailurePrompted = false;
     return false;
   }
   try {
-    window.localStorage?.setItem(LOCAL_DEV_KEY_STORAGE, nextValue);
-    window.location.reload();
-    return true;
+    window.localStorage?.setItem(storageKey, nextValue);
   } catch {
-    return false;
+    // Continue with runtime key even when localStorage is blocked.
   }
+  window[RUNTIME_GOOGLE_KEY_FIELD] = nextValue;
+  window.__UOGA_GOOGLE_MAPS_API_KEY = nextValue;
+  googleFailurePrompted = false;
+  return nextValue;
+}
+
+function loadGoogleMapsApiScript(apiKey) {
+  if (!isLikelyGoogleApiKey(apiKey) || googleApiReady || googleApiLoading) return false;
+  const key = String(apiKey).trim();
+  window.__UOGA_GOOGLE_MAPS_API_KEY = key;
+  window[RUNTIME_GOOGLE_KEY_FIELD] = key;
+  const existing = document.getElementById('uoga-google-maps-api');
+  if (existing?.parentNode) {
+    existing.parentNode.removeChild(existing);
+  }
+  const script = document.createElement('script');
+  script.id = 'uoga-google-maps-api';
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&loading=async&callback=initGoogleBaseline`;
+  script.async = true;
+  script.defer = true;
+  googleApiLoading = true;
+  script.onerror = () => {
+    console.error('Google Maps API failed to load.');
+    handleGoogleMapsFailure('Google map failed to load.');
+  };
+  document.head.appendChild(script);
+  if (googleMapsLoadTimeoutId) {
+    clearTimeout(googleMapsLoadTimeoutId);
+  }
+  googleMapsLoadTimeoutId = setTimeout(() => {
+    if (!googleApiReady) {
+      console.error('Google Maps API load timed out.');
+      handleGoogleMapsFailure('Google map timed out.');
+    }
+  }, 12000);
+  return true;
 }
 
 function handleGoogleMapsFailure(failureReason) {
   googleApiLoading = false;
   const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()} Switched to globe view.`;
-  if (promptForLocalDevGoogleKey(failureReason)) return;
+  const promptedKey = promptForGoogleKey(failureReason);
+  if (isLikelyGoogleApiKey(promptedKey)) {
+    updateStatus('Retrying Google map with the provided key...');
+    loadGoogleMapsApiScript(promptedKey);
+    return;
+  }
   fallbackToGlobeMode(fallbackMessage);
 }
 
@@ -3702,7 +3791,13 @@ function installGoogleAuthErrorMonitor() {
       handleGoogleMapsFailure('Google map blocked by referrer restrictions.');
       return;
     }
-    if (msg.includes('InvalidKeyMapError') || msg.includes('InvalidKey')) {
+    if (
+      msg.includes('InvalidKeyMapError')
+      || msg.includes('InvalidKey')
+      || msg.includes('ApiProjectMapError')
+      || msg.includes('NoApiKeys')
+      || msg.includes('BillingNotEnabledMapError')
+    ) {
       handleGoogleMapsFailure('Google map key is invalid.');
     }
   });

@@ -34,15 +34,28 @@ window.UOGA_CONFIG = (() => {
     }
     return readStoredGoogleMapsKey('UOGA_GOOGLE_MAPS_API_KEY_PROD');
   }
+  function isPrivateIpv4Host(host) {
+    return /^10\./.test(host)
+      || /^192\.168\./.test(host)
+      || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
+  }
   const GOOGLE_MAPS_API_KEY_PROD = readProdGoogleMapsKey();
-  function isLocalHost() {
+  function isDevLikeHost() {
     if (typeof window === 'undefined') return false;
+    if (window.location?.protocol === 'file:') return true;
     const host = String(window.location?.hostname || '').toLowerCase();
-    return host === 'localhost' || host === '127.0.0.1';
+    return host === 'localhost'
+      || host === '127.0.0.1'
+      || host === '::1'
+      || host === '[::1]'
+      || host.endsWith('.local')
+      || host.endsWith('.lan')
+      || isPrivateIpv4Host(host);
   }
   const GOOGLE_MAPS_API_KEY = (() => {
-    if (!isLocalHost()) return GOOGLE_MAPS_API_KEY_PROD;
-    return readDevGoogleMapsKey();
+    const devKey = readDevGoogleMapsKey();
+    if (isDevLikeHost()) return devKey || GOOGLE_MAPS_API_KEY_PROD;
+    return GOOGLE_MAPS_API_KEY_PROD || devKey;
   })();
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 
