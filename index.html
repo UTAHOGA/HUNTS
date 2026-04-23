@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
+=======
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
+>>>>>>> 534288330d2b59704b2e34e9d6f275b6ae74b92b
   <title>Utah Hunt Planner</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
   <link rel="stylesheet" href="./style.css?v=20260422-header-pill-sync-4" />
@@ -86,6 +95,7 @@
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
     <div class="ownership-case"></div>
   </div>
+<<<<<<< HEAD
 
   <div class="planner-body">
   <section class="hero" aria-label="Introduction">
@@ -163,6 +173,85 @@
         <div class="map-stage">
           <div id="map" aria-label="Google DWR mirror map"></div>
           <div id="globeMap" aria-label="Cesium globe view"></div>
+=======
+
+  <div class="planner-body">
+  <section class="hero" aria-label="Introduction">
+    <!-- Hero tagline removed per UI simplification request -->
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Build Your Hunt</h2>
+        <div class="panel-body">
+          <div class="field">
+            <label for="searchInput">Search by hunt number</label>
+            <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
+          </div>
+          <div class="field">
+            <label for="speciesFilter">Species</label>
+            <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
+          </div>
+          <div class="field">
+            <label for="sexFilter">Sex</label>
+            <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntTypeFilter">Hunt Type</label>
+            <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntCategoryFilter">Hunt Class</label>
+            <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="weaponFilter">Weapon Type</label>
+            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="unitFilter">DWR Hunt Units</label>
+            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
+          </div>
+          <div class="filter-actions">
+            <button id="applyFiltersBtn" type="button">Apply Filters</button>
+            <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
+          </div>
+          <div id="status" class="status">Loading map...</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Available Hunts</h2>
+        <div class="panel-body">
+          <div id="matchingHunts" class="hunt-list">
+            <div class="empty-note">Use filters or click a unit to load hunts.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Hunt Analysis</h2>
+        <div class="panel-body" id="selectedHuntPanel">
+          <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Saved Hunts</h2>
+        <div class="panel-body">
+          <div id="huntBasket" class="hunt-list">
+            <div class="empty-note">Save hunts to compare them here.</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+      <section class="map-wrap">
+        <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
+          <div id="globeMap" aria-label="Cesium globe view"></div>
+>>>>>>> 534288330d2b59704b2e34e9d6f275b6ae74b92b
           <iframe
             id="dwrMapFrame"
             class="dwr-map-frame"
@@ -172,6 +261,7 @@
             referrerpolicy="no-referrer-when-downgrade"
             hidden
           ></iframe>
+<<<<<<< HEAD
         </div>
 
       <div id="mapChooser" class="map-chooser" aria-hidden="true">
@@ -187,6 +277,23 @@
         </div>
       </div>
 
+=======
+        </div>
+
+      <div id="mapChooser" class="map-chooser" aria-hidden="true">
+        <div class="map-chooser-head">
+          <div>
+            <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
+            <h3 id="mapChooserTitle" class="map-chooser-title">Available Hunts</h3>
+          </div>
+          <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
+        </div>
+        <div id="mapChooserBody" class="map-chooser-body">
+          <div class="map-chooser-empty">Click a boundary to load hunts.</div>
+        </div>
+      </div>
+
+>>>>>>> 534288330d2b59704b2e34e9d6f275b6ae74b92b
       <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
 
       <!-- Collapsible basemap controls (lives on top of the map, not in the right sidebar). -->
@@ -211,6 +318,48 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD
+
+    <aside class="rightbar">
+      <div class="rightbar-header">
+        <h2 class="rightbar-header-title">U.O.G.A.</h2>
+        <p class="rightbar-header-subtitle">Verified Outfitters</p>
+      </div>
+      <section class="panel">
+        <h2>Outfitters</h2>
+        <div class="panel-body">
+          <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
+          <div id="outfitterResults" class="outfitter-list">
+            <div class="empty-note">Select a hunt to load outfitters.</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+  </div>
+
+  <section id="huntDetailsSection" class="hunt-details-section" hidden>
+    <div class="hunt-details-head">
+      <div>
+        <p class="hunt-details-kicker">Official Utah DWR Hunt Details</p>
+        <h2 id="huntDetailsTitle" class="hunt-details-title">Selected Hunt Details</h2>
+        <p id="huntDetailsMeta" class="hunt-details-meta"></p>
+      </div>
+      <button id="closeHuntDetailsBtn" type="button" class="secondary">Close</button>
+    </div>
+    <div class="hunt-details-body">
+      <p class="hunt-details-note">
+        Official details are loaded below so visitors can stay on U.O.G.A. If the DWR page blocks embedding, use
+        <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer">this fallback link</a>.
+      </p>
+      <iframe id="huntDetailsFrame" class="hunt-details-frame" loading="lazy" allow="geolocation" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
+
+  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
+  <script src="./config.js?v=20260404-selection-matrix-fix-1"></script>
+=======
 
     <aside class="rightbar">
       <div class="rightbar-header">
@@ -258,11 +407,16 @@
       document.write(`<script id="uoga-google-maps-api" src="https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}"><\/script>`);
     })();
   </script>
+>>>>>>> 534288330d2b59704b2e34e9d6f275b6ae74b92b
   <script src="./ui.js?v=20260422-backpack-front-1"></script>
   <script src="./header-layout.js?v=20260422-header-layout-1"></script>
   <script src="./ownership-dock.js?v=20260422-ownership-dock-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
+<<<<<<< HEAD
+  <script src="app.js?v=20260423-map-recovery-1"></script>
+=======
   <script src="app.js?v=20260423-no-public-google-key-prompt-1"></script>
+>>>>>>> 534288330d2b59704b2e34e9d6f275b6ae74b92b
   <script src="./google-basemap.js?v=20260422-google-basemap-popup-5"></script>
 </body>
 </html>
