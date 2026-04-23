@@ -15,53 +15,12 @@ window.UOGA_CONFIG = (() => {
     EXTERNAL SERVICES / API KEYS
     ============================================================================
   */
-  function readStoredGoogleMapsKey(storageKey) {
-    if (typeof window === 'undefined') return '';
-    try {
-      const raw = window.localStorage?.getItem(storageKey);
-      return String(raw || '').trim();
-    } catch {
-      return '';
-    }
-  }
-  function readUrlGoogleMapsKey() {
-    if (typeof window === 'undefined') return '';
-    const names = ['google_maps_key', 'google_maps_api_key', 'gmaps_key', 'googleKey'];
-    try {
-      const search = new URLSearchParams(window.location?.search || '');
-      for (const name of names) {
-        const value = String(search.get(name) || '').trim();
-        if (value) return value;
-      }
-      const hashText = String(window.location?.hash || '').replace(/^#/, '');
-      const hashParams = new URLSearchParams(hashText.includes('?') ? hashText.split('?').pop() : hashText);
-      for (const name of names) {
-        const value = String(hashParams.get(name) || '').trim();
-        if (value) return value;
-      }
-    } catch {
-      return '';
-    }
-    return '';
-  }
-  function readDevGoogleMapsKey() {
-    return readStoredGoogleMapsKey('UOGA_GOOGLE_MAPS_API_KEY_DEV');
-  }
-  function readProdGoogleMapsKey() {
-    if (typeof window !== 'undefined') {
-      const injected = String(window.__UOGA_GOOGLE_MAPS_API_KEY || '').trim();
-      if (injected) return injected;
-    }
-    const urlKey = readUrlGoogleMapsKey();
-    if (urlKey) return urlKey;
-    return readStoredGoogleMapsKey('UOGA_GOOGLE_MAPS_API_KEY_PROD');
-  }
+  const GOOGLE_MAPS_API_KEY = '';
   function isPrivateIpv4Host(host) {
     return /^10\./.test(host)
       || /^192\.168\./.test(host)
       || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
   }
-  const GOOGLE_MAPS_API_KEY_PROD = readProdGoogleMapsKey();
   function isDevLikeHost() {
     if (typeof window === 'undefined') return false;
     if (window.location?.protocol === 'file:') return true;
@@ -74,11 +33,6 @@ window.UOGA_CONFIG = (() => {
       || host.endsWith('.lan')
       || isPrivateIpv4Host(host);
   }
-  const GOOGLE_MAPS_API_KEY = (() => {
-    const devKey = readDevGoogleMapsKey();
-    if (isDevLikeHost()) return devKey || GOOGLE_MAPS_API_KEY_PROD;
-    return GOOGLE_MAPS_API_KEY_PROD || devKey;
-  })();
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 
   /*

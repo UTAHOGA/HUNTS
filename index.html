@@ -250,19 +250,12 @@
 
   <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
   <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
-  <script src="./config.js?v=20260423-wix-google-key-1"></script>
-  <script>
-    (() => {
-      const key = String(window.UOGA_CONFIG?.GOOGLE_MAPS_API_KEY || '').trim();
-      if (!key || window.google?.maps?.Map) return;
-      document.write(`<script id="uoga-google-maps-api" src="https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}"><\/script>`);
-    })();
-  </script>
+  <script src="./config.js?v=20260423-google-key-reset-1"></script>
   <script src="./ui.js?v=20260422-backpack-front-1"></script>
   <script src="./header-layout.js?v=20260422-header-layout-1"></script>
   <script src="./ownership-dock.js?v=20260422-ownership-dock-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260423-no-public-google-key-prompt-1"></script>
+  <script src="app.js?v=20260423-google-key-reset-1"></script>
   <script src="./google-basemap.js?v=20260422-google-basemap-popup-5"></script>
 </body>
 </html>

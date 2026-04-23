@@ -65,7 +65,6 @@ const {
 let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
-let googleFailurePrompted = false;
 let googleMapFailureMessage = '';
 let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
@@ -80,9 +79,6 @@ const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
-const LOCAL_DEV_KEY_STORAGE = 'UOGA_GOOGLE_MAPS_API_KEY_DEV';
-const PROD_KEY_STORAGE = 'UOGA_GOOGLE_MAPS_API_KEY_PROD';
-const RUNTIME_GOOGLE_KEY_FIELD = '__UOGA_GOOGLE_MAPS_API_KEY_RUNTIME';
 // Temporary debug guard: keep Google map as the active mode while we validate key/referrer setup.
 const FORCE_GOOGLE_ONLY_DEBUG = false;
 
@@ -3574,14 +3570,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initDwrFrameEvents();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
-  // Require a valid key for the current origin before loading Maps script.
-  let activeGoogleMapsKey = resolveGoogleMapsApiKey();
-  if (!isLikelyGoogleApiKey(activeGoogleMapsKey) && isLocalDevHost()) {
-    const prompted = promptForGoogleKey('Google map key is missing or invalid for this origin.');
-    if (isLikelyGoogleApiKey(prompted)) {
-      activeGoogleMapsKey = prompted;
-    }
-  }
+  const activeGoogleMapsKey = resolveGoogleMapsApiKey();
   if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
     updateStatus('Google map disabled: missing valid key. Using globe view.');
     fallbackToGlobeMode('Google map disabled until a valid key is provided.');
@@ -3647,61 +3636,13 @@ function isLocalDevHost() {
     || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
 }
 
-function readLocalDevGoogleKey() {
-  if (typeof window === 'undefined') return '';
-  try {
-    return String(window.localStorage?.getItem(LOCAL_DEV_KEY_STORAGE) || '').trim();
-  } catch {
-    return '';
-  }
-}
-
 function isLikelyGoogleApiKey(value) {
   const key = String(value || '').trim();
   return /^AIza[0-9A-Za-z_-]{35}$/.test(key);
 }
 
-function getActiveGoogleStorageKey() {
-  return isLocalDevHost() ? LOCAL_DEV_KEY_STORAGE : PROD_KEY_STORAGE;
-}
-
-function readActiveRuntimeGoogleKey() {
-  if (typeof window === 'undefined') return '';
-  try {
-    return String(window.localStorage?.getItem(getActiveGoogleStorageKey()) || '').trim();
-  } catch {
-    return '';
-  }
-}
-
-function readStoredGoogleKey(storageKey) {
-  if (typeof window === 'undefined') return '';
-  try {
-    return String(window.localStorage?.getItem(storageKey) || '').trim();
-  } catch {
-    return '';
-  }
-}
-
-function readInjectedGoogleKey() {
-  if (typeof window === 'undefined') return '';
-  const runtimeKey = String(window[RUNTIME_GOOGLE_KEY_FIELD] || '').trim();
-  if (runtimeKey) return runtimeKey;
-  return String(window.__UOGA_GOOGLE_MAPS_API_KEY || '').trim();
-}
-
 function resolveGoogleMapsApiKey() {
-  const candidates = [
-    GOOGLE_MAPS_API_KEY,
-    readInjectedGoogleKey(),
-    readActiveRuntimeGoogleKey(),
-    readStoredGoogleKey(LOCAL_DEV_KEY_STORAGE),
-    readStoredGoogleKey(PROD_KEY_STORAGE),
-  ];
-  for (const candidate of candidates) {
-    if (isLikelyGoogleApiKey(candidate)) return String(candidate).trim();
-  }
-  return '';
+  return isLikelyGoogleApiKey(GOOGLE_MAPS_API_KEY) ? String(GOOGLE_MAPS_API_KEY).trim() : '';
 }
 
 function getGoogleKeySourceLabel() {
@@ -3713,44 +3654,9 @@ function getGoogleKeySourceLabel() {
   return isLocalDevHost() ? 'missing local dev key' : 'missing production key';
 }
 
-function promptForGoogleKey(failureReason) {
-  if (!isLocalDevHost()) return false;
-  if (googleFailurePrompted) return false;
-  googleFailurePrompted = true;
-
-  const storageKey = getActiveGoogleStorageKey();
-  const currentValue = readActiveRuntimeGoogleKey();
-  const keyScopeLabel = isLocalDevHost() ? 'local dev (localhost/LAN)' : 'this site';
-  const entered = window.prompt(
-    `${failureReason}\n\nPaste your Google Maps API key for ${keyScopeLabel}:`,
-    currentValue
-  );
-  const nextValue = String(entered || '').trim();
-  if (!nextValue) {
-    googleFailurePrompted = false;
-    return false;
-  }
-  if (!isLikelyGoogleApiKey(nextValue)) {
-    updateStatus('Google key format looks invalid. Expected a key that starts with AIza.');
-    googleFailurePrompted = false;
-    return false;
-  }
-  try {
-    window.localStorage?.setItem(storageKey, nextValue);
-  } catch {
-    // Continue with runtime key even when localStorage is blocked.
-  }
-  window[RUNTIME_GOOGLE_KEY_FIELD] = nextValue;
-  window.__UOGA_GOOGLE_MAPS_API_KEY = nextValue;
-  googleFailurePrompted = false;
-  return nextValue;
-}
-
 function loadGoogleMapsApiScript(apiKey) {
   if (!isLikelyGoogleApiKey(apiKey) || googleApiReady || googleApiLoading) return false;
   const key = String(apiKey).trim();
-  window.__UOGA_GOOGLE_MAPS_API_KEY = key;
-  window[RUNTIME_GOOGLE_KEY_FIELD] = key;
   if (window.google?.maps?.Map) {
     window.setTimeout(initGoogleBaseline, 0);
     return true;
@@ -3785,14 +3691,6 @@ function loadGoogleMapsApiScript(apiKey) {
 function handleGoogleMapsFailure(failureReason) {
   googleApiLoading = false;
   const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()} Switched to globe view.`;
-  if (isLocalDevHost()) {
-    const promptedKey = promptForGoogleKey(failureReason);
-    if (isLikelyGoogleApiKey(promptedKey)) {
-      updateStatus('Retrying Google map with the provided key...');
-      loadGoogleMapsApiScript(promptedKey);
-      return;
-    }
-  }
   fallbackToGlobeMode(fallbackMessage);
 }
 
