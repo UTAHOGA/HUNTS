@@ -261,6 +261,16 @@ window.UOGA_UI = (() => {
   function positionBackpackTray() {
     if (!trayButton || !trayPanel) return;
     const rect = trayButton.getBoundingClientRect();
+    if (window.innerWidth <= 900) {
+      trayPanel.style.top = 'auto';
+      trayPanel.style.left = '14px';
+      trayPanel.style.right = '14px';
+      trayPanel.style.bottom = '14px';
+      trayPanel.style.width = 'auto';
+      trayPanel.style.maxHeight = 'min(78vh, 760px)';
+      trayPanel.style.setProperty('--uoga-backpack-notch-left', 'auto');
+      return;
+    }
     const panelWidth = Math.min(430, Math.max(320, window.innerWidth - 28));
     const centerX = rect.left + (rect.width / 2);
     // Center panel under the button, then clamp to viewport padding.
@@ -268,6 +278,7 @@ window.UOGA_UI = (() => {
     trayPanel.style.top = `${rect.bottom + 12}px`;
     trayPanel.style.left = `${left}px`;
     trayPanel.style.right = 'auto';
+    trayPanel.style.bottom = 'auto';
     trayPanel.style.width = `min(430px, calc(100vw - 28px))`;
     trayPanel.style.maxHeight = `min(72vh, 760px)`;
     // Notch (the small cap above the panel) should align under the toggle.
@@ -644,13 +655,46 @@ window.UOGA_UI = (() => {
           justify-content: space-between;
         }
         .uoga-backpack-panel {
+          top: auto;
           left: 14px;
-          width: min(100%, calc(100vw - 28px));
+          right: 14px;
+          bottom: 14px;
+          width: auto;
+          max-height: min(78vh, 760px);
+          padding: 10px;
+          border-radius: 24px 24px 20px 20px;
+          transform-origin: bottom center;
         }
         .uoga-backpack-panel::before {
-          left: auto;
-          right: 36px;
-          width: 120px;
+          display: none;
+        }
+        .uoga-backpack-sections {
+          gap: 12px;
+        }
+        .uoga-backpack-hero {
+          padding: 12px;
+          border-radius: 18px;
+        }
+        .uoga-backpack-hero-badge,
+        .uoga-backpack-hero-image {
+          min-height: 98px;
+          height: 98px;
+        }
+        .uoga-backpack-hero-badge-title {
+          font-size: 24px;
+        }
+        .uoga-backpack-item,
+        .uoga-backpack-empty {
+          padding: 10px;
+          border-radius: 16px;
+        }
+        .uoga-backpack-actions {
+          gap: 6px;
+        }
+        .uoga-backpack-actions a,
+        .uoga-backpack-actions button,
+        .uoga-backpack-ghost {
+          flex: 1 1 120px;
         }
       }
     `;
