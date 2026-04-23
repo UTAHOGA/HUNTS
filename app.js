@@ -2997,17 +2997,26 @@ function styleBoundaryLayer() {
     const filtered = getDisplayHunts();
     const matcher = buildBoundaryMatcher(filtered);
     const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
+    let visibleMatches = 0;
+    huntUnitsLayer.forEach(f => {
+        const id = safe(f.getProperty('BoundaryID'));
+        const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+        if (showAllUnits || matcher.matches(id, name)) visibleMatches += 1;
+    });
+    const showFilteredMatches = showBoundaries && (showAllUnits || visibleMatches > 0);
     huntUnitsLayer.setStyle(f => {
         const id = safe(f.getProperty('BoundaryID'));
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
         const isMatch = showAllUnits || matcher.matches(id, name);
         const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
+        const visible = showFilteredMatches ? isMatch : showBoundaries;
+        const emphasized = showFilteredMatches && isMatch;
         return {
-          visible: showBoundaries && isMatch,
+          visible,
           strokeColor: isSelected ? '#c84f00' : '#3653b3',
-          strokeWeight: isSelected ? 4 : 1.5,
+          strokeWeight: isSelected ? 4 : emphasized ? 1.8 : 1,
           fillColor: isSelected ? '#ff8a3d' : '#3653b3',
-          fillOpacity: showBoundaries && isMatch ? (isSelected ? 0.22 : 0.08) : 0
+          fillOpacity: visible ? (isSelected ? 0.22 : emphasized ? 0.08 : 0.02) : 0
         };
     });
 }
