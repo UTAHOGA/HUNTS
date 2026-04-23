@@ -30,7 +30,7 @@
         <select id="mapTypeSelect">
           <option value="dwr">DWR Map</option>
           <option value="google" selected>Google Map</option>
-          <option value="globe">ESRI Globe</option>
+          <option value="earth">Google Earth</option>
         </select>
       </div>
     </div>
@@ -162,7 +162,15 @@
       <section class="map-wrap">
         <div class="map-stage">
           <div id="map" aria-label="Google DWR mirror map"></div>
-          <div id="globeMap" aria-label="Cesium globe view"></div>
+          <iframe
+            id="googleEarthFrame"
+            class="google-earth-frame"
+            title="Google Earth"
+            loading="lazy"
+            allow="geolocation; fullscreen"
+            referrerpolicy="no-referrer-when-downgrade"
+            hidden
+          ></iframe>
           <iframe
             id="dwrMapFrame"
             class="dwr-map-frame"
@@ -195,13 +203,6 @@
           Basemap
         </button>
         <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
-          <div id="globeBasemapGrid" class="globe-basemap-grid" aria-label="Globe basemap">
-            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriImagery">Esri Imagery</button>
-            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsImagery">USGS Imagery</button>
-            <button type="button" class="globe-basemap-btn" data-globe-basemap="esriTopo">Esri Topo</button>
-            <button type="button" class="globe-basemap-btn" data-globe-basemap="usgsTopo">USGS Topo</button>
-          </div>
-          <div class="globe-basemap-divider" aria-hidden="true"></div>
           <div id="googleBasemapGrid" class="globe-basemap-grid" aria-label="Google basemap">
             <button type="button" class="globe-basemap-btn" data-google-basemap="roadmap">Road</button>
             <button type="button" class="globe-basemap-btn" data-google-basemap="terrain">Terrain</button>
@@ -248,14 +249,12 @@
     </div>
   </section>
 
-  <link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Widgets/widgets.css">
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.135/Build/Cesium/Cesium.js"></script>
-  <script src="./config.js?v=20260423-google-key-reset-1"></script>
+  <script src="./config.js?v=20260423-google-earth-1"></script>
   <script src="./ui.js?v=20260422-backpack-front-1"></script>
   <script src="./header-layout.js?v=20260422-header-layout-1"></script>
   <script src="./ownership-dock.js?v=20260422-ownership-dock-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260423-google-key-reset-1"></script>
-  <script src="./google-basemap.js?v=20260422-google-basemap-popup-5"></script>
+  <script src="app.js?v=20260423-google-earth-1"></script>
+  <script src="./google-basemap.js?v=20260423-google-earth-1"></script>
 </body>
 </html>

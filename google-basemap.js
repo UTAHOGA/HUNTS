@@ -36,13 +36,8 @@
     return (sel && sel.value === 'google') || false;
   }
 
-  function isGlobeMode() {
-    const sel = getMapTypeSelect();
-    return (sel && sel.value === 'globe') || false;
-  }
-
   function shouldShowPopover() {
-    return isGoogleMode() || isGlobeMode();
+    return isGoogleMode();
   }
 
   function applyToGoogleMap() {
@@ -93,14 +88,11 @@
 
     const panel = getPanel();
     if (panel) {
-      panel.dataset.mapMode = isGoogleMode() ? 'google' : isGlobeMode() ? 'globe' : 'dwr';
+      panel.dataset.mapMode = isGoogleMode() ? 'google' : 'external';
     }
 
-    // Reduce confusion: dim the irrelevant grid.
     const googleGrid = document.getElementById('googleBasemapGrid');
-    const globeGrid = document.getElementById('globeBasemapGrid');
-    if (googleGrid) googleGrid.style.opacity = isGlobeMode() ? '0.45' : '1';
-    if (globeGrid) globeGrid.style.opacity = isGoogleMode() ? '0.45' : '1';
+    if (googleGrid) googleGrid.style.opacity = '1';
   }
 
   function onToggleClick(e) {
@@ -134,13 +126,6 @@
       return;
     }
 
-    const globeBtn = e.target && e.target.closest ? e.target.closest('[data-globe-basemap]') : null;
-    if (globeBtn) {
-      // app.js owns applying globe basemap; we just auto-collapse for cleanliness.
-      if (CROP_BASEMAP_PANEL_ON_SELECT) {
-        window.setTimeout(closePanel, 0);
-      }
-    }
   }
 
   function onMapTypeChange(e) {
@@ -197,4 +182,3 @@
     init();
   }
 })();
-

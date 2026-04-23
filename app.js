@@ -62,7 +62,7 @@ const {
   loadFirstNormalizedList
 } = window.UOGA_DATA;
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleMapFailureMessage = '';
@@ -90,8 +90,6 @@ const searchInput = document.getElementById('searchInput'),
   huntCategoryFilter = document.getElementById('huntCategoryFilter'),
   unitFilter = document.getElementById('unitFilter'),
   mapTypeSelect = document.getElementById('mapTypeSelect'),
-  globeBasemapSelect = document.getElementById('globeBasemapSelect'),
-  globeBasemapGrid = document.getElementById('globeBasemapGrid'),
   streetViewBtn = document.getElementById('streetViewBtn'),
   resetViewBtn = document.getElementById('resetViewBtn'),
   applyFiltersBtn = document.getElementById('applyFiltersBtn'),
@@ -114,6 +112,7 @@ const searchInput = document.getElementById('searchInput'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
   mapChooserBody = document.getElementById('mapChooserBody'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat'),
+  googleEarthFrame = document.getElementById('googleEarthFrame'),
   dwrMapFrame = document.getElementById('dwrMapFrame'),
   plannerDnrLogoLink = document.getElementById('plannerDnrLogoLink'),
   instructionsTab = document.getElementById('instructionsTab'),
@@ -1227,8 +1226,11 @@ function closeSelectedHuntFloat(zoomToUnit = false) {
   selectedHuntFloat.classList.remove('is-open');
   selectedHuntFloat.setAttribute('aria-hidden', 'true');
   selectedHuntFloat.innerHTML = '';
-  if (zoomToUnit && selectedHunt && safe(mapTypeSelect?.value).toLowerCase() !== 'globe') {
+  if (zoomToUnit && selectedHunt && safe(mapTypeSelect?.value).toLowerCase() === 'google') {
     zoomToSelectedBoundary();
+  }
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
+    updateGoogleEarthFrame(selectedHunt);
   }
 }
 function getSelectedUnitGroups() {
@@ -1402,241 +1404,6 @@ function closeInlineHuntDetails() {
   frame.src = 'about:blank';
 }
 
-function createGlobeImageryProvider(key) {
-  if (typeof Cesium === 'undefined') return null;
-  const providers = {
-    osm: () => new Cesium.OpenStreetMapImageryProvider({ url: 'https://tile.openstreetmap.org/' }),
-    osmHot: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-      subdomains: ['a', 'b', 'c']
-    }),
-    openTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
-      credit: 'OpenTopoMap'
-    }),
-    cartoLight: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      subdomains: ['a', 'b', 'c', 'd']
-    }),
-    cartoDark: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      subdomains: ['a', 'b', 'c', 'd']
-    }),
-    esriImagery: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriStreet: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    esriNatGeo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'
-    }),
-    usgsImagery: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}'
-    }),
-    usgsTopo: () => new Cesium.UrlTemplateImageryProvider({
-      url: 'https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}'
-    })
-  };
-  return providers[key]?.() || providers.osm();
-}
-
-function getGlobeBasemapLabel(key) {
-  const labels = {
-    osm: 'OpenStreetMap',
-    osmHot: 'OSM Humanitarian',
-    openTopo: 'OpenTopoMap',
-    cartoLight: 'Carto Light',
-    cartoDark: 'Carto Dark',
-    esriImagery: 'Esri World Imagery',
-    esriTopo: 'Esri World Topo',
-    esriStreet: 'Esri World Street',
-    esriNatGeo: 'Esri NatGeo',
-    usgsImagery: 'USGS Imagery',
-    usgsTopo: 'USGS Topo'
-  };
-  return labels[key] || key;
-}
-
-function syncGlobeBasemapButtons() {
-  if (!globeBasemapGrid) return;
-  globeBasemapGrid.querySelectorAll('[data-globe-basemap]').forEach(btn => {
-    const isActive = btn.getAttribute('data-globe-basemap') === currentGlobeBasemap;
-    btn.classList.toggle('is-active', isActive);
-    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-  });
-}
-
-function applyGlobeBasemap(key = currentGlobeBasemap) {
-  if (!cesiumViewer || typeof Cesium === 'undefined') return;
-  const imageryProvider = createGlobeImageryProvider(key);
-  if (!imageryProvider) return;
-  currentGlobeBasemap = key;
-  cesiumViewer.imageryLayers.removeAll();
-  cesiumViewer.imageryLayers.addImageryProvider(imageryProvider);
-  cesiumViewer.scene.requestRender();
-  if (globeBasemapSelect) {
-    globeBasemapSelect.value = currentGlobeBasemap;
-  }
-  syncGlobeBasemapButtons();
-  const container = document.getElementById('globeMap');
-  if (container) {
-    container.style.background = currentGlobeBasemap === 'cartoDark' ? '#10141d' : '#d7e7f5';
-  }
-}
-
-async function ensureCesiumHuntBoundaries() {
-  if (!cesiumViewer || typeof Cesium === 'undefined' || !huntBoundaryGeoJson) return;
-  if (cesiumHuntDataSource) return cesiumHuntDataSource;
-  cesiumHuntDataSource = await Cesium.GeoJsonDataSource.load(huntBoundaryGeoJson, {
-    clampToGround: true
-  });
-  cesiumViewer.dataSources.add(cesiumHuntDataSource);
-  if (cesiumHuntDataSource?.entities?.values) {
-    cesiumHuntDataSource.entities.values.forEach(entity => {
-      if (entity.polygon) {
-        entity.polygon.fill = true;
-        entity.polygon.outline = false;
-        entity.polygon.material = Cesium.Color.fromCssColorString('#3653b3').withAlpha(0.18);
-      }
-      if (entity.polyline) {
-        entity.polyline.show = false;
-      }
-      entity.show = false;
-    });
-  }
-  updateCesiumBoundaryStyles();
-  return cesiumHuntDataSource;
-}
-
-async function ensureCesiumUtahOutline() {
-  if (!cesiumViewer || typeof Cesium === 'undefined') return null;
-  if (cesiumUtahOutlineDataSource) return cesiumUtahOutlineDataSource;
-  const geojson = await fetchGeoJson(UTAH_OUTLINE_QUERY_URL);
-  cesiumUtahOutlineDataSource = await Cesium.GeoJsonDataSource.load(geojson, {
-    clampToGround: true,
-    stroke: Cesium.Color.fromCssColorString('#c84f00'),
-    strokeWidth: 8,
-    fill: Cesium.Color.fromCssColorString('#c84f00').withAlpha(0.0)
-  });
-  cesiumViewer.dataSources.add(cesiumUtahOutlineDataSource);
-  if (cesiumUtahOutlineDataSource?.entities?.values) {
-    cesiumUtahOutlineDataSource.entities.values.forEach(entity => {
-      entity.show = true;
-      if (entity.polygon) {
-        entity.polygon.fill = false;
-        entity.polygon.outline = true;
-        entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#c84f00');
-        entity.polygon.outlineWidth = 8;
-      }
-      if (entity.polyline) {
-        entity.polyline.show = true;
-        entity.polyline.width = 8;
-        entity.polyline.material = new Cesium.PolylineOutlineMaterialProperty({
-          color: Cesium.Color.fromCssColorString('#c84f00'),
-          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
-          outlineWidth: 2
-        });
-        entity.polyline.clampToGround = true;
-      }
-    });
-  }
-  cesiumViewer?.scene?.requestRender?.();
-  return cesiumUtahOutlineDataSource;
-}
-
-function getCesiumEntityOutlinePositions(entity) {
-  if (!entity?.polygon?.hierarchy || typeof Cesium === 'undefined') return null;
-  try {
-    const hierarchyValue = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now());
-    const positions = hierarchyValue?.positions;
-    if (!Array.isArray(positions) || positions.length < 2) return null;
-    const closed = positions.slice();
-    const first = closed[0];
-    const last = closed[closed.length - 1];
-    if (!Cesium.Cartesian3.equals(first, last)) closed.push(first);
-    return closed;
-  } catch (error) {
-    console.error('Cesium outline extraction failed', error);
-    return null;
-  }
-}
-
-function getCesiumEntityMatches(entity) {
-  const properties = entity?.properties;
-  const boundaryId = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
-  const boundaryName = normalizeBoundaryKey(
-    properties?.Boundary_Name?.getValue?.()
-    ?? properties?.BOUNDARY_NAME?.getValue?.()
-    ?? properties?.BoundaryName?.getValue?.()
-  );
-  const displaySource = getDisplayHunts();
-  const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
-  return source.filter(h => {
-    const hBoundaryId = safe(getBoundaryId(h));
-    const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
-    const hUnitName = normalizeBoundaryKey(getUnitName(h));
-    return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
-  });
-}
-
-function focusCesiumBoundaryEntity(entity) {
-  if (!cesiumViewer || !entity || typeof Cesium === 'undefined') return;
-  cesiumViewer.flyTo(entity, {
-    offset: new Cesium.HeadingPitchRange(0, -0.8, 180000)
-  }).catch?.(() => {});
-}
-
-function updateCesiumBoundaryStyles() {
-  if (!cesiumHuntDataSource?.entities?.values || typeof Cesium === 'undefined') return;
-  const showBoundaries = shouldShowHuntBoundaries();
-  const showAllUnits = shouldShowAllHuntUnits();
-  const filtered = getDisplayHunts();
-  const matcher = buildBoundaryMatcher(filtered);
-  const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
-  cesiumHuntDataSource.entities.values.forEach(entity => {
-    const properties = entity.properties;
-    const id = safe(properties?.BoundaryID?.getValue?.() ?? properties?.BOUNDARYID?.getValue?.());
-    const name = normalizeBoundaryKey(
-      properties?.Boundary_Name?.getValue?.()
-      ?? properties?.BOUNDARY_NAME?.getValue?.()
-      ?? properties?.BoundaryName?.getValue?.()
-    );
-    const isMatch = showAllUnits || matcher.matches(id, name);
-    const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
-    const visible = showBoundaries && isMatch;
-    entity.show = visible;
-    const fillColor = Cesium.Color.fromCssColorString(isSelected ? '#ff8a3d' : '#3653b3').withAlpha(isSelected ? 0.0 : 0.32);
-    if (entity.polygon) {
-      entity.polygon.material = fillColor;
-      entity.polygon.outline = false;
-    }
-    const outlinePositions = isSelected ? getCesiumEntityOutlinePositions(entity) : null;
-    if (outlinePositions?.length >= 2) {
-      entity.polyline = new Cesium.PolylineGraphics({
-        positions: outlinePositions,
-        width: 9,
-        material: new Cesium.PolylineOutlineMaterialProperty({
-          color: Cesium.Color.fromCssColorString('#c84f00'),
-          outlineColor: Cesium.Color.fromCssColorString('#6e2a00'),
-          outlineWidth: 2
-        }),
-        clampToGround: true
-      });
-    } else if (entity.polyline) {
-      entity.polyline = isSelected
-        ? entity.polyline
-        : undefined;
-    }
-    if (entity.polyline) {
-      entity.polyline.show = visible && isSelected;
-    }
-  });
-  cesiumViewer?.scene?.requestRender?.();
-}
 function buildDnrPlate(hunt, compact = false, roomy = false) {
   const plateUrl = assetUrl(roomy ? LOGO_DNR_ROOMY : LOGO_DNR);
   const code = escapeHtml(getHuntCode(hunt) || '');
@@ -2273,7 +2040,7 @@ async function focusOutfitter(outfitter) {
     return;
   }
   noteOutfitterInteraction();
-  if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
     mapTypeSelect.value = 'google';
     applyMapMode();
   }
@@ -2288,7 +2055,7 @@ async function focusOutfitter(outfitter) {
 async function updateOutfitterMarkers(matches) {
   clearOutfitterMarkers();
   const runId = outfitterMarkerRunId;
-  if (!googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() === 'globe') return;
+  if (!googleBaselineMap || safe(mapTypeSelect?.value).toLowerCase() !== 'google') return;
   const unique = [];
   const seen = new Set();
   for (const outfitter of matches) {
@@ -2903,79 +2670,6 @@ async function ensureUtahOutlineLayer() {
   return utahOutlineLayer;
 }
 
-function ensureCesiumViewer() {
-  if (cesiumViewer || typeof Cesium === 'undefined') return;
-  const container = document.getElementById('globeMap');
-  if (!container) return;
-  // Do not depend on Cesium ion defaults (can 401 when token is missing/expired).
-  // Explicitly disable Ion terrain and imagery.
-  if (Cesium?.Ion) {
-    Cesium.Ion.defaultAccessToken = '';
-  }
-  cesiumViewer = new Cesium.Viewer(container, {
-    animation: false,
-    timeline: false,
-    geocoder: false,
-    homeButton: false,
-    sceneModePicker: false,
-    baseLayerPicker: false,
-    navigationHelpButton: false,
-    fullscreenButton: false,
-    selectionIndicator: false,
-    infoBox: false,
-    baseLayer: false,
-    imageryProvider: false,
-    terrainProvider: new Cesium.EllipsoidTerrainProvider()
-  });
-  applyGlobeBasemap(currentGlobeBasemap);
-  cesiumViewer.scene.globe.enableLighting = false;
-  cesiumViewer.scene.globe.showGroundAtmosphere = false;
-  cesiumViewer.scene.globe.depthTestAgainstTerrain = false;
-  cesiumViewer.scene.globe.baseColor = Cesium.Color.fromCssColorString('#d7e7f5');
-  if (cesiumViewer.scene.skyBox) cesiumViewer.scene.skyBox.show = false;
-  if (cesiumViewer.scene.skyAtmosphere) cesiumViewer.scene.skyAtmosphere.show = false;
-  if (cesiumViewer.scene.sun) cesiumViewer.scene.sun.show = false;
-  if (cesiumViewer.scene.moon) cesiumViewer.scene.moon.show = false;
-  cesiumViewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#d7e7f5');
-  cesiumViewer.scene.requestRenderMode = false;
-  cesiumViewer.scene.screenSpaceCameraController.enableCollisionDetection = true;
-  // Page-first scrolling: keep the mouse wheel available to scroll the page rather than zooming the globe.
-  // Zoom is still available via right-drag (desktop) and pinch (touch/trackpad).
-  try {
-    const ssc = cesiumViewer.scene.screenSpaceCameraController;
-    if (ssc && Cesium?.CameraEventType) {
-      // Keep WHEEL enabled so Ctrl+wheel can zoom; our wheel handler prevents zoom when Ctrl is not held.
-      ssc.zoomEventTypes = [Cesium.CameraEventType.WHEEL, Cesium.CameraEventType.RIGHT_DRAG, Cesium.CameraEventType.PINCH];
-    }
-  } catch (err) {
-    console.warn('Could not update Cesium zoom event types', err);
-  }
-  container.style.background = '#d7e7f5';
-  installPageScrollOnMap('globeMap');
-  if (huntBoundaryGeoJson) {
-    ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
-  }
-  ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
-  const handler = new Cesium.ScreenSpaceEventHandler(cesiumViewer.scene.canvas);
-  handler.setInputAction((movement) => {
-    const picked = cesiumViewer.scene.pick(movement.position);
-    const entity = picked?.id;
-    if (!entity?.properties) return;
-    const matches = getCesiumEntityMatches(entity);
-    focusCesiumBoundaryEntity(entity);
-    const boundaryName = firstNonEmpty(
-      entity.properties?.Boundary_Name?.getValue?.(),
-      entity.properties?.BOUNDARY_NAME?.getValue?.(),
-      'Selected Unit'
-    );
-    if (matches.length) {
-      updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
-    } else {
-      updateStatus(`Zoomed to ${boundaryName}.`);
-    }
-  }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-}
-
 function getDwrBoundaryUrl(hunt = selectedHunt) {
   const huntCode = safe(hunt ? getHuntCode(hunt) : '').trim().toUpperCase();
   if (huntCode) {
@@ -3026,46 +2720,59 @@ function initDwrFrameEvents() {
   });
 }
 
-function fallbackToGlobeMode(reason = 'Google map unavailable.') {
+function getGoogleEarthUrl(hunt = selectedHunt) {
+  const center = getSelectedHuntCenter();
+  if (center) {
+    return `https://earth.google.com/web/@${center.lat()},${center.lng()},240000a,0d,35y,0h,0t,0r`;
+  }
+  return 'https://earth.google.com/web/';
+}
+
+function updateGoogleEarthFrame(hunt = selectedHunt) {
+  if (!googleEarthFrame) return;
+  const src = getGoogleEarthUrl(hunt);
+  if (googleEarthFrame.getAttribute('src') !== src) {
+    googleEarthFrame.setAttribute('src', src);
+  }
+}
+
+function initGoogleEarthFrameEvents() {
+  if (!googleEarthFrame || googleEarthFrame.__uogaEventsBound) return;
+  googleEarthFrame.__uogaEventsBound = true;
+  googleEarthFrame.addEventListener('load', () => {
+    if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
+      updateStatus('Google Earth iframe active.');
+    }
+  });
+  googleEarthFrame.addEventListener('error', () => {
+    updateStatus('Google Earth iframe failed to load. Return to Google Map for hunt boundaries.');
+  });
+}
+
+function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   googleMapFailureMessage = reason;
   if (typeof window !== 'undefined') {
     window.__UOGA_GOOGLE_MAP_STATUS = reason;
   }
-  if (FORCE_GOOGLE_ONLY_DEBUG) {
-    mapWrap.classList.remove('is-dwr-mode');
-    mapWrap.classList.remove('is-globe-mode');
-    if (dwrMapFrame) {
-      dwrMapFrame.hidden = true;
-    }
-    if (mapTypeSelect) {
-      mapTypeSelect.value = 'google';
-    }
-    updateStatus(`${reason} (Google-only debug mode enabled.)`);
-    return;
-  }
-  if (mapTypeSelect) {
-    mapTypeSelect.value = 'globe';
-  }
   mapWrap.classList.remove('is-dwr-mode');
+  mapWrap.classList.remove('is-earth-mode');
   if (dwrMapFrame) {
     dwrMapFrame.hidden = true;
   }
-  ensureCesiumViewer();
-  mapWrap.classList.add('is-globe-mode');
-  setTimeout(() => {
-    if (cesiumViewer) {
-      cesiumViewer.resize();
-      cesiumViewer.scene.requestRender();
-    }
-  }, 0);
+  if (googleEarthFrame) {
+    googleEarthFrame.hidden = true;
+  }
+  if (mapTypeSelect) {
+    mapTypeSelect.value = 'google';
+  }
   updateStatus(reason);
 }
 
 function applyMapMode() {
   let value = safe(mapTypeSelect?.value || 'google').toLowerCase();
-  if (FORCE_GOOGLE_ONLY_DEBUG && value === 'globe') {
+  if (FORCE_GOOGLE_ONLY_DEBUG && value === 'earth') {
     value = 'google';
     if (mapTypeSelect) {
       mapTypeSelect.value = 'google';
@@ -3076,8 +2783,12 @@ function applyMapMode() {
   const basemapControl = document.getElementById('globeBasemapControl');
 
   mapWrap.classList.remove('is-dwr-mode');
+  mapWrap.classList.remove('is-earth-mode');
   if (dwrMapFrame) {
     dwrMapFrame.hidden = true;
+  }
+  if (googleEarthFrame) {
+    googleEarthFrame.hidden = true;
   }
 
   if (value === 'dwr') {
@@ -3086,57 +2797,34 @@ function applyMapMode() {
     if (dwrMapFrame) {
       dwrMapFrame.hidden = false;
     }
-    mapWrap.classList.remove('is-globe-mode');
     mapWrap.classList.add('is-dwr-mode');
     if (basemapControl) basemapControl.hidden = true;
     updateStatus('Utah DWR map active.');
     return;
   }
 
-  if (value === 'globe') {
-    if (basemapControl) basemapControl.hidden = false;
+  if (value === 'earth') {
+    if (basemapControl) basemapControl.hidden = true;
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
-    updateStatus(googleMapFailureMessage || `${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
-    ensureCesiumViewer();
-    mapWrap.classList.add('is-globe-mode');
-    setTimeout(() => {
-      if (cesiumViewer) {
-        cesiumViewer.resize();
-        cesiumViewer.scene.requestRender();
-      }
-    }, 0);
-    if (selectedHunt && cesiumViewer) {
-      const boundaryId = firstNonEmpty(selectedHunt.boundaryId, selectedHunt.boundaryID, getUnitCode(selectedHunt));
-      if (boundaryId && huntUnitsLayer) {
-        const bounds = new google.maps.LatLngBounds();
-        let found = false;
-        huntUnitsLayer.forEach(f => {
-          if (safe(f.getProperty('BoundaryID')) === safe(boundaryId)) {
-            f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
-          }
-        });
-        if (found) {
-          const center = bounds.getCenter();
-          cesiumViewer.camera.flyTo({
-            destination: Cesium.Cartesian3.fromDegrees(center.lng(), center.lat(), 250000)
-          });
-        }
-      }
+    updateGoogleEarthFrame(selectedHunt);
+    if (googleEarthFrame) {
+      googleEarthFrame.hidden = false;
     }
-    updateCesiumBoundaryStyles();
+    mapWrap.classList.add('is-earth-mode');
+    updateStatus('Google Earth iframe active. Hunt boundaries and ownership layers stay on Google Map.');
     return;
   }
 
   // Switching back to Google mode should show the Google map container even if the API is still loading.
-  mapWrap.classList.remove('is-globe-mode');
+  mapWrap.classList.remove('is-earth-mode');
 
   if (!googleBaselineMap) {
     if (googleApiLoading) {
       updateStatus('Loading Google map...');
       return;
     }
-    fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
+    handleGoogleMapUnavailable(`Google map is unavailable. (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()}`);
     return;
   }
 
@@ -3151,12 +2839,6 @@ function applyMapMode() {
 }
 
 function resetMapView() {
-  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe' && cesiumViewer) {
-    cesiumViewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(GOOGLE_BASELINE_DEFAULT_CENTER.lng, GOOGLE_BASELINE_DEFAULT_CENTER.lat, 850000)
-    });
-    return;
-  }
   if (googleBaselineMap) {
     googleBaselineMap.setCenter(GOOGLE_BASELINE_DEFAULT_CENTER);
     googleBaselineMap.setZoom(GOOGLE_BASELINE_DEFAULT_ZOOM);
@@ -3181,7 +2863,7 @@ function getSelectedHuntCenter() {
 
 function openStreetViewAtFocus() {
   if (!googleBaselineMap || typeof google === 'undefined' || !google.maps?.StreetViewService) return;
-  if (safe(mapTypeSelect?.value).toLowerCase() === 'globe') {
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
     mapTypeSelect.value = 'google';
     applyMapMode();
   }
@@ -3247,7 +2929,7 @@ function initGoogleBaseline() {
   if (typeof window !== 'undefined') {
     window.__UOGA_GOOGLE_MAP_STATUS = 'Google map active.';
   }
-  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
+  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'earth') {
     mapTypeSelect.value = 'google';
   }
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
@@ -3299,10 +2981,7 @@ function buildBoundaryLayer() {
 }
 
 function styleBoundaryLayer() {
-    // Google Maps hunt-unit layer may be absent (Google maps removed).
-    // Cesium styling still needs to update when filters or selection change.
     if (!huntUnitsLayer) {
-      updateCesiumBoundaryStyles();
       return;
     }
     const showBoundaries = shouldShowHuntBoundaries();
@@ -3323,7 +3002,6 @@ function styleBoundaryLayer() {
           fillOpacity: showBoundaries && isMatch ? (isSelected ? 0.22 : 0.08) : 0
         };
     });
-    updateCesiumBoundaryStyles();
 }
 
 function bindControls() {
@@ -3399,25 +3077,6 @@ function bindControls() {
   document.getElementById('closeMapChooserBtn')?.addEventListener('click', closeSelectedHuntPopup);
   document.getElementById('closeHuntDetailsBtn')?.addEventListener('click', closeInlineHuntDetails);
   mapTypeSelect?.addEventListener('change', applyMapMode);
-  globeBasemapSelect?.addEventListener('change', () => {
-    currentGlobeBasemap = safe(globeBasemapSelect.value || 'esriImagery');
-    applyGlobeBasemap(currentGlobeBasemap);
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
-  });
-  globeBasemapGrid?.addEventListener('click', event => {
-    const btn = event.target.closest('[data-globe-basemap]');
-    if (!btn) return;
-    currentGlobeBasemap = safe(btn.getAttribute('data-globe-basemap') || currentGlobeBasemap);
-    if (globeBasemapSelect) {
-      globeBasemapSelect.value = currentGlobeBasemap;
-    }
-    if (safe(mapTypeSelect?.value).toLowerCase() !== 'globe' && mapTypeSelect) {
-      mapTypeSelect.value = 'globe';
-      applyMapMode();
-    }
-    applyGlobeBasemap(currentGlobeBasemap);
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe basemap active.`);
-  });
   streetViewBtn?.addEventListener('click', openStreetViewAtFocus);
   resetViewBtn?.addEventListener('click', resetMapView);
   toggleDwrUnits?.addEventListener('change', () => {
@@ -3568,14 +3227,14 @@ function bootstrapPendingHuntSelection() {
 document.addEventListener('DOMContentLoaded', async () => {
   installGoogleAuthErrorMonitor();
   initDwrFrameEvents();
+  initGoogleEarthFrameEvents();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
   const activeGoogleMapsKey = resolveGoogleMapsApiKey();
   if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
-    updateStatus('Google map disabled: missing valid key. Using globe view.');
-    fallbackToGlobeMode('Google map disabled until a valid key is provided.');
+    handleGoogleMapUnavailable('Google map disabled until a valid key is provided.');
   }
-  // Load Google Maps API with fallback to globe mode.
+  // Load Google Maps API. Boundaries and land layers stay wired to this map.
   window.gm_authFailure = () => {
     console.error('Google Maps API authentication failed.');
     handleGoogleMapsFailure('Google map authentication failed.');
@@ -3591,10 +3250,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
       huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
       if (googleApiReady) buildBoundaryLayer();
-      if (cesiumViewer) {
-        ensureCesiumHuntBoundaries().catch(err => console.error('Cesium hunt boundaries failed', err));
-        ensureCesiumUtahOutline().catch(err => console.error('Cesium Utah outline failed', err));
-      }
   } catch(e) { console.error("GeoJSON load failed", e); }
 
   refreshSelectionMatrix();
@@ -3690,8 +3345,8 @@ function loadGoogleMapsApiScript(apiKey) {
 
 function handleGoogleMapsFailure(failureReason) {
   googleApiLoading = false;
-  const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()} Switched to globe view.`;
-  fallbackToGlobeMode(fallbackMessage);
+  const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()}`;
+  handleGoogleMapUnavailable(fallbackMessage);
 }
 
 function installGoogleAuthErrorMonitor() {
