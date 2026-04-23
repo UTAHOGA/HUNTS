@@ -66,6 +66,7 @@ let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesium
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleFailurePrompted = false;
+let googleMapFailureMessage = '';
 let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
 let conservationPermitAreas = [];
@@ -3032,6 +3033,10 @@ function initDwrFrameEvents() {
 function fallbackToGlobeMode(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
+  googleMapFailureMessage = reason;
+  if (typeof window !== 'undefined') {
+    window.__UOGA_GOOGLE_MAP_STATUS = reason;
+  }
   if (FORCE_GOOGLE_ONLY_DEBUG) {
     mapWrap.classList.remove('is-dwr-mode');
     mapWrap.classList.remove('is-globe-mode');
@@ -3096,7 +3101,7 @@ function applyMapMode() {
     if (basemapControl) basemapControl.hidden = false;
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
-    updateStatus(`${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
+    updateStatus(googleMapFailureMessage || `${getGlobeBasemapLabel(currentGlobeBasemap)} globe active.`);
     ensureCesiumViewer();
     mapWrap.classList.add('is-globe-mode');
     setTimeout(() => {
@@ -3242,6 +3247,10 @@ function initGoogleBaseline() {
     googleMapsLoadTimeoutId = null;
   }
   googleApiLoading = false;
+  googleMapFailureMessage = '';
+  if (typeof window !== 'undefined') {
+    window.__UOGA_GOOGLE_MAP_STATUS = 'Google map active.';
+  }
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
     mapTypeSelect.value = 'google';
   }
