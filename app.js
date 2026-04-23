@@ -3567,7 +3567,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Require a valid key for the current origin before loading Maps script.
   let activeGoogleMapsKey = resolveGoogleMapsApiKey();
-  if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
+  if (!isLikelyGoogleApiKey(activeGoogleMapsKey) && isLocalDevHost()) {
     const prompted = promptForGoogleKey('Google map key is missing or invalid for this origin.');
     if (isLikelyGoogleApiKey(prompted)) {
       activeGoogleMapsKey = prompted;
@@ -3705,6 +3705,7 @@ function getGoogleKeySourceLabel() {
 }
 
 function promptForGoogleKey(failureReason) {
+  if (!isLocalDevHost()) return false;
   if (googleFailurePrompted) return false;
   googleFailurePrompted = true;
 
@@ -3775,11 +3776,13 @@ function loadGoogleMapsApiScript(apiKey) {
 function handleGoogleMapsFailure(failureReason) {
   googleApiLoading = false;
   const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()} Switched to globe view.`;
-  const promptedKey = promptForGoogleKey(failureReason);
-  if (isLikelyGoogleApiKey(promptedKey)) {
-    updateStatus('Retrying Google map with the provided key...');
-    loadGoogleMapsApiScript(promptedKey);
-    return;
+  if (isLocalDevHost()) {
+    const promptedKey = promptForGoogleKey(failureReason);
+    if (isLikelyGoogleApiKey(promptedKey)) {
+      updateStatus('Retrying Google map with the provided key...');
+      loadGoogleMapsApiScript(promptedKey);
+      return;
+    }
   }
   fallbackToGlobeMode(fallbackMessage);
 }
