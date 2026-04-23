@@ -1387,6 +1387,21 @@ html.embed header.topbar .topbar-right {
   overflow: hidden;
 }
 
+/* Ownership menus must be able to pop out of the pillowcase. */
+.ownership-case {
+  overflow: visible;
+}
+
+/* Keep the ownership dropdowns above the map layers. */
+.ownership-dock {
+  position: relative;
+  z-index: 50;
+}
+
+.ownership-dock .toggle-menu-panel {
+  z-index: 1000;
+}
+
 /* A subtle "lower ring" so the case reads as double-layered. */
 .page-nav-case::after,
 .ownership-case::after {

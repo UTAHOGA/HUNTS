@@ -3,3 +3,4 @@ node_modules/
 _exports/
 _local_untracked_backup/
 *.log
+processed_data/*.rebuilt.csv

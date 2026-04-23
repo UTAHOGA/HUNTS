@@ -62,8 +62,11 @@ const {
   loadFirstNormalizedList
 } = window.UOGA_DATA;
 
-let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'esriImagery', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, cesiumViewer = null, huntUnitsLayer = null, cesiumHuntDataSource = null, cesiumUtahOutlineDataSource = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, currentGlobeBasemap = 'osm', outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let googleMapsLoadTimeoutId = null;
+let googleApiLoading = false;
+let googleFailurePrompted = false;
+let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
 let conservationPermitAreas = [];
 let conservationPermitHuntTable = [];
@@ -76,6 +79,7 @@ const outfitterMarkerIndex = new Map();
 const blmOwnershipPointCache = new Map();
 const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
+const LOCAL_DEV_KEY_STORAGE = 'UOGA_GOOGLE_MAPS_API_KEY_DEV';
 // Temporary debug guard: keep Google map as the active mode while we validate key/referrer setup.
 const FORCE_GOOGLE_ONLY_DEBUG = false;
 
@@ -158,7 +162,7 @@ function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
     ? 'Nonresident'
     : 'Resident';
 
-  localStorage.setItem('selected_hunt_code', code);
+localStorage.setItem('selected_hunt_code', code);
   localStorage.setItem('selected_hunt_research_residency', normalizedResidency);
   localStorage.setItem('selected_hunt_research_points', String(points));
 
@@ -2904,6 +2908,7 @@ function ensureCesiumViewer() {
   if (cesiumViewer || typeof Cesium === 'undefined') return;
   const container = document.getElementById('globeMap');
   if (!container) return;
+  // Do not depend on Cesium ion defaults (can 401 when token is missing/expired).
   cesiumViewer = new Cesium.Viewer(container, {
     animation: false,
     timeline: false,
@@ -2914,7 +2919,9 @@ function ensureCesiumViewer() {
     navigationHelpButton: false,
     fullscreenButton: false,
     selectionIndicator: false,
-    infoBox: false
+    infoBox: false,
+    baseLayer: false,
+    terrain: new Cesium.EllipsoidTerrainProvider()
   });
   applyGlobeBasemap(currentGlobeBasemap);
   cesiumViewer.scene.globe.enableLighting = false;
@@ -2978,7 +2985,41 @@ function updateDwrMapFrame(hunt = selectedHunt) {
   const src = getDwrBoundaryUrl(hunt);
   if (dwrMapFrame.getAttribute('src') !== src) {
     dwrMapFrame.setAttribute('src', src);
+    if (dwrFrameLoadTimeoutId) {
+      clearTimeout(dwrFrameLoadTimeoutId);
+      dwrFrameLoadTimeoutId = null;
+    }
+    dwrFrameLoadTimeoutId = setTimeout(() => {
+      updateStatus('DWR map may be blocked in iframe. Use the DWR logo to open map directly.');
+      dwrFrameLoadTimeoutId = null;
+    }, 7000);
   }
+  if (plannerDnrLogoLink) {
+    plannerDnrLogoLink.href = src;
+    plannerDnrLogoLink.target = '_blank';
+    plannerDnrLogoLink.rel = 'noopener noreferrer';
+  }
+}
+
+function initDwrFrameEvents() {
+  if (!dwrMapFrame || dwrMapFrame.__uogaEventsBound) return;
+  dwrMapFrame.__uogaEventsBound = true;
+  dwrMapFrame.addEventListener('load', () => {
+    if (dwrFrameLoadTimeoutId) {
+      clearTimeout(dwrFrameLoadTimeoutId);
+      dwrFrameLoadTimeoutId = null;
+    }
+    if (safe(mapTypeSelect?.value).toLowerCase() === 'dwr') {
+      updateStatus('Utah DWR map active.');
+    }
+  });
+  dwrMapFrame.addEventListener('error', () => {
+    if (dwrFrameLoadTimeoutId) {
+      clearTimeout(dwrFrameLoadTimeoutId);
+      dwrFrameLoadTimeoutId = null;
+    }
+    updateStatus('DWR iframe failed to load. Use the DWR logo to open map directly.');
+  });
 }
 
 function fallbackToGlobeMode(reason = 'Google map unavailable.') {
@@ -3079,13 +3120,19 @@ function applyMapMode() {
     return;
   }
 
+  // Switching back to Google mode should show the Google map container even if the API is still loading.
+  mapWrap.classList.remove('is-globe-mode');
+
   if (!googleBaselineMap) {
+    if (googleApiLoading) {
+      updateStatus('Loading Google map...');
+      return;
+    }
     fallbackToGlobeMode('Google map is unavailable. Switched to globe view.');
     return;
   }
 
   if (basemapControl) basemapControl.hidden = false;
-  mapWrap.classList.remove('is-globe-mode');
   googleBaselineMap.setMapTypeId(value === 'google' ? 'terrain' : value);
   googleBaselineMap.getStreetView()?.setVisible(false);
   styleBoundaryLayer();
@@ -3187,6 +3234,7 @@ function initGoogleBaseline() {
     clearTimeout(googleMapsLoadTimeoutId);
     googleMapsLoadTimeoutId = null;
   }
+  googleApiLoading = false;
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() === 'globe') {
     mapTypeSelect.value = 'google';
   }
@@ -3506,24 +3554,41 @@ function bootstrapPendingHuntSelection() {
 
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
+  installGoogleAuthErrorMonitor();
+  initDwrFrameEvents();
+  updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
+
+  // Localhost requires a valid local dev key before loading the Maps script.
+  if (isLocalDevHost()) {
+    const localKey = readLocalDevGoogleKey();
+    if (!isLikelyGoogleApiKey(localKey)) {
+      const prompted = promptForLocalDevGoogleKey('Localhost Google map key is missing or invalid.');
+      if (prompted) return;
+      updateStatus('Google map disabled: missing valid localhost key. Using globe view.');
+      fallbackToGlobeMode('Google map disabled on localhost until a valid local key is provided.');
+      return;
+    }
+  }
+
   // Load Google Maps API with fallback to globe mode.
   window.gm_authFailure = () => {
     console.error('Google Maps API authentication failed.');
-    fallbackToGlobeMode('Google map authentication failed. Switched to globe view.');
+    handleGoogleMapsFailure('Google map authentication failed.');
   };
   const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&v=weekly&callback=initGoogleBaseline`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&v=weekly&loading=async&callback=initGoogleBaseline`;
   script.async = true;
   script.defer = true;
+  googleApiLoading = true;
   script.onerror = () => {
     console.error('Google Maps API failed to load.');
-    fallbackToGlobeMode('Google map failed to load. Switched to globe view.');
+    handleGoogleMapsFailure('Google map failed to load.');
   };
   document.head.appendChild(script);
   googleMapsLoadTimeoutId = setTimeout(() => {
     if (!googleApiReady) {
       console.error('Google Maps API load timed out.');
-      fallbackToGlobeMode('Google map timed out. Switched to globe view.');
+      handleGoogleMapsFailure('Google map timed out.');
     }
   }, 12000);
   
@@ -3552,4 +3617,93 @@ document.addEventListener('DOMContentLoaded', async () => {
 function sortWithPreferredOrder(arr, pref) {
     const map = new Map(pref.map((v, i) => [v, i]));
     return arr.sort((a, b) => (map.has(a) ? map.get(a) : 99) - (map.has(b) ? map.get(b) : 99));
+}
+
+function getCurrentOrigin() {
+  if (typeof window === 'undefined') return '';
+  const origin = String(window.location?.origin || '').trim();
+  return origin || `${window.location.protocol}//${window.location.host}`;
+}
+
+function buildGoogleReferrerHint() {
+  const origin = getCurrentOrigin();
+  if (!origin) return 'Add your local URL to allowed HTTP referrers in Google Maps key restrictions.';
+  return `Allow this referrer in Google Maps key restrictions: ${origin}/*`;
+}
+
+function isLocalDevHost() {
+  if (typeof window === 'undefined') return false;
+  const host = String(window.location?.hostname || '').toLowerCase();
+  return host === 'localhost' || host === '127.0.0.1';
+}
+
+function readLocalDevGoogleKey() {
+  if (typeof window === 'undefined') return '';
+  try {
+    return String(window.localStorage?.getItem(LOCAL_DEV_KEY_STORAGE) || '').trim();
+  } catch {
+    return '';
+  }
+}
+
+function isLikelyGoogleApiKey(value) {
+  const key = String(value || '').trim();
+  return /^AIza[0-9A-Za-z_-]{35}$/.test(key);
+}
+
+function getGoogleKeySourceLabel() {
+  if (!isLocalDevHost()) return 'production config key';
+  const localKey = readLocalDevGoogleKey();
+  if (!localKey) return 'missing local dev key';
+  return isLikelyGoogleApiKey(localKey) ? 'local dev key' : 'invalid local dev key';
+}
+
+function promptForLocalDevGoogleKey(failureReason) {
+  if (!isLocalDevHost()) return false;
+  if (googleFailurePrompted) return false;
+  googleFailurePrompted = true;
+
+  const currentValue = readLocalDevGoogleKey();
+  const entered = window.prompt(
+    `${failureReason}\n\nPaste your local Google Maps API key to save for this browser:`,
+    currentValue
+  );
+  const nextValue = String(entered || '').trim();
+  if (!nextValue) return false;
+  if (!isLikelyGoogleApiKey(nextValue)) {
+    updateStatus('Google key format looks invalid. Expected a key that starts with AIza.');
+    googleFailurePrompted = false;
+    return false;
+  }
+  try {
+    window.localStorage?.setItem(LOCAL_DEV_KEY_STORAGE, nextValue);
+    window.location.reload();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function handleGoogleMapsFailure(failureReason) {
+  googleApiLoading = false;
+  const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()} Switched to globe view.`;
+  if (promptForLocalDevGoogleKey(failureReason)) return;
+  fallbackToGlobeMode(fallbackMessage);
+}
+
+function installGoogleAuthErrorMonitor() {
+  if (typeof window === 'undefined') return;
+  if (window.__uogaGoogleAuthMonitorInstalled) return;
+  window.__uogaGoogleAuthMonitorInstalled = true;
+
+  window.addEventListener('error', (event) => {
+    const msg = String(event?.message || '');
+    if (msg.includes('RefererNotAllowedMapError')) {
+      handleGoogleMapsFailure('Google map blocked by referrer restrictions.');
+      return;
+    }
+    if (msg.includes('InvalidKeyMapError') || msg.includes('InvalidKey')) {
+      handleGoogleMapsFailure('Google map key is invalid.');
+    }
+  });
 }

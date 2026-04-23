@@ -171,36 +171,33 @@ function buildProjectionGroups(projectionRows) {
   return groups;
 }
 
+function buildEngineGroupMeta(existingEngineRows) {
+  const metaByGroup = new Map();
+  existingEngineRows.forEach((r) => {
+    const gk = normKey(r.hunt_code, r.residency);
+    if (!metaByGroup.has(gk)) metaByGroup.set(gk, r);
+  });
+  return metaByGroup;
+}
+
 function overlayEngine(existingEngine, historyByGroup, projGroups) {
   const header = existingEngine.header;
   const baseRows = existingEngine.rows;
 
   const byKey = new Map();
+  const baseOrder = [];
   baseRows.forEach((r) => {
     const k = `${normKey(r.hunt_code, r.residency)}__${String(r.points ?? '').trim()}`;
     byKey.set(k, r);
+    baseOrder.push(k);
   });
 
+  const groupMeta = buildEngineGroupMeta(baseRows);
   const replaced = { rows: 0, groups: 0 };
 
   for (const [gk, g] of projGroups.entries()) {
     const hist = historyByGroup.get(gk);
-    const g2025 = hist ? hist.guaranteed_at_2025 : 0;
-    const cutoff = g.bonus_cutoff_point;
-    const g2026 = cutoff == null ? 0 : (cutoff + 1);
-    const guaranteedDelta = g2026 - g2025;
-    const deltaGapConstant = guaranteedDelta - 1;
-    const publicPermits2025 = hist ? hist.public_permits_2025 : 0;
-    const publicPermits2026 = hist ? (toNum(hist.public_permits_2025) + toNum(hist.random_permits_2025) + toNum(hist.max_point_permits_2025) - toNum(hist.random_permits_2025) - toNum(hist.max_point_permits_2025)) : null;
-    // Above line is a no-op placeholder; we set 2026 permits from the existing engine's "meta truth"
-    // by using the simulation hint only when history is missing.
-    const permits2026 = (() => {
-      // Prefer existing engine source rows for permits, since that's what is live today.
-      // If we can't find them, fall back to the projection hint.
-      return g.public_permits_2026_hint || 0;
-    })();
-    const maxPoint2026 = Math.ceil(permits2026 / 2);
-    const random2026 = permits2026 - maxPoint2026;
+    const meta = groupMeta.get(gk);
 
     // Precompute above sums for speed.
     const ptsList = Array.from(g.applicants_by_points.keys()).sort((a, b) => a - b);
@@ -217,41 +214,43 @@ function overlayEngine(existingEngine, historyByGroup, projGroups) {
       const applicantsAt = g.applicants_by_points.get(pts) || 0;
       const applicantsAbove = aboveSum.get(pts) || 0;
 
-      const status = pts >= g2026 ? 'MAX POOL' : 'BEHIND';
-      const gap = g2026 - pts;
-      const deltaGap = deltaGapConstant;
-      const trend = trendFromDeltaGap(deltaGap);
-      const drawOutlook = outlook(status, deltaGap, gap);
+      const base = byKey.get(`${gk}__${pts}`);
 
-      const row = {
+      // Default to the existing engine row for everything except projection-derived columns.
+      // This preserves the authoritative permit splits + status/trend/outlook logic used by the live site.
+      const row = base ? { ...base } : {
         hunt_code: g.hunt_code,
         residency: g.residency,
         points: String(pts),
-        public_permits_2025: String(hist ? hist.public_permits_2025 : ''),
-        public_permits_2026: String(permits2026),
-        public_permits_2026_source: 'posted_2026',
-        max_point_permits_2025: String(hist ? hist.max_point_permits_2025 : ''),
-        max_point_permits_2026: String(maxPoint2026),
-        random_permits_2025: String(hist ? hist.random_permits_2025 : ''),
-        random_permits_2026: String(random2026),
-        guaranteed_at_2025: String(g2025),
-        guaranteed_at_2026: String(g2026),
-        permit_delta_2025_to_2026: String(permits2026 - (hist ? hist.public_permits_2025 : 0)),
-        projected_applicants_2026_source: 'projected_2026',
-        guaranteed_delta_2025_to_2026: String(guaranteedDelta),
-        applicants_above: String(applicantsAbove),
-        applicants_at_level: String(applicantsAt),
-        random_draw_odds_2026: (() => {
-          const v = g.random_prob_by_points.get(pts);
-          const n = toNum(v);
-          return n == null ? '' : n.toFixed(3);
-        })(),
-        gap: String(gap),
-        delta_gap: String(deltaGap),
-        status,
-        trend,
-        draw_outlook: drawOutlook
+        public_permits_2025: meta?.public_permits_2025 ?? String(hist ? hist.public_permits_2025 : ''),
+        public_permits_2026: meta?.public_permits_2026 ?? String(g.public_permits_2026_hint || 0),
+        public_permits_2026_source: meta?.public_permits_2026_source ?? 'projection_hint_2026',
+        max_point_permits_2025: meta?.max_point_permits_2025 ?? String(hist ? hist.max_point_permits_2025 : ''),
+        max_point_permits_2026: meta?.max_point_permits_2026 ?? '',
+        random_permits_2025: meta?.random_permits_2025 ?? String(hist ? hist.random_permits_2025 : ''),
+        random_permits_2026: meta?.random_permits_2026 ?? '',
+        guaranteed_at_2025: meta?.guaranteed_at_2025 ?? String(hist ? hist.guaranteed_at_2025 : ''),
+        guaranteed_at_2026: meta?.guaranteed_at_2026 ?? '',
+        permit_delta_2025_to_2026: meta?.permit_delta_2025_to_2026 ?? '',
+        gap: meta?.gap ?? '',
+        delta_gap: meta?.delta_gap ?? '',
+        status: meta?.status ?? '',
+        trend: meta?.trend ?? '',
+        draw_outlook: meta?.draw_outlook ?? ''
       };
+
+      row.hunt_code = g.hunt_code;
+      row.residency = g.residency;
+      row.points = String(pts);
+
+      row.projected_applicants_2026_source = 'projected_2026';
+      row.applicants_above = String(applicantsAbove);
+      row.applicants_at_level = String(applicantsAt);
+      row.random_draw_odds_2026 = (() => {
+        const v = g.random_prob_by_points.get(pts);
+        const n = toNum(v);
+        return n == null ? '' : n.toFixed(3);
+      })();
 
       // Ensure full header coverage: if header contains keys that aren't in row, keep blanks.
       const out = {};
@@ -259,20 +258,34 @@ function overlayEngine(existingEngine, historyByGroup, projGroups) {
         out[col] = row[col] ?? '';
       });
 
-      const rk = `${gk}__${pts}`;
-      byKey.set(rk, out);
+      byKey.set(`${gk}__${pts}`, out);
       replaced.rows += 1;
     });
   }
 
-  // Return rows in stable order matching original file order as much as possible.
-  const outRows = Array.from(byKey.values());
-  outRows.sort((a, b) => {
-    const ak = normKey(a.hunt_code, a.residency);
-    const bk = normKey(b.hunt_code, b.residency);
-    if (ak !== bk) return ak.localeCompare(bk);
-    return (toNum(a.points) ?? 0) - (toNum(b.points) ?? 0);
+  // Preserve the original file ordering first, then append any new rows (rare) deterministically.
+  const outRows = [];
+  const seen = new Set();
+  baseOrder.forEach((k) => {
+    const r = byKey.get(k);
+    if (!r) return;
+    outRows.push(r);
+    seen.add(k);
   });
+
+  const extras = [];
+  for (const [k, r] of byKey.entries()) {
+    if (!seen.has(k)) extras.push([k, r]);
+  }
+  extras.sort((a, b) => {
+    const ak = a[0].split('__').slice(0, 2).join('__');
+    const bk = b[0].split('__').slice(0, 2).join('__');
+    if (ak !== bk) return ak.localeCompare(bk);
+    const ap = toNum(a[1]?.points) ?? 0;
+    const bp = toNum(b[1]?.points) ?? 0;
+    return ap - bp;
+  });
+  extras.forEach(([, r]) => outRows.push(r));
 
   return { header, rows: outRows, replaced };
 }
@@ -282,9 +295,11 @@ function overlayLadder(existingLadder, historyByGroup, projGroups) {
   const baseRows = existingLadder.rows;
 
   const byKey = new Map();
+  const baseOrder = [];
   baseRows.forEach((r) => {
     const k = `${normKey(r.hunt_code, r.residency)}__${String(r.points ?? '').trim()}`;
     byKey.set(k, r);
+    baseOrder.push(k);
   });
 
   let replaced = 0;
@@ -299,15 +314,20 @@ function overlayLadder(existingLadder, historyByGroup, projGroups) {
       const odds25 = hist ? (hist.odds_2025_by_points.get(pts) || 'N/A') : 'N/A';
       const odds26 = g.total_prob_by_points.get(pts);
 
-      const row = {
+      const base = byKey.get(`${gk}__${pts}`);
+      const row = base ? { ...base } : {
         hunt_code: g.hunt_code,
         residency: g.residency,
         points: String(pts),
-        odds_2025_actual: String(odds25 || 'N/A'),
-        odds_2026_projected: odds26 == null ? '' : fmt3(odds26),
         guaranteed_marker: pts === g2026 ? 'TRUE' : 'FALSE',
         user_point_marker: 'FALSE'
       };
+
+      row.hunt_code = g.hunt_code;
+      row.residency = g.residency;
+      row.points = String(pts);
+      row.odds_2025_actual = String(odds25 || 'N/A');
+      row.odds_2026_projected = odds26 == null ? '' : fmt3(odds26);
 
       const out = {};
       header.forEach((col) => {
@@ -319,13 +339,28 @@ function overlayLadder(existingLadder, historyByGroup, projGroups) {
     });
   }
 
-  const outRows = Array.from(byKey.values());
-  outRows.sort((a, b) => {
-    const ak = normKey(a.hunt_code, a.residency);
-    const bk = normKey(b.hunt_code, b.residency);
-    if (ak !== bk) return ak.localeCompare(bk);
-    return (toNum(a.points) ?? 0) - (toNum(b.points) ?? 0);
+  const outRows = [];
+  const seen = new Set();
+  baseOrder.forEach((k) => {
+    const r = byKey.get(k);
+    if (!r) return;
+    outRows.push(r);
+    seen.add(k);
   });
+
+  const extras = [];
+  for (const [k, r] of byKey.entries()) {
+    if (!seen.has(k)) extras.push([k, r]);
+  }
+  extras.sort((a, b) => {
+    const ak = a[0].split('__').slice(0, 2).join('__');
+    const bk = b[0].split('__').slice(0, 2).join('__');
+    if (ak !== bk) return ak.localeCompare(bk);
+    const ap = toNum(a[1]?.points) ?? 0;
+    const bp = toNum(b[1]?.points) ?? 0;
+    return ap - bp;
+  });
+  extras.forEach(([, r]) => outRows.push(r));
 
   return { header, rows: outRows, replaced };
 }

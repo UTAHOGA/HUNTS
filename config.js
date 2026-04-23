@@ -15,7 +15,35 @@ window.UOGA_CONFIG = (() => {
     EXTERNAL SERVICES / API KEYS
     ============================================================================
   */
-  const GOOGLE_MAPS_API_KEY = 'AIzaSyC49dXQ4FOyXqaUey4ASKlnDXWiwBHDlRM';
+  function readStoredGoogleMapsKey(storageKey) {
+    if (typeof window === 'undefined') return '';
+    try {
+      const raw = window.localStorage?.getItem(storageKey);
+      return String(raw || '').trim();
+    } catch {
+      return '';
+    }
+  }
+  function readDevGoogleMapsKey() {
+    return readStoredGoogleMapsKey('UOGA_GOOGLE_MAPS_API_KEY_DEV');
+  }
+  function readProdGoogleMapsKey() {
+    if (typeof window !== 'undefined') {
+      const injected = String(window.__UOGA_GOOGLE_MAPS_API_KEY || '').trim();
+      if (injected) return injected;
+    }
+    return readStoredGoogleMapsKey('UOGA_GOOGLE_MAPS_API_KEY_PROD');
+  }
+  const GOOGLE_MAPS_API_KEY_PROD = readProdGoogleMapsKey();
+  function isLocalHost() {
+    if (typeof window === 'undefined') return false;
+    const host = String(window.location?.hostname || '').toLowerCase();
+    return host === 'localhost' || host === '127.0.0.1';
+  }
+  const GOOGLE_MAPS_API_KEY = (() => {
+    if (!isLocalHost()) return GOOGLE_MAPS_API_KEY_PROD;
+    return readDevGoogleMapsKey();
+  })();
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
 
   /*
