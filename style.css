@@ -786,6 +786,7 @@
       min-height: calc(100vh - 225px);
     }
     #googleEarthFrame { display: none; border: 0; background: #fff; }
+    .map-wrap:not(.is-dwr-mode):not(.is-earth-mode) #map { display: block !important; }
     .map-wrap.is-earth-mode #map,
     .map-wrap.is-earth-mode #basemapPopover,
     .map-wrap.is-earth-mode #selectedHuntFloat,

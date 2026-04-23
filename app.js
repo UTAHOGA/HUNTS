@@ -1028,6 +1028,33 @@ function updateWildernessOverlayVisibility() {
 function updateStatus(message) {
   if (statusEl) statusEl.textContent = message;
 }
+
+function forceGoogleMapVisible() {
+  const mapWrap = document.querySelector('.map-wrap');
+  const mapEl = document.getElementById('map');
+  if (mapWrap) {
+    mapWrap.classList.remove('is-dwr-mode');
+    mapWrap.classList.remove('is-earth-mode');
+  }
+  if (mapEl) {
+    mapEl.style.display = '';
+  }
+  if (dwrMapFrame) {
+    dwrMapFrame.hidden = true;
+    dwrMapFrame.style.display = '';
+  }
+  if (googleEarthFrame) {
+    googleEarthFrame.hidden = true;
+    googleEarthFrame.style.display = '';
+  }
+  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
+    mapTypeSelect.value = 'google';
+  }
+  if (googleBaselineMap && typeof google !== 'undefined') {
+    google.maps.event.trigger(googleBaselineMap, 'resize');
+  }
+}
+
 function resetAllFilters() {
   if (searchInput) searchInput.value = '';
   if (speciesFilter) speciesFilter.value = 'All Species';
@@ -1054,10 +1081,7 @@ function handleFilterChange(event) {
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
-  if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
-    mapTypeSelect.value = 'google';
-    applyMapMode();
-  }
+  forceGoogleMapVisible();
   if (!googleBaselineMap) {
     updateStatus('Google map is still loading. Filter selection saved; boundaries will appear when the map is ready.');
     return;
@@ -1081,6 +1105,7 @@ function handleFilterChange(event) {
   renderMatchingHunts();
   renderSelectedHunt();
   renderOutfitters();
+  forceGoogleMapVisible();
 }
 
 function refreshSelectionMatrix() {
