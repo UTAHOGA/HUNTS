@@ -15,7 +15,7 @@ window.UOGA_CONFIG = (() => {
     EXTERNAL SERVICES / API KEYS
     ============================================================================
   */
-  const GOOGLE_MAPS_API_KEY = '';
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyC49dXQ4FOyXqaUey4ASKlnDXWiwBHDlRM';
   function isPrivateIpv4Host(host) {
     return /^10\./.test(host)
       || /^192\.168\./.test(host)
