@@ -2732,22 +2732,6 @@ function updateDwrMapFrame(hunt = selectedHunt) {
   }
 }
 
-function openDwrMapDirect(hunt = selectedHunt) {
-  const src = getDwrBoundaryUrl(hunt);
-  if (plannerDnrLogoLink) {
-    plannerDnrLogoLink.href = src;
-    plannerDnrLogoLink.target = '_blank';
-    plannerDnrLogoLink.rel = 'noopener noreferrer';
-  }
-  const opened = window.open(src, '_blank', 'noopener,noreferrer');
-  if (opened) {
-    updateStatus('Official Utah DWR map opened in a new tab. Google map remains active here for boundaries and ownership.');
-    return true;
-  }
-  updateStatus('Official Utah DWR map is ready. Use the DWR logo to open it in a new tab.');
-  return false;
-}
-
 function initDwrFrameEvents() {
   if (!dwrMapFrame || dwrMapFrame.__uogaEventsBound) return;
   dwrMapFrame.__uogaEventsBound = true;
@@ -2841,12 +2825,14 @@ function applyMapMode() {
   }
 
   if (value === 'dwr') {
-    openDwrMapDirect(selectedHunt);
-    if (mapTypeSelect) mapTypeSelect.value = 'google';
-    if (basemapControl) basemapControl.hidden = false;
-    if (googleBaselineMap && typeof google !== 'undefined') {
-      google.maps.event.trigger(googleBaselineMap, 'resize');
+    clearOutfitterMarkers();
+    updateDwrMapFrame(selectedHunt);
+    if (dwrMapFrame) {
+      dwrMapFrame.hidden = false;
     }
+    mapWrap.classList.add('is-dwr-mode');
+    if (basemapControl) basemapControl.hidden = true;
+    updateStatus('Utah DWR map active.');
     return;
   }
 
@@ -3202,7 +3188,10 @@ function bindControls() {
   instructionsReadBtn?.addEventListener('click', readInstructionsAudio);
   plannerDnrLogoLink?.addEventListener('click', (event) => {
     event.preventDefault();
-    openDwrMapDirect(selectedHunt);
+    if (mapTypeSelect) {
+      mapTypeSelect.value = 'dwr';
+      applyMapMode();
+    }
   });
   document.addEventListener('click', (event) => {
     if (!instructionsPanel || !instructionsTab || instructionsPanel.hidden) return;
