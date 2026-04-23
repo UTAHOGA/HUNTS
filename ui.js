@@ -347,8 +347,12 @@ window.UOGA_UI = (() => {
         position: relative;
         flex: 0 0 auto;
         margin-left: 10px;
-        z-index: 2147483000;
+        z-index: 2147483646;
         isolation: isolate;
+      }
+      .uoga-backpack-shell.is-open {
+        position: relative;
+        z-index: 2147483647;
       }
       .uoga-backpack-toggle {
         position: relative;
@@ -448,8 +452,9 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 2147483646;
+        z-index: 2147483647;
         transform-origin: top right;
+        isolation: isolate;
       }
       .uoga-backpack-panel::before {
           content: "";

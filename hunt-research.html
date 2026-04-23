@@ -532,30 +532,46 @@
         width: 18px;
         height: 18px;
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,0.14);
-        background: rgba(255,255,255,0.12);
-        box-shadow: inset 0 1px 2px rgba(0,0,0,0.28);
-        opacity: 0.32;
+        border: 1px solid rgba(83, 60, 42, 0.14);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255,255,255,0.92) 0 24%, rgba(255,255,255,0.18) 25% 42%, rgba(255,255,255,0.02) 43% 100%);
+        box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,0.78),
+          0 0 0 1px rgba(48, 30, 18, 0.06);
+        opacity: 0.58;
       }
 
       .outlook-light.is-active {
         opacity: 1;
-        transform: scale(1.06);
+        transform: scale(1);
+        border-color: rgba(255,255,255,0.86);
       }
 
       .outlook-light.red.is-active {
-        background: #e15759;
-        box-shadow: 0 0 0 4px rgba(225,87,89,0.16), 0 0 18px rgba(225,87,89,0.42);
+        background:
+          radial-gradient(circle at 50% 50%, #fff8f7 0 13%, #ff786f 14% 31%, #e53935 32% 54%, rgba(229,57,53,0.16) 55% 100%);
+        box-shadow:
+          0 0 0 3px rgba(229,57,53,0.13),
+          0 0 10px rgba(229,57,53,0.52),
+          0 0 22px rgba(229,57,53,0.26);
       }
 
       .outlook-light.yellow.is-active {
-        background: #f4c542;
-        box-shadow: 0 0 0 4px rgba(244,197,66,0.16), 0 0 18px rgba(244,197,66,0.42);
+        background:
+          radial-gradient(circle at 50% 50%, #fffced 0 13%, #ffe56b 14% 31%, #f2b400 32% 54%, rgba(242,180,0,0.16) 55% 100%);
+        box-shadow:
+          0 0 0 3px rgba(242,180,0,0.14),
+          0 0 10px rgba(242,180,0,0.62),
+          0 0 22px rgba(242,180,0,0.28);
       }
 
       .outlook-light.green.is-active {
-        background: #52b36a;
-        box-shadow: 0 0 0 4px rgba(82,179,106,0.16), 0 0 18px rgba(82,179,106,0.42);
+        background:
+          radial-gradient(circle at 50% 50%, #effff4 0 13%, #66e58d 14% 31%, #00a650 32% 54%, rgba(0,166,80,0.16) 55% 100%);
+        box-shadow:
+          0 0 0 3px rgba(0,166,80,0.14),
+          0 0 10px rgba(0,166,80,0.58),
+          0 0 22px rgba(0,166,80,0.28);
       }
 
     .likelihood-guaranteed,
