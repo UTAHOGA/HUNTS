@@ -2866,96 +2866,403 @@ label.toggle-chip:has(input:checked),
     min-width: 220px !important;
   }
 }
-/* === HUNT BACKPACK BUTTON + OPEN PANEL POSITION === */
 
-.uoga-backpack-toggle {
-  background: linear-gradient(180deg, #fffdf9, #f2e8dc) !important;
-  color: rgb(240,120,0) !important;
-  border: 1px solid #c9a27f !important;
-  border-radius: 18px 18px 22px 18px !important;
-  box-shadow:
+/* =========================================================
+   FINAL SCOPED CONTROL FIX — 2026-04-24
+   Purpose: keep each pill family separate while making the
+   Planner controls visually consistent.
+
+   IMPORTANT: This section is intentionally scoped. It does
+   not globally rewrite every button/select on the site.
+   ========================================================= */
+:root {
+  --uoga-orange: rgb(240, 120, 0);
+  --uoga-brown: #3b2a1f;
+  --uoga-pill-edge: #c9a27f;
+  --uoga-pill-bg: linear-gradient(180deg, #fffdf9 0%, #f2e8dc 100%);
+  --uoga-pill-active-bg: linear-gradient(180deg, #fff7ee 0%, #ead8c4 100%);
+  --uoga-pill-shadow:
     inset 0 1px 0 rgba(255,255,255,0.95),
     inset 0 -2px 2px rgba(0,0,0,0.10),
-    0 3px 7px rgba(0,0,0,0.18) !important;
-}
-
-.uoga-backpack-toggle[aria-expanded="true"],
-.uoga-backpack-toggle.is-open {
-  background: linear-gradient(180deg, #fff7ee, #ead8c4) !important;
-  color: rgb(240,120,0) !important;
-  border-color: rgb(240,120,0) !important;
-  box-shadow:
-    inset 0 0 0 2px rgb(240,120,0),
+    0 3px 7px rgba(0,0,0,0.18);
+  --uoga-pill-ring-shadow:
+    inset 0 0 0 2px rgb(240, 120, 0),
     inset 0 2px 2px rgba(255,255,255,0.65),
     inset 0 -3px 4px rgba(120,55,10,0.26),
-    0 4px 9px rgba(0,0,0,0.22) !important;
+    0 4px 9px rgba(0,0,0,0.22);
 }
 
-.uoga-backpack-mark,
-.uoga-backpack-mark-wrap {
-  color: rgb(240,120,0) !important;
+/* ---------- Layering: keep header controls above map UI ---------- */
+.topbar,
+.topbar.topbar-planner,
+.ownership-dock,
+.ownership-case,
+.topbar.topbar-planner .topbar-left,
+.topbar.topbar-planner .topbar-center,
+.topbar.topbar-planner .controls,
+.topbar.topbar-planner .controls-center {
+  overflow: visible !important;
+}
+.topbar.topbar-planner { position: relative !important; z-index: 20000 !important; }
+.topbar.topbar-planner .topbar-left { position: relative !important; z-index: 23000 !important; }
+.topbar.topbar-planner .topbar-center { position: relative !important; z-index: 22000 !important; }
+.ownership-dock { position: relative !important; z-index: 22000 !important; }
+.basemap-pop { z-index: 7000 !important; }
+.globe-basemap-panel { z-index: 7001 !important; }
+
+/* ---------- Map Selector: custom logo selector in index.html ---------- */
+.topbar.topbar-planner .map-mode-native {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.topbar.topbar-planner .map-mode-sr-label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.topbar.topbar-planner .map-mode-control {
+  position: relative !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.topbar.topbar-planner .map-mode-picker {
+  position: relative !important;
+  z-index: 24000 !important;
+}
+.topbar.topbar-planner .map-mode-toggle,
+.topbar.topbar-planner .map-mode-option {
+  min-height: 42px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-bg) !important;
+  color: var(--uoga-orange) !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  box-shadow: var(--uoga-pill-shadow) !important;
+}
+.topbar.topbar-planner .map-mode-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 240px !important;
+  padding: 0 16px !important;
+  cursor: pointer !important;
+}
+.topbar.topbar-planner .map-mode-label {
+  font-size: 10px !important;
+  color: var(--uoga-orange) !important;
+  white-space: nowrap !important;
+}
+.topbar.topbar-planner .map-mode-current {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 116px !important;
+}
+.topbar.topbar-planner .map-mode-logo,
+.topbar.topbar-planner .map-mode-option-logo {
+  max-height: 20px !important;
+  max-width: 120px !important;
+  width: auto !important;
+  height: auto !important;
+  display: block !important;
+}
+.topbar.topbar-planner .map-mode-text {
+  color: var(--uoga-orange) !important;
+  font-weight: 900 !important;
+  letter-spacing: .10em !important;
+  white-space: nowrap !important;
+}
+.topbar.topbar-planner .map-mode-menu {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  z-index: 25000 !important;
+}
+.topbar.topbar-planner .map-mode-menu[hidden] { display: none !important; }
+.topbar.topbar-planner .map-mode-option {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 240px !important;
+  padding: 0 14px !important;
+  cursor: pointer !important;
+}
+.topbar.topbar-planner .map-mode-toggle[aria-expanded="true"],
+.topbar.topbar-planner .map-mode-option.is-active {
+  border-color: var(--uoga-orange) !important;
+  background: var(--uoga-pill-active-bg) !important;
+  color: var(--uoga-orange) !important;
+  box-shadow: var(--uoga-pill-ring-shadow) !important;
 }
 
-/* Move the open Backpack panel below the header */
-.uoga-backpack-shell {
+/* ---------- Landowner header + option pills only ---------- */
+.topbar.topbar-planner .toggle-row,
+.ownership-dock .toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-wrap: wrap !important;
+  max-width: 100% !important;
+  overflow: visible !important;
   position: relative !important;
   z-index: 22000 !important;
 }
-
-.uoga-backpack-shell [role="dialog"],
-.uoga-backpack-shell [aria-label*="Backpack"],
-.uoga-backpack-shell [class*="panel"],
-.uoga-backpack-shell [class*="popover"],
-.uoga-backpack-shell [class*="dropdown"],
-.uoga-backpack-shell [class*="tray"] {
-  top: 100px !important;
-  max-height: calc(100vh - 120px) !important;
-  overflow-y: auto !important;
-  z-index: 23000 !important;
-}/* === HUNT BACKPACK BUTTON + OPEN PANEL POSITION === */
-
-.uoga-backpack-toggle {
-  background: linear-gradient(180deg, #fffdf9, #f2e8dc) !important;
-  color: rgb(240,120,0) !important;
-  border: 1px solid #c9a27f !important;
-  border-radius: 18px 18px 22px 18px !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.95),
-    inset 0 -2px 2px rgba(0,0,0,0.10),
-    0 3px 7px rgba(0,0,0,0.18) !important;
-}
-
-.uoga-backpack-toggle[aria-expanded="true"],
-.uoga-backpack-toggle.is-open {
-  background: linear-gradient(180deg, #fff7ee, #ead8c4) !important;
-  color: rgb(240,120,0) !important;
-  border-color: rgb(240,120,0) !important;
-  box-shadow:
-    inset 0 0 0 2px rgb(240,120,0),
-    inset 0 2px 2px rgba(255,255,255,0.65),
-    inset 0 -3px 4px rgba(120,55,10,0.26),
-    0 4px 9px rgba(0,0,0,0.22) !important;
-}
-
-.uoga-backpack-mark,
-.uoga-backpack-mark-wrap {
-  color: rgb(240,120,0) !important;
-}
-
-/* Move the open Backpack panel below the header */
-.uoga-backpack-shell {
+.topbar.topbar-planner .toggle-menu,
+.ownership-dock .toggle-menu {
   position: relative !important;
-  z-index: 22000 !important;
+  z-index: 22100 !important;
+}
+.topbar.topbar-planner .toggle-menu[open],
+.ownership-dock .toggle-menu[open] {
+  z-index: 22200 !important;
+}
+.topbar.topbar-planner .toggle-menu > summary,
+.ownership-dock .toggle-menu > summary,
+.topbar.topbar-planner label.toggle-chip,
+.ownership-dock label.toggle-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  min-width: 112px !important;
+  padding: 0 14px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-bg) !important;
+  color: var(--uoga-orange) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  box-shadow: var(--uoga-pill-shadow) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  text-indent: 0 !important;
+}
+.topbar.topbar-planner .toggle-menu > summary,
+.ownership-dock .toggle-menu > summary {
+  list-style: none !important;
+}
+.topbar.topbar-planner .toggle-menu > summary::-webkit-details-marker,
+.ownership-dock .toggle-menu > summary::-webkit-details-marker {
+  display: none !important;
+}
+.topbar.topbar-planner .toggle-menu > summary::after,
+.ownership-dock .toggle-menu > summary::after {
+  content: "▾" !important;
+  margin-left: 7px !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: currentColor !important;
+}
+.topbar.topbar-planner .toggle-menu[open] > summary::after,
+.ownership-dock .toggle-menu[open] > summary::after { content: "▴" !important; }
+.topbar.topbar-planner .toggle-chip input,
+.ownership-dock .toggle-chip input {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: var(--uoga-orange) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.topbar.topbar-planner .toggle-chip-label,
+.ownership-dock .toggle-chip-label,
+.topbar.topbar-planner .toggle-menu > summary *,
+.ownership-dock .toggle-menu > summary * {
+  display: inline-block !important;
+  color: inherit !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  text-indent: 0 !important;
+}
+.topbar.topbar-planner label.toggle-chip:has(input:checked),
+.ownership-dock label.toggle-chip:has(input:checked),
+.topbar.topbar-planner .toggle-menu[open] > summary,
+.ownership-dock .toggle-menu[open] > summary {
+  background: var(--uoga-pill-active-bg) !important;
+  color: var(--uoga-orange) !important;
+  border-color: var(--uoga-orange) !important;
+  box-shadow: var(--uoga-pill-ring-shadow) !important;
+}
+.topbar.topbar-planner .toggle-menu-panel,
+.ownership-dock .toggle-menu-panel {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  min-width: 190px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  z-index: 22300 !important;
+}
+.topbar.topbar-planner .toggle-menu-panel .toggle-chip,
+.ownership-dock .toggle-menu-panel .toggle-chip {
+  display: grid !important;
+  grid-template-columns: 16px auto !important;
+  justify-content: start !important;
+  align-items: center !important;
+  min-width: 190px !important;
 }
 
-.uoga-backpack-shell [role="dialog"],
-.uoga-backpack-shell [aria-label*="Backpack"],
-.uoga-backpack-shell [class*="panel"],
-.uoga-backpack-shell [class*="popover"],
-.uoga-backpack-shell [class*="dropdown"],
-.uoga-backpack-shell [class*="tray"] {
-  top: 100px !important;
-  max-height: calc(100vh - 120px) !important;
-  overflow-y: auto !important;
-  z-index: 23000 !important;
+/* ---------- Basemap button + its 4 Google basemap choices ---------- */
+.basemap-toggle,
+.basemap-toggle > span,
+.globe-basemap-btn {
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-bg) !important;
+  color: var(--uoga-orange) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .10em !important;
+  text-transform: uppercase !important;
+  box-shadow: var(--uoga-pill-shadow) !important;
+}
+.basemap-toggle {
+  min-height: 42px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.basemap-toggle > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 42px !important;
+  min-width: 148px !important;
+  padding: 0 16px !important;
+}
+.basemap-toggle[aria-expanded="true"] > span {
+  border-color: var(--uoga-orange) !important;
+  background: var(--uoga-pill-active-bg) !important;
+  box-shadow: var(--uoga-pill-ring-shadow) !important;
+}
+.globe-basemap-panel {
+  display: none !important;
+  width: 220px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* honor the aria state that google-basemap.js toggles */
+.globe-basemap-panel[aria-hidden="false"] {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+}
+.globe-basemap-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  width: 220px !important;
+}
+.globe-basemap-btn {
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 220px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  cursor: pointer !important;
+}
+.globe-basemap-btn[data-google-basemap="roadmap"],
+.globe-basemap-btn[data-google-basemap="terrain"],
+.globe-basemap-btn[data-google-basemap="hybrid"],
+.globe-basemap-btn[data-google-basemap="satellite"] {
+  display: inline-flex !important;
+}
+.globe-basemap-btn.is-active,
+.globe-basemap-btn[aria-pressed="true"] {
+  border-color: var(--uoga-orange) !important;
+  background: var(--uoga-pill-active-bg) !important;
+  color: var(--uoga-orange) !important;
+  box-shadow: var(--uoga-pill-ring-shadow) !important;
+}
+
+/* ---------- Hunt Backpack closed button, not the open panel ---------- */
+.uoga-backpack-shell,
+.uoga-backpack-toggle {
+  overflow: visible !important;
+}
+.uoga-backpack-toggle,
+.uoga-backpack-toggle > span,
+.uoga-backpack-mark-wrap {
+  border-radius: 999px !important;
+  border-color: var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-bg) !important;
+  color: var(--uoga-orange) !important;
+  box-shadow: var(--uoga-pill-shadow) !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+.uoga-backpack-toggle[aria-expanded="true"],
+.uoga-backpack-toggle.is-open,
+.uoga-backpack-toggle[aria-expanded="true"] > span,
+.uoga-backpack-toggle.is-open > span,
+.uoga-backpack-toggle[aria-expanded="true"] .uoga-backpack-mark-wrap,
+.uoga-backpack-toggle.is-open .uoga-backpack-mark-wrap {
+  border-color: var(--uoga-orange) !important;
+  background: var(--uoga-pill-active-bg) !important;
+  color: var(--uoga-orange) !important;
+  box-shadow: var(--uoga-pill-ring-shadow) !important;
+}
+.uoga-backpack-panel,
+#huntBackpackPanel {
+  z-index: 26000 !important;
+}
+
+@media (max-width: 900px) {
+  .topbar.topbar-planner .map-mode-toggle,
+  .topbar.topbar-planner .map-mode-option,
+  .globe-basemap-btn,
+  .globe-basemap-grid,
+  .globe-basemap-panel {
+    width: 220px !important;
+    min-width: 220px !important;
+  }
+  .topbar.topbar-planner .toggle-menu-panel,
+  .ownership-dock .toggle-menu-panel {
+    left: 0 !important;
+    right: auto !important;
+  }
 }

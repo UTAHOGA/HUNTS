@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
+  <title>Utah Hunt Planner</title>
+  <script src="./embed-mode.js?v=20260422-embed-1"></script>
+  <link rel="stylesheet" href="./style.css?v=20260423-planner-header-refine-1" />
+  <style>
+    /* Basemap popover is styled in style.css; keep index.html free of positioning rules. */
+
+    /* Self-contained Map Selector repair. Keep this here so the HTML replacement works even if style.css has older rules. */
+    .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
+    .map-mode-sr-label { position:absolute !important; width:1px !important; height:1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+    .map-mode-control { position:relative !important; padding:0 !important; border:none !important; background:transparent !important; box-shadow:none !important; }
+    .map-mode-picker { position:relative; z-index:10020; }
+    .map-mode-toggle, .map-mode-option { min-height:42px; border-radius:999px; border:1px solid #c9a27f; background:linear-gradient(180deg,#fffdf9,#f2e8dc); color:rgb(240,120,0); font-weight:900; letter-spacing:.08em; text-transform:uppercase; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.10), 0 3px 7px rgba(0,0,0,.18); }
+    .map-mode-toggle { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 16px; cursor:pointer; }
+    .map-mode-label { font-size:10px; color:rgb(240,120,0); white-space:nowrap; }
+    .map-mode-current { display:inline-flex; align-items:center; justify-content:center; min-width:112px; }
+    .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
+    .map-mode-text { color:rgb(240,120,0); font-weight:900; letter-spacing:.10em; white-space:nowrap; }
+    .map-mode-menu { position:absolute; top:calc(100% + 8px); left:0; display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
+    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 14px; cursor:pointer; }
+    .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active { border-color:rgb(240,120,0); background:linear-gradient(180deg,#fff7ee,#ead8c4); box-shadow:inset 0 0 0 2px rgb(240,120,0), inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.26), 0 4px 9px rgba(0,0,0,.22); }
+  </style>
+</head>
+<body class="theme-dark">
+  <section class="page-nav-strip" aria-label="Site navigation">
+    <div class="page-nav-case">
+      <nav class="utility-nav">
+        <a class="utility-link active" href="./index.html#google-maps" aria-current="page"><span>PLANNER</span></a>
+        <a class="utility-link" href="./hunt-research.html"><span>RESEARCH</span></a>
+        <a class="utility-link" href="./vetting.html"><span>VERIFY</span></a>
+        <a class="utility-link" href="./hard-data.html"><span>HARD COPY</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <header class="topbar topbar-planner">
+    <div class="topbar-left">
+      <div class="control-group map-mode-control">
+        <label for="mapTypeSelect" class="map-mode-sr-label">Map Selector</label>
+
+        <select id="mapTypeSelect" class="map-mode-native" aria-hidden="true" tabindex="-1">
+          <option value="dwr">DWR Map</option>
+          <option value="earth">Google Earth</option>
+          <option value="google" selected>Google Maps</option>
+        </select>
+
+        <div class="map-mode-picker" data-map-mode-picker>
+          <button id="mapModeToggleBtn" class="map-mode-toggle" type="button" aria-expanded="false">
+            <span class="map-mode-label">Map Selector</span>
+            <span class="map-mode-current">
+              <img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">
+            </span>
+          </button>
+
+          <div class="map-mode-menu" hidden>
+            <button type="button" class="map-mode-option" data-map-mode-value="google">
+              <img class="map-mode-option-logo" src="./assets/logos/google-maps-logo.png" alt="">
+              <span>Google Maps</span>
+            </button>
+
+            <button type="button" class="map-mode-option" data-map-mode-value="earth">
+              <img class="map-mode-option-logo" src="./assets/logos/google_earth_logo.png" alt="">
+              <span>Google Earth</span>
+            </button>
+
+            <button type="button" class="map-mode-option" data-map-mode-value="dwr">
+              <span>DWR Map</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <div class="toggle-row">
+        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+        <details class="toggle-menu">
+          <summary id="federalLayersSummary">Federal</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="stateLayersSummary">State</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+          </div>
+        </details>
+        <details class="toggle-menu">
+          <summary id="privateLayersSummary">Private</summary>
+          <div class="toggle-menu-panel">
+            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+          </div>
+        </details>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="controls-center">
+        <a id="plannerDnrLogoLink" class="header-dnr-link" href="#" aria-label="Open Utah DWR Map">
+          <img src="./assets/logos/DWR-LOGO.png" alt="Utah DWR logo" />
+        </a>
+      </div>
+    </div>
+    <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
+    <section id="instructionsPanel" class="instructions-panel" hidden>
+      <div class="instructions-head">
+        <h3>Quick Instructions</h3>
+        <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
+      </div>
+      <ol>
+        <li>Choose map mode and land layers.</li>
+        <li>Filter species, sex, hunt type, and units.</li>
+        <li>Click a unit or hunt card to inspect odds and details.</li>
+        <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
+      </ol>
+    </section>
+  </header>
+  <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
+    <div class="ownership-case"></div>
+  </div>
+
+  <div class="planner-body">
+  <section class="hero" aria-label="Introduction">
+    <!-- Hero tagline removed per UI simplification request -->
+  </section>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Build Your Hunt</h2>
+        <div class="panel-body">
+          <div class="field">
+            <label for="searchInput">Search by hunt number</label>
+            <input id="searchInput" class="hunt-input" type="text" placeholder="Search code, name, or unit..." />
+          </div>
+          <div class="field">
+            <label for="speciesFilter">Species</label>
+            <select id="speciesFilter" class="hunt-select"><option value="All Species">Loading...</option></select>
+          </div>
+          <div class="field">
+            <label for="sexFilter">Sex</label>
+            <select id="sexFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntTypeFilter">Hunt Type</label>
+            <select id="huntTypeFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="huntCategoryFilter">Hunt Class</label>
+            <select id="huntCategoryFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="weaponFilter">Weapon Type</label>
+            <select id="weaponFilter" class="hunt-select"><option value="All">All</option></select>
+          </div>
+          <div class="field">
+            <label for="unitFilter">DWR Hunt Units</label>
+            <select id="unitFilter" class="hunt-select"><option value="">Loading...</option></select>
+          </div>
+          <div class="filter-actions">
+            <button id="applyFiltersBtn" type="button">Apply Filters</button>
+            <button id="clearFiltersBtn" type="button" class="secondary">Clear All</button>
+          </div>
+          <div id="status" class="status">Loading map...</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Available Hunts</h2>
+        <div class="panel-body">
+          <div id="matchingHunts" class="hunt-list">
+            <div class="empty-note">Use filters or click a unit to load hunts.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Hunt Analysis</h2>
+        <div class="panel-body" id="selectedHuntPanel">
+          <div class="empty-note">Select a hunt to see draw odds, trends, and outfitter matches.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Saved Hunts</h2>
+        <div class="panel-body">
+          <div id="huntBasket" class="hunt-list">
+            <div class="empty-note">Save hunts to compare them here.</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+      <section class="map-wrap">
+        <div class="map-stage">
+          <div id="map" aria-label="Google DWR mirror map"></div>
+          <iframe
+            id="googleEarthFrame"
+            class="google-earth-frame"
+            title="Google Earth"
+            loading="lazy"
+            allow="geolocation; fullscreen"
+            referrerpolicy="no-referrer-when-downgrade"
+            hidden
+          ></iframe>
+          <iframe
+            id="dwrMapFrame"
+            class="dwr-map-frame"
+            title="Utah DWR Hunt Boundary Map"
+            loading="lazy"
+            allow="geolocation"
+            referrerpolicy="no-referrer-when-downgrade"
+            hidden
+          ></iframe>
+        </div>
+
+      <div id="mapChooser" class="map-chooser" aria-hidden="true">
+        <div class="map-chooser-head">
+          <div>
+            <div id="mapChooserKicker" class="map-chooser-kicker">Selected Unit</div>
+            <h3 id="mapChooserTitle" class="map-chooser-title">Available Hunts</h3>
+          </div>
+          <button id="closeMapChooserBtn" type="button" class="secondary">Close</button>
+        </div>
+        <div id="mapChooserBody" class="map-chooser-body">
+          <div class="map-chooser-empty">Click a boundary to load hunts.</div>
+        </div>
+      </div>
+
+      <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
+
+      <!-- Collapsible basemap controls (lives on top of the map, not in the right sidebar). -->
+      <div id="basemapPopover" class="basemap-pop" aria-hidden="true">
+        <button id="basemapToggleBtn" type="button" class="basemap-toggle" aria-expanded="false">
+          <span>Basemap</span>
+        </button>
+        <div id="globeBasemapPanel" class="globe-basemap-panel" aria-hidden="true">
+          <div id="googleBasemapGrid" class="globe-basemap-grid" aria-label="Google basemap">
+            <button type="button" class="globe-basemap-btn" data-google-basemap="roadmap">Road</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="terrain">Terrain</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="hybrid">Hybrid</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="satellite">Satellite</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="rightbar">
+      <div class="rightbar-header">
+        <h2 class="rightbar-header-title">U.O.G.A.</h2>
+        <p class="rightbar-header-subtitle">Verified Outfitters</p>
+      </div>
+      <section class="panel">
+        <h2>Outfitters</h2>
+        <div class="panel-body">
+          <p class="helper" style="margin-bottom:12px;">Verified outfitters are matched by species, unit, and service fit. <a href="./vetting.html">See how verification works</a>.</p>
+          <div id="outfitterResults" class="outfitter-list">
+            <div class="empty-note">Select a hunt to load outfitters.</div>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+  </div>
+
+  <section id="huntDetailsSection" class="hunt-details-section" hidden>
+    <div class="hunt-details-head">
+      <div>
+        <p class="hunt-details-kicker">Official Utah DWR Hunt Details</p>
+        <h2 id="huntDetailsTitle" class="hunt-details-title">Selected Hunt Details</h2>
+        <p id="huntDetailsMeta" class="hunt-details-meta"></p>
+      </div>
+      <button id="closeHuntDetailsBtn" type="button" class="secondary">Close</button>
+    </div>
+    <div class="hunt-details-body">
+      <p class="hunt-details-note">
+        Official details are loaded below so visitors can stay on U.O.G.A. If the DWR page blocks embedding, use
+        <a id="huntDetailsFallbackLink" href="#" target="_blank" rel="noopener noreferrer">this fallback link</a>.
+      </p>
+      <iframe id="huntDetailsFrame" class="hunt-details-frame" loading="lazy" allow="geolocation" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
+
+  <script src="./config.js?v=20260423-terrain-inpage-1"></script>
+  <script src="./ui.js?v=20260423-mobile-polish-1"></script>
+  <script src="./header-layout.js?v=20260423-terrain-inpage-1"></script>
+  <script src="./ownership-dock.js?v=20260423-terrain-inpage-1"></script>
+  <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
+  <script src="app.js?v=20260423-white-header-nav-1"></script>
+  <script src="./google-basemap.js?v=20260423-terrain-inpage-1"></script>
+
+  <script>
+    (() => {
+      const select = document.getElementById('mapTypeSelect');
+      const picker = document.querySelector('[data-map-mode-picker]');
+      const toggle = document.getElementById('mapModeToggleBtn');
+      const menu = picker?.querySelector('.map-mode-menu');
+      const current = picker?.querySelector('.map-mode-current');
+      if (!select || !picker || !toggle || !menu || !current) return;
+
+      const modes = {
+        google: { html: '<img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">' },
+        earth: { html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">' },
+        dwr: { html: '<span class="map-mode-text">DWR Map</span>' }
+      };
+
+      function syncPicker() {
+        const value = select.value || 'google';
+        current.innerHTML = (modes[value] || modes.google).html;
+        menu.querySelectorAll('.map-mode-option').forEach(btn => {
+          btn.classList.toggle('is-active', btn.dataset.mapModeValue === value);
+        });
+      }
+
+      toggle.addEventListener('click', event => {
+        event.preventDefault();
+        const willOpen = menu.hidden;
+        menu.hidden = !willOpen;
+        toggle.setAttribute('aria-expanded', String(willOpen));
+      });
+
+      menu.querySelectorAll('.map-mode-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          select.value = btn.dataset.mapModeValue;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          menu.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+          syncPicker();
+        });
+      });
+
+      document.addEventListener('click', event => {
+        if (!picker.contains(event.target)) {
+          menu.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      select.addEventListener('change', syncPicker);
+      syncPicker();
+    })();
+  </script>
+</body>
+</html>
