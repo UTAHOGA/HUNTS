@@ -2583,3 +2583,286 @@ label.toggle-chip:has(input:checked),
   }
 }
 
+
+/* =========================================================
+   FINAL ACTUAL FIX — PRESERVE INNER ORANGE RING
+   Added after all earlier rules so it wins the cascade.
+   Keeps: brown active pill + white text + orange inner ring + bevel.
+   ========================================================= */
+
+:root {
+  --accent: rgb(240, 120, 0);
+  --accent-dark: rgb(240, 120, 0);
+  --uoga-active-brown: #3b2a1f;
+  --uoga-pill-edge: #c9a27f;
+  --uoga-pill-raised-bg: linear-gradient(180deg, #ffffff 0%, #f2e8dc 100%);
+  --uoga-pill-raised-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 2px rgba(0,0,0,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+  --uoga-pill-active-ring-shadow:
+    inset 0 0 0 2px rgb(240, 120, 0),
+    inset 0 2px 4px rgba(0,0,0,0.40),
+    inset 0 -1px 0 rgba(255,255,255,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+}
+
+/* Keep the hunt backpack / land ownership dropdowns above map controls and panels. */
+.topbar,
+.topbar.topbar-planner,
+.ownership-dock,
+.ownership-case,
+.toggle-row,
+.toggle-menu {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.topbar,
+.topbar.topbar-planner { z-index: 20000 !important; }
+.ownership-dock,
+.ownership-case,
+.toggle-row { z-index: 21000 !important; }
+.toggle-menu { z-index: 22000 !important; }
+.toggle-menu[open] { z-index: 23000 !important; }
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel { z-index: 24000 !important; }
+
+/* Base raised pill look for land ownership and dropdown controls. */
+.toggle-chip,
+.toggle-menu > summary,
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary,
+.control-group select#mapTypeSelect,
+.basemap-toggle > span,
+.globe-basemap-btn {
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+}
+
+/* Land/backpack layout: no outer container box. */
+.toggle-row,
+.ownership-dock .toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-wrap: wrap !important;
+  max-width: 100% !important;
+}
+
+.toggle-chip,
+.toggle-menu > summary,
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  min-width: 106px !important;
+  padding: 0 14px !important;
+  font-size: 11px !important;
+  letter-spacing: .08em !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.toggle-chip input,
+.ownership-dock .toggle-chip input {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: rgb(240, 120, 0) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.toggle-chip-label,
+.ownership-dock .toggle-chip-label {
+  display: inline-block !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  color: currentColor !important;
+}
+
+/* Active/checked state: brown pill, white text, orange inner ring retained. */
+label.toggle-chip:has(input:checked),
+.toggle-menu[open] > summary,
+.ownership-dock label.toggle-chip:has(input:checked),
+.ownership-dock .toggle-menu[open] > summary,
+.control-group select#mapTypeSelect:focus,
+.basemap-toggle[aria-expanded="true"] > span,
+.globe-basemap-btn.is-active,
+.globe-basemap-btn[aria-pressed="true"] {
+  background: var(--uoga-active-brown) !important;
+  color: #ffffff !important;
+  border-color: rgb(240, 120, 0) !important;
+  box-shadow: var(--uoga-pill-active-ring-shadow) !important;
+}
+
+.toggle-menu > summary { list-style: none !important; }
+.toggle-menu > summary::-webkit-details-marker { display: none !important; }
+.toggle-menu > summary::after {
+  content: "▾" !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: currentColor !important;
+}
+.toggle-menu[open] > summary::after { content: "▴" !important; }
+
+.toggle-menu-count { color: rgb(240, 120, 0) !important; font-weight: 900 !important; }
+.toggle-menu[open] .toggle-menu-count { color: #ffffff !important; }
+
+/* Dropdown menus: just pill options, no visible outer container box. */
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  min-width: 190px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.toggle-menu-panel .toggle-chip,
+.ownership-dock .toggle-menu-panel .toggle-chip {
+  display: grid !important;
+  grid-template-columns: 16px auto !important;
+  align-items: center !important;
+  justify-content: start !important;
+  gap: 8px !important;
+  min-width: 190px !important;
+  white-space: normal !important;
+}
+
+/* Map/Terrain selector: wider matching pill. */
+.control-group:has(#mapTypeSelect) {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+}
+
+.control-group label[for="mapTypeSelect"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.control-group select#mapTypeSelect {
+  height: 38px !important;
+  min-height: 38px !important;
+  min-width: 210px !important;
+  padding: 0 42px 0 16px !important;
+  font-size: 12px !important;
+  letter-spacing: .14em !important;
+  cursor: pointer !important;
+  appearance: none !important;
+}
+
+/* Basemap panel: 4 visible pills, one column, no container box. */
+.globe-basemap-panel {
+  width: 220px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 5001 !important;
+}
+
+.globe-basemap-title,
+.globe-basemap-note,
+.globe-basemap-select,
+.globe-basemap-divider {
+  display: none !important;
+}
+
+.globe-basemap-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  width: 220px !important;
+}
+
+.globe-basemap-btn {
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 220px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  letter-spacing: .12em !important;
+  text-align: center !important;
+}
+
+.globe-basemap-btn[data-globe-basemap="esriImagery"],
+.globe-basemap-btn[data-globe-basemap="usgsImagery"],
+.globe-basemap-btn[data-globe-basemap="esriTopo"],
+.globe-basemap-btn[data-globe-basemap="usgsTopo"] {
+  display: inline-flex !important;
+}
+
+.toggle-chip:hover,
+.toggle-menu > summary:hover,
+.control-group select#mapTypeSelect:hover,
+.basemap-toggle:hover > span,
+.globe-basemap-btn:hover {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+}
+
+@media (max-width: 900px) {
+  .toggle-row,
+  .ownership-dock .toggle-row {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    padding-bottom: 8px !important;
+  }
+
+  .toggle-menu-panel,
+  .ownership-dock .toggle-menu-panel {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  .control-group select#mapTypeSelect,
+  .basemap-toggle,
+  .basemap-toggle > span,
+  .globe-basemap-panel,
+  .globe-basemap-grid,
+  .globe-basemap-btn {
+    width: 220px !important;
+    min-width: 220px !important;
+  }
+}
