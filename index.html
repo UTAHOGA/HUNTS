@@ -9,6 +9,21 @@
   <link rel="stylesheet" href="./style.css?v=20260423-planner-header-refine-1" />
   <style>
     /* Basemap popover is styled in style.css; keep index.html free of positioning rules. */
+
+    /* Self-contained Map Selector repair. Keep this here so the HTML replacement works even if style.css has older rules. */
+    .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
+    .map-mode-sr-label { position:absolute !important; width:1px !important; height:1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
+    .map-mode-control { position:relative !important; padding:0 !important; border:none !important; background:transparent !important; box-shadow:none !important; }
+    .map-mode-picker { position:relative; z-index:10020; }
+    .map-mode-toggle, .map-mode-option { min-height:42px; border-radius:999px; border:1px solid #c9a27f; background:linear-gradient(180deg,#fffdf9,#f2e8dc); color:rgb(240,120,0); font-weight:900; letter-spacing:.08em; text-transform:uppercase; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.10), 0 3px 7px rgba(0,0,0,.18); }
+    .map-mode-toggle { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 16px; cursor:pointer; }
+    .map-mode-label { font-size:10px; color:rgb(240,120,0); white-space:nowrap; }
+    .map-mode-current { display:inline-flex; align-items:center; justify-content:center; min-width:112px; }
+    .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
+    .map-mode-text { color:rgb(240,120,0); font-weight:900; letter-spacing:.10em; white-space:nowrap; }
+    .map-mode-menu { position:absolute; top:calc(100% + 8px); left:0; display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
+    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 14px; cursor:pointer; }
+    .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active { border-color:rgb(240,120,0); background:linear-gradient(180deg,#fff7ee,#ead8c4); box-shadow:inset 0 0 0 2px rgb(240,120,0), inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.26), 0 4px 9px rgba(0,0,0,.22); }
   </style>
 </head>
 <body class="theme-dark">
@@ -25,13 +40,39 @@
 
   <header class="topbar topbar-planner">
     <div class="topbar-left">
-      <div class="control-group">
-        <label for="mapTypeSelect">Hunt Terrain</label>
-        <select id="mapTypeSelect">
-          <option value="dwr">DWR</option>
+      <div class="control-group map-mode-control">
+        <label for="mapTypeSelect" class="map-mode-sr-label">Map Selector</label>
+
+        <select id="mapTypeSelect" class="map-mode-native" aria-hidden="true" tabindex="-1">
+          <option value="dwr">DWR Map</option>
           <option value="earth">Google Earth</option>
           <option value="google" selected>Google Maps</option>
         </select>
+
+        <div class="map-mode-picker" data-map-mode-picker>
+          <button id="mapModeToggleBtn" class="map-mode-toggle" type="button" aria-expanded="false">
+            <span class="map-mode-label">Map Selector</span>
+            <span class="map-mode-current">
+              <img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">
+            </span>
+          </button>
+
+          <div class="map-mode-menu" hidden>
+            <button type="button" class="map-mode-option" data-map-mode-value="google">
+              <img class="map-mode-option-logo" src="./assets/logos/google-maps-logo.png" alt="">
+              <span>Google Maps</span>
+            </button>
+
+            <button type="button" class="map-mode-option" data-map-mode-value="earth">
+              <img class="map-mode-option-logo" src="./assets/logos/google_earth_logo.png" alt="">
+              <span>Google Earth</span>
+            </button>
+
+            <button type="button" class="map-mode-option" data-map-mode-value="dwr">
+              <span>DWR Map</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="topbar-center">
@@ -256,5 +297,57 @@
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="app.js?v=20260423-white-header-nav-1"></script>
   <script src="./google-basemap.js?v=20260423-terrain-inpage-1"></script>
+
+  <script>
+    (() => {
+      const select = document.getElementById('mapTypeSelect');
+      const picker = document.querySelector('[data-map-mode-picker]');
+      const toggle = document.getElementById('mapModeToggleBtn');
+      const menu = picker?.querySelector('.map-mode-menu');
+      const current = picker?.querySelector('.map-mode-current');
+      if (!select || !picker || !toggle || !menu || !current) return;
+
+      const modes = {
+        google: { html: '<img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">' },
+        earth: { html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">' },
+        dwr: { html: '<span class="map-mode-text">DWR Map</span>' }
+      };
+
+      function syncPicker() {
+        const value = select.value || 'google';
+        current.innerHTML = (modes[value] || modes.google).html;
+        menu.querySelectorAll('.map-mode-option').forEach(btn => {
+          btn.classList.toggle('is-active', btn.dataset.mapModeValue === value);
+        });
+      }
+
+      toggle.addEventListener('click', event => {
+        event.preventDefault();
+        const willOpen = menu.hidden;
+        menu.hidden = !willOpen;
+        toggle.setAttribute('aria-expanded', String(willOpen));
+      });
+
+      menu.querySelectorAll('.map-mode-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          select.value = btn.dataset.mapModeValue;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          menu.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+          syncPicker();
+        });
+      });
+
+      document.addEventListener('click', event => {
+        if (!picker.contains(event.target)) {
+          menu.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      select.addEventListener('change', syncPicker);
+      syncPicker();
+    })();
+  </script>
 </body>
 </html>
