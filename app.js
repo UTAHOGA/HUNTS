@@ -1044,6 +1044,23 @@ function getMapModeHash(value) {
   return '#google-maps';
 }
 
+function syncPlannerNavState() {
+  if (typeof document === 'undefined') return;
+  const navLinks = Array.from(document.querySelectorAll('.page-nav-strip [data-map-nav]'));
+  if (!navLinks.length) return;
+  const activeMode = safe(mapTypeSelect?.value || 'google').trim().toLowerCase();
+  navLinks.forEach((link) => {
+    const mode = safe(link.getAttribute('data-map-nav')).trim().toLowerCase();
+    const isActive = mode === activeMode;
+    link.classList.toggle('active', isActive);
+    if (isActive) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+}
+
 function syncMapModeFromHash() {
   const hashMode = normalizeMapModeHash(typeof window !== 'undefined' ? window.location.hash : '');
   if (!hashMode || !mapTypeSelect || safe(mapTypeSelect.value).toLowerCase() === hashMode) return;
@@ -1079,6 +1096,7 @@ function forceGoogleMapVisible() {
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
     mapTypeSelect.value = 'google';
   }
+  syncPlannerNavState();
   syncHashFromMapMode();
   if (googleBaselineMap && typeof google !== 'undefined') {
     google.maps.event.trigger(googleBaselineMap, 'resize');
@@ -2844,6 +2862,7 @@ function applyMapMode() {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   const basemapControl = document.getElementById('globeBasemapControl');
+  syncPlannerNavState();
   syncHashFromMapMode();
 
   mapWrap.classList.remove('is-dwr-mode');
@@ -3303,6 +3322,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initDwrFrameEvents();
   initGoogleEarthFrameEvents();
   window.addEventListener('hashchange', syncMapModeFromHash);
+  syncPlannerNavState();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
   const activeGoogleMapsKey = resolveGoogleMapsApiKey();
