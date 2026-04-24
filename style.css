@@ -1925,7 +1925,7 @@ header.topbar.topbar-planner .topbar-center > .toggle-row {
   border-radius: 18px 18px 22px 18px !important;
   border: 1px solid var(--uoga-case-border) !important;
   background: var(--uoga-case-bg) !important;
-  box-shadow: var(--uoga-case-shadow) !important;
+  box-shadow: none !important;
   color: var(--accent) !important;
   font-size: 12px !important;
   font-weight: 900 !important;
@@ -1945,7 +1945,7 @@ header.topbar.topbar-planner .topbar-center > .toggle-row {
   background:
     radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%),
     linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96));
-  box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+  box-shadow: none !important;
   line-height: 1;
   white-space: nowrap;
 }
@@ -1954,9 +1954,7 @@ header.topbar.topbar-planner .topbar-center > .toggle-row {
 .page-nav-strip .utility-link.active,
 .page-nav-strip .utility-link[aria-current="page"] {
   border-color: rgba(240, 120, 0, 0.4) !important;
-  box-shadow:
-    0 0 0 2px rgba(240, 120, 0, 0.16),
-    0 14px 28px rgba(82, 44, 20, 0.30) !important;
+  box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.16) !important;
 }
 
 @media (max-width: 900px) {
