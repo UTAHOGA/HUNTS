@@ -1593,7 +1593,7 @@ html.embed header.topbar .topbar-right {
 
 /* Hunt Terrain selector: same double-pill shell and inner capsule as Hunt Backpack. */
 .topbar.topbar-planner .control-group:has(#mapTypeSelect) {
-  width: 156px !important;
+  width: 252px !important;
   min-height: var(--uoga-shell-min-h) !important;
   padding: 6px 10px 6px 8px !important;
   border-radius: 18px 18px 22px 18px !important;
@@ -1603,8 +1603,8 @@ html.embed header.topbar .topbar-right {
 }
 
 .topbar.topbar-planner .control-group select#mapTypeSelect {
-  width: 138px !important;
-  min-width: 138px !important;
+  width: 234px !important;
+  min-width: 234px !important;
   height: var(--uoga-shell-inner-h) !important;
   min-height: var(--uoga-shell-inner-h) !important;
   border-radius: 999px !important;
