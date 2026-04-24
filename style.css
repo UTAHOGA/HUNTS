@@ -481,7 +481,147 @@
     .control-group select:hover { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select:focus { outline: none; border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent), 0 0 0 2px rgba(240, 120, 0, 0.18); }
     .control-group select option { color: #14100c; }
-    .toggle-row { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 18px 18px 22px 18px; background: transparent; flex-wrap: wrap; max-width: 100%; }
+    /* ================================
+   HUNT BACKPACK / LAND LAYER PILLS
+   ================================ */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  flex-wrap: wrap;
+  max-width: 100%;
+  position: relative;
+  z-index: 10000;
+}
+
+.toggle-chip,
+.toggle-menu summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid #c9a27f;
+  background: linear-gradient(180deg, #ffffff, #f2e8dc);
+  color: rgb(240, 120, 0);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+
+  /* beveled OUT */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 2px rgba(0,0,0,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+}
+
+.toggle-chip:hover,
+.toggle-menu summary:hover {
+  border-color: rgb(240, 120, 0);
+  transform: translateY(-1px);
+}
+
+.toggle-chip input {
+  width: 16px;
+  height: 16px;
+  accent-color: rgb(240, 120, 0);
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-chip-label {
+  display: inline-block;
+  line-height: 1.05;
+  text-align: center;
+  white-space: normal;
+}
+
+label.toggle-chip:has(input:checked),
+.toggle-menu[open] summary {
+  background: #3b2a1f;
+  color: #ffffff;
+  border-color: #3b2a1f;
+
+  /* beveled IN / pressed */
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.40),
+    inset 0 -1px 0 rgba(255,255,255,0.10);
+}
+
+.toggle-menu {
+  position: relative;
+  z-index: 10000;
+}
+
+.toggle-menu[open] {
+  z-index: 10001;
+}
+
+.toggle-menu summary {
+  list-style: none;
+}
+
+.toggle-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.toggle-menu summary::after {
+  content: "▾";
+  font-size: 11px;
+  line-height: 1;
+  color: currentColor;
+}
+
+.toggle-menu[open] summary::after {
+  content: "▴";
+}
+
+.toggle-menu-count {
+  color: rgb(240, 120, 0);
+  font-weight: 900;
+}
+
+.toggle-menu[open] .toggle-menu-count {
+  color: #ffffff;
+}
+
+.toggle-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 190px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  z-index: 10002;
+}
+
+.toggle-menu-panel .toggle-chip {
+  display: grid;
+  grid-template-columns: 16px auto;
+  align-items: center;
+  justify-content: start;
+  gap: 8px;
+  min-width: 190px;
+  white-space: normal;
+}.toggle-row { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 18px 18px 22px 18px; background: transparent; flex-wrap: wrap; max-width: 100%; }
     .toggle-chip { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; cursor: pointer; border-radius: 999px; padding: 0 10px; min-height: var(--nav-pill-h); border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); background: #ffffff; }
     .toggle-chip input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;}
     .toggle-chip-label { display: inline-block; line-height: 1.05; text-align: center; white-space: normal; }
@@ -1068,7 +1208,8 @@
       .utility-link,
       .control-group,
       #themeToggleBtn,
-      #streetViewBtn,.control-group select {
+      #streetViewBtn,
+.control-group select {
         width: 100%;
       }
       .toggle-row {
@@ -2003,5 +2144,725 @@ header.topbar.topbar-planner .topbar-center > .toggle-row {
   .page-nav-strip .utility-link {
     width: 100%;
     min-width: 142px;
+  }
+}
+
+
+/* =========================================================
+   FINAL REPAIR PATCH — UOGA PILL CONTROLS
+   Additive override placed at end so earlier duplicate/conflicting
+   rules cannot override the intended design.
+   Brand orange: rgb(240, 120, 0)
+   Active brown: #3b2a1f
+   ========================================================= */
+
+:root {
+  --accent: rgb(240, 120, 0);
+  --accent-dark: rgb(240, 120, 0);
+  --uoga-active-brown: #3b2a1f;
+  --uoga-pill-edge: #c9a27f;
+  --uoga-pill-raised-bg: linear-gradient(180deg, #ffffff 0%, #f2e8dc 100%);
+  --uoga-pill-raised-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 2px rgba(0,0,0,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+  --uoga-pill-pressed-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.40),
+    inset 0 -1px 0 rgba(255,255,255,0.10);
+}
+
+/* Keep Backpack / ownership dropdowns above map, basemap, chooser, and floating panels. */
+.topbar,
+.topbar.topbar-planner,
+.ownership-dock,
+.ownership-case,
+.toggle-row,
+.toggle-menu {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.topbar,
+.topbar.topbar-planner {
+  z-index: 20000 !important;
+}
+
+.ownership-dock,
+.ownership-case,
+.toggle-row {
+  z-index: 21000 !important;
+}
+
+.toggle-menu {
+  z-index: 22000 !important;
+}
+
+.toggle-menu[open] {
+  z-index: 23000 !important;
+}
+
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel {
+  z-index: 24000 !important;
+}
+
+/* -------------------------
+   HUNT BACKPACK / LAND PILLS
+   ------------------------- */
+
+.toggle-row,
+.ownership-dock .toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-wrap: wrap !important;
+  max-width: 100% !important;
+}
+
+.toggle-chip,
+.toggle-menu > summary,
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  min-width: 106px !important;
+  padding: 0 14px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+  transform: none;
+}
+
+.toggle-chip:hover,
+.toggle-menu > summary:hover,
+.ownership-dock label.toggle-chip:hover,
+.ownership-dock .toggle-menu > summary:hover {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 2px rgba(0,0,0,0.10),
+    0 5px 10px rgba(0,0,0,0.22) !important;
+}
+
+.toggle-chip input,
+.ownership-dock .toggle-chip input {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: rgb(240, 120, 0) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.toggle-chip-label,
+.ownership-dock .toggle-chip-label {
+  display: inline-block !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  color: currentColor !important;
+}
+
+/* Checked/active state: brown outer pill, white text, pressed bevel. */
+label.toggle-chip:has(input:checked),
+.toggle-menu[open] > summary,
+.ownership-dock label.toggle-chip:has(input:checked),
+.ownership-dock .toggle-menu[open] > summary {
+  background: var(--uoga-active-brown) !important;
+  color: #ffffff !important;
+  border-color: var(--uoga-active-brown) !important;
+  box-shadow: var(--uoga-pill-pressed-shadow) !important;
+}
+
+.toggle-menu > summary {
+  list-style: none !important;
+}
+
+.toggle-menu > summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.toggle-menu > summary::after {
+  content: "▾" !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: currentColor !important;
+}
+
+.toggle-menu[open] > summary::after {
+  content: "▴" !important;
+}
+
+.toggle-menu-count {
+  color: rgb(240, 120, 0) !important;
+  font-weight: 900 !important;
+}
+
+.toggle-menu[open] .toggle-menu-count {
+  color: #ffffff !important;
+}
+
+/* Dropdown contents: expanding pills only, no surrounding box. */
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  min-width: 190px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.toggle-menu-panel .toggle-chip,
+.ownership-dock .toggle-menu-panel .toggle-chip {
+  display: grid !important;
+  grid-template-columns: 16px auto !important;
+  align-items: center !important;
+  justify-content: start !important;
+  gap: 8px !important;
+  min-width: 190px !important;
+  white-space: normal !important;
+}
+
+/* -------------------------
+   MAP / TERRAIN SELECTOR
+   ------------------------- */
+
+.control-group:has(#mapTypeSelect) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+  gap: 0 !important;
+}
+
+.control-group label[for="mapTypeSelect"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.control-group select#mapTypeSelect {
+  height: 38px !important;
+  min-height: 38px !important;
+  min-width: 220px !important;
+  padding: 0 42px 0 16px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  background-size: 12px 8px !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgb(240,120,0) 50%),
+    linear-gradient(135deg, rgb(240,120,0) 50%, transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #f2e8dc 100%) !important;
+}
+
+.control-group select#mapTypeSelect:hover {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+}
+
+.control-group select#mapTypeSelect:focus {
+  outline: none !important;
+  background: var(--uoga-active-brown) !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #ffffff 50%),
+    linear-gradient(135deg, #ffffff 50%, transparent 50%) !important;
+  background-repeat: no-repeat !important;
+  background-position: right 14px center !important;
+  background-size: 12px 8px !important;
+  color: #ffffff !important;
+  border-color: var(--uoga-active-brown) !important;
+  box-shadow: var(--uoga-pill-pressed-shadow) !important;
+}
+
+.control-group select#mapTypeSelect option {
+  background: #fffdf9 !important;
+  color: #3b2a1f !important;
+  font-weight: 900 !important;
+}
+
+/* -------------------------
+   BASEMAP PILL + FOUR OPTION PILLS
+   ------------------------- */
+
+.basemap-pop {
+  z-index: 5000 !important;
+}
+
+.basemap-toggle {
+  width: 220px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgb(240, 120, 0) !important;
+}
+
+.basemap-toggle > span,
+.basemap-toggle {
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+}
+
+.basemap-toggle > span {
+  width: 220px !important;
+  min-height: 38px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+}
+
+.basemap-toggle:hover > span {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+}
+
+.basemap-toggle[aria-expanded="true"] > span {
+  background: var(--uoga-active-brown) !important;
+  color: #ffffff !important;
+  border-color: var(--uoga-active-brown) !important;
+  box-shadow: var(--uoga-pill-pressed-shadow) !important;
+}
+
+/* Dropdown panel: no container box; just four beveled pills in one column. */
+.basemap-pop .globe-basemap-panel,
+.globe-basemap-panel[aria-hidden="false"] {
+  position: absolute !important;
+  top: calc(38px + 10px) !important;
+  right: 0 !important;
+  width: 220px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  z-index: 5001 !important;
+}
+
+.globe-basemap-title,
+.globe-basemap-note,
+.globe-basemap-select,
+.globe-basemap-divider {
+  display: none !important;
+}
+
+.globe-basemap-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  width: 220px !important;
+  justify-items: stretch !important;
+  align-items: center !important;
+}
+
+.globe-basemap-btn {
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 220px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+}
+
+.globe-basemap-btn[data-globe-basemap="esriImagery"],
+.globe-basemap-btn[data-globe-basemap="usgsImagery"],
+.globe-basemap-btn[data-globe-basemap="esriTopo"],
+.globe-basemap-btn[data-globe-basemap="usgsTopo"] {
+  display: inline-flex !important;
+}
+
+.globe-basemap-btn:hover {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+}
+
+.globe-basemap-btn.is-active,
+.globe-basemap-btn[aria-pressed="true"] {
+  background: var(--uoga-active-brown) !important;
+  color: #ffffff !important;
+  border-color: var(--uoga-active-brown) !important;
+  box-shadow: var(--uoga-pill-pressed-shadow) !important;
+}
+
+/* Mobile: keep controls usable without clipping dropdowns. */
+@media (max-width: 900px) {
+  .toggle-row,
+  .ownership-dock .toggle-row {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    padding-bottom: 8px !important;
+  }
+
+  .toggle-menu-panel,
+  .ownership-dock .toggle-menu-panel {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  .control-group select#mapTypeSelect,
+  .basemap-toggle,
+  .basemap-toggle > span,
+  .basemap-pop .globe-basemap-panel,
+  .globe-basemap-grid,
+  .globe-basemap-btn {
+    width: 220px !important;
+    min-width: 220px !important;
+  }
+}
+
+
+/* =========================================================
+   FINAL ACTUAL FIX — PRESERVE INNER ORANGE RING
+   Added after all earlier rules so it wins the cascade.
+   Keeps: brown active pill + white text + orange inner ring + bevel.
+   ========================================================= */
+
+:root {
+  --accent: rgb(240, 120, 0);
+  --accent-dark: rgb(240, 120, 0);
+  --uoga-active-brown: #3b2a1f;
+  --uoga-pill-edge: #c9a27f;
+  --uoga-pill-raised-bg: linear-gradient(180deg, #ffffff 0%, #f2e8dc 100%);
+  --uoga-pill-raised-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -2px 2px rgba(0,0,0,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+  --uoga-pill-active-ring-shadow:
+    inset 0 0 0 2px rgb(240, 120, 0),
+    inset 0 2px 4px rgba(0,0,0,0.40),
+    inset 0 -1px 0 rgba(255,255,255,0.10),
+    0 3px 7px rgba(0,0,0,0.18);
+}
+
+/* Keep the hunt backpack / land ownership dropdowns above map controls and panels. */
+.topbar,
+.topbar.topbar-planner,
+.ownership-dock,
+.ownership-case,
+.toggle-row,
+.toggle-menu {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.topbar,
+.topbar.topbar-planner { z-index: 20000 !important; }
+.ownership-dock,
+.ownership-case,
+.toggle-row { z-index: 21000 !important; }
+.toggle-menu { z-index: 22000 !important; }
+.toggle-menu[open] { z-index: 23000 !important; }
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel { z-index: 24000 !important; }
+
+/* Base raised pill look for land ownership and dropdown controls. */
+.toggle-chip,
+.toggle-menu > summary,
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary,
+.control-group select#mapTypeSelect,
+.basemap-toggle > span,
+.globe-basemap-btn {
+  border-radius: 999px !important;
+  border: 1px solid var(--uoga-pill-edge) !important;
+  background: var(--uoga-pill-raised-bg) !important;
+  color: rgb(240, 120, 0) !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  box-shadow: var(--uoga-pill-raised-shadow) !important;
+}
+
+/* Land/backpack layout: no outer container box. */
+.toggle-row,
+.ownership-dock .toggle-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-wrap: wrap !important;
+  max-width: 100% !important;
+}
+
+.toggle-chip,
+.toggle-menu > summary,
+.ownership-dock label.toggle-chip,
+.ownership-dock .toggle-menu > summary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-height: 38px !important;
+  min-width: 106px !important;
+  padding: 0 14px !important;
+  font-size: 11px !important;
+  letter-spacing: .08em !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  user-select: none !important;
+}
+
+.toggle-chip input,
+.ownership-dock .toggle-chip input {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: rgb(240, 120, 0) !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.toggle-chip-label,
+.ownership-dock .toggle-chip-label {
+  display: inline-block !important;
+  line-height: 1.05 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  color: currentColor !important;
+}
+
+/* Active/checked state: brown pill, white text, orange inner ring retained. */
+label.toggle-chip:has(input:checked),
+.toggle-menu[open] > summary,
+.ownership-dock label.toggle-chip:has(input:checked),
+.ownership-dock .toggle-menu[open] > summary,
+.control-group select#mapTypeSelect:focus,
+.basemap-toggle[aria-expanded="true"] > span,
+.globe-basemap-btn.is-active,
+.globe-basemap-btn[aria-pressed="true"] {
+  background: var(--uoga-active-brown) !important;
+  color: #ffffff !important;
+  border-color: rgb(240, 120, 0) !important;
+  box-shadow: var(--uoga-pill-active-ring-shadow) !important;
+}
+
+.toggle-menu > summary { list-style: none !important; }
+.toggle-menu > summary::-webkit-details-marker { display: none !important; }
+.toggle-menu > summary::after {
+  content: "▾" !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: currentColor !important;
+}
+.toggle-menu[open] > summary::after { content: "▴" !important; }
+
+.toggle-menu-count { color: rgb(240, 120, 0) !important; font-weight: 900 !important; }
+.toggle-menu[open] .toggle-menu-count { color: #ffffff !important; }
+
+/* Dropdown menus: just pill options, no visible outer container box. */
+.toggle-menu-panel,
+.ownership-dock .toggle-menu-panel {
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  left: 0 !important;
+  min-width: 190px !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.toggle-menu-panel .toggle-chip,
+.ownership-dock .toggle-menu-panel .toggle-chip {
+  display: grid !important;
+  grid-template-columns: 16px auto !important;
+  align-items: center !important;
+  justify-content: start !important;
+  gap: 8px !important;
+  min-width: 190px !important;
+  white-space: normal !important;
+}
+
+/* Map/Terrain selector: wider matching pill. */
+.control-group:has(#mapTypeSelect) {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+}
+
+.control-group label[for="mapTypeSelect"] {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.control-group select#mapTypeSelect {
+  height: 38px !important;
+  min-height: 38px !important;
+  min-width: 210px !important;
+  padding: 0 42px 0 16px !important;
+  font-size: 12px !important;
+  letter-spacing: .14em !important;
+  cursor: pointer !important;
+  appearance: none !important;
+}
+
+/* Basemap panel: 4 visible pills, one column, no container box. */
+.globe-basemap-panel {
+  width: 220px !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 5001 !important;
+}
+
+.globe-basemap-title,
+.globe-basemap-note,
+.globe-basemap-select,
+.globe-basemap-divider {
+  display: none !important;
+}
+
+.globe-basemap-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+  width: 220px !important;
+}
+
+.globe-basemap-btn {
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 220px !important;
+  min-height: 38px !important;
+  padding: 0 14px !important;
+  font-size: 12px !important;
+  letter-spacing: .12em !important;
+  text-align: center !important;
+}
+
+.globe-basemap-btn[data-globe-basemap="esriImagery"],
+.globe-basemap-btn[data-globe-basemap="usgsImagery"],
+.globe-basemap-btn[data-globe-basemap="esriTopo"],
+.globe-basemap-btn[data-globe-basemap="usgsTopo"] {
+  display: inline-flex !important;
+}
+
+.toggle-chip:hover,
+.toggle-menu > summary:hover,
+.control-group select#mapTypeSelect:hover,
+.basemap-toggle:hover > span,
+.globe-basemap-btn:hover {
+  border-color: rgb(240, 120, 0) !important;
+  transform: translateY(-1px) !important;
+}
+
+@media (max-width: 900px) {
+  .toggle-row,
+  .ownership-dock .toggle-row {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    padding-bottom: 8px !important;
+  }
+
+  .toggle-menu-panel,
+  .ownership-dock .toggle-menu-panel {
+    left: 0 !important;
+    right: auto !important;
+  }
+
+  .control-group select#mapTypeSelect,
+  .basemap-toggle,
+  .basemap-toggle > span,
+  .globe-basemap-panel,
+  .globe-basemap-grid,
+  .globe-basemap-btn {
+    width: 220px !important;
+    min-width: 220px !important;
   }
 }
