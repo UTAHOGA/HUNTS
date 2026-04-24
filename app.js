@@ -3019,9 +3019,7 @@ function initGoogleBaseline() {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
     mapTypeId: 'terrain',
-    // Page-first scrolling: don't let the mouse wheel get "stuck" zooming the map.
-    // Zoom still works with trackpad gestures or by using the map controls.
-    gestureHandling: 'cooperative',
+    gestureHandling: 'greedy',
     streetViewControl: true,
     fullscreenControl: true,
     mapTypeControl: false
