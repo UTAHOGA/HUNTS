@@ -6,27 +6,52 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>Utah Hunt Planner</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
-  <link rel="stylesheet" href="./style.css?v=20260423-planner-header-refine-1" />
+  <link rel="stylesheet" href="./style.css?v=20260423-light-pill-rebuild-1" />
   <style>
-    /* Basemap popover is styled in style.css; keep index.html free of positioning rules. */
-
-    /* Self-contained Map Selector repair. Keep this here so the HTML replacement works even if style.css has older rules. */
+    /* Light rebuild pass: keep app.js wiring, improve visual direction. */
+    body { background-color:#f4efe4; }
     .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
     .map-mode-sr-label { position:absolute !important; width:1px !important; height:1px !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
     .map-mode-control { position:relative !important; padding:0 !important; border:none !important; background:transparent !important; box-shadow:none !important; }
     .map-mode-picker { position:relative; z-index:10020; }
-    .map-mode-toggle, .map-mode-option { min-height:42px; border-radius:999px; border:1px solid #c9a27f; background:linear-gradient(180deg,#fffdf9,#f2e8dc); color:rgb(240,120,0); font-weight:900; letter-spacing:.08em; text-transform:uppercase; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.10), 0 3px 7px rgba(0,0,0,.18); }
-    .map-mode-toggle { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 16px; cursor:pointer; }
-    .map-mode-label { font-size:10px; color:rgb(240,120,0); white-space:nowrap; }
+    .map-mode-toggle,
+    .map-mode-option,
+    .topbar .toggle-row,
+    .utility-link,
+    .basemap-toggle,
+    .globe-basemap-btn {
+      border-radius:999px !important;
+      border:1px solid #c9a27f !important;
+      background:linear-gradient(180deg,#fffdf9,#f2e8dc) !important;
+      color:#2b1c12 !important;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
+    }
+    .map-mode-toggle { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; min-height:42px; padding:0 16px; cursor:pointer; }
+    .map-mode-label { font-size:10px; color:#f07800; white-space:nowrap; }
     .map-mode-current { display:inline-flex; align-items:center; justify-content:center; min-width:112px; }
     .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
-    .map-mode-text { color:rgb(240,120,0); font-weight:900; letter-spacing:.10em; white-space:nowrap; }
+    .map-mode-text { color:#f07800; font-weight:900; letter-spacing:.10em; white-space:nowrap; }
     .map-mode-menu { position:absolute; top:calc(100% + 8px); left:0; display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
-    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; padding:0 14px; cursor:pointer; }
-    .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active { border-color:rgb(240,120,0); background:linear-gradient(180deg,#fff7ee,#ead8c4); box-shadow:inset 0 0 0 2px rgb(240,120,0), inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.26), 0 4px 9px rgba(0,0,0,.22); }
+    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; min-height:42px; padding:0 14px; cursor:pointer; }
+    .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active, .utility-link.active {
+      border-color:#f07800 !important;
+      background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
+      color:#2b1c12 !important;
+      box-shadow:inset 0 0 0 2px #f07800, inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.18), 0 6px 14px rgba(58,37,18,.18) !important;
+    }
+    .hero {
+      padding:16px 22px 14px !important;
+      background:linear-gradient(180deg,rgba(255,253,249,.92),rgba(244,239,228,.86)) !important;
+    }
+    .hero h1 { margin:0; color:#2b1c12; }
+    .hero p { margin:8px auto 0; color:#6b5646; }
+    .quick-start { background:rgba(255,255,255,.44) !important; }
   </style>
 </head>
-<body class="theme-dark">
+<body>
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
       <nav class="utility-nav">
@@ -130,7 +155,15 @@
 
   <div class="planner-body">
   <section class="hero" aria-label="Introduction">
-    <!-- Hero tagline removed per UI simplification request -->
+    <h1>Plan Your Hunt Like a Professional</h1>
+    <p>Map it, analyze it, compare it, and match it with verified outfitters.</p>
+  </section>
+
+  <section class="quick-start" aria-label="Quick start steps">
+    <div class="qs-step">1. Pick map mode</div>
+    <div class="qs-step">2. Filter species and hunt class</div>
+    <div class="qs-step">3. Select a hunt unit</div>
+    <div class="qs-step">4. Save to Hunt Backpack</div>
   </section>
 
   <main class="layout">
@@ -238,7 +271,6 @@
 
       <div id="selectedHuntFloat" class="selected-hunt-float" aria-hidden="true"></div>
 
-      <!-- Collapsible basemap controls (lives on top of the map, not in the right sidebar). -->
       <div id="basemapPopover" class="basemap-pop" aria-hidden="true">
         <button id="basemapToggleBtn" type="button" class="basemap-toggle" aria-expanded="false">
           <span>Basemap</span>
