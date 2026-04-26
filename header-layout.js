@@ -207,7 +207,8 @@
 
   function init() {
     injectLightPillStyle();
-    moveNavStripIntoHeader();
+    // Keep page nav strip in its own row so cross-page nav pills remain visible.
+    // Moving it inside .topbar collides with legacy "header cleanup" CSS rules.
     bindMapEngine();
   }
 
