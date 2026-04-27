@@ -1407,3 +1407,50 @@ button#mapModeToggleBtn .map-mode-label {
     padding: 10px;
   }
 }
+/* =========================================================
+   MAP MODE PICKER (STABLE PATCH – 2026-04-27)
+   ========================================================= */
+
+.map-mode-menu {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel2);
+  box-shadow: var(--shadow);
+}
+
+.map-mode-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel2);
+  cursor: pointer;
+}
+
+.map-mode-option:hover {
+  border-color: var(--accent);
+}
+
+.map-mode-option.is-active {
+  border-color: var(--selected-outline);
+  background: linear-gradient(180deg, var(--selected-fill), var(--selected-fill-dark));
+  color: var(--selected-text);
+}
+
+.map-mode-option-logo {
+  max-width: 120px;
+  max-height: 24px;
+  height: auto;
+  width: auto;
+  display: block;
+}
+
+.map-mode-option[data-map-mode-value="earth"] .map-mode-option-logo {
+  max-width: 140px;
+}
