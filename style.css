@@ -827,3 +827,51 @@
     width: 100%;
   }
 }
+
+/* --- Header Button (Map Selector) --- */
+button#mapModeToggleBtn {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  height: 42px !important;
+  padding: 0 !important;
+}
+
+button#mapModeToggleBtn .map-mode-label {
+  margin-top: 8px !important;
+  font-size: 18px !important;
+  color: rgb(240, 120, 0) !important;
+  font-weight: 600 !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5), -1px -1px 0 rgba(0,0,0,0.5), 1px -1px 0 rgba(0,0,0,0.5), -1px 1px 0 rgba(0,0,0,0.5) !important;
+}
+
+/* --- Dropdown Menu Container --- */
+.map-mode-menu {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important; /* Buttons closer together */
+  padding: 4px 0 !important;
+  margin-right: auto !important; /* Align to the left */
+}
+
+/* --- Dropdown Buttons (Perfect Size Locked) --- */
+.map-mode-menu .map-mode-option {
+  width: 180px !important;
+  height: 34px !important;
+  padding: 4px 12px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: white !important;
+  border: none !important;
+}
+
+.map-mode-menu .map-mode-option img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 26px !important; /* Scaled to fit perfectly */
+  object-fit: contain !important;
+}
