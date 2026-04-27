@@ -1,4 +1,10 @@
-    /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
+/* ============================================================================
+   U.O.G.A. MAIN TRUNK STYLESHEET
+   Map-first planner baseline.
+   Last organized: 2026-04-27
+   ============================================================================ */
+
+/* --- LIGHT MODE (CLASSIC) VARIABLES --- */
     :root {
       --bg: #f4efe4;
       --panel: rgba(255, 251, 244, 0.97);
@@ -62,12 +68,8 @@
       flex: 1;
       min-height: 0;
     }
-
     .hero {
-      text-align: center;
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255, 102, 0, 0.06), transparent);
+      display: none !important;
     }
     .hero h1 {
       margin: 0;
@@ -87,16 +89,8 @@
       line-height: 1.5;
       color: var(--muted);
     }
-
     .quick-start {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: stretch;
-      gap: 10px 14px;
-      padding: 12px 18px 16px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.12);
+      display: none !important;
     }
     body:not(.theme-dark) .quick-start {
       background: rgba(255, 255, 255, 0.35);
@@ -120,11 +114,19 @@
     }
 
     /* --- TOPBAR & LOGO LOCKUP --- */
-    .topbar { 
-      display: flex; align-items: center; justify-content: space-between; gap: 18px; 
-      padding: 12px 20px; background: var(--panel); 
-      border-bottom: 1px solid var(--line); box-shadow: var(--shadow); z-index: 2; 
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    .topbar {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 8px 14px;
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      border-bottom: 1px solid var(--line);
+      box-shadow: none;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
     .brand { min-width: 0; }
     .brand-logo-lockup { display: flex; align-items: center; justify-content: center; gap: 16px; width: 100%; }
@@ -267,9 +269,23 @@
     button.secondary:hover { background: var(--panel); }
     
     /* --- LAYOUT & SIDEBAR --- */
-    .layout { display: grid; grid-template-columns: 340px minmax(0, 1fr) 320px; min-height: 0; }
-    .sidebar { border-right: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 14px; backdrop-filter: blur(10px); min-width: 0; }
-    .rightbar { border-left: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 14px; backdrop-filter: blur(10px); min-width: 0; }
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 0;
+    }
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 76%, transparent);
+      overflow: auto;
+      padding: 10px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      min-width: 0;
+    }
+    .rightbar {
+      display: none;
+    }
     .rightbar-header {
       margin-bottom: 12px;
       padding: 14px 12px 16px;
@@ -293,9 +309,27 @@
       line-height: 1;
       color: var(--accent);
     }
-    .panel { border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
-    .panel h2 { margin: 0; padding: 12px 14px; font-family: var(--font-display); font-size: 19px; line-height: 1.05; background: linear-gradient(180deg, var(--accent), var(--accent-dark)); color: #fff6ed; letter-spacing: 0.02em; }
-    .panel-body { padding: 14px; }
+    .panel {
+      border: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--panel2) 88%, transparent);
+      box-shadow: none;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .panel h2 {
+      margin: 0;
+      padding: 10px 12px;
+      font-family: var(--font-display);
+      font-size: 17px;
+      line-height: 1.05;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      color: #fff6ed;
+      letter-spacing: 0.02em;
+    }
+    .panel-body {
+      padding: 10px;
+    }
     .helper, .empty-note { color: var(--muted); line-height: 1.45; font-size: 14px; margin: 0; }
     .status { margin-top: 12px; color: var(--text); font-size: 13px; font-weight: 700; padding: 8px; background: var(--panel); border-radius: 6px; border: 1px dashed var(--accent); text-align: center;}
     
@@ -366,9 +400,23 @@
     body.theme-dark .hunt-basket-actions a {
       color: #7cbcf7;
     }
-    .hunt-card, .map-chooser-card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; display: grid; gap: 6px; cursor: pointer; transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease; }
+    .hunt-card, .map-chooser-card {
+      border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--panel) 88%, transparent);
+      padding: 10px;
+      display: grid;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: none;
+      transition: border-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+    }
     .outfitter-card { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(0,0,0,0.04)), var(--panel); padding: 14px; display: grid; gap: 10px; box-shadow: 0 10px 24px rgba(0,0,0,0.14); }
-    .hunt-card:hover, .map-chooser-card:hover { border-color: var(--accent); box-shadow: var(--shadow); transform: translateY(-2px); }
+    .hunt-card:hover, .map-chooser-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 18px rgba(58,37,18,0.12);
+      transform: translateY(-1px);
+    }
     .hunt-card.is-selected {
       border-color: var(--selected-outline);
       background: linear-gradient(180deg, rgba(224, 116, 41, 0.95), rgba(183, 89, 32, 0.96));
@@ -398,13 +446,18 @@
     
     /* --- MAP --- */
     .map-wrap { position: relative; min-height: 0; overflow: hidden; }
-    .map-stage { position: relative; width: 100%; height: 100%; min-height: calc(100vh - 225px); }
+    .map-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: calc(100vh - 128px);
+    }
     #map, #globeMap {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
-      min-height: calc(100vh - 225px);
+      min-height: calc(100vh - 128px);
     }
     #globeMap { display: none; background: #0f1723; }
     .map-wrap.is-globe-mode #map { display: none; }
@@ -783,123 +836,9 @@
       }
     }
 
-
-/* Header cleanup: keep only map/layer controls and Hunt Backpack. */
-.topbar {
-  min-height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-  padding: 12px 18px;
-}
-.topbar .brand,
-#themeToggleBtn,
-#streetViewBtn,
-#resetViewBtn,
-.hero,
-.quick-start {
-  display: none !important;
-}
-.controls.planner-controls {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.controls.planner-controls .uoga-backpack-shell {
-  margin-left: auto;
-}
-@media (max-width: 900px) {
-  .topbar {
-    min-height: auto;
-    padding: 10px 12px;
-  }
-  .controls.planner-controls {
-    justify-content: stretch;
-  }
-  .control-group,
-  .toggle-row,
-  .uoga-backpack-shell,
-  .uoga-backpack-toggle {
-    width: 100%;
-  }
-}
-
-/* --- Header Button (Map Selector) --- */
-button#mapModeToggleBtn {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  height: 42px !important;
-  padding: 0 !important;
-}
-
-button#mapModeToggleBtn .map-mode-label {
-  margin-top: 8px !important;
-  font-size: 18px !important;
-  color: rgb(240, 120, 0) !important;
-  font-weight: 600 !important;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5), -1px -1px 0 rgba(0,0,0,0.5), 1px -1px 0 rgba(0,0,0,0.5), -1px 1px 0 rgba(0,0,0,0.5) !important;
-}
-
-/* --- Dropdown Menu Container --- */
-.map-mode-menu {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important; /* Buttons closer together */
-  padding: 4px 0 !important;
-  margin-right: auto !important; /* Align to the left */
-}
-
-/* --- Dropdown Buttons (Perfect Size Locked) --- */
-.map-mode-menu .map-mode-option {
-  width: 180px !important;
-  height: 34px !important;
-  padding: 4px 12px !important;
-  box-sizing: border-box !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  background: white !important;
-  border: none !important;
-}
-
-.map-mode-menu .map-mode-option img {
-  width: auto !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: 26px !important; /* Scaled to fit perfectly */
-  object-fit: contain !important;
-}
-
 /* ============================================================================
-   U.O.G.A. MAP-FIRST POLISH PATCH
-   Purpose: reduce visual clutter, give the map priority, and keep existing
-   app.js wiring intact. Safe to append at the end of style.css.
+   PLANNER CONTROL RAIL
    ============================================================================ */
-
-/* Keep the planner focused on the map. The hero and quick-start blocks are
-   useful onboarding copy, but they consume prime vertical space in the live app. */
-.planner-body > .hero,
-.planner-body > .quick-start,
-.hero,
-.quick-start {
-  display: none !important;
-}
-
-/* Header should be a compact control rail, not a second dashboard. */
-.topbar {
-  min-height: 58px !important;
-  padding: 8px 14px !important;
-  gap: 10px !important;
-  box-shadow: none !important;
-  background: color-mix(in srgb, var(--panel) 92%, transparent) !important;
-}
-
 .topbar .brand,
 #themeToggleBtn,
 #streetViewBtn,
@@ -907,8 +846,8 @@ button#mapModeToggleBtn .map-mode-label {
   display: none !important;
 }
 
-.controls,
-.controls.planner-controls {
+.controls.planner-controls,
+.topbar .controls {
   width: 100%;
   display: flex;
   align-items: center;
@@ -917,195 +856,143 @@ button#mapModeToggleBtn .map-mode-label {
   flex-wrap: wrap;
 }
 
-.controls.planner-controls .uoga-backpack-shell,
-.uoga-backpack-shell {
+.controls.planner-controls .uoga-backpack-shell {
   margin-left: auto;
 }
 
-/* Give the map the main real estate. Outfitters/right rail can return later as a drawer. */
-.layout {
-  grid-template-columns: 280px minmax(0, 1fr) !important;
-  min-height: 0;
-}
-
-.rightbar {
-  display: none !important;
-}
-
-/* Turn the sidebar into a tool rail instead of another heavy content column. */
-.sidebar {
-  padding: 10px !important;
-  background: color-mix(in srgb, var(--panel) 68%, transparent) !important;
-  border-right: 1px solid var(--line) !important;
+/* Map selector: compact, readable, and aligned with the control rail. */
+.map-mode-control {
+  position: relative !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
   box-shadow: none !important;
 }
 
-/* Flatten standard panels. Interaction should stand out, not every box. */
-.panel {
-  border-radius: 8px !important;
-  box-shadow: none !important;
-  background: color-mix(in srgb, var(--panel2) 88%, transparent) !important;
-  margin-bottom: 10px !important;
+.map-mode-picker {
+  position: relative;
+  z-index: 10020;
 }
 
-.panel h2 {
-  padding: 10px 12px !important;
-  font-size: 17px !important;
-  line-height: 1.05 !important;
+.map-mode-native,
+.map-mode-sr-label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
 }
 
-.panel-body {
-  padding: 10px !important;
+.map-mode-toggle,
+.map-mode-option,
+.topbar .toggle-row,
+.utility-link,
+.basemap-toggle,
+.globe-basemap-btn {
+  border-radius: 999px !important;
+  border: 1px solid #c9a27f !important;
+  background: linear-gradient(180deg, #fffdf9, #f2e8dc) !important;
+  color: #2b1c12 !important;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
 }
 
-/* Compact form controls so the user can see more filters without scrolling. */
-.field {
-  gap: 4px !important;
-  margin-bottom: 9px !important;
+.map-mode-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 230px !important;
+  min-height: 42px !important;
+  padding: 0 16px !important;
+  cursor: pointer;
 }
 
-.field label {
-  font-size: 11px !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  color: var(--muted) !important;
+.map-mode-label {
+  font-size: 10px !important;
+  color: #f07800 !important;
+  white-space: nowrap;
 }
 
-.hunt-select,
-.hunt-input {
-  min-height: 36px !important;
-  padding: 8px 12px !important;
-  font-size: 13px !important;
+.map-mode-current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 112px;
 }
 
-.filter-actions {
-  gap: 8px !important;
-  margin-top: 12px !important;
+.map-mode-logo,
+.map-mode-option-logo {
+  max-height: 20px;
+  max-width: 118px;
+  width: auto;
+  height: auto;
+  display: block;
 }
 
-/* Hunt cards should read as selectable rows; only the active card gets weight. */
-.hunt-card,
-.map-chooser-card,
-.hunt-basket-card,
-.outfitter-card {
-  box-shadow: none !important;
-  border-color: color-mix(in srgb, var(--line) 72%, transparent) !important;
+.map-mode-text {
+  color: #f07800;
+  font-weight: 900;
+  letter-spacing: .10em;
+  white-space: nowrap;
 }
 
-.hunt-card:hover,
-.map-chooser-card:hover {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(58, 37, 18, 0.10) !important;
+.map-mode-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  z-index: 10030;
 }
 
-.hunt-card.is-selected {
-  box-shadow: var(--selected-shadow) !important;
+.map-mode-option {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 230px !important;
+  min-height: 40px !important;
+  padding: 0 14px !important;
+  cursor: pointer;
 }
 
-.hunt-card-head {
-  grid-template-columns: 34px minmax(0, 1fr) !important;
-  gap: 8px !important;
+.map-mode-toggle[aria-expanded="true"],
+.map-mode-option.is-active,
+.utility-link.active {
+  border-color: #f07800 !important;
+  background: linear-gradient(180deg, #fff7ee, #ead8c4) !important;
+  color: #2b1c12 !important;
+  box-shadow: inset 0 0 0 2px #f07800, inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.18), 0 6px 14px rgba(58,37,18,.18) !important;
 }
 
-.hunt-card-logo {
-  width: 34px !important;
-  height: 34px !important;
-  border-radius: 8px !important;
-}
-
-.hunt-card-title {
-  font-size: 14px !important;
-}
-
-.hunt-card-actions {
-  margin-top: 6px !important;
-}
-
-/* With hero/quick-start gone, the map can be taller. */
-.map-stage,
-#map,
-#globeMap,
-.google-earth-frame,
-.dwr-map-frame {
-  min-height: calc(100vh - 122px) !important;
-}
-
-.map-stage {
-  height: calc(100vh - 122px) !important;
-}
-
-/* Control pills: smaller, cleaner, less shouty. */
-.control-group,
-.toggle-row {
-  padding: 6px 8px !important;
-  gap: 6px !important;
-  box-shadow: none !important;
-}
-
-.toggle-menu summary {
-  padding: 5px 10px !important;
-  font-size: 11px !important;
-}
-
-.toggle-chip {
-  font-size: 11px !important;
-}
-
-/* Map selector: preserve your custom picker, but reduce excess visual noise. */
-button#mapModeToggleBtn {
-  height: 38px !important;
-  min-height: 38px !important;
-}
-
-button#mapModeToggleBtn .map-mode-label {
-  margin-top: 5px !important;
-  font-size: 13px !important;
-  text-shadow: none !important;
-}
-
-.map-mode-menu .map-mode-option {
-  width: 180px !important;
-  height: 34px !important;
-}
-
-/* Tablet/mobile: map first, then filters/results. */
+/* ============================================================================
+   MAP-FIRST RESPONSIVE RULES
+   ============================================================================ */
 @media (max-width: 1180px) {
   .layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .map-wrap {
-    order: -1;
-    min-height: 62svh !important;
-  }
-
-  .map-stage,
-  #map,
-  #globeMap,
-  .google-earth-frame,
-  .dwr-map-frame {
-    min-height: 62svh !important;
-    height: 62svh !important;
-  }
-
-  .sidebar {
-    border-right: none !important;
-    border-bottom: 1px solid var(--line) !important;
-    overflow: visible !important;
+    grid-template-columns: 260px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 900px) {
-  .topbar {
-    min-height: auto !important;
-    padding: 8px 10px !important;
-    align-items: stretch !important;
-    flex-direction: column !important;
+  body {
+    display: block;
+    min-height: 100dvh;
   }
 
-  .controls,
-  .controls.planner-controls {
-    justify-content: stretch !important;
+  .topbar {
+    min-height: auto;
+    padding: 10px 12px;
+  }
+
+  .controls.planner-controls,
+  .topbar .controls {
+    justify-content: stretch;
   }
 
   .control-group,
@@ -1117,21 +1004,37 @@ button#mapModeToggleBtn .map-mode-label {
     width: 100% !important;
   }
 
-  .map-mode-menu {
-    width: 100% !important;
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    max-height: 42dvh;
+  }
+
+  .rightbar {
+    display: none !important;
+  }
+
+  .map-stage,
+  #map,
+  #globeMap {
+    min-height: 58dvh;
   }
 }
 
 @media (max-width: 480px) {
   .sidebar {
-    padding: 10px !important;
+    padding: 8px;
   }
 
   .panel h2 {
-    font-size: 16px !important;
+    font-size: 16px;
   }
 
   .panel-body {
-    padding: 10px !important;
+    padding: 8px;
   }
 }
