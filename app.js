@@ -3465,3 +3465,72 @@ function installGoogleAuthErrorMonitor() {
     }
   });
 }
+// === Map mode custom picker sync ===
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.__uogaMapModePickerBound) return;
+  window.__uogaMapModePickerBound = true;
+
+  const select = document.getElementById('mapTypeSelect');
+  const picker = document.querySelector('[data-map-mode-picker]');
+  const toggle = document.getElementById('mapModeToggleBtn');
+  const menu = picker?.querySelector('.map-mode-menu');
+  const current = picker?.querySelector('.map-mode-current');
+
+  if (!select || !picker || !toggle || !menu || !current) return;
+
+  const modes = {
+    google: {
+      html: '<img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">'
+    },
+    earth: {
+      html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">'
+    },
+    dwr: {
+      html: '<span class="map-mode-text">DWR Map</span>'
+    }
+  };
+
+  function syncPicker() {
+    const value = select.value || 'google';
+    current.innerHTML = (modes[value] || modes.google).html;
+
+    menu.querySelectorAll('.map-mode-option').forEach(btn => {
+      btn.classList.toggle('is-active', btn.dataset.mapModeValue === value);
+    });
+  }
+
+  toggle.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const willOpen = menu.hidden;
+    menu.hidden = !willOpen;
+    toggle.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  menu.querySelectorAll('.map-mode-option').forEach(btn => {
+    btn.addEventListener('click', event => {
+      event.preventDefault();
+
+      select.value = btn.dataset.mapModeValue;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+
+      syncPicker();
+    });
+  });
+
+  document.addEventListener('click', event => {
+    if (!picker.contains(event.target)) {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  select.addEventListener('change', syncPicker);
+
+  // initialize
+  syncPicker();
+});
