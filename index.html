@@ -37,22 +37,23 @@
 
         <div class="map-mode-picker" data-map-mode-picker>
           <button id="mapModeToggleBtn" class="map-mode-toggle" type="button" aria-expanded="false">
-            <span class="map-mode-label">Map Selector</span>
+            <span class="map-mode-label">Map<br>Selector</span>
             <span class="map-mode-current">
               <img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">
             </span>
           </button>
 
           <div class="map-mode-menu" hidden>
-            <button type="button" class="map-mode-option" data-map-mode-value="google">
+            <button type="button" class="map-mode-option map-mode-option--icononly" data-map-mode-value="google" aria-label="Google Maps">
               <img class="map-mode-option-logo" src="./assets/logos/google-maps-logo.png" alt="">
             </button>
 
-            <button type="button" class="map-mode-option" data-map-mode-value="earth">
+            <button type="button" class="map-mode-option map-mode-option--icononly" data-map-mode-value="earth" aria-label="Google Earth">
               <img class="map-mode-option-logo" src="./assets/logos/google_earth_logo.png" alt="">
             </button>
 
-            <button type="button" class="map-mode-option" data-map-mode-value="dwr">
+            <button type="button" class="map-mode-option" data-map-mode-value="dwr" aria-label="DWR Map">
+              <img class="map-mode-option-logo map-mode-option-logo--dwr" src="./assets/logos/DWR-LOGO-.png" alt="">
               <span>DWR Map</span>
             </button>
           </div>
