@@ -1067,3 +1067,17 @@ button#mapModeToggleBtn .map-mode-label {
   width: 34px;
   height: 34px;
 }
+
+.map-mode-toggle {
+  min-width: 286px !important;
+}
+
+.map-mode-label {
+  flex-direction: row !important;
+  min-width: 138px !important;
+  white-space: nowrap !important;
+}
+
+.map-mode-option--icononly {
+  justify-content: center !important;
+}
