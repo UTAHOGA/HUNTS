@@ -66,7 +66,20 @@
     const open = !!nextOpen;
 
     if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (panel) {
+      panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+      // Prevent focus from remaining inside a hidden panel (Chrome warns about aria-hidden on focused descendants).
+      // inert is supported in modern Chromium and is a no-op elsewhere.
+      if (open) {
+        panel.removeAttribute('inert');
+      } else {
+        panel.setAttribute('inert', '');
+        const active = document.activeElement;
+        if (active && panel.contains(active) && btn) {
+          btn.focus({ preventScroll: true });
+        }
+      }
+    }
     if (popover) popover.dataset.open = open ? 'true' : 'false';
   }
 

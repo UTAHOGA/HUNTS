@@ -63,6 +63,16 @@ const {
 } = window.UOGA_DATA;
 
 let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+
+function getGooglePreferredBasemapType() {
+  const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
+  try {
+    const raw = String(localStorage.getItem('uoga_google_basemap_type_v2') || '').trim();
+    return VALID.has(raw) ? raw : 'terrain';
+  } catch {
+    return 'terrain';
+  }
+}
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleMapFailureMessage = '';
@@ -2912,7 +2922,12 @@ function applyMapMode() {
   }
 
   if (basemapControl) basemapControl.hidden = false;
-  googleBaselineMap.setMapTypeId(value === 'google' ? 'terrain' : value);
+  if (value === 'google') {
+    googleBaselineMap.setMapTypeId(getGooglePreferredBasemapType());
+  } else {
+    // Back-compat: if older code paths still pass google basemap ids here, honor them.
+    googleBaselineMap.setMapTypeId(value);
+  }
   googleBaselineMap.getStreetView()?.setVisible(false);
   styleBoundaryLayer();
   if (selectedHunt) {
@@ -3018,12 +3033,14 @@ function initGoogleBaseline() {
   googleBaselineMap = new google.maps.Map(document.getElementById('map'), {
     center: GOOGLE_BASELINE_DEFAULT_CENTER, zoom: GOOGLE_BASELINE_DEFAULT_ZOOM,
     styles: huntPlannerMapStyle,
-    mapTypeId: 'terrain',
+    mapTypeId: getGooglePreferredBasemapType(),
     gestureHandling: 'greedy',
     streetViewControl: true,
     fullscreenControl: true,
     mapTypeControl: false
   });
+  // Expose the active map instance so UI helpers (google-basemap.js) can reliably control it.
+  window.googleBaselineMap = googleBaselineMap;
   googleApiReady = true;
   installPageScrollOnMap('map');
   if (huntBoundaryGeoJson) buildBoundaryLayer();
