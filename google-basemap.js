@@ -17,6 +17,18 @@
     return document.getElementById('basemapToggleBtn');
   }
 
+  function getNativeMapSelect() {
+    return document.getElementById('mapTypeSelect');
+  }
+
+  function sanitizeNativeMapSelect() {
+    const sel = getNativeMapSelect();
+    if (!sel) return;
+    sel.removeAttribute('aria-hidden');
+    sel.removeAttribute('tabindex');
+    sel.hidden = true;
+  }
+
   function getPanel() {
     return document.getElementById('globeBasemapPanel');
   }
@@ -164,6 +176,7 @@
   }
 
   function init() {
+    sanitizeNativeMapSelect();
     const btn = getToggleBtn();
     if (btn) btn.addEventListener('click', onToggleClick);
 
