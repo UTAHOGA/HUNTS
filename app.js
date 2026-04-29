@@ -1,3 +1,11 @@
+const uogaConfig = window.UOGA_CONFIG;
+const uogaData = window.UOGA_DATA;
+
+if (!uogaConfig || !uogaData) {
+  console.error('UOGA config/data missing. Check script load order and file paths.');
+  throw new Error('UOGA config/data missing. Check script load order and file paths.');
+}
+
 const {
   GOOGLE_MAPS_API_KEY,
   GOOGLE_BASELINE_DEFAULT_CENTER,
@@ -47,7 +55,7 @@ const {
   DNR_ORANGE,
   DNR_BROWN,
   KNOWN_OUTFITTER_COORDS
-} = window.UOGA_CONFIG;
+} = uogaConfig;
 
 const {
   fetchJson,
@@ -60,7 +68,7 @@ const {
   loadDerivedSpikeElkRecords: loadDerivedSpikeElkRecordsFromData,
   loadHuntDataRecords,
   loadFirstNormalizedList
-} = window.UOGA_DATA;
+} = uogaData;
 
 let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 
