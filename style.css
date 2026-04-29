@@ -1081,3 +1081,8 @@ button#mapModeToggleBtn .map-mode-label {
 .map-mode-option--icononly {
   justify-content: center !important;
 }
+
+#plannerDnrLogoLink,
+.header-dnr-link {
+  display: none !important;
+}
