@@ -64,6 +64,7 @@
     .topbar-left { flex:0 0 520px !important; display:flex !important; justify-content:center !important; }
     .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
     .topbar-right { flex:0 0 auto !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; margin-left:auto !important; }
+    .topbar-right .uoga-backpack-shell { margin-left:0 !important; }
     .controls { flex:0 0 auto !important; margin-left:auto !important; }
     @media (max-width: 900px) {
       .topbar { justify-content:space-between !important; }
@@ -119,6 +120,17 @@
           </div>
         </div>
       </div>
+      <div class="uoga-page-nav-control" data-uoga-page-nav="true">
+        <button id="pageNavToggleBtn" class="uoga-page-nav-toggle" type="button" aria-expanded="false">
+          <span class="uoga-page-nav-label">Hunt Builder<br>Page Navigation</span>
+        </button>
+        <div class="uoga-page-nav-menu" hidden>
+          <a class="utility-link uoga-page-nav-link active" href="./index.html#google-maps" aria-current="page"><span>BUILDER</span></a>
+          <a class="utility-link uoga-page-nav-link" href="./research.html"><span>RESEARCH</span></a>
+          <a class="utility-link uoga-page-nav-link" href="./verify.html"><span>VERIFY</span></a>
+          <a class="utility-link uoga-page-nav-link" href="./hard-copy.html"><span>HARD COPY</span></a>
+        </div>
+      </div>
     </div>
     <div class="topbar-center">
       <div class="toggle-row">
@@ -148,7 +160,19 @@
         </details>
       </div>
     </div>
-    <div class="topbar-right" data-backpack-host></div>
+    <div class="topbar-right" data-backpack-host>
+      <div class="uoga-backpack-shell">
+        <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
+          <span class="uoga-backpack-mark-wrap" aria-hidden="true">
+            <span class="uoga-backpack-mark">Hunt Backpack</span>
+          </span>
+          <span class="uoga-backpack-badge" hidden>0</span>
+        </button>
+        <section class="uoga-backpack-panel" aria-hidden="true">
+          <div class="uoga-backpack-sections"></div>
+        </section>
+      </div>
+    </div>
   </header>
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
     <div class="ownership-case"></div>
@@ -326,11 +350,11 @@
   </section>
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
-  <script src="./ui.js?v=20260430-backpack-header-1"></script>
-  <script src="./header-layout.js?v=20260430-header-backpack-1"></script>
+  <script src="./ui.js?v=20260430-nav-backpack-2"></script>
+  <script src="./header-layout.js?v=20260430-nav-backpack-2"></script>
   <script src="./ownership-dock.js?v=20260423-terrain-inpage-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260430-header-backpack-1"></script>
+  <script src="app.js?v=20260430-nav-backpack-2"></script>
   <script src="./google-basemap.js?v=20260423-terrain-inpage-1"></script>
 </body>
 </html>

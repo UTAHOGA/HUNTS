@@ -6,14 +6,52 @@
     return path.endsWith('/index.html') || path.endsWith('/builder.html') || path === '/' || path === '';
   };
 
+  function bindPageNavControl(wrapper) {
+    if (!wrapper || wrapper.__uogaPageNavBound) return;
+    const toggle = wrapper.querySelector('.uoga-page-nav-toggle');
+    const menu = wrapper.querySelector('.uoga-page-nav-menu');
+    if (!toggle || !menu) return;
+    wrapper.__uogaPageNavBound = true;
+
+    const setMenuOpen = (isOpen) => {
+      menu.hidden = !isOpen;
+      menu.style.display = isOpen ? 'grid' : 'none';
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    setMenuOpen(false);
+
+    toggle.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      setMenuOpen(menu.hidden);
+    });
+
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        setMenuOpen(false);
+      });
+    });
+
+    document.addEventListener('click', event => {
+      if (!wrapper.contains(event.target)) setMenuOpen(false);
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    });
+  }
+
   function buildPageNavDropdown() {
     const strip = document.querySelector('.page-nav-strip');
     const header = document.querySelector('header.topbar');
-    if (!strip || !header) return;
-    if (document.querySelector('[data-uoga-page-nav]')) {
-      strip.remove();
+    const existingWrapper = document.querySelector('[data-uoga-page-nav]');
+    if (existingWrapper) {
+      bindPageNavControl(existingWrapper);
+      if (strip) strip.remove();
       return;
     }
+    if (!strip || !header) return;
     const nav = strip.querySelector('.utility-nav');
     if (!nav) return;
     const links = Array.from(nav.querySelectorAll('a.utility-link'));
@@ -42,30 +80,7 @@
       host.insertBefore(wrapper, host.firstChild);
     }
     strip.remove();
-    const toggle = wrapper.querySelector('.uoga-page-nav-toggle');
-    const closeMenu = () => {
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
-    };
-    toggle.addEventListener('click', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const willOpen = menu.hidden;
-      menu.hidden = !willOpen;
-      toggle.setAttribute('aria-expanded', String(willOpen));
-    });
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        closeMenu();
-        toggle.focus();
-      });
-    });
-    document.addEventListener('click', event => {
-      if (!wrapper.contains(event.target)) closeMenu();
-    });
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeMenu();
-    });
+    bindPageNavControl(wrapper);
   }
 
   function injectLightPillStyle() {

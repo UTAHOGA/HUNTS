@@ -750,21 +750,26 @@ window.UOGA_UI = (() => {
 
     injectBackpackStyles();
 
-    trayShell = document.createElement('div');
-    trayShell.className = 'uoga-backpack-shell';
-    trayShell.innerHTML = `
-      <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
-        <span class="uoga-backpack-mark-wrap" aria-hidden="true">
-          <span class="uoga-backpack-mark">Hunt Backpack</span>
-        </span>
-        <span class="uoga-backpack-badge" hidden>0</span>
-      </button>
-      <section class="uoga-backpack-panel" aria-hidden="true">
-        <div class="uoga-backpack-sections"></div>
-      </section>
-    `;
+    trayShell = host.querySelector('.uoga-backpack-shell') || document.querySelector('.uoga-backpack-shell');
+    if (!trayShell) {
+      trayShell = document.createElement('div');
+      trayShell.className = 'uoga-backpack-shell';
+      trayShell.innerHTML = `
+        <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
+          <span class="uoga-backpack-mark-wrap" aria-hidden="true">
+            <span class="uoga-backpack-mark">Hunt Backpack</span>
+          </span>
+          <span class="uoga-backpack-badge" hidden>0</span>
+        </button>
+        <section class="uoga-backpack-panel" aria-hidden="true">
+          <div class="uoga-backpack-sections"></div>
+        </section>
+      `;
+      host.appendChild(trayShell);
+    } else if (trayShell.parentElement !== host && isBuilderPage()) {
+      host.appendChild(trayShell);
+    }
 
-    host.appendChild(trayShell);
     trayButton = trayShell.querySelector('.uoga-backpack-toggle');
     trayPanel = trayShell.querySelector('.uoga-backpack-panel');
     trayBadge = trayShell.querySelector('.uoga-backpack-badge');
