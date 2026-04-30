@@ -145,7 +145,8 @@ function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t)
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
   function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
 function setInstructionsOpen(isOpen) {
-  if (!instructionsBody || !instructionsTab) return;
+  if (!instructionsPanel || !instructionsBody || !instructionsTab) return;
+  instructionsPanel.hidden = !isOpen;
   instructionsBody.hidden = !isOpen;
   instructionsTab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
@@ -3253,7 +3254,7 @@ function bindControls() {
     updatePrivateLayersSummary();
   });
   instructionsTab?.addEventListener('click', () => {
-    setInstructionsOpen(instructionsBody?.hidden ?? false);
+    setInstructionsOpen(instructionsPanel?.hidden ?? false);
   });
   instructionsReadBtn?.addEventListener('click', readInstructionsAudio);
   plannerDnrLogoLink?.addEventListener('click', (event) => {
@@ -3264,10 +3265,10 @@ function bindControls() {
     }
   });
   document.addEventListener('click', (event) => {
-    if (!instructionsBody || !instructionsTab || instructionsBody.hidden) return;
+    if (!instructionsPanel || !instructionsTab || instructionsPanel.hidden) return;
     const target = event.target;
     if (!(target instanceof Node)) return;
-    if (instructionsPanel?.contains(target) || instructionsTab.contains(target)) return;
+    if (instructionsPanel.contains(target) || instructionsTab.contains(target)) return;
     setInstructionsOpen(false);
   });
 }

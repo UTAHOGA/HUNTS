@@ -29,13 +29,13 @@
       text-transform:uppercase;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
     }
-    .map-mode-toggle { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; width:220px; min-height:46px; padding:6px 14px 7px; cursor:pointer; }
+    .map-mode-toggle { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; width:224px; min-height:46px; padding:6px 14px 7px; cursor:pointer; }
     .map-mode-label { font-size:10px; line-height:1; color:#f07800; white-space:nowrap; }
     .map-mode-current { display:inline-flex; align-items:center; justify-content:center; width:100%; min-width:0; }
     .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
     .map-mode-text { color:#f07800; font-weight:900; letter-spacing:.10em; white-space:nowrap; }
     .map-mode-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
-    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; min-height:42px; padding:0 14px; cursor:pointer; }
+    .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:224px; min-height:42px; padding:0 14px; cursor:pointer; }
     .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active, .utility-link.active {
       border-color:#f07800 !important;
       background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
@@ -136,24 +136,25 @@
       </div>
     </div>
     <div class="controls" aria-label="Header actions">
-      <div class="controls-center"></div>
+      <div class="controls-center">
+        <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
+      </div>
     </div>
-    <section id="instructionsPanel" class="instructions-panel">
-      <div class="instructions-head">
-        <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="true" aria-controls="instructionsBody">Instructions</button>
-        <h3>Quick Instructions</h3>
-        <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
-      </div>
-      <div id="instructionsBody" class="instructions-body">
-        <ol>
-          <li>Choose map mode and land layers.</li>
-          <li>Filter species, sex, hunt type, and units.</li>
-          <li>Click a unit or hunt card to inspect odds and details.</li>
-          <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
-        </ol>
-      </div>
-    </section>
   </header>
+  <section id="instructionsPanel" class="instructions-panel" hidden>
+    <div class="instructions-head">
+      <h3>Quick Instructions</h3>
+      <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
+    </div>
+    <div id="instructionsBody" class="instructions-body" hidden>
+      <ol>
+        <li>Choose map mode and land layers.</li>
+        <li>Filter species, sex, hunt type, and units.</li>
+        <li>Click a unit or hunt card to inspect odds and details.</li>
+        <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
+      </ol>
+    </div>
+  </section>
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
     <div class="ownership-case"></div>
   </div>
