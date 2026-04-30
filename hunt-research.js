@@ -817,7 +817,7 @@
     }
 
     if (els.openPlannerLink) {
-      els.openPlannerLink.href = `./index.html?hunt_code=${encodeURIComponent(filters.huntCode)}`;
+      els.openPlannerLink.href = `./builder.html?hunt_code=${encodeURIComponent(filters.huntCode)}`;
     }
 
     if (els.openDwrLink) {
