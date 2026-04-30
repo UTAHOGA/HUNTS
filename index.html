@@ -34,7 +34,7 @@
     .map-mode-current { display:inline-flex; align-items:center; justify-content:center; width:100%; min-width:0; }
     .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
     .map-mode-text { color:#f07800; font-weight:900; letter-spacing:.10em; white-space:nowrap; }
-    .map-mode-menu { position:absolute; top:calc(100% + 8px); left:0; display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
+    .map-mode-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
     .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:230px; min-height:42px; padding:0 14px; cursor:pointer; }
     .map-mode-toggle[aria-expanded="true"], .map-mode-option.is-active, .utility-link.active {
       border-color:#f07800 !important;
@@ -52,6 +52,16 @@
     .header-dnr-link { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:0 14px; border-radius:999px; border:1px solid #c9a27f; background:linear-gradient(180deg,#fffdf9,#f2e8dc); text-decoration:none; }
     .header-dnr-link img { width:auto; height:18px; max-width:44px; object-fit:contain; display:block; }
     .header-dnr-link-label { color:#f07800; }
+    .topbar { justify-content:flex-start !important; }
+    .topbar-left { flex:0 0 340px !important; display:flex !important; justify-content:center !important; }
+    .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
+    .controls { flex:0 0 auto !important; margin-left:auto !important; }
+    @media (max-width: 900px) {
+      .topbar { justify-content:space-between !important; }
+      .topbar-left { flex:0 0 auto !important; width:auto !important; display:flex !important; justify-content:flex-start !important; }
+      .topbar-center { justify-content:flex-start !important; }
+      .controls { margin-left:0 !important; }
+    }
 
   </style>
 </head>
