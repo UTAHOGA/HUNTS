@@ -1191,7 +1191,7 @@ function handleFilterChange(event) {
   if (activeMode === 'earth') {
     refreshGoogleEarth3dBoundaryOverlaySoon();
   } else if (activeMode === 'dwr') {
-    updateDwrMapFrame(selectedHunt);
+    updateDwrMapFrame(getPreferredDwrHuntCandidate());
   }
 }
 
@@ -2848,6 +2848,18 @@ function updateDwrMapFrame(hunt = selectedHunt) {
   }
 }
 
+function getPreferredDwrHuntCandidate() {
+  const visibleHunts = getDisplayHunts();
+  if (!visibleHunts.length) return null;
+  if (selectedHunt) {
+    const selectedKey = getHuntRecordKey(selectedHunt);
+    if (visibleHunts.some(h => getHuntRecordKey(h) === selectedKey)) {
+      return selectedHunt;
+    }
+  }
+  return visibleHunts[0] || null;
+}
+
 function initDwrFrameEvents() {
   if (!dwrMapFrame || dwrMapFrame.__uogaEventsBound) return;
   dwrMapFrame.__uogaEventsBound = true;
@@ -3432,7 +3444,7 @@ function applyMapMode() {
 
   if (value === 'dwr') {
     clearOutfitterMarkers();
-    updateDwrMapFrame(selectedHunt);
+    updateDwrMapFrame(getPreferredDwrHuntCandidate());
     if (dwrMapFrame) {
       dwrMapFrame.hidden = false;
     }
