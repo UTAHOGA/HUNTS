@@ -277,6 +277,7 @@ window.UOGA_UI = (() => {
     if (!trayShell || !trayButton || !trayPanel) return;
     trayOpen = false;
     trayShell.classList.remove('is-open');
+    document.body.classList.remove('uoga-backpack-open');
     trayButton.setAttribute('aria-expanded', 'false');
     trayPanel.setAttribute('aria-hidden', 'true');
   }
@@ -316,6 +317,7 @@ window.UOGA_UI = (() => {
     positionBackpackTray();
     trayOpen = true;
     trayShell.classList.add('is-open');
+    document.body.classList.add('uoga-backpack-open');
     trayButton.setAttribute('aria-expanded', 'true');
     trayPanel.setAttribute('aria-hidden', 'false');
   }

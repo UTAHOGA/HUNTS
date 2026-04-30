@@ -16,8 +16,8 @@
     .map-mode-picker { position:relative; z-index:10020; }
     .map-mode-toggle,
     .map-mode-option,
-    .topbar .toggle-row,
-    .quick-start .toggle-row,
+    .ownership-dock .toggle-row,
+    .ownership-dock .toggle-menu summary,
     .utility-link,
     .basemap-toggle,
     .globe-basemap-btn {
@@ -45,37 +45,30 @@
       color:#2b1c12 !important;
       box-shadow:inset 0 0 0 2px #f07800, inset 0 2px 2px rgba(255,255,255,.65), inset 0 -3px 4px rgba(120,55,10,.18), 0 6px 14px rgba(58,37,18,.18) !important;
     }
-    .hero {
-      padding:16px 22px 14px !important;
-      background:linear-gradient(180deg,rgba(255,253,249,.92),rgba(244,239,228,.86)) !important;
-    }
-    .hero h1 { margin:0; color:#2b1c12; }
-    .hero p { margin:8px auto 0; color:#6b5646; }
-    .quick-start {
-      display:flex !important;
-      flex-wrap:wrap !important;
-      justify-content:center !important;
-      align-items:center !important;
-      gap:10px 14px !important;
-      padding:8px 18px 10px !important;
-      border-bottom:1px solid var(--line) !important;
-      background:rgba(255,255,255,.44) !important;
-    }
-    .ownership-dock { display:flex !important; justify-content:center !important; align-items:center !important; flex:1 1 auto !important; min-width:min(680px, 100%) !important; max-width:980px !important; }
-    .ownership-case { display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; }
-    .quick-start .toggle-row { justify-content:center !important; width:auto !important; max-width:100% !important; }
-    .quick-start .toggle-menu-panel { z-index:10040 !important; }
+    .topbar-title { flex:1 1 360px !important; min-width:280px !important; display:flex !important; justify-content:center !important; align-items:center !important; padding:0 18px !important; text-align:center !important; }
+    .topbar-title h1 { margin:0 !important; font-family:Georgia, "Times New Roman", serif !important; font-size:clamp(20px,2.2vw,31px) !important; line-height:1.02 !important; font-weight:900 !important; letter-spacing:.04em !important; text-transform:uppercase !important; color:#2b1c12 !important; text-shadow:0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(92,55,24,.16) !important; }
+    .topbar-title h1::after { content:"" !important; display:block !important; width:min(420px, 92%) !important; height:3px !important; margin:6px auto 0 !important; border-radius:999px !important; background:linear-gradient(90deg, transparent, #f07800, transparent) !important; box-shadow:0 3px 8px rgba(240,120,0,.22) !important; }
+    .instructions-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; flex:0 0 auto !important; }
+    .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:0 !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:min(430px, calc(100vw - 28px)) !important; padding:12px !important; border:1px solid #c9a27f !important; border-radius:18px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
+    .instructions-control .instructions-panel[hidden] { display:none !important; }
+    .ownership-dock { position:absolute !important; top:12px !important; right:14px !important; z-index:30 !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; max-width:min(760px, calc(100% - 28px)) !important; transition:right 160ms ease, max-width 160ms ease !important; }
+    .uoga-backpack-open .ownership-dock { right:min(458px, calc(100% - 320px)) !important; max-width:calc(100% - 486px) !important; }
+    .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
+    .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; }
+    .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
     .topbar { justify-content:flex-start !important; flex-wrap:wrap !important; }
-    .topbar-left { flex:0 0 520px !important; display:flex !important; justify-content:center !important; }
-    .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
+    .topbar-left { flex:0 0 auto !important; display:flex !important; justify-content:center !important; align-items:center !important; gap:14px !important; }
     .topbar-right { flex:0 0 auto !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; margin-left:auto !important; }
     .topbar-right .uoga-backpack-shell { margin-left:0 !important; }
     .controls { flex:0 0 auto !important; margin-left:auto !important; }
     @media (max-width: 900px) {
       .topbar { justify-content:space-between !important; }
       .topbar-left { flex:0 0 auto !important; width:auto !important; display:flex !important; justify-content:flex-start !important; }
-      .topbar-center { justify-content:flex-start !important; }
+      .topbar-title { order:3 !important; flex:1 1 100% !important; padding:4px 0 0 !important; }
       .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
+      .instructions-control .instructions-panel { left:50% !important; transform:translateX(-50%) !important; }
+      .ownership-dock, .uoga-backpack-open .ownership-dock { left:12px !important; right:12px !important; max-width:none !important; justify-content:center !important; }
+      .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
       .controls { margin-left:0 !important; }
     }
 
@@ -136,6 +129,18 @@
           <a class="utility-link uoga-page-nav-link" href="./hard-copy.html"><span>HARD COPY</span></a>
         </div>
       </div>
+      <div class="instructions-control">
+        <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
+        <div id="instructionsPanel" class="instructions-panel" hidden>
+          <div class="qs-step">1. Pick map mode</div>
+          <div class="qs-step">2. Filter species and hunt class</div>
+          <div class="qs-step">3. Select a hunt unit</div>
+          <div class="qs-step">4. Save to Hunt Backpack</div>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-title" aria-label="Page title">
+      <h1>PLAN YOUR UTAH HUNT LIKE THE PROS DO!</h1>
     </div>
     <div class="topbar-right" data-backpack-host>
       <div class="uoga-backpack-shell">
@@ -152,50 +157,6 @@
     </div>
   </header>
   <div class="planner-body">
-  <section class="hero" aria-label="Introduction">
-    <h1>PLAN YOUR UTAH HUNT LIKE THE PROS DO!</h1>
-  </section>
-
-  <section class="quick-start" aria-label="Quick start steps">
-    <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
-    <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
-      <div class="ownership-case">
-        <div class="toggle-row">
-          <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-          <details class="toggle-menu">
-            <summary id="federalLayersSummary">Federal</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-              <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-              <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
-            </div>
-          </details>
-          <details class="toggle-menu">
-            <summary id="stateLayersSummary">State</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-              <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-              <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
-            </div>
-          </details>
-          <details class="toggle-menu">
-            <summary id="privateLayersSummary">Private</summary>
-            <div class="toggle-menu-panel">
-              <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
-              <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-            </div>
-          </details>
-        </div>
-      </div>
-    </div>
-    <div id="instructionsPanel" class="instructions-panel" hidden>
-      <div class="qs-step">1. Pick map mode</div>
-      <div class="qs-step">2. Filter species and hunt class</div>
-      <div class="qs-step">3. Select a hunt unit</div>
-      <div class="qs-step">4. Save to Hunt Backpack</div>
-    </div>
-  </section>
-
   <main class="layout">
     <aside class="sidebar">
       <section class="panel">
@@ -264,6 +225,36 @@
     </aside>
 
       <section class="map-wrap">
+        <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
+          <div class="ownership-case">
+            <div class="toggle-row">
+              <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+              <details class="toggle-menu">
+                <summary id="federalLayersSummary">Federal</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+                  <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+                  <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+                </div>
+              </details>
+              <details class="toggle-menu">
+                <summary id="stateLayersSummary">State</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+                  <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+                </div>
+              </details>
+              <details class="toggle-menu">
+                <summary id="privateLayersSummary">Private</summary>
+                <div class="toggle-menu-panel">
+                  <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+                  <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
         <div class="map-stage">
           <div id="map" aria-label="Google DWR mirror map"></div>
           <iframe
@@ -353,8 +344,8 @@
   </section>
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
-  <script src="./ui.js?v=20260430-nav-backpack-2"></script>
-  <script src="./header-layout.js?v=20260430-ownership-subheader-1"></script>
+  <script src="./ui.js?v=20260430-title-map-overlay-1"></script>
+  <script src="./header-layout.js?v=20260430-title-map-overlay-1"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="app.js?v=20260430-nav-backpack-2"></script>
