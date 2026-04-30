@@ -103,6 +103,8 @@ const FORCE_GOOGLE_ONLY_DEBUG = false;
 // Google 3D map components require the beta channel.
 const GOOGLE_MAPS_SCRIPT_CHANNEL = 'beta';
 const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
+const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
+const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -2914,6 +2916,7 @@ async function ensureGoogleEarth3dMap() {
   const maps3d = await googleEarth3dLibraryPromise;
   googleEarth3dMap = el;
   el.mode = maps3d?.MapMode?.HYBRID || 'hybrid';
+  bindGoogleEarth3dZoomStyleEvents(el);
   syncGoogleEarth3dCamera();
   return el;
 }
@@ -2939,6 +2942,51 @@ function clearGoogleEarth3dBoundaryOverlays() {
     if (overlay?.remove) overlay.remove();
   });
   googleEarth3dBoundaryOverlays = [];
+}
+
+function getGoogleEarth3dCurrentRange(map3d = googleEarth3dMap) {
+  const value = Number(map3d?.range);
+  return Number.isFinite(value) ? value : Number.POSITIVE_INFINITY;
+}
+
+function shouldUseGoogleEarthOutlineOnly(rangeValue = getGoogleEarth3dCurrentRange(), threshold = GOOGLE_EARTH_OUTLINE_ONLY_RANGE) {
+  return Number.isFinite(rangeValue) && rangeValue <= threshold;
+}
+
+function applyGoogleEarth3dOverlayZoomStyle(overlay, rangeValue = getGoogleEarth3dCurrentRange()) {
+  if (!overlay) return;
+  const baseStyle = overlay.__uogaBaseStyle;
+  if (!baseStyle) return;
+  const fillColor = String(baseStyle.fillColor || '').trim();
+  if (!fillColor || fillColor === GOOGLE_EARTH_TRANSPARENT_FILL) return;
+  const threshold = Number(overlay.__uogaOutlineOnlyRange);
+  const outlineOnly = shouldUseGoogleEarthOutlineOnly(
+    rangeValue,
+    Number.isFinite(threshold) ? threshold : GOOGLE_EARTH_OUTLINE_ONLY_RANGE
+  );
+  overlay.fillColor = outlineOnly ? GOOGLE_EARTH_TRANSPARENT_FILL : fillColor;
+}
+
+function applyGoogleEarth3dZoomStylesForCurrentRange(map3d = googleEarth3dMap) {
+  const currentRange = getGoogleEarth3dCurrentRange(map3d);
+  googleEarth3dBoundaryOverlays.forEach((overlay) => applyGoogleEarth3dOverlayZoomStyle(overlay, currentRange));
+}
+
+function scheduleGoogleEarth3dZoomStyleRefresh() {
+  if (typeof window === 'undefined') return;
+  if (window.__uogaEarthZoomStyleTimer) {
+    clearTimeout(window.__uogaEarthZoomStyleTimer);
+  }
+  window.__uogaEarthZoomStyleTimer = window.setTimeout(() => {
+    applyGoogleEarth3dZoomStylesForCurrentRange();
+  }, 36);
+}
+
+function bindGoogleEarth3dZoomStyleEvents(map3d) {
+  if (!map3d || map3d.__uogaEarthZoomStyleEventsBound) return;
+  map3d.__uogaEarthZoomStyleEventsBound = true;
+  map3d.addEventListener('gmp-rangechange', scheduleGoogleEarth3dZoomStyleRefresh);
+  map3d.addEventListener('gmp-steadychange', scheduleGoogleEarth3dZoomStyleRefresh);
 }
 
 function getGoogleEarth3dBoundaryFeatures() {
@@ -3125,6 +3173,13 @@ function appendGoogleEarth3dFeatureOverlays(map3d, Polygon3DElement, features, s
       if (paths.length > 1 && 'innerPaths' in overlay) {
         overlay.innerPaths = paths.slice(1);
       }
+      overlay.__uogaBaseStyle = {
+        strokeColor: style?.strokeColor,
+        strokeWidth: style?.strokeWidth,
+        fillColor: style?.fillColor
+      };
+      overlay.__uogaOutlineOnlyRange = style?.outlineOnlyRange;
+      applyGoogleEarth3dOverlayZoomStyle(overlay, getGoogleEarth3dCurrentRange(map3d));
       map3d.append(overlay);
       googleEarth3dBoundaryOverlays.push(overlay);
       drawn += 1;
@@ -3201,6 +3256,8 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
     updateStatus('Google Earth 3D active. Select a hunt or turn on overlays to draw land boundaries.');
     return;
   }
+
+  applyGoogleEarth3dZoomStylesForCurrentRange(map3d);
 
   const enabledOverlayCount = overlayDefinitions.length;
   const boundaryMessage = boundaryFeatures.length
