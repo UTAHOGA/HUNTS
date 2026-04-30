@@ -183,61 +183,38 @@
        .uoga-page-nav-menu { padding:12px !important; min-width:224px !important; }
        .uoga-page-nav-menu .utility-link,
        .uoga-page-nav-menu .uoga-page-nav-link { width:100% !important; min-height:42px !important; justify-content:center !important; }
-       .instructions-panel {
-         margin:12px auto 18px !important;
-         width:min(1120px, calc(100% - 36px)) !important;
-         border:1px solid #c9a27f !important;
-         border-radius:18px !important;
-         background:rgba(255,251,244,.96) !important;
-         box-shadow:0 10px 28px rgba(58,37,18,.16) !important;
-         overflow:hidden !important;
-       }
-       .instructions-head {
-         display:flex !important;
-         align-items:center !important;
-         justify-content:center !important;
-         gap:12px !important;
-         flex-wrap:wrap !important;
-         padding:12px 16px !important;
-         background:linear-gradient(180deg,#f07800,#d96700) !important;
-         color:#fff8f1 !important;
-       }
-       .instructions-head h3 {
-         margin:0 !important;
-         font-family:var(--font-display) !important;
-         font-size:21px !important;
-         line-height:1.04 !important;
-         color:#fff8f1 !important;
-         text-align:center !important;
-       }
-       .instructions-tab,
-       .instructions-head .secondary {
-         display:inline-flex !important;
-         align-items:center !important;
-         justify-content:center !important;
-         min-height:42px !important;
-         padding:8px 16px !important;
-         border-radius:999px !important;
-         border:1px solid #c9a27f !important;
-         background:linear-gradient(180deg,#fffdf9,#f2e8dc) !important;
-         color:#2b1c12 !important;
-         font-weight:900 !important;
-         letter-spacing:.06em !important;
-         text-transform:uppercase !important;
-         box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
-       }
-       .instructions-tab[aria-expanded=\"true\"],
-       .instructions-head .secondary:hover,
-       .instructions-tab:hover {
-         border-color:#f07800 !important;
-         background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
-         box-shadow:inset 0 0 0 2px #f07800, 0 6px 14px rgba(58,37,18,.18) !important;
-       }
-       .instructions-body {
-         padding:14px 18px 18px !important;
-         background:rgba(255,253,248,.98) !important;
-       }
-       .instructions-body[hidden] { display:none !important; }
+        .instructions-tab {
+          display:inline-flex !important;
+          align-items:center !important;
+          justify-content:center !important;
+          min-height:42px !important;
+          padding:8px 16px !important;
+          border-radius:999px !important;
+          border:1px solid #c9a27f !important;
+          background:linear-gradient(180deg,#fffdf9,#f2e8dc) !important;
+          color:#2b1c12 !important;
+          font-weight:900 !important;
+          letter-spacing:.06em !important;
+          text-transform:uppercase !important;
+          box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
+          flex:0 0 auto !important;
+        }
+        .instructions-tab[aria-expanded=\"true\"],
+        .instructions-tab:hover {
+          border-color:#f07800 !important;
+          background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
+          box-shadow:inset 0 0 0 2px #f07800, 0 6px 14px rgba(58,37,18,.18) !important;
+        }
+        .instructions-panel {
+          display:flex !important;
+          flex:1 1 0 !important;
+          min-width:0 !important;
+          align-items:stretch !important;
+          justify-content:flex-start !important;
+          gap:10px 14px !important;
+          flex-wrap:wrap !important;
+        }
+        .instructions-panel[hidden] { display:none !important; }
        .uoga-engine-control { display:flex !important; align-items:center !important; gap:8px !important; }
        .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }

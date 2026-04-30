@@ -135,7 +135,6 @@ const searchInput = document.getElementById('searchInput'),
   plannerDnrLogoLink = document.getElementById('plannerDnrLogoLink'),
   instructionsTab = document.getElementById('instructionsTab'),
   instructionsPanel = document.getElementById('instructionsPanel'),
-  instructionsBody = document.getElementById('instructionsBody'),
   instructionsReadBtn = document.getElementById('instructionsReadBtn');
 
 // --- UTILITIES ---
@@ -145,9 +144,8 @@ function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t)
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
   function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
 function setInstructionsOpen(isOpen) {
-  if (!instructionsPanel || !instructionsBody || !instructionsTab) return;
+  if (!instructionsPanel || !instructionsTab) return;
   instructionsPanel.hidden = !isOpen;
-  instructionsBody.hidden = !isOpen;
   instructionsTab.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 function readInstructionsAudio() {
@@ -3256,7 +3254,6 @@ function bindControls() {
   instructionsTab?.addEventListener('click', () => {
     setInstructionsOpen(instructionsPanel?.hidden ?? false);
   });
-  instructionsReadBtn?.addEventListener('click', readInstructionsAudio);
   plannerDnrLogoLink?.addEventListener('click', (event) => {
     event.preventDefault();
     if (mapTypeSelect) {

@@ -48,7 +48,16 @@
     }
     .hero h1 { margin:0; color:#2b1c12; }
     .hero p { margin:8px auto 0; color:#6b5646; }
-    .quick-start { background:rgba(255,255,255,.44) !important; }
+    .quick-start {
+      display:flex !important;
+      flex-wrap:wrap !important;
+      justify-content:flex-start !important;
+      align-items:stretch !important;
+      gap:10px 14px !important;
+      padding:12px 18px 16px !important;
+      border-bottom:1px solid var(--line) !important;
+      background:rgba(255,255,255,.44) !important;
+    }
     .topbar { justify-content:flex-start !important; }
     .topbar-left { flex:0 0 520px !important; display:flex !important; justify-content:center !important; }
     .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
@@ -135,26 +144,7 @@
         </details>
       </div>
     </div>
-    <div class="controls" aria-label="Header actions">
-      <div class="controls-center">
-        <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
-      </div>
-    </div>
   </header>
-  <section id="instructionsPanel" class="instructions-panel" hidden>
-    <div class="instructions-head">
-      <h3>Quick Instructions</h3>
-      <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
-    </div>
-    <div id="instructionsBody" class="instructions-body" hidden>
-      <ol>
-        <li>Choose map mode and land layers.</li>
-        <li>Filter species, sex, hunt type, and units.</li>
-        <li>Click a unit or hunt card to inspect odds and details.</li>
-        <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
-      </ol>
-    </div>
-  </section>
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
     <div class="ownership-case"></div>
   </div>
@@ -166,10 +156,13 @@
   </section>
 
   <section class="quick-start" aria-label="Quick start steps">
-    <div class="qs-step">1. Pick map mode</div>
-    <div class="qs-step">2. Filter species and hunt class</div>
-    <div class="qs-step">3. Select a hunt unit</div>
-    <div class="qs-step">4. Save to Hunt Backpack</div>
+    <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
+    <div id="instructionsPanel" class="instructions-panel" hidden>
+      <div class="qs-step">1. Pick map mode</div>
+      <div class="qs-step">2. Filter species and hunt class</div>
+      <div class="qs-step">3. Select a hunt unit</div>
+      <div class="qs-step">4. Save to Hunt Backpack</div>
+    </div>
   </section>
 
   <main class="layout">
