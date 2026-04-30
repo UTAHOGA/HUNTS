@@ -151,30 +151,30 @@
        .uoga-page-nav-control,
        .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
        .uoga-page-nav-toggle,
-       .map-mode-toggle { display:inline-flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:2px !important; width:224px !important; min-height:46px !important; padding:6px 14px 6px !important; cursor:pointer !important; }
+       .map-mode-toggle { display:inline-flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:2px !important; width:224px !important; min-height:48px !important; padding:5px 14px !important; cursor:pointer !important; }
        .uoga-page-nav-label,
        .map-mode-label { font-size:10px !important; line-height:1 !important; color:#f07800 !important; white-space:nowrap !important; }
        .uoga-page-nav-current,
        .map-mode-current { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:100% !important; min-width:0 !important; }
-       .map-mode-option--icononly[data-map-mode-value=\"dwr\"] { min-height:54px !important; }
-       .map-mode-option-logo--dwr { width:52px !important; height:52px !important; max-width:52px !important; max-height:52px !important; }
+       .map-mode-option--icononly[data-map-mode-value=\"dwr\"] { min-height:56px !important; }
+       .map-mode-option-logo--dwr { width:auto !important; height:46px !important; max-width:170px !important; max-height:46px !important; }
         .uoga-page-nav-label {
          display:inline-flex !important;
          align-items:center !important;
          justify-content:center !important;
-         min-width:188px !important;
-          min-height:38px !important;
+         min-width:176px !important;
+         min-height:38px !important;
          padding:0 18px !important;
          border-radius:999px !important;
          border:1px solid color-mix(in srgb, var(--accent) 52%, transparent) !important;
          background:radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 34%), linear-gradient(180deg, rgba(57, 44, 34, 0.92), rgba(28, 22, 17, 0.96)) !important;
          box-shadow:0 8px 18px rgba(0,0,0,0.28) !important;
          color:var(--accent) !important;
-          font-size:14px !important;
+           font-size:15px !important;
          font-weight:900 !important;
-         letter-spacing:.12em !important;
+         letter-spacing:.10em !important;
          text-transform:uppercase !important;
-         line-height:1.08 !important;
+         line-height:1.02 !important;
          white-space:nowrap !important;
          text-align:center !important;
        }
@@ -183,6 +183,7 @@
        .uoga-page-nav-menu { padding:12px !important; min-width:224px !important; }
        .uoga-page-nav-menu .utility-link,
        .uoga-page-nav-menu .uoga-page-nav-link { width:100% !important; min-height:42px !important; justify-content:center !important; }
+       .map-mode-option-logo--dwr { width:auto !important; height:46px !important; max-width:170px !important; max-height:46px !important; }
         .instructions-tab {
           display:inline-flex !important;
           align-items:center !important;
@@ -209,10 +210,14 @@
           display:flex !important;
           flex:1 1 0 !important;
           min-width:0 !important;
-          align-items:stretch !important;
+          align-items:center !important;
           justify-content:flex-start !important;
           gap:10px 14px !important;
-          flex-wrap:wrap !important;
+          flex-wrap:nowrap !important;
+          overflow-x:auto !important;
+        }
+        .instructions-panel .qs-step {
+          flex:0 0 auto !important;
         }
         .instructions-panel[hidden] { display:none !important; }
        .uoga-engine-control { display:flex !important; align-items:center !important; gap:8px !important; }
