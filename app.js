@@ -2886,12 +2886,11 @@ function ensureGoogleEarth3dElement() {
     el.id = 'googleEarth3dMap';
     el.className = 'google-earth-3d-map';
     el.setAttribute('aria-label', 'Google Earth 3D map');
-    el.setAttribute('mode', 'satellite');
+    el.setAttribute('mode', 'hybrid');
     el.setAttribute('center', `${GOOGLE_BASELINE_DEFAULT_CENTER.lat},${GOOGLE_BASELINE_DEFAULT_CENTER.lng},1800`);
     el.setAttribute('range', '420000');
-    el.setAttribute('tilt', '0');
-    el.setAttribute('heading', '0');
-    el.setAttribute('roll', '0');
+    el.setAttribute('tilt', '64');
+    el.setAttribute('heading', '25');
     el.setAttribute('gesture-handling', 'greedy');
     el.hidden = true;
     el.addEventListener('gmp-error', () => {
@@ -2914,7 +2913,7 @@ async function ensureGoogleEarth3dMap() {
   }
   const maps3d = await googleEarth3dLibraryPromise;
   googleEarth3dMap = el;
-  el.mode = maps3d?.MapMode?.SATELLITE || maps3d?.MapMode?.HYBRID || 'satellite';
+  el.mode = maps3d?.MapMode?.HYBRID || 'hybrid';
   syncGoogleEarth3dCamera();
   return el;
 }
@@ -2931,9 +2930,8 @@ function syncGoogleEarth3dCamera() {
   }
   el.center = { lat: center.lat, lng: center.lng, altitude: 1800 };
   el.range = 420000;
-  el.tilt = 0;
-  el.heading = 0;
-  el.roll = 0;
+  el.tilt = 64;
+  el.heading = 25;
 }
 
 function clearGoogleEarth3dBoundaryOverlays() {
@@ -3032,9 +3030,8 @@ function syncGoogleEarth3dCameraToFeatures(features) {
   const range = Math.min(850000, Math.max(45000, Math.max(latMeters, lngMeters) * 1.9));
   el.center = center;
   el.range = range;
-  el.tilt = 0;
-  el.heading = 0;
-  el.roll = 0;
+  el.tilt = 64;
+  el.heading = 25;
 }
 
 function getGoogleEarth3dOverlayDefinitions() {
