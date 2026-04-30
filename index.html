@@ -141,18 +141,20 @@
     <div class="controls" aria-label="Header actions">
       <div class="controls-center"></div>
     </div>
-    <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
-    <section id="instructionsPanel" class="instructions-panel" hidden>
+    <section id="instructionsPanel" class="instructions-panel">
       <div class="instructions-head">
+        <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="true" aria-controls="instructionsBody">Instructions</button>
         <h3>Quick Instructions</h3>
         <button id="instructionsReadBtn" type="button" class="secondary">Read Audio</button>
       </div>
-      <ol>
-        <li>Choose map mode and land layers.</li>
-        <li>Filter species, sex, hunt type, and units.</li>
-        <li>Click a unit or hunt card to inspect odds and details.</li>
-        <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
-      </ol>
+      <div id="instructionsBody" class="instructions-body">
+        <ol>
+          <li>Choose map mode and land layers.</li>
+          <li>Filter species, sex, hunt type, and units.</li>
+          <li>Click a unit or hunt card to inspect odds and details.</li>
+          <li>Save hunts to Hunt Backpack for cross-page workflow.</li>
+        </ol>
+      </div>
     </section>
   </header>
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
