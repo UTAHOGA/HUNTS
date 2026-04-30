@@ -169,8 +169,8 @@
       }
       .helper, .empty-note, .hunt-card-meta, .map-chooser-meta { color:#6b5646 !important; }
       .map-stage { position:relative !important; }
-      #map, #googleEarthFrame, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
-      #googleEarthFrame, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
+      #map, #googleEarthFrame, #googleEarth3dMap, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      #googleEarthFrame, #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
        .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; }
        .topbar-right { display:flex !important; align-items:center !important; justify-content:flex-end !important; flex:0 0 auto !important; margin-left:auto !important; }
@@ -367,7 +367,7 @@
     if (earth && !earth.src) earth.src = GOOGLE_EARTH_URL;
     if (dwr && !dwr.src) dwr.src = DWR_MAP_URL;
     if (map) map.hidden = next !== 'google';
-    if (earth) earth.hidden = next !== 'earth';
+    if (earth) earth.hidden = true;
     if (dwr) dwr.hidden = next !== 'dwr';
     document.body.dataset.mapMode = next;
     document.querySelectorAll('[data-engine], [data-map-mode-value]').forEach(btn => {
@@ -375,7 +375,7 @@
       btn.classList.toggle('is-active', v === next);
     });
     const status = document.getElementById('status');
-    if (status) status.textContent = next === 'earth' ? 'Google Earth active.' : next === 'dwr' ? 'Utah DWR map active.' : 'Google map active.';
+    if (status) status.textContent = next === 'earth' ? 'Google Earth 3D active.' : next === 'dwr' ? 'Utah DWR map active.' : 'Google map active.';
   }
 
   function bindMapEngine() {

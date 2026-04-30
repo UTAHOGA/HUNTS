@@ -1,7 +1,7 @@
 (() => {
   const STORAGE_KEY = 'uoga_google_basemap_type_v2';
   const DEFAULT_TYPE = 'terrain';
-  const VALID_TYPES = new Set(['roadmap', 'terrain', 'hybrid', 'satellite', 'aerial3d']);
+  const VALID_TYPES = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
 
   const CROP_BASEMAP_PANEL_ON_SELECT = true;
 
@@ -57,10 +57,9 @@
     const preferred = readPreferredType();
     const map = window.googleBaselineMap;
     if (map && typeof map.setMapTypeId === 'function') {
-      const mapTypeId = preferred === 'aerial3d' ? 'hybrid' : preferred;
-      map.setMapTypeId(mapTypeId);
+      map.setMapTypeId(preferred);
       if (typeof map.setTilt === 'function') {
-        map.setTilt(preferred === 'aerial3d' ? 45 : 0);
+        map.setTilt(0);
       }
       if (typeof map.setHeading === 'function') {
         map.setHeading(0);

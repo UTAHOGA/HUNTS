@@ -70,14 +70,13 @@ const {
   loadFirstNormalizedList
 } = uogaData;
 
-let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 
 function getGooglePreferredBasemapType() {
-  const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite', 'aerial3d']);
+  const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
   try {
     const raw = String(localStorage.getItem('uoga_google_basemap_type_v2') || '').trim();
-    if (!VALID.has(raw)) return 'terrain';
-    return raw === 'aerial3d' ? 'hybrid' : raw;
+    return VALID.has(raw) ? raw : 'terrain';
   } catch {
     return 'terrain';
   }
@@ -1111,6 +1110,9 @@ function forceGoogleMapVisible() {
   if (googleEarthFrame) {
     googleEarthFrame.hidden = true;
     googleEarthFrame.style.display = '';
+  }
+  if (googleEarth3dMap) {
+    googleEarth3dMap.hidden = true;
   }
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
     mapTypeSelect.value = 'google';
@@ -2845,6 +2847,63 @@ function initGoogleEarthFrameEvents() {
   });
 }
 
+function ensureGoogleEarth3dElement() {
+  const stage = document.querySelector('.map-stage') || document.querySelector('.map-wrap');
+  if (!stage) return null;
+  let el = document.getElementById('googleEarth3dMap');
+  if (!el) {
+    el = document.createElement('gmp-map-3d');
+    el.id = 'googleEarth3dMap';
+    el.className = 'google-earth-3d-map';
+    el.setAttribute('aria-label', 'Google Earth 3D map');
+    el.setAttribute('mode', 'hybrid');
+    el.setAttribute('center', `${GOOGLE_BASELINE_DEFAULT_CENTER.lat},${GOOGLE_BASELINE_DEFAULT_CENTER.lng},1800`);
+    el.setAttribute('range', '420000');
+    el.setAttribute('tilt', '64');
+    el.setAttribute('heading', '25');
+    el.setAttribute('gesture-handling', 'greedy');
+    el.hidden = true;
+    el.addEventListener('gmp-error', () => {
+      updateGoogleEarthFrame(selectedHunt);
+      if (googleEarthFrame) googleEarthFrame.hidden = false;
+      el.hidden = true;
+      updateStatus('Google Earth 3D could not render. Showing the fallback Google Earth page.');
+    });
+    stage.appendChild(el);
+  }
+  return el;
+}
+
+async function ensureGoogleEarth3dMap() {
+  const el = ensureGoogleEarth3dElement();
+  if (!el) return null;
+  if (!window.google?.maps?.importLibrary) return null;
+  if (!googleEarth3dLibraryPromise) {
+    googleEarth3dLibraryPromise = window.google.maps.importLibrary('maps3d');
+  }
+  const maps3d = await googleEarth3dLibraryPromise;
+  googleEarth3dMap = el;
+  el.mode = maps3d?.MapMode?.HYBRID || 'hybrid';
+  syncGoogleEarth3dCamera();
+  return el;
+}
+
+function syncGoogleEarth3dCamera() {
+  const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
+  if (!el) return;
+  let center = GOOGLE_BASELINE_DEFAULT_CENTER;
+  if (googleBaselineMap?.getCenter) {
+    const googleCenter = googleBaselineMap.getCenter();
+    if (googleCenter) {
+      center = { lat: googleCenter.lat(), lng: googleCenter.lng() };
+    }
+  }
+  el.center = { lat: center.lat, lng: center.lng, altitude: 1800 };
+  el.range = 420000;
+  el.tilt = 64;
+  el.heading = 25;
+}
+
 function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2859,6 +2918,9 @@ function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
   }
   if (googleEarthFrame) {
     googleEarthFrame.hidden = true;
+  }
+  if (googleEarth3dMap) {
+    googleEarth3dMap.hidden = true;
   }
   if (mapTypeSelect) {
     mapTypeSelect.value = 'google';
@@ -2889,6 +2951,9 @@ function applyMapMode() {
   if (googleEarthFrame) {
     googleEarthFrame.hidden = true;
   }
+  if (googleEarth3dMap) {
+    googleEarth3dMap.hidden = true;
+  }
 
   if (value === 'dwr') {
     clearOutfitterMarkers();
@@ -2906,12 +2971,28 @@ function applyMapMode() {
     if (basemapControl) basemapControl.hidden = true;
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
-    updateGoogleEarthFrame(selectedHunt);
-    if (googleEarthFrame) {
-      googleEarthFrame.hidden = false;
-    }
     mapWrap.classList.add('is-earth-mode');
-    updateStatus('Google Earth iframe active. Hunt boundaries and ownership layers stay on Google Map.');
+    const mapEl = document.getElementById('map');
+    if (mapEl) mapEl.hidden = true;
+    updateStatus('Loading Google Earth 3D...');
+    ensureGoogleEarth3dMap()
+      .then((el) => {
+        if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
+        if (el) {
+          el.hidden = false;
+          updateStatus('Google Earth 3D active. Hunt boundaries and ownership layers stay on Google Maps mode.');
+          return;
+        }
+        updateGoogleEarthFrame(selectedHunt);
+        if (googleEarthFrame) googleEarthFrame.hidden = false;
+        updateStatus('Google Earth fallback page active.');
+      })
+      .catch((err) => {
+        console.error('Google Earth 3D failed to load.', err);
+        updateGoogleEarthFrame(selectedHunt);
+        if (googleEarthFrame) googleEarthFrame.hidden = false;
+        updateStatus('Google Earth 3D failed to load. Showing the fallback Google Earth page.');
+      });
     return;
   }
 
@@ -2929,6 +3010,8 @@ function applyMapMode() {
 
   if (basemapControl) basemapControl.hidden = false;
   mapWrap.classList.add('is-google-mode');
+  const mapEl = document.getElementById('map');
+  if (mapEl) mapEl.hidden = false;
   if (value === 'google') {
     googleBaselineMap.setMapTypeId(getGooglePreferredBasemapType());
   } else {
