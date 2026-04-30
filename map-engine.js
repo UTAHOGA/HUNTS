@@ -136,23 +136,15 @@
   function setMode(mode) {
     const select = ensureSelect();
     const picker = ensurePicker(select);
-    const map = $('map');
-    const earth3d = $('googleEarth3dMap');
     const { dwr } = ensureFrames();
     const next = ['google', 'earth', 'dwr'].includes(mode) ? mode : 'google';
     const didChange = select.value !== next;
     select.value = next;
-    // Keep the 2D map visible for Earth mode until the 3D renderer takes over.
-    if (map) map.hidden = next === 'dwr';
-    if (earth3d) earth3d.hidden = next !== 'earth';
-    if (dwr) dwr.hidden = next !== 'dwr';
     document.body.dataset.mapMode = next;
     if (didChange) {
       select.dispatchEvent(new Event('change', { bubbles: true }));
     }
     renderPicker(select, picker);
-    const status = $('status');
-    if (status) status.textContent = next === 'earth' ? 'Google Earth active.' : next === 'dwr' ? 'Utah DWR map active.' : 'Google map active.';
   }
 
   function bind() {

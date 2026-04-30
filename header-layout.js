@@ -358,17 +358,11 @@
 
   function setMode(mode) {
     const select = normalizeMapSelect();
-    const map = document.getElementById('map');
-    const earth3d = document.getElementById('googleEarth3dMap');
     const { dwr } = ensureFrames();
     const next = ['google', 'earth', 'dwr'].includes(mode) ? mode : 'google';
     const didChange = !!select && select.value !== next;
     if (select) select.value = next;
     if (dwr && !dwr.src) dwr.src = DWR_MAP_URL;
-    // Keep the 2D map visible for Earth mode until the 3D renderer takes over.
-    if (map) map.hidden = next === 'dwr';
-    if (earth3d) earth3d.hidden = next !== 'earth';
-    if (dwr) dwr.hidden = next !== 'dwr';
     document.body.dataset.mapMode = next;
     if (didChange) {
       select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -377,8 +371,6 @@
       const v = btn.dataset.engine || btn.dataset.mapModeValue;
       btn.classList.toggle('is-active', v === next);
     });
-    const status = document.getElementById('status');
-    if (status) status.textContent = next === 'earth' ? 'Google Earth 3D active.' : next === 'dwr' ? 'Utah DWR map active.' : 'Google map active.';
   }
 
   function bindMapEngine() {
