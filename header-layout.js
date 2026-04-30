@@ -182,7 +182,7 @@
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
-       .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; }
+       .topbar-left { display:flex !important; align-items:center !important; justify-content:flex-end !important; gap:14px !important; flex:1 1 auto !important; min-width:0 !important; width:auto !important; }
        .topbar-right { display:flex !important; align-items:center !important; justify-content:flex-end !important; flex:0 0 auto !important; margin-left:auto !important; }
        .uoga-page-nav-control,
        .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
@@ -234,20 +234,20 @@
           min-height:42px !important;
           padding:8px 16px !important;
           border-radius:999px !important;
-          border:1px solid #c9a27f !important;
-          background:linear-gradient(180deg,#fffdf9,#f2e8dc) !important;
+          border:1px solid #b45e00 !important;
+          background:linear-gradient(180deg,#f28a12,#d66f00) !important;
           color:#2b1c12 !important;
           font-weight:900 !important;
           letter-spacing:.06em !important;
           text-transform:uppercase !important;
-          box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
+          box-shadow:inset 0 1px 0 rgba(255,236,214,.66), inset 0 -2px 3px rgba(62,33,6,.26), 0 6px 14px rgba(58,37,18,.20) !important;
           flex:0 0 auto !important;
         }
         .instructions-tab[aria-expanded=\"true\"],
         .instructions-tab:hover {
-          border-color:#f07800 !important;
-          background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
-          box-shadow:inset 0 0 0 2px #f07800, 0 6px 14px rgba(58,37,18,.18) !important;
+          border-color:#f7a142 !important;
+          background:linear-gradient(180deg,#f7a142,#e07900) !important;
+          box-shadow:inset 0 0 0 2px rgba(255,235,210,.42), 0 8px 18px rgba(58,37,18,.24) !important;
         }
         .instructions-panel {
           display:flex !important;
@@ -263,7 +263,16 @@
           flex:0 0 auto !important;
         }
         .instructions-panel[hidden] { display:none !important; }
-       .instructions-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; flex:0 0 auto !important; }
+       .instructions-control {
+         position:relative !important;
+         display:flex !important;
+         align-items:center !important;
+         justify-content:center !important;
+         flex:0 0 auto !important;
+         order:-1 !important;
+         margin-right:auto !important;
+         margin-left:clamp(10px, calc((340px - 170px) / 2), 130px) !important;
+       }
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
        .instructions-control .qs-step { width:100% !important; max-width:none !important; flex:0 0 auto !important; padding:9px 10px !important; font-size:11px !important; font-weight:900 !important; }
@@ -283,6 +292,13 @@
        .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
       .uoga-engine-pill img { max-height:20px !important; max-width:110px !important; display:block !important; }
+      @media (max-width: 1200px) {
+        .instructions-control {
+          margin-left:0 !important;
+          order:0 !important;
+          margin-right:0 !important;
+        }
+      }
       @media (max-width: 900px) {
         .topbar-title { order:3 !important; flex:1 1 100% !important; padding:4px 0 0 !important; }
         .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
