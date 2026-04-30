@@ -3503,7 +3503,7 @@ document.addEventListener('DOMContentLoaded', () => {
       html: '<img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">'
     },
     earth: {
-      html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo_2.png" alt="Google Earth">'
+      html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">'
     },
     dwr: {
       html: '<img class="map-mode-logo map-mode-logo--dwr-current" src="./assets/logos/DWR-LOGO-TEXT.png" alt="Utah DWR">'
