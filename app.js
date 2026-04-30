@@ -1193,6 +1193,7 @@ function handleFilterChange(event) {
   } else if (activeMode === 'dwr') {
     updateDwrMapFrame(getPreferredDwrHuntCandidate());
   }
+  maybeAutoAdvanceFilterMatrix(changedId);
 }
 
 function refreshSelectionMatrix() {
@@ -3720,6 +3721,7 @@ function bindControls() {
     if (typeof window !== 'undefined' && document.getElementById('matchingHunts')) {
       document.getElementById('matchingHunts').scrollTop = 0;
     }
+    scrollSidebarToHuntResults();
     if (!count) {
       updateStatus('No matching hunts found for the current filters.');
     } else if (selectedUnitGroups.length > 1 && !selectedUnitValue) {
@@ -3900,6 +3902,54 @@ function zoomToDisplayHuntsBounds() {
     return true;
   }
   return false;
+}
+
+function getSidebarScrollContainer() {
+  return document.querySelector('.sidebar');
+}
+
+function scrollSidebarToElement(targetEl, offset = 12, behavior = 'smooth') {
+  if (!targetEl) return;
+  const container = getSidebarScrollContainer();
+  if (!container) {
+    targetEl.scrollIntoView({ behavior, block: 'start' });
+    return;
+  }
+  const containerRect = container.getBoundingClientRect();
+  const targetRect = targetEl.getBoundingClientRect();
+  const nextTop = container.scrollTop + (targetRect.top - containerRect.top) - offset;
+  container.scrollTo({ top: Math.max(0, nextTop), behavior });
+}
+
+function isAdvancedMatrixSelection(controlId) {
+  const el = document.getElementById(controlId);
+  if (!el) return false;
+  const value = safe(el.value).trim();
+  if (!value) return false;
+  if (controlId === 'speciesFilter') return value !== 'All Species';
+  return value !== 'All';
+}
+
+function maybeAutoAdvanceFilterMatrix(changedId) {
+  const sequence = ['speciesFilter', 'sexFilter', 'huntTypeFilter', 'huntCategoryFilter', 'weaponFilter', 'unitFilter'];
+  const idx = sequence.indexOf(changedId);
+  if (idx < 0) return;
+  if (!isAdvancedMatrixSelection(changedId)) return;
+  const nextId = sequence[idx + 1] || 'applyFiltersBtn';
+  const nextEl = document.getElementById(nextId);
+  if (!nextEl) return;
+  window.setTimeout(() => {
+    scrollSidebarToElement(nextEl, 18, 'smooth');
+  }, 60);
+}
+
+function scrollSidebarToHuntResults() {
+  const results = document.getElementById('matchingHunts');
+  if (!results) return;
+  const panel = results.closest('.panel') || results;
+  window.setTimeout(() => {
+    scrollSidebarToElement(panel, 10, 'smooth');
+  }, 40);
 }
 
 function bootstrapPendingHuntSelection() {

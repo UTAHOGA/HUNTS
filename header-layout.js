@@ -41,6 +41,41 @@
     });
   }
 
+  function closeTopbarOverlays(exceptId = '') {
+    const pageNavToggle = document.getElementById('pageNavToggleBtn');
+    const pageNavMenu = document.querySelector('.uoga-page-nav-menu');
+    if (exceptId !== 'pageNavToggleBtn' && pageNavMenu && pageNavToggle) {
+      pageNavMenu.hidden = true;
+      pageNavMenu.style.display = 'none';
+      pageNavToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    const mapModeToggle = document.getElementById('mapModeToggleBtn');
+    const mapModeMenu = document.querySelector('.map-mode-menu');
+    if (exceptId !== 'mapModeToggleBtn' && mapModeMenu && mapModeToggle) {
+      mapModeMenu.hidden = true;
+      mapModeToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    const instructionsTab = document.getElementById('instructionsTab');
+    const instructionsPanel = document.getElementById('instructionsPanel');
+    if (exceptId !== 'instructionsTab' && instructionsTab && instructionsPanel) {
+      instructionsPanel.hidden = true;
+      instructionsTab.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function bindTopbarOverlayPriority() {
+    if (document.body?.dataset.uogaOverlayPriorityBound) return;
+    if (document.body) document.body.dataset.uogaOverlayPriorityBound = 'true';
+
+    document.addEventListener('click', (event) => {
+      const trigger = event.target?.closest?.('#mapModeToggleBtn, #pageNavToggleBtn, #instructionsTab');
+      if (!trigger) return;
+      closeTopbarOverlays(trigger.id);
+    }, { capture: true });
+  }
+
   function buildPageNavDropdown() {
     const strip = document.querySelector('.page-nav-strip');
     const header = document.querySelector('header.topbar');
@@ -115,11 +150,10 @@
         border-bottom:1px solid #c9a27f !important;
         box-shadow:0 8px 22px rgba(58,37,18,.14) !important;
         color:#2b1c12 !important;
-        display:grid !important;
-        grid-template-columns:minmax(0, 1fr) auto !important;
+        display:flex !important;
         align-items:center !important;
         gap:14px !important;
-        flex-wrap:nowrap !important;
+        flex-wrap:wrap !important;
       }
       .topbar-title { display:none !important; }
       .topbar-title h1 { margin:0 !important; width:min(720px, 100%) !important; padding:8px 22px 9px !important; border:2px solid rgba(198,42,42,.95) !important; font-family:Georgia, "Times New Roman", serif !important; font-size:clamp(20px,2.15vw,31px) !important; line-height:1.02 !important; font-weight:900 !important; letter-spacing:.04em !important; text-transform:uppercase !important; color:#2b1c12 !important; background:rgba(255,253,248,.78) !important; text-shadow:0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(92,55,24,.16) !important; box-shadow:0 8px 20px rgba(58,37,18,.10) !important; }
@@ -186,28 +220,16 @@
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
-       .topbar-left {
-         display:grid !important;
-         grid-template-columns:clamp(180px, 24vw, 340px) minmax(210px, 1fr) minmax(210px, 1fr) !important;
-         align-items:center !important;
-         justify-items:center !important;
-         column-gap:14px !important;
-         row-gap:10px !important;
-         width:100% !important;
-         min-width:0 !important;
-       }
+       .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
        .topbar-right {
          display:flex !important;
          align-items:center !important;
          justify-content:flex-end !important;
          flex:0 0 auto !important;
-         margin-left:0 !important;
-         justify-self:end !important;
+         margin-left:auto !important;
        }
        .uoga-page-nav-control,
        .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
-       .uoga-page-nav-control { order:2 !important; grid-column:2 !important; }
-       .map-mode-control { order:3 !important; grid-column:3 !important; }
        .uoga-page-nav-toggle,
        .map-mode-toggle { display:inline-flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:2px !important; width:224px !important; min-height:48px !important; padding:5px 14px !important; cursor:pointer !important; }
        .uoga-page-nav-label,
@@ -291,11 +313,9 @@
          align-items:center !important;
          justify-content:center !important;
          flex:0 0 auto !important;
-         order:1 !important;
-         margin-right:0 !important;
-         margin-left:0 !important;
-         grid-column:1 !important;
-         justify-self:center !important;
+         order:-1 !important;
+         margin-right:auto !important;
+         margin-left:clamp(10px, calc((340px - 170px) / 2), 130px) !important;
        }
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
@@ -317,10 +337,6 @@
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
       .uoga-engine-pill img { max-height:20px !important; max-width:110px !important; display:block !important; }
       @media (max-width: 1200px) {
-        .topbar, .topbar.topbar-planner {
-          grid-template-columns:minmax(0, 1fr) !important;
-          justify-items:stretch !important;
-        }
         .topbar-left {
           display:flex !important;
           flex-wrap:wrap !important;
@@ -328,39 +344,28 @@
           align-items:center !important;
           gap:12px !important;
         }
-        .topbar-right {
-          justify-self:end !important;
-        }
+        .topbar-right { margin-left:auto !important; }
         .instructions-control {
-          margin:0 !important;
-          order:1 !important;
-          grid-column:auto !important;
+          margin-left:0 !important;
+          margin-right:auto !important;
+          order:0 !important;
         }
-        .uoga-page-nav-control { order:2 !important; grid-column:auto !important; }
-        .map-mode-control { order:3 !important; grid-column:auto !important; }
       }
       @media (max-width: 900px) {
         .topbar-left {
-          display:grid !important;
-          grid-template-columns:1fr !important;
-          justify-items:center !important;
-          align-items:center !important;
-          row-gap:10px !important;
-        }
-        .instructions-control,
-        .uoga-page-nav-control,
-        .map-mode-control {
-          grid-column:1 !important;
-          width:min(100%, 320px) !important;
-        }
-        .uoga-page-nav-toggle,
-        .map-mode-toggle {
-          width:100% !important;
-        }
-        .topbar-right {
-          justify-self:center !important;
-          width:100% !important;
+          display:flex !important;
+          flex-wrap:wrap !important;
           justify-content:center !important;
+          align-items:center !important;
+          gap:10px !important;
+        }
+        .instructions-control { margin:0 !important; order:0 !important; }
+        .uoga-page-nav-control, .map-mode-control { width:auto !important; }
+        .uoga-page-nav-toggle, .map-mode-toggle { width:min(224px, 86vw) !important; }
+        .topbar-right {
+          width:auto !important;
+          justify-content:center !important;
+          margin-left:0 !important;
         }
         .ownership-dock, .uoga-backpack-open .ownership-dock { left:12px !important; right:12px !important; max-width:none !important; justify-content:center !important; }
         .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
@@ -466,6 +471,7 @@
   function init() {
     injectLightPillStyle();
     buildPageNavDropdown();
+    bindTopbarOverlayPriority();
     bindMapEngine();
   }
 
