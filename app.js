@@ -2820,11 +2820,7 @@ function initDwrFrameEvents() {
 }
 
 function getGoogleEarthUrl(hunt = selectedHunt) {
-  const center = getSelectedHuntCenter();
-  if (center) {
-    return `https://earth.google.com/web/@${center.lat()},${center.lng()},240000a,0d,35y,0h,0t,0r`;
-  }
-  return 'https://earth.google.com/web/';
+  return 'https://www.uoga.org/hunt-builder-google-earth';
 }
 
 function updateGoogleEarthFrame(hunt = selectedHunt) {
