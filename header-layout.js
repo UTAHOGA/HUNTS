@@ -156,8 +156,8 @@
        .map-mode-label { font-size:10px !important; line-height:1 !important; color:#f07800 !important; white-space:nowrap !important; }
        .uoga-page-nav-current,
        .map-mode-current { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:100% !important; min-width:0 !important; }
-       .map-mode-option--icononly[data-map-mode-value=\"dwr\"] { min-height:56px !important; }
-       .map-mode-option-logo--dwr { width:auto !important; height:46px !important; max-width:170px !important; max-height:46px !important; }
+       .map-mode-option--icononly[data-map-mode-value=\"dwr\"] { min-height:42px !important; }
+       .map-mode-option-logo--dwr { width:170px !important; height:34px !important; max-width:170px !important; max-height:34px !important; object-fit:contain !important; }
         .uoga-page-nav-label {
          display:inline-flex !important;
          align-items:center !important;
@@ -183,7 +183,7 @@
        .uoga-page-nav-menu { padding:12px !important; min-width:224px !important; }
        .uoga-page-nav-menu .utility-link,
        .uoga-page-nav-menu .uoga-page-nav-link { width:100% !important; min-height:42px !important; justify-content:center !important; }
-       .map-mode-option-logo--dwr { width:auto !important; height:46px !important; max-width:170px !important; max-height:46px !important; }
+       .map-mode-option-logo--dwr { width:170px !important; height:34px !important; max-width:170px !important; max-height:34px !important; object-fit:contain !important; }
         .instructions-tab {
           display:inline-flex !important;
           align-items:center !important;
