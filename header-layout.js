@@ -124,7 +124,9 @@
       .uoga-page-nav-toggle,
       .uoga-page-nav-link,
       .topbar .toggle-row,
+      .quick-start .toggle-row,
       .topbar .toggle-menu summary,
+      .quick-start .toggle-menu summary,
       .basemap-toggle,
       .globe-basemap-btn,
       .uoga-engine-pill {
@@ -243,6 +245,10 @@
           flex:0 0 auto !important;
         }
         .instructions-panel[hidden] { display:none !important; }
+       .ownership-dock { display:flex !important; justify-content:center !important; align-items:center !important; flex:1 1 auto !important; min-width:min(680px, 100%) !important; max-width:980px !important; }
+       .ownership-case { display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; }
+       .quick-start .toggle-row { justify-content:center !important; width:auto !important; max-width:100% !important; }
+       .quick-start .toggle-menu-panel { z-index:10040 !important; }
        .uoga-engine-control { display:flex !important; align-items:center !important; gap:8px !important; }
        .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }

@@ -17,6 +17,7 @@
     .map-mode-toggle,
     .map-mode-option,
     .topbar .toggle-row,
+    .quick-start .toggle-row,
     .utility-link,
     .basemap-toggle,
     .globe-basemap-btn {
@@ -53,13 +54,17 @@
     .quick-start {
       display:flex !important;
       flex-wrap:wrap !important;
-      justify-content:flex-start !important;
-      align-items:stretch !important;
+      justify-content:center !important;
+      align-items:center !important;
       gap:10px 14px !important;
-      padding:12px 18px 16px !important;
+      padding:8px 18px 10px !important;
       border-bottom:1px solid var(--line) !important;
       background:rgba(255,255,255,.44) !important;
     }
+    .ownership-dock { display:flex !important; justify-content:center !important; align-items:center !important; flex:1 1 auto !important; min-width:min(680px, 100%) !important; max-width:980px !important; }
+    .ownership-case { display:flex !important; justify-content:center !important; align-items:center !important; width:100% !important; }
+    .quick-start .toggle-row { justify-content:center !important; width:auto !important; max-width:100% !important; }
+    .quick-start .toggle-menu-panel { z-index:10040 !important; }
     .topbar { justify-content:flex-start !important; flex-wrap:wrap !important; }
     .topbar-left { flex:0 0 520px !important; display:flex !important; justify-content:center !important; }
     .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
@@ -132,34 +137,6 @@
         </div>
       </div>
     </div>
-    <div class="topbar-center">
-      <div class="toggle-row">
-        <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-        <details class="toggle-menu">
-          <summary id="federalLayersSummary">Federal</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-            <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-            <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
-          </div>
-        </details>
-        <details class="toggle-menu">
-          <summary id="stateLayersSummary">State</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-            <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-            <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
-          </div>
-        </details>
-        <details class="toggle-menu">
-          <summary id="privateLayersSummary">Private</summary>
-          <div class="toggle-menu-panel">
-            <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
-            <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-          </div>
-        </details>
-      </div>
-    </div>
     <div class="topbar-right" data-backpack-host>
       <div class="uoga-backpack-shell">
         <button type="button" class="uoga-backpack-toggle" aria-expanded="false" aria-haspopup="dialog">
@@ -174,10 +151,6 @@
       </div>
     </div>
   </header>
-  <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
-    <div class="ownership-case"></div>
-  </div>
-
   <div class="planner-body">
   <section class="hero" aria-label="Introduction">
     <h1>PLAN YOUR UTAH HUNT LIKE THE PROS DO!</h1>
@@ -185,6 +158,36 @@
 
   <section class="quick-start" aria-label="Quick start steps">
     <button id="instructionsTab" class="instructions-tab" type="button" aria-expanded="false" aria-controls="instructionsPanel">Instructions</button>
+    <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
+      <div class="ownership-case">
+        <div class="toggle-row">
+          <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+          <details class="toggle-menu">
+            <summary id="federalLayersSummary">Federal</summary>
+            <div class="toggle-menu-panel">
+              <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+              <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+              <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
+            </div>
+          </details>
+          <details class="toggle-menu">
+            <summary id="stateLayersSummary">State</summary>
+            <div class="toggle-menu-panel">
+              <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+              <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
+              <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+            </div>
+          </details>
+          <details class="toggle-menu">
+            <summary id="privateLayersSummary">Private</summary>
+            <div class="toggle-menu-panel">
+              <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
+              <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
     <div id="instructionsPanel" class="instructions-panel" hidden>
       <div class="qs-step">1. Pick map mode</div>
       <div class="qs-step">2. Filter species and hunt class</div>
@@ -351,8 +354,8 @@
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
   <script src="./ui.js?v=20260430-nav-backpack-2"></script>
-  <script src="./header-layout.js?v=20260430-nav-backpack-2"></script>
-  <script src="./ownership-dock.js?v=20260423-terrain-inpage-1"></script>
+  <script src="./header-layout.js?v=20260430-ownership-subheader-1"></script>
+  <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="app.js?v=20260430-nav-backpack-2"></script>
   <script src="./google-basemap.js?v=20260423-terrain-inpage-1"></script>
