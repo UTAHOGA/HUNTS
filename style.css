@@ -409,6 +409,20 @@
     #globeMap { display: none; background: #0f1723; }
     .map-wrap.is-globe-mode #map { display: none; }
     .map-wrap.is-globe-mode #globeMap { display: block; }
+    /* Keep planner dropdowns above map/overlay surfaces */
+    .topbar,
+    .topbar-planner,
+    .topbar-right,
+    .uoga-page-nav-control,
+    .uoga-backpack-shell {
+      position: relative;
+      z-index: 20040 !important;
+    }
+    .uoga-page-nav-menu,
+    .uoga-backpack-panel {
+      position: absolute;
+      z-index: 20090 !important;
+    }
     :root {
       --dwr-iframe-top-crop: 42px;
     }
