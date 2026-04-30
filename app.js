@@ -85,6 +85,8 @@ function getGooglePreferredBasemapType() {
 let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleMapFailureMessage = '';
+let googleEarth3dLastFocusSignature = '';
+let googleEarth3dReorientTimeoutId = null;
 let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
 let conservationPermitAreas = [];
@@ -3064,10 +3066,9 @@ function getFeatureCoordinateBounds(features) {
   return bounds.count ? bounds : null;
 }
 
-function syncGoogleEarth3dCameraToFeatures(features) {
-  const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
+function getGoogleEarth3dCameraTarget(features) {
   const bounds = getFeatureCoordinateBounds(features);
-  if (!el || !bounds) return;
+  if (!bounds) return null;
   const center = {
     lat: (bounds.north + bounds.south) / 2,
     lng: (bounds.east + bounds.west) / 2,
@@ -3076,10 +3077,98 @@ function syncGoogleEarth3dCameraToFeatures(features) {
   const latMeters = Math.max(1, Math.abs(bounds.north - bounds.south) * 111320);
   const lngMeters = Math.max(1, Math.abs(bounds.east - bounds.west) * 111320 * Math.cos(center.lat * Math.PI / 180));
   const range = Math.min(850000, Math.max(45000, Math.max(latMeters, lngMeters) * 1.9));
-  el.center = center;
-  el.range = range;
-  el.tilt = 64;
-  el.heading = 25;
+  return {
+    center,
+    range,
+    tilt: 64,
+    heading: 25
+  };
+}
+
+function syncGoogleEarth3dCameraToFeatures(features) {
+  const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
+  const target = getGoogleEarth3dCameraTarget(features);
+  if (!el || !target) return;
+  el.center = target.center;
+  el.range = target.range;
+  el.tilt = target.tilt;
+  el.heading = target.heading;
+}
+
+function getGoogleEarth3dFocusSignature(features) {
+  if (!Array.isArray(features) || !features.length) return '';
+  return features
+    .slice(0, 20)
+    .map((feature, index) => {
+      const props = feature?.properties || {};
+      const id = safe(props.BoundaryID || props.Boundary_Id || props.BOUNDARYID || '');
+      const name = normalizeBoundaryKey(props.Boundary_Name || props.NAME || props.Name || '');
+      return `${id || 'na'}:${name || index}`;
+    })
+    .join('|');
+}
+
+function reorientGoogleEarth3dCameraForFocus(features, { force = false } = {}) {
+  const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
+  const target = getGoogleEarth3dCameraTarget(features);
+  if (!el || !target) return;
+
+  const signature = getGoogleEarth3dFocusSignature(features);
+  if (!force && signature && signature === googleEarth3dLastFocusSignature) return;
+  if (signature) googleEarth3dLastFocusSignature = signature;
+
+  const zoomOutCamera = {
+    center: target.center,
+    range: Math.max(target.range * 2.2, 220000),
+    tilt: Math.max(48, target.tilt - 10),
+    heading: target.heading
+  };
+  const zoomInCamera = {
+    center: target.center,
+    range: target.range,
+    tilt: target.tilt,
+    heading: target.heading
+  };
+
+  if (googleEarth3dReorientTimeoutId) {
+    clearTimeout(googleEarth3dReorientTimeoutId);
+    googleEarth3dReorientTimeoutId = null;
+  }
+
+  const performZoomIn = () => {
+    if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
+    try {
+      if (typeof el.flyCameraTo === 'function') {
+        el.flyCameraTo({ endCamera: zoomInCamera, durationMillis: 700 });
+      } else {
+        el.center = zoomInCamera.center;
+        el.range = zoomInCamera.range;
+        el.tilt = zoomInCamera.tilt;
+        el.heading = zoomInCamera.heading;
+      }
+    } catch (error) {
+      console.warn('Google Earth reorient zoom-in failed', error);
+      el.center = zoomInCamera.center;
+      el.range = zoomInCamera.range;
+      el.tilt = zoomInCamera.tilt;
+      el.heading = zoomInCamera.heading;
+    }
+  };
+
+  try {
+    if (typeof el.flyCameraTo === 'function') {
+      el.flyCameraTo({ endCamera: zoomOutCamera, durationMillis: 380 });
+    } else {
+      el.center = zoomOutCamera.center;
+      el.range = zoomOutCamera.range;
+      el.tilt = zoomOutCamera.tilt;
+      el.heading = zoomOutCamera.heading;
+    }
+  } catch (error) {
+    console.warn('Google Earth reorient zoom-out failed', error);
+  }
+
+  googleEarth3dReorientTimeoutId = setTimeout(performZoomIn, 340);
 }
 
 function getGoogleEarth3dOverlayDefinitions() {
@@ -3250,6 +3339,9 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
 
   if (focusFeatures.length) {
     syncGoogleEarth3dCameraToFeatures(focusFeatures);
+  }
+  if (boundaryFeatures.length) {
+    reorientGoogleEarth3dCameraForFocus(boundaryFeatures);
   }
 
   if (!drawnOverlays) {
