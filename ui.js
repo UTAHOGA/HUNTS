@@ -134,7 +134,7 @@ window.UOGA_UI = (() => {
     const path = (window.location.pathname || '').toLowerCase();
     if (path.endsWith('/research.html') || path.endsWith('research.html')) return './research.html';
     if (path.endsWith('/verify.html') || path.endsWith('verify.html')) return './verify.html';
-    return './builder.html';
+    return './index.html';
   }
 
   function itemMeta(item) {
@@ -187,7 +187,7 @@ window.UOGA_UI = (() => {
             <div class="uoga-backpack-subvalue">${escapeHtml(itemSubvalue(item))}</div>
             <div class="uoga-backpack-actions">
               <a href="./research.html?hunt_code=${encodeURIComponent(item.hunt_code)}" data-backpack-link="research" data-hunt-code="${escapeHtml(item.hunt_code)}">Research</a>
-              <a href="./builder.html?hunt_code=${encodeURIComponent(item.hunt_code)}" data-backpack-link="planner" data-hunt-code="${escapeHtml(item.hunt_code)}">Planner</a>
+              <a href="./index.html?hunt_code=${encodeURIComponent(item.hunt_code)}" data-backpack-link="planner" data-hunt-code="${escapeHtml(item.hunt_code)}">Planner</a>
               ${sectionType === 'saved'
                 ? `<button type="button" data-backpack-remove="${escapeHtml(item.hunt_code)}">Remove</button>`
                 : '<span class="uoga-backpack-ghost">Recent</span>'}
@@ -239,7 +239,7 @@ window.UOGA_UI = (() => {
           window.selectHuntByCode(code);
           document.getElementById('selectedHuntPanel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         } else {
-          window.location.href = `./builder.html?hunt_code=${encodeURIComponent(code)}`;
+          window.location.href = `./index.html?hunt_code=${encodeURIComponent(code)}`;
         }
       });
     });
