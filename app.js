@@ -1416,6 +1416,10 @@ function openSelectedUnitsChooser() {
 }
 
 function openSelectedHuntFloat() {
+  if (safe(mapTypeSelect?.value).toLowerCase() === 'dwr') {
+    closeSelectedHuntFloat();
+    return;
+  }
   if (!selectedHuntFloat || !selectedHunt) {
     closeSelectedHuntFloat();
     return;
@@ -3444,6 +3448,7 @@ function applyMapMode() {
 
   if (value === 'dwr') {
     clearOutfitterMarkers();
+    closeSelectedHuntFloat();
     updateDwrMapFrame(getPreferredDwrHuntCandidate());
     if (dwrMapFrame) {
       dwrMapFrame.hidden = false;
