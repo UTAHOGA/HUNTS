@@ -87,6 +87,7 @@ let googleApiLoading = false;
 let googleMapFailureMessage = '';
 let googleEarth3dLastFocusSignature = '';
 let googleEarth3dLastSelectedHuntKey = '';
+let googleEarth3dLastBoundaryFocusSignature = '';
 let googleEarth3dReorientTimeoutId = null;
 let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
@@ -139,7 +140,6 @@ const searchInput = document.getElementById('searchInput'),
   mapChooserKicker = document.getElementById('mapChooserKicker'),
   mapChooserBody = document.getElementById('mapChooserBody'),
   selectedHuntFloat = document.getElementById('selectedHuntFloat'),
-  googleEarthFrame = document.getElementById('googleEarthFrame'),
   dwrMapFrame = document.getElementById('dwrMapFrame'),
   plannerDnrLogoLink = document.getElementById('plannerDnrLogoLink'),
   instructionsTab = document.getElementById('instructionsTab'),
@@ -2857,31 +2857,6 @@ function initDwrFrameEvents() {
   });
 }
 
-function getGoogleEarthUrl(hunt = selectedHunt) {
-  return 'https://www.uoga.org/hunt-builder-google-earth';
-}
-
-function updateGoogleEarthFrame(hunt = selectedHunt) {
-  if (!googleEarthFrame) return;
-  const src = getGoogleEarthUrl(hunt);
-  if (googleEarthFrame.getAttribute('src') !== src) {
-    googleEarthFrame.setAttribute('src', src);
-  }
-}
-
-function initGoogleEarthFrameEvents() {
-  if (!googleEarthFrame || googleEarthFrame.__uogaEventsBound) return;
-  googleEarthFrame.__uogaEventsBound = true;
-  googleEarthFrame.addEventListener('load', () => {
-    if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
-      updateStatus('Google Earth iframe active.');
-    }
-  });
-  googleEarthFrame.addEventListener('error', () => {
-    updateStatus('Google Earth iframe failed to load. Return to Google Map for hunt boundaries.');
-  });
-}
-
 function ensureGoogleEarth3dElement() {
   const stage = document.querySelector('.map-stage') || document.querySelector('.map-wrap');
   if (!stage) return null;
@@ -2899,10 +2874,8 @@ function ensureGoogleEarth3dElement() {
     el.setAttribute('gesture-handling', 'greedy');
     el.hidden = true;
     el.addEventListener('gmp-error', () => {
-      updateGoogleEarthFrame(selectedHunt);
-      if (googleEarthFrame) googleEarthFrame.hidden = false;
       el.hidden = true;
-      updateStatus('Google Earth 3D could not render. Showing the fallback Google Earth page.');
+      updateStatus('Google Earth 3D could not render. Switch to Google Maps or DWR map.');
     });
     stage.appendChild(el);
   }
@@ -3346,15 +3319,22 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
   });
 
   const selectedHuntKey = getSelectedHuntKey();
+  const boundaryFocusSignature = getGoogleEarth3dFocusSignature(boundaryFeatures);
   const huntChanged = !!selectedHuntKey && selectedHuntKey !== googleEarth3dLastSelectedHuntKey;
+  const boundaryFocusChanged = !!boundaryFocusSignature && boundaryFocusSignature !== googleEarth3dLastBoundaryFocusSignature;
   if (selectedHuntKey) {
     googleEarth3dLastSelectedHuntKey = selectedHuntKey;
   } else {
     googleEarth3dLastSelectedHuntKey = '';
   }
+  if (boundaryFocusSignature) {
+    googleEarth3dLastBoundaryFocusSignature = boundaryFocusSignature;
+  } else {
+    googleEarth3dLastBoundaryFocusSignature = '';
+  }
 
   if (boundaryFeatures.length) {
-    reorientGoogleEarth3dCameraForFocus(boundaryFeatures, { force: huntChanged });
+    reorientGoogleEarth3dCameraForFocus(boundaryFeatures, { force: huntChanged || boundaryFocusChanged });
   } else if (huntChanged && focusFeatures.length) {
     reorientGoogleEarth3dCameraForFocus(focusFeatures, { force: true });
   } else if (focusFeatures.length && !selectedHuntKey) {
