@@ -70,7 +70,7 @@ const {
   loadFirstNormalizedList
 } = uogaData;
 
-let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, googleEarth3dBoundaryOverlays = [], huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 
 function getGooglePreferredBasemapType() {
   const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
@@ -241,13 +241,15 @@ function getNormalizedSex(valueOrHunt) {
 function getHuntCode(h) { return firstNonEmpty(h.huntCode, h.hunt_code, h.HuntCode, h.code); }
 function getHuntTitle(h) { return firstNonEmpty(h.title, h.Title, h.huntTitle, getHuntCode(h)); }
 function getUnitCode(h) { return firstNonEmpty(h.unitCode, h.unit_code, h.UnitCode); }
-function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName); }
+function getUnitName(h) { return firstNonEmpty(h.unitName, h.unit_name, h.UnitName, h.dwr_unit_name, h.DwrUnitName); }
 function getBoundaryNamesForHunt(h) {
   const code = safe(getUnitCode(h)).trim();
   const unitName = safe(getUnitName(h)).trim();
   const strippedUnitName = unitName.replace(/\s*\((?:conservation|private lands only|select areas only)\)\s*$/i, '').trim();
   const officialNames = Array.isArray(h?.officialBoundaryNames) ? h.officialBoundaryNames : [];
-  const base = [unitName, strippedUnitName, ...officialNames];
+  const boundaryNames = Array.isArray(h?.boundaryNames) ? h.boundaryNames : [];
+  const externalBoundaryNames = Array.isArray(h?.externalBoundaryNames) ? h.externalBoundaryNames : [];
+  const base = [unitName, strippedUnitName, ...boundaryNames, ...officialNames, ...externalBoundaryNames];
   const overrides = Array.isArray(HUNT_BOUNDARY_NAME_OVERRIDES[code]) ? HUNT_BOUNDARY_NAME_OVERRIDES[code] : [];
   return [...new Set([...base, ...overrides].map(v => safe(v).trim()).filter(Boolean))];
 }
@@ -259,8 +261,12 @@ function buildBoundaryMatcher(hunts) {
   hunts.forEach(hunt => {
     const boundaryId = safe(getBoundaryId(hunt)).trim();
     if (boundaryId) boundaryIds.add(boundaryId);
-    const officialBoundaryIds = Array.isArray(hunt?.officialBoundaryIds) ? hunt.officialBoundaryIds : [];
-    officialBoundaryIds.forEach(id => {
+    const boundaryIdLists = [
+      hunt?.boundaryIds,
+      hunt?.officialBoundaryIds,
+      hunt?.externalBoundaryIds
+    ];
+    boundaryIdLists.flatMap(ids => Array.isArray(ids) ? ids : []).forEach(id => {
       const normalizedId = safe(id).trim();
       if (normalizedId) boundaryIds.add(normalizedId);
     });
@@ -339,7 +345,7 @@ function getRequiredUsfsForestsForHunt(hunt) {
   return [...required];
 }
 function getUnitValue(h) { return firstNonEmpty(getUnitCode(h), getUnitName(h)); }
-function getBoundaryId(h) { return firstNonEmpty(h.boundaryId, h.boundaryID, h.BoundaryID); }
+function getBoundaryId(h) { return firstNonEmpty(h.boundaryId, h.boundaryID, h.BoundaryID, h.boundary_id, h.originalBoundaryId); }
 function normalizeHuntCode(value) { return safe(value).trim().toUpperCase(); }
 function getHuntRecordKey(h) {
   return [
@@ -1114,6 +1120,7 @@ function forceGoogleMapVisible() {
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
   }
+  clearGoogleEarth3dBoundaryOverlays();
   if (mapTypeSelect && safe(mapTypeSelect.value).toLowerCase() !== 'google') {
     mapTypeSelect.value = 'google';
   }
@@ -1139,6 +1146,7 @@ function resetAllFilters() {
   closeSelectionInfoWindow();
   refreshSelectionMatrix();
   styleBoundaryLayer();
+  refreshGoogleEarth3dBoundaryOverlay();
   renderMatchingHunts();
   renderSelectedHunt();
   updateStatus('Filters cleared. Select a species or click a hunt unit.');
@@ -1171,6 +1179,7 @@ function handleFilterChange(event) {
   }
   refreshSelectionMatrix();
   styleBoundaryLayer();
+  refreshGoogleEarth3dBoundaryOverlay();
   renderMatchingHunts();
   renderSelectedHunt();
   renderOutfitters();
@@ -1379,6 +1388,7 @@ function openSelectedUnitsChooser() {
       if (unitFilter) unitFilter.value = unitValue;
       refreshSelectionMatrix();
       styleBoundaryLayer();
+      refreshGoogleEarth3dBoundaryOverlay();
       renderMatchingHunts();
       renderSelectedHunt();
       renderOutfitters();
@@ -1586,6 +1596,7 @@ window.selectHuntByKey = (key) => {
     renderMatchingHunts();
     styleBoundaryLayer(); 
     zoomToSelectedBoundary(); 
+    refreshGoogleEarth3dBoundaryOverlay();
   }
 };
 window.selectHuntByCode = (code) => {
@@ -2904,6 +2915,156 @@ function syncGoogleEarth3dCamera() {
   el.heading = 25;
 }
 
+function clearGoogleEarth3dBoundaryOverlays() {
+  googleEarth3dBoundaryOverlays.forEach(overlay => {
+    if (overlay?.remove) overlay.remove();
+  });
+  googleEarth3dBoundaryOverlays = [];
+}
+
+function getGoogleEarth3dBoundaryFeatures() {
+  const features = Array.isArray(huntBoundaryGeoJson?.features) ? huntBoundaryGeoJson.features : [];
+  if (!features.length) return [];
+
+  if (selectedHunt) {
+    const matcher = buildBoundaryMatcher([selectedHunt]);
+    return features.filter(feature => {
+      const props = feature?.properties || {};
+      return matcher.matches(safe(props.BoundaryID), normalizeBoundaryKey(props.Boundary_Name));
+    }).slice(0, 8);
+  }
+
+  if (selectedBoundaryFeature) {
+    const selectedId = safe(selectedBoundaryFeature.getProperty?.('BoundaryID'));
+    const selectedName = normalizeBoundaryKey(selectedBoundaryFeature.getProperty?.('Boundary_Name'));
+    return features.filter(feature => {
+      const props = feature?.properties || {};
+      return (selectedId && safe(props.BoundaryID) === selectedId)
+        || (selectedName && normalizeBoundaryKey(props.Boundary_Name) === selectedName);
+    }).slice(0, 8);
+  }
+
+  const displayHunts = getDisplayHunts();
+  if (!displayHunts.length || shouldShowAllHuntUnits()) return [];
+  const matcher = buildBoundaryMatcher(displayHunts);
+  return features.filter(feature => {
+    const props = feature?.properties || {};
+    return matcher.matches(safe(props.BoundaryID), normalizeBoundaryKey(props.Boundary_Name));
+  }).slice(0, 12);
+}
+
+function closeRingIfNeeded(points) {
+  if (points.length < 3) return points;
+  const first = points[0];
+  const last = points[points.length - 1];
+  if (first.lat === last.lat && first.lng === last.lng) return points;
+  return [...points, { ...first }];
+}
+
+function simplifyGoogleEarth3dRing(ring, maxPoints = 900) {
+  if (!Array.isArray(ring)) return [];
+  const clean = ring
+    .map(coord => Array.isArray(coord) ? { lng: Number(coord[0]), lat: Number(coord[1]) } : null)
+    .filter(point => Number.isFinite(point?.lat) && Number.isFinite(point?.lng));
+  if (clean.length <= maxPoints) return closeRingIfNeeded(clean);
+  const step = Math.ceil(clean.length / maxPoints);
+  const sampled = clean.filter((_, index) => index % step === 0);
+  return closeRingIfNeeded(sampled);
+}
+
+function getFeatureCoordinateBounds(features) {
+  const bounds = { north: -90, south: 90, east: -180, west: 180, count: 0 };
+  const visitCoord = (coord) => {
+    if (!Array.isArray(coord)) return;
+    const lng = Number(coord[0]);
+    const lat = Number(coord[1]);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    bounds.north = Math.max(bounds.north, lat);
+    bounds.south = Math.min(bounds.south, lat);
+    bounds.east = Math.max(bounds.east, lng);
+    bounds.west = Math.min(bounds.west, lng);
+    bounds.count += 1;
+  };
+  const visitNested = (value) => {
+    if (!Array.isArray(value)) return;
+    if (typeof value[0] === 'number') {
+      visitCoord(value);
+      return;
+    }
+    value.forEach(visitNested);
+  };
+  features.forEach(feature => visitNested(feature?.geometry?.coordinates));
+  return bounds.count ? bounds : null;
+}
+
+function syncGoogleEarth3dCameraToFeatures(features) {
+  const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
+  const bounds = getFeatureCoordinateBounds(features);
+  if (!el || !bounds) return;
+  const center = {
+    lat: (bounds.north + bounds.south) / 2,
+    lng: (bounds.east + bounds.west) / 2,
+    altitude: 1800
+  };
+  const latMeters = Math.max(1, Math.abs(bounds.north - bounds.south) * 111320);
+  const lngMeters = Math.max(1, Math.abs(bounds.east - bounds.west) * 111320 * Math.cos(center.lat * Math.PI / 180));
+  const range = Math.min(850000, Math.max(45000, Math.max(latMeters, lngMeters) * 1.9));
+  el.center = center;
+  el.range = range;
+  el.tilt = 64;
+  el.heading = 25;
+}
+
+async function refreshGoogleEarth3dBoundaryOverlay() {
+  if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
+  const map3d = await ensureGoogleEarth3dMap();
+  if (!map3d) return;
+  const maps3d = await googleEarth3dLibraryPromise;
+  const Polygon3DElement = maps3d?.Polygon3DElement || google?.maps?.maps3d?.Polygon3DElement;
+  if (!Polygon3DElement) return;
+
+  clearGoogleEarth3dBoundaryOverlays();
+  await getHuntBoundaryGeoJson().catch(err => console.error('3D hunt boundary GeoJSON failed', err));
+  const features = getGoogleEarth3dBoundaryFeatures();
+  if (!features.length) {
+    updateStatus('Google Earth 3D active. Select a hunt or unit to draw its boundary.');
+    return;
+  }
+
+  const polygonOptions = {
+    strokeColor: '#ff6600ff',
+    strokeWidth: 5,
+    fillColor: '#ff660038',
+    drawsOccludedSegments: true,
+    zIndex: 100
+  };
+
+  features.forEach(feature => {
+    const geometry = feature?.geometry || {};
+    const polygons = geometry.type === 'Polygon'
+      ? [geometry.coordinates]
+      : geometry.type === 'MultiPolygon'
+        ? geometry.coordinates
+        : [];
+    polygons.slice(0, 8).forEach(polygon => {
+      const paths = polygon
+        .map(ring => simplifyGoogleEarth3dRing(ring, features.length > 1 ? 450 : 900))
+        .filter(ring => ring.length >= 4);
+      if (!paths.length) return;
+      const overlay = new Polygon3DElement(polygonOptions);
+      overlay.path = paths[0];
+      if (paths.length > 1 && 'innerPaths' in overlay) {
+        overlay.innerPaths = paths.slice(1);
+      }
+      map3d.append(overlay);
+      googleEarth3dBoundaryOverlays.push(overlay);
+    });
+  });
+
+  syncGoogleEarth3dCameraToFeatures(features);
+  updateStatus(`Google Earth 3D active. Showing ${features.length} hunt unit boundar${features.length === 1 ? 'y' : 'ies'}.`);
+}
+
 function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
@@ -2954,6 +3115,9 @@ function applyMapMode() {
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
   }
+  if (value !== 'earth') {
+    clearGoogleEarth3dBoundaryOverlays();
+  }
 
   if (value === 'dwr') {
     clearOutfitterMarkers();
@@ -2980,7 +3144,7 @@ function applyMapMode() {
         if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
         if (el) {
           el.hidden = false;
-          updateStatus('Google Earth 3D active. Hunt boundaries and ownership layers stay on Google Maps mode.');
+          refreshGoogleEarth3dBoundaryOverlay();
           return;
         }
         updateGoogleEarthFrame(selectedHunt);
@@ -3221,6 +3385,7 @@ function bindControls() {
     }
     refreshSelectionMatrix();
     styleBoundaryLayer();
+    refreshGoogleEarth3dBoundaryOverlay();
     renderMatchingHunts();
     renderSelectedHunt();
     renderOutfitters();
@@ -3415,6 +3580,7 @@ function bootstrapPendingHuntSelection() {
   renderOutfitters();
   renderMatchingHunts();
   styleBoundaryLayer();
+  refreshGoogleEarth3dBoundaryOverlay();
   if (huntUnitsLayer && googleBaselineMap) {
     zoomToSelectedBoundary();
   }
