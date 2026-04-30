@@ -298,7 +298,7 @@
       <span class="uoga-engine-label">Map Selector</span>
       <button type="button" class="uoga-engine-pill" data-engine="google"><img src="./assets/logos/google-maps-logo.png" alt="Google Maps"><span>Google</span></button>
       <button type="button" class="uoga-engine-pill" data-engine="earth"><img src="./assets/logos/google_earth_logo.png?v=20260430-map-selector-1" alt="Google Earth"><span>Earth</span></button>
-      <button type="button" class="uoga-engine-pill" data-engine="dwr"><img src="./assets/logos/DWR-LOGO.png?v=20260430-map-selector-1" alt="Utah DWR Map"><span>DWR Map</span></button>
+      <button type="button" class="uoga-engine-pill" data-engine="dwr"><img src="./assets/logos/DWR-LOGO-maps.png?v=20260430-dwr-pill-1" alt="Utah DWR Map"><span>DWR Map</span></button>
     `;
     const oldGroup = select.closest('.control-group');
     const host = document.querySelector('.topbar-left') || document.querySelector('.topbar') || document.body;
