@@ -71,6 +71,7 @@ const {
 } = uogaData;
 
 let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, googleEarth3dBoundaryOverlays = [], huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+const googleEarth3dGeoJsonCache = new Map();
 
 function getGooglePreferredBasemapType() {
   const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
@@ -99,6 +100,9 @@ const blmDistrictPointCache = new Map();
 const outfitterFederalCoverageIndex = new Map();
 // Temporary debug guard: keep Google map as the active mode while we validate key/referrer setup.
 const FORCE_GOOGLE_ONLY_DEBUG = false;
+// Google 3D map components require the beta channel.
+const GOOGLE_MAPS_SCRIPT_CHANNEL = 'beta';
+const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -2437,6 +2441,21 @@ function getHuntBoundaryGeoJson() {
   }
   return huntBoundaryGeoJsonPromise;
 }
+function getGoogleEarth3dGeoJson(key, loader) {
+  if (!googleEarth3dGeoJsonCache.has(key)) {
+    const request = Promise.resolve()
+      .then(loader)
+      .catch(error => {
+        googleEarth3dGeoJsonCache.delete(key);
+        throw error;
+      });
+    googleEarth3dGeoJsonCache.set(key, request);
+  }
+  return googleEarth3dGeoJsonCache.get(key);
+}
+function getGeoJsonFeatureList(geojson) {
+  return Array.isArray(geojson?.features) ? geojson.features : [];
+}
 function createOwnershipLayer(bucket, style, clickBuilder) {
   const layer = new google.maps.Data();
   getOwnershipBucketGeoJson(bucket).then(geojson => {
@@ -2867,11 +2886,12 @@ function ensureGoogleEarth3dElement() {
     el.id = 'googleEarth3dMap';
     el.className = 'google-earth-3d-map';
     el.setAttribute('aria-label', 'Google Earth 3D map');
-    el.setAttribute('mode', 'hybrid');
+    el.setAttribute('mode', 'satellite');
     el.setAttribute('center', `${GOOGLE_BASELINE_DEFAULT_CENTER.lat},${GOOGLE_BASELINE_DEFAULT_CENTER.lng},1800`);
     el.setAttribute('range', '420000');
-    el.setAttribute('tilt', '64');
-    el.setAttribute('heading', '25');
+    el.setAttribute('tilt', '0');
+    el.setAttribute('heading', '0');
+    el.setAttribute('roll', '0');
     el.setAttribute('gesture-handling', 'greedy');
     el.hidden = true;
     el.addEventListener('gmp-error', () => {
@@ -2894,7 +2914,7 @@ async function ensureGoogleEarth3dMap() {
   }
   const maps3d = await googleEarth3dLibraryPromise;
   googleEarth3dMap = el;
-  el.mode = maps3d?.MapMode?.HYBRID || 'hybrid';
+  el.mode = maps3d?.MapMode?.SATELLITE || maps3d?.MapMode?.HYBRID || 'satellite';
   syncGoogleEarth3dCamera();
   return el;
 }
@@ -2911,8 +2931,9 @@ function syncGoogleEarth3dCamera() {
   }
   el.center = { lat: center.lat, lng: center.lng, altitude: 1800 };
   el.range = 420000;
-  el.tilt = 64;
-  el.heading = 25;
+  el.tilt = 0;
+  el.heading = 0;
+  el.roll = 0;
 }
 
 function clearGoogleEarth3dBoundaryOverlays() {
@@ -3011,8 +3032,108 @@ function syncGoogleEarth3dCameraToFeatures(features) {
   const range = Math.min(850000, Math.max(45000, Math.max(latMeters, lngMeters) * 1.9));
   el.center = center;
   el.range = range;
-  el.tilt = 64;
-  el.heading = 25;
+  el.tilt = 0;
+  el.heading = 0;
+  el.roll = 0;
+}
+
+function getGoogleEarth3dOverlayDefinitions() {
+  return [
+    {
+      key: 'sitla',
+      enabled: !!toggleSITLA?.checked,
+      style: { strokeColor: '#2a78d2ff', strokeWidth: 2, fillColor: '#6fb3ff20' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('sitla', () => getOwnershipBucketGeoJson('sitla')))
+    },
+    {
+      key: 'stateParks',
+      enabled: !!toggleStateParks?.checked,
+      style: { strokeColor: '#0d6f78ff', strokeWidth: 2.5, fillColor: '#5ec7d126' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('stateParks', () => fetchGeoJson(STATE_PARKS_QUERY_URL)))
+    },
+    {
+      key: 'wma',
+      enabled: !!toggleWma?.checked,
+      style: { strokeColor: '#b38a00ff', strokeWidth: 2.5, fillColor: '#ffd84d30' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('wma', () => fetchGeoJson(WMA_QUERY_URL)))
+    },
+    {
+      key: 'cwmu',
+      enabled: !!toggleCwmu?.checked,
+      style: { strokeColor: '#b11f1fff', strokeWidth: 2, fillColor: '#ff6b6b26' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('cwmu', () => getCwmuGeoJson()))
+    },
+    {
+      key: 'private',
+      enabled: !!togglePrivate?.checked,
+      style: { strokeColor: '#8f4a3aff', strokeWidth: 1.5, fillColor: '#c9928418' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('private', () => getOwnershipBucketGeoJson('private')))
+    },
+    {
+      key: 'usfs',
+      enabled: !!toggleUSFS?.checked,
+      style: { strokeColor: '#2f6b3bff', strokeWidth: 2, fillColor: '#7ea96b20' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('usfs', () => fetchGeoJson(USFS_QUERY_URL)))
+    },
+    {
+      key: 'blm',
+      enabled: !!toggleBLM?.checked,
+      style: { strokeColor: '#b9722fff', strokeWidth: 2, fillColor: '#d8af7b12' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('blm', () => fetchGeoJson(BLM_ADMIN_QUERY_URL)))
+    },
+    {
+      key: 'blmDetail',
+      enabled: !!toggleBLMDetail?.checked,
+      style: { strokeColor: '#b9722fcc', strokeWidth: 1.25, fillColor: '#d8af7b08' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson(
+        'blmDetail',
+        () => fetchArcGisPagedGeoJson(BLM_SURFACE_OWNERSHIP_LAYER_URL, "UT_LGD IN ('Bureau of Land Management (BLM)','BLM Wilderness Area')")
+      ))
+    },
+    {
+      key: 'wilderness',
+      enabled: shouldShowWildernessOverlay(),
+      style: { strokeColor: '#8a611dff', strokeWidth: 2, fillColor: '#c8a76f26' },
+      loader: async () => {
+        const features = getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('wilderness', () => fetchGeoJson(WILDERNESS_QUERY_URL)));
+        return features.filter(feature => shouldShowWildernessFeature(safe(feature?.properties?.Agency)));
+      }
+    },
+    {
+      key: 'utahOutline',
+      enabled: true,
+      style: { strokeColor: '#c84f00ff', strokeWidth: 3, fillColor: '#00000000' },
+      loader: async () => getGeoJsonFeatureList(await getGoogleEarth3dGeoJson('utahOutline', () => fetchGeoJson(UTAH_OUTLINE_QUERY_URL)))
+    }
+  ];
+}
+
+function appendGoogleEarth3dFeatureOverlays(map3d, Polygon3DElement, features, style, maxPointsPerRing = 650) {
+  if (!map3d || !Polygon3DElement || !Array.isArray(features) || !features.length) return 0;
+  let drawn = 0;
+  features.forEach(feature => {
+    const geometry = feature?.geometry || {};
+    const polygons = geometry.type === 'Polygon'
+      ? [geometry.coordinates]
+      : geometry.type === 'MultiPolygon'
+        ? geometry.coordinates
+        : [];
+    polygons.slice(0, 10).forEach(polygon => {
+      const paths = polygon
+        .map(ring => simplifyGoogleEarth3dRing(ring, maxPointsPerRing))
+        .filter(ring => ring.length >= 4);
+      if (!paths.length) return;
+      const overlay = new Polygon3DElement(style);
+      overlay.path = paths[0];
+      if (paths.length > 1 && 'innerPaths' in overlay) {
+        overlay.innerPaths = paths.slice(1);
+      }
+      map3d.append(overlay);
+      googleEarth3dBoundaryOverlays.push(overlay);
+      drawn += 1;
+    });
+  });
+  return drawn;
 }
 
 async function refreshGoogleEarth3dBoundaryOverlay() {
@@ -3025,44 +3146,84 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
 
   clearGoogleEarth3dBoundaryOverlays();
   await getHuntBoundaryGeoJson().catch(err => console.error('3D hunt boundary GeoJSON failed', err));
-  const features = getGoogleEarth3dBoundaryFeatures();
-  if (!features.length) {
-    updateStatus('Google Earth 3D active. Select a hunt or unit to draw its boundary.');
+  const boundaryFeatures = getGoogleEarth3dBoundaryFeatures();
+  const focusFeatures = [];
+  let drawnOverlays = 0;
+
+  if (boundaryFeatures.length) {
+    const polygonOptions = {
+      strokeColor: '#ff6600ff',
+      strokeWidth: 5,
+      fillColor: '#ff660038',
+      drawsOccludedSegments: true,
+      zIndex: 100
+    };
+    drawnOverlays += appendGoogleEarth3dFeatureOverlays(
+      map3d,
+      Polygon3DElement,
+      boundaryFeatures,
+      polygonOptions,
+      boundaryFeatures.length > 1 ? 450 : 900
+    );
+    focusFeatures.push(...boundaryFeatures);
+  }
+
+  const overlayDefinitions = getGoogleEarth3dOverlayDefinitions().filter(def => def.enabled);
+  const overlayResults = await Promise.all(overlayDefinitions.map(async (def) => {
+    try {
+      const features = await def.loader();
+      return { def, features };
+    } catch (error) {
+      console.error(`Google Earth overlay "${def.key}" failed`, error);
+      return { def, features: [] };
+    }
+  }));
+
+  overlayResults.forEach(({ def, features }) => {
+    if (!features.length) return;
+    drawnOverlays += appendGoogleEarth3dFeatureOverlays(
+      map3d,
+      Polygon3DElement,
+      features,
+      {
+        ...def.style,
+        drawsOccludedSegments: true
+      },
+      420
+    );
+    if (def.key !== 'utahOutline') {
+      focusFeatures.push(...features.slice(0, 120));
+    }
+  });
+
+  if (focusFeatures.length) {
+    syncGoogleEarth3dCameraToFeatures(focusFeatures);
+  }
+
+  if (!drawnOverlays) {
+    updateStatus('Google Earth 3D active. Select a hunt or turn on overlays to draw land boundaries.');
     return;
   }
 
-  const polygonOptions = {
-    strokeColor: '#ff6600ff',
-    strokeWidth: 5,
-    fillColor: '#ff660038',
-    drawsOccludedSegments: true,
-    zIndex: 100
-  };
+  const enabledOverlayCount = overlayDefinitions.length;
+  const boundaryMessage = boundaryFeatures.length
+    ? ` Showing ${boundaryFeatures.length} hunt unit boundar${boundaryFeatures.length === 1 ? 'y' : 'ies'}.`
+    : '';
+  updateStatus(`Google Earth 3D active with ${enabledOverlayCount} land overlay${enabledOverlayCount === 1 ? '' : 's'} and ${drawnOverlays} polygons.${boundaryMessage}`);
+}
 
-  features.forEach(feature => {
-    const geometry = feature?.geometry || {};
-    const polygons = geometry.type === 'Polygon'
-      ? [geometry.coordinates]
-      : geometry.type === 'MultiPolygon'
-        ? geometry.coordinates
-        : [];
-    polygons.slice(0, 8).forEach(polygon => {
-      const paths = polygon
-        .map(ring => simplifyGoogleEarth3dRing(ring, features.length > 1 ? 450 : 900))
-        .filter(ring => ring.length >= 4);
-      if (!paths.length) return;
-      const overlay = new Polygon3DElement(polygonOptions);
-      overlay.path = paths[0];
-      if (paths.length > 1 && 'innerPaths' in overlay) {
-        overlay.innerPaths = paths.slice(1);
-      }
-      map3d.append(overlay);
-      googleEarth3dBoundaryOverlays.push(overlay);
-    });
-  });
-
-  syncGoogleEarth3dCameraToFeatures(features);
-  updateStatus(`Google Earth 3D active. Showing ${features.length} hunt unit boundar${features.length === 1 ? 'y' : 'ies'}.`);
+function refreshGoogleEarth3dBoundaryOverlaySoon() {
+  if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
+  if (typeof window === 'undefined') {
+    refreshGoogleEarth3dBoundaryOverlay().catch(err => console.error('Google Earth overlay refresh failed', err));
+    return;
+  }
+  if (window.__uogaEarthOverlayRefreshTimer) {
+    clearTimeout(window.__uogaEarthOverlayRefreshTimer);
+  }
+  window.__uogaEarthOverlayRefreshTimer = window.setTimeout(() => {
+    refreshGoogleEarth3dBoundaryOverlay().catch(err => console.error('Google Earth overlay refresh failed', err));
+  }, 40);
 }
 
 function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
@@ -3162,6 +3323,8 @@ function applyMapMode() {
 
   // Switching back to Google mode should show the Google map container even if the API is still loading.
   mapWrap.classList.remove('is-earth-mode');
+  const mapEl = document.getElementById('map');
+  if (mapEl) mapEl.hidden = false;
 
   if (!googleBaselineMap) {
     if (googleApiLoading) {
@@ -3174,8 +3337,6 @@ function applyMapMode() {
 
   if (basemapControl) basemapControl.hidden = false;
   mapWrap.classList.add('is-google-mode');
-  const mapEl = document.getElementById('map');
-  if (mapEl) mapEl.hidden = false;
   if (value === 'google') {
     googleBaselineMap.setMapTypeId(getGooglePreferredBasemapType());
   } else {
@@ -3449,12 +3610,14 @@ function bindControls() {
       closeSelectedHuntFloat();
     }
     styleBoundaryLayer();
+    refreshGoogleEarth3dBoundaryOverlaySoon();
   });
   toggleUSFS?.addEventListener('change', async () => {
     if (toggleUSFS.checked) await ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
     setLayerVisibility(usfsLayer, !!toggleUSFS.checked);
     if (shouldShowWildernessOverlay()) await ensureWildernessLayer().catch(err => console.error('Wilderness layer failed', err));
     updateWildernessOverlayVisibility();
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateFederalLayersSummary();
   });
   toggleBLM?.addEventListener('change', async () => {
@@ -3469,37 +3632,44 @@ function bindControls() {
       setLayerVisibility(usfsLayer, false);
       setLayerVisibility(usfsLayer, true);
     }
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateFederalLayersSummary();
   });
   toggleBLMDetail?.addEventListener('change', async () => {
     if (toggleBLMDetail.checked) await ensureBlmDetailLayer().catch(err => console.error('BLM detail layer failed', err));
     setLayerVisibility(blmDetailLayer, !!(toggleBLM?.checked || toggleBLMDetail.checked));
     applyBlmDetailLayerStyle();
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateFederalLayersSummary();
   });
   toggleSITLA?.addEventListener('change', async () => {
     if (toggleSITLA.checked) await ensureSitlaLayer().catch(err => console.error('SITLA layer failed', err));
     setLayerVisibility(sitlaLayer, !!toggleSITLA.checked);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateStateLayersSummary();
   });
   toggleStateParks?.addEventListener('change', async () => {
     if (toggleStateParks.checked) await ensureStateParksLayer().catch(err => console.error('State parks layer failed', err));
     setLayerVisibility(stateParksLayer, !!toggleStateParks.checked);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateStateLayersSummary();
   });
   toggleWma?.addEventListener('change', async () => {
     if (toggleWma.checked) await ensureWmaLayer().catch(err => console.error('WMA layer failed', err));
     setLayerVisibility(wmaLayer, !!toggleWma.checked);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updateStateLayersSummary();
   });
   toggleCwmu?.addEventListener('change', async () => {
     if (toggleCwmu.checked) await ensureCwmuLayer().catch(err => console.error('CWMU layer failed', err));
     setLayerVisibility(cwmuLayer, !!toggleCwmu.checked);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updatePrivateLayersSummary();
   });
   togglePrivate?.addEventListener('change', async () => {
     if (togglePrivate.checked) await ensurePrivateLayer().catch(err => console.error('Private layer failed', err));
     setLayerVisibility(privateLayer, !!togglePrivate.checked);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
     updatePrivateLayersSummary();
   });
   instructionsTab?.addEventListener('click', () => {
@@ -3688,7 +3858,7 @@ function loadGoogleMapsApiScript(apiKey) {
   }
   const script = document.createElement('script');
   script.id = 'uoga-google-maps-api';
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&loading=async&callback=initGoogleBaseline`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=${GOOGLE_MAPS_SCRIPT_CHANNEL}&libraries=${GOOGLE_MAPS_SCRIPT_LIBRARIES}&loading=async&callback=initGoogleBaseline`;
   script.async = true;
   script.defer = true;
   googleApiLoading = true;
