@@ -60,14 +60,16 @@
       border-bottom:1px solid var(--line) !important;
       background:rgba(255,255,255,.44) !important;
     }
-    .topbar { justify-content:flex-start !important; }
+    .topbar { justify-content:flex-start !important; flex-wrap:wrap !important; }
     .topbar-left { flex:0 0 520px !important; display:flex !important; justify-content:center !important; }
     .topbar-center { flex:1 1 auto !important; display:flex !important; justify-content:center !important; }
+    .topbar-right { flex:0 0 auto !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; margin-left:auto !important; }
     .controls { flex:0 0 auto !important; margin-left:auto !important; }
     @media (max-width: 900px) {
       .topbar { justify-content:space-between !important; }
       .topbar-left { flex:0 0 auto !important; width:auto !important; display:flex !important; justify-content:flex-start !important; }
       .topbar-center { justify-content:flex-start !important; }
+      .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
       .controls { margin-left:0 !important; }
     }
 
@@ -146,6 +148,7 @@
         </details>
       </div>
     </div>
+    <div class="topbar-right" data-backpack-host></div>
   </header>
   <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
     <div class="ownership-case"></div>
@@ -153,8 +156,7 @@
 
   <div class="planner-body">
   <section class="hero" aria-label="Introduction">
-    <h1>Plan Your Hunt Like a Professional</h1>
-    <p>Map it, analyze it, compare it, and match it with verified outfitters.</p>
+    <h1>PLAN YOUR UTAH HUNT LIKE THE PROS DO!</h1>
   </section>
 
   <section class="quick-start" aria-label="Quick start steps">
@@ -324,11 +326,11 @@
   </section>
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
-  <script src="./ui.js?v=20260423-mobile-polish-1"></script>
-  <script src="./header-layout.js?v=20260430-map-selector-1"></script>
+  <script src="./ui.js?v=20260430-backpack-header-1"></script>
+  <script src="./header-layout.js?v=20260430-header-backpack-1"></script>
   <script src="./ownership-dock.js?v=20260423-terrain-inpage-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260430-map-selector-1"></script>
+  <script src="app.js?v=20260430-header-backpack-1"></script>
   <script src="./google-basemap.js?v=20260423-terrain-inpage-1"></script>
 </body>
 </html>

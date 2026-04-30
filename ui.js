@@ -31,6 +31,29 @@ window.UOGA_UI = (() => {
       .replace(/"/g, '&quot;');
   }
 
+  function isBuilderPage() {
+    const path = String(window.location?.pathname || '').toLowerCase();
+    return path.endsWith('/index.html') || path.endsWith('/builder.html') || path === '/' || path === '';
+  }
+
+  function getBackpackHost() {
+    if (isBuilderPage()) {
+      const existingHost = document.querySelector('[data-backpack-host]') || document.querySelector('.topbar-right');
+      if (existingHost) return existingHost;
+
+      const topbar = document.querySelector('header.topbar');
+      if (topbar) {
+        const host = document.createElement('div');
+        host.className = 'topbar-right';
+        host.setAttribute('data-backpack-host', 'true');
+        topbar.appendChild(host);
+        return host;
+      }
+    }
+
+    return document.querySelector('.controls') || document.querySelector('.nav');
+  }
+
   function parseStoredList(key) {
     try {
       const raw = localStorage.getItem(key);
@@ -360,6 +383,10 @@ window.UOGA_UI = (() => {
         margin-left: 10px;
         z-index: 2147483646;
         isolation: isolate;
+      }
+      .topbar-right .uoga-backpack-shell,
+      [data-backpack-host] .uoga-backpack-shell {
+        margin-left: 0;
       }
       .uoga-backpack-shell.is-open {
         position: relative;
@@ -718,7 +745,7 @@ window.UOGA_UI = (() => {
       return;
     }
 
-    const host = document.querySelector('.controls') || document.querySelector('.nav');
+    const host = getBackpackHost();
     if (!host) return;
 
     injectBackpackStyles();

@@ -3519,6 +3519,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function closePicker() {
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
   toggle.addEventListener('click', event => {
     event.preventDefault();
     event.stopPropagation();
@@ -3535,8 +3540,7 @@ document.addEventListener('DOMContentLoaded', () => {
       select.value = btn.dataset.mapModeValue;
       select.dispatchEvent(new Event('change', { bubbles: true }));
 
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
+      closePicker();
       toggle.focus();
 
       syncPicker();
@@ -3545,9 +3549,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('click', event => {
     if (!picker.contains(event.target)) {
-      menu.hidden = true;
-      toggle.setAttribute('aria-expanded', 'false');
+      closePicker();
     }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closePicker();
   });
 
   select.addEventListener('change', syncPicker);

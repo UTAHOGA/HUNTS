@@ -63,6 +63,9 @@
     document.addEventListener('click', event => {
       if (!wrapper.contains(event.target)) closeMenu();
     });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMenu();
+    });
   }
 
   function injectLightPillStyle() {
@@ -95,6 +98,7 @@
         border-bottom:1px solid #c9a27f !important;
         box-shadow:0 8px 22px rgba(58,37,18,.14) !important;
         color:#2b1c12 !important;
+        flex-wrap:wrap !important;
       }
       .page-nav-strip { display:none !important; visibility:hidden !important; opacity:0 !important; background:transparent !important; border:0 !important; }
       .page-nav-case { display:flex !important; align-items:center !important; justify-content:center !important; width:100% !important; }
@@ -148,6 +152,7 @@
       #googleEarthFrame, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
        .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 520px !important; width:520px !important; }
+       .topbar-right { display:flex !important; align-items:center !important; justify-content:flex-end !important; flex:0 0 auto !important; margin-left:auto !important; }
        .uoga-page-nav-control,
        .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
        .uoga-page-nav-toggle,
@@ -181,6 +186,7 @@
        }
        .uoga-page-nav-menu,
        .map-mode-menu { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; z-index:10030 !important; min-width:224px !important; }
+       .uoga-page-nav-menu[hidden] { display:none !important; }
        .map-mode-menu[hidden] { display:none !important; }
        .uoga-page-nav-menu { padding:12px !important; min-width:224px !important; }
        .uoga-page-nav-menu .utility-link,
@@ -226,6 +232,9 @@
        .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
       .uoga-engine-pill img { max-height:20px !important; max-width:110px !important; display:block !important; }
+      @media (max-width: 900px) {
+        .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
+      }
     `;
     document.head.appendChild(style);
   }
