@@ -73,10 +73,11 @@ const {
 let googleBaselineMap = null, huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 
 function getGooglePreferredBasemapType() {
-  const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
+  const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite', 'aerial3d']);
   try {
     const raw = String(localStorage.getItem('uoga_google_basemap_type_v2') || '').trim();
-    return VALID.has(raw) ? raw : 'terrain';
+    if (!VALID.has(raw)) return 'terrain';
+    return raw === 'aerial3d' ? 'hybrid' : raw;
   } catch {
     return 'terrain';
   }
@@ -2875,12 +2876,13 @@ function applyMapMode() {
   }
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
-  const basemapControl = document.getElementById('globeBasemapControl');
+  const basemapControl = document.getElementById('basemapPopover') || document.getElementById('globeBasemapControl');
   syncPlannerNavState();
   syncHashFromMapMode();
 
   mapWrap.classList.remove('is-dwr-mode');
   mapWrap.classList.remove('is-earth-mode');
+  mapWrap.classList.remove('is-google-mode');
   if (dwrMapFrame) {
     dwrMapFrame.hidden = true;
   }
@@ -2926,6 +2928,7 @@ function applyMapMode() {
   }
 
   if (basemapControl) basemapControl.hidden = false;
+  mapWrap.classList.add('is-google-mode');
   if (value === 'google') {
     googleBaselineMap.setMapTypeId(getGooglePreferredBasemapType());
   } else {

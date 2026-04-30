@@ -1,7 +1,7 @@
 (() => {
   const STORAGE_KEY = 'uoga_google_basemap_type_v2';
   const DEFAULT_TYPE = 'terrain';
-  const VALID_TYPES = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
+  const VALID_TYPES = new Set(['roadmap', 'terrain', 'hybrid', 'satellite', 'aerial3d']);
 
   const CROP_BASEMAP_PANEL_ON_SELECT = true;
 
@@ -57,7 +57,14 @@
     const preferred = readPreferredType();
     const map = window.googleBaselineMap;
     if (map && typeof map.setMapTypeId === 'function') {
-      map.setMapTypeId(preferred);
+      const mapTypeId = preferred === 'aerial3d' ? 'hybrid' : preferred;
+      map.setMapTypeId(mapTypeId);
+      if (typeof map.setTilt === 'function') {
+        map.setTilt(preferred === 'aerial3d' ? 45 : 0);
+      }
+      if (typeof map.setHeading === 'function') {
+        map.setHeading(0);
+      }
     }
   }
 
@@ -80,6 +87,7 @@
     if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (panel) {
       panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+      panel.hidden = !open;
       // Prevent focus from remaining inside a hidden panel (Chrome warns about aria-hidden on focused descendants).
       // inert is supported in modern Chromium and is a no-op elsewhere.
       if (open) {
@@ -109,6 +117,7 @@
     if (!popover) return;
     const show = shouldShowPopover();
     popover.setAttribute('aria-hidden', show ? 'false' : 'true');
+    popover.hidden = !show;
     if (!show) closePanel();
 
     const panel = getPanel();

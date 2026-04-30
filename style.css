@@ -507,6 +507,22 @@
     .selected-unit-placard-pill-value { font-size: 14px; font-weight: 800; line-height: 1.25; color: var(--selected-text); }
     .selected-unit-placard-actions { display:flex; gap:10px; flex-wrap:wrap; }
     .selected-unit-placard-note { font-size: 12px; line-height: 1.4; color: #caa98d; }
+    .basemap-pop {
+      position: absolute;
+      top: 68px;
+      right: 14px;
+      z-index: 31;
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+    .basemap-pop[aria-hidden="true"] {
+      display: none;
+    }
+    .basemap-pop[data-open="true"] .globe-basemap-panel {
+      display: grid;
+      gap: 8px;
+    }
     .globe-basemap-panel {
       position: absolute;
       top: 18px;
@@ -782,4 +798,3 @@
         font-size: 11px;
       }
     }
-
