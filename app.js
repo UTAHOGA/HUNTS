@@ -86,6 +86,7 @@ let googleMapsLoadTimeoutId = null;
 let googleApiLoading = false;
 let googleMapFailureMessage = '';
 let googleEarth3dLastFocusSignature = '';
+let googleEarth3dLastSelectedHuntKey = '';
 let googleEarth3dReorientTimeoutId = null;
 let dwrFrameLoadTimeoutId = null;
 let controlsBound = false;
@@ -3112,6 +3113,7 @@ function reorientGoogleEarth3dCameraForFocus(features, { force = false } = {}) {
   const el = googleEarth3dMap || document.getElementById('googleEarth3dMap');
   const target = getGoogleEarth3dCameraTarget(features);
   if (!el || !target) return;
+  el.hidden = false;
 
   const signature = getGoogleEarth3dFocusSignature(features);
   if (!force && signature && signature === googleEarth3dLastFocusSignature) return;
@@ -3138,6 +3140,9 @@ function reorientGoogleEarth3dCameraForFocus(features, { force = false } = {}) {
   const performZoomIn = () => {
     if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
     try {
+      if (typeof el.stopCameraAnimation === 'function') {
+        el.stopCameraAnimation();
+      }
       if (typeof el.flyCameraTo === 'function') {
         el.flyCameraTo({ endCamera: zoomInCamera, durationMillis: 700 });
       } else {
@@ -3156,6 +3161,9 @@ function reorientGoogleEarth3dCameraForFocus(features, { force = false } = {}) {
   };
 
   try {
+    if (typeof el.stopCameraAnimation === 'function') {
+      el.stopCameraAnimation();
+    }
     if (typeof el.flyCameraTo === 'function') {
       el.flyCameraTo({ endCamera: zoomOutCamera, durationMillis: 380 });
     } else {
@@ -3337,11 +3345,21 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
     }
   });
 
-  if (focusFeatures.length) {
-    syncGoogleEarth3dCameraToFeatures(focusFeatures);
+  const selectedHuntKey = getSelectedHuntKey();
+  const huntChanged = !!selectedHuntKey && selectedHuntKey !== googleEarth3dLastSelectedHuntKey;
+  if (selectedHuntKey) {
+    googleEarth3dLastSelectedHuntKey = selectedHuntKey;
+  } else {
+    googleEarth3dLastSelectedHuntKey = '';
   }
+
   if (boundaryFeatures.length) {
-    reorientGoogleEarth3dCameraForFocus(boundaryFeatures);
+    reorientGoogleEarth3dCameraForFocus(boundaryFeatures, { force: huntChanged });
+  } else if (huntChanged && focusFeatures.length) {
+    reorientGoogleEarth3dCameraForFocus(focusFeatures, { force: true });
+  } else if (focusFeatures.length && !selectedHuntKey) {
+    // Only auto-fit to broad overlay extents when no explicit hunt is selected.
+    syncGoogleEarth3dCameraToFeatures(focusFeatures);
   }
 
   if (!drawnOverlays) {
