@@ -3538,6 +3538,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       menu.hidden = true;
       toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
 
       syncPicker();
     });
