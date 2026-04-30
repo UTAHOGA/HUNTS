@@ -2,14 +2,59 @@
   const DWR_MAP_URL = 'https://dwrapps.utah.gov/huntboundary/hbstart';
   const GOOGLE_EARTH_URL = 'https://earth.google.com/web/@39.3209804,-111.0937311,1730290.51059961a,0d,35y,0h,0t,0r';
 
-  function moveNavStripIntoHeader() {
+  function buildPageNavDropdown() {
     const strip = document.querySelector('.page-nav-strip');
     const header = document.querySelector('header.topbar');
     if (!strip || !header) return;
-    if (header.contains(strip)) return;
-    const center = header.querySelector('.topbar-center');
-    if (center) center.insertBefore(strip, center.firstChild);
-    else header.insertBefore(strip, header.firstChild);
+    if (document.querySelector('[data-uoga-page-nav]')) {
+      strip.remove();
+      return;
+    }
+    const nav = strip.querySelector('.utility-nav');
+    if (!nav) return;
+    const links = Array.from(nav.querySelectorAll('a.utility-link'));
+    if (!links.length) return;
+    const active = links.find(link => link.classList.contains('active')) || links[0];
+    const wrapper = document.createElement('div');
+    wrapper.className = 'uoga-page-nav-control';
+    wrapper.setAttribute('data-uoga-page-nav', 'true');
+    wrapper.innerHTML = `
+      <button id="pageNavToggleBtn" class="uoga-page-nav-toggle" type="button" aria-expanded="false">
+        <span class="uoga-page-nav-label">Hunt Builder<br>Page Navigation</span>
+        <span class="uoga-page-nav-current">${active ? active.textContent.trim() : 'Builder'}</span>
+      </button>
+      <div class="uoga-page-nav-menu" hidden></div>
+    `;
+    const menu = wrapper.querySelector('.uoga-page-nav-menu');
+    links.forEach(link => {
+      const clone = link.cloneNode(true);
+      clone.classList.add('uoga-page-nav-link');
+      menu.appendChild(clone);
+    });
+    const host = header.querySelector('.topbar-left') || header;
+    host.insertBefore(wrapper, host.firstChild);
+    strip.remove();
+    const toggle = wrapper.querySelector('.uoga-page-nav-toggle');
+    const closeMenu = () => {
+      menu.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const willOpen = menu.hidden;
+      menu.hidden = !willOpen;
+      toggle.setAttribute('aria-expanded', String(willOpen));
+    });
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        closeMenu();
+        toggle.focus();
+      });
+    });
+    document.addEventListener('click', event => {
+      if (!wrapper.contains(event.target)) closeMenu();
+    });
   }
 
   function injectLightPillStyle() {
@@ -43,12 +88,14 @@
         box-shadow:0 8px 22px rgba(58,37,18,.14) !important;
         color:#2b1c12 !important;
       }
-      .page-nav-strip { display:block !important; visibility:visible !important; opacity:1 !important; background:transparent !important; border:0 !important; }
+      .page-nav-strip { display:none !important; visibility:hidden !important; opacity:0 !important; background:transparent !important; border:0 !important; }
       .page-nav-case { display:flex !important; align-items:center !important; justify-content:center !important; width:100% !important; }
       .utility-nav { display:flex !important; align-items:center !important; justify-content:center !important; gap:12px !important; flex-wrap:wrap !important; }
       .utility-link,
       .map-mode-toggle,
       .map-mode-option,
+      .uoga-page-nav-toggle,
+      .uoga-page-nav-link,
       .topbar .toggle-row,
       .topbar .toggle-menu summary,
       .basemap-toggle,
@@ -64,8 +111,10 @@
         box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important;
       }
       .utility-link.active,
+      .uoga-page-nav-link.active,
       .map-mode-option.is-active,
       .map-mode-toggle[aria-expanded="true"],
+      .uoga-page-nav-toggle[aria-expanded="true"],
       .uoga-engine-pill.is-active {
         border-color:#f07800 !important;
         background:linear-gradient(180deg,#fff7ee,#ead8c4) !important;
@@ -90,6 +139,21 @@
       #map, #googleEarthFrame, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
       #googleEarthFrame, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
+      .topbar-left { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:12px !important; flex:0 1 auto !important; width:auto !important; }
+      .uoga-page-nav-control,
+      .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
+      .uoga-page-nav-toggle,
+      .map-mode-toggle { display:inline-flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:2px !important; width:210px !important; min-height:46px !important; padding:6px 14px 7px !important; cursor:pointer !important; }
+      .uoga-page-nav-label,
+      .map-mode-label { font-size:10px !important; line-height:1 !important; color:#f07800 !important; white-space:nowrap !important; }
+      .uoga-page-nav-current,
+      .map-mode-current { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:100% !important; min-width:0 !important; }
+      .uoga-page-nav-current { color:#2b1c12 !important; font-size:12px !important; font-weight:900 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
+      .uoga-page-nav-menu,
+      .map-mode-menu { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; z-index:10030 !important; min-width:210px !important; }
+      .uoga-page-nav-menu { padding:12px !important; }
+      .uoga-page-nav-menu .utility-link,
+      .uoga-page-nav-menu .uoga-page-nav-link { width:100% !important; min-height:42px !important; justify-content:center !important; }
       .uoga-engine-control { display:flex !important; align-items:center !important; gap:8px !important; }
       .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
       .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
@@ -207,8 +271,7 @@
 
   function init() {
     injectLightPillStyle();
-    // Keep page nav strip in its own row so cross-page nav pills remain visible.
-    // Moving it inside .topbar collides with legacy "header cleanup" CSS rules.
+    buildPageNavDropdown();
     bindMapEngine();
   }
 
