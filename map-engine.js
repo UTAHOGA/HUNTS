@@ -34,8 +34,19 @@
       .map-mode-menu { position:absolute !important; top:calc(100% + 8px) !important; left:0 !important; display:grid !important; gap:8px !important; z-index:10030 !important; }
       .map-mode-toggle, .map-mode-option { display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:10px !important; width:230px !important; min-height:42px !important; padding:0 14px !important; cursor:pointer !important; }
       .map-mode-logo, .map-mode-option-logo { max-height:20px !important; max-width:118px !important; width:auto !important; height:auto !important; display:block !important; }
-      .map-stage { position:relative !important; }
-      #map, #googleEarth3dMap, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      .map-stage { position:relative !important; overflow:hidden !important; }
+      #map, #googleEarth3dMap { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      #dwrMapFrame {
+        position:absolute !important;
+        left:0 !important;
+        right:0 !important;
+        bottom:0 !important;
+        top:-42px !important;
+        width:100% !important;
+        height:calc(100% + 42px) !important;
+        min-height:calc(100% + 42px) !important;
+        border:0 !important;
+      }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .sidebar, .rightbar, .panel, .panel-body, .rightbar-header, .hunt-card, .outfitter-card { background:rgba(255,251,244,.96) !important; color:#2b1c12 !important; border-color:#c9a27f !important; }
       .panel h2 { background:linear-gradient(180deg,#f07800,#d96700) !important; color:#fff8f1 !important; }

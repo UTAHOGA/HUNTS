@@ -167,8 +167,19 @@
         border-color:#c9a27f !important;
       }
       .helper, .empty-note, .hunt-card-meta, .map-chooser-meta { color:#6b5646 !important; }
-      .map-stage { position:relative !important; }
-      #map, #googleEarth3dMap, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      .map-stage { position:relative !important; overflow:hidden !important; }
+      #map, #googleEarth3dMap { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      #dwrMapFrame {
+        position:absolute !important;
+        left:0 !important;
+        right:0 !important;
+        bottom:0 !important;
+        top:-42px !important;
+        width:100% !important;
+        height:calc(100% + 42px) !important;
+        min-height:calc(100% + 42px) !important;
+        border:0 !important;
+      }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
        .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; }
