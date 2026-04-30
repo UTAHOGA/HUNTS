@@ -6,3 +6,4 @@ _local_untracked_backup/
 *.psd
 processed_data/*.rebuilt.csv
 style.repaired.css
+config.local.js

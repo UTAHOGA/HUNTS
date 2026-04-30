@@ -1158,12 +1158,12 @@ function resetAllFilters() {
 }
 
 function handleFilterChange(event) {
+  const activeMode = safe(mapTypeSelect?.value || 'google').toLowerCase();
   selectedHunt = null;
   selectedBoundaryFeature = null;
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
-  forceGoogleMapVisible();
   if (!googleBaselineMap) {
     updateStatus('Google map is still loading. Filter selection saved; boundaries will appear when the map is ready.');
     return;
@@ -1188,7 +1188,11 @@ function handleFilterChange(event) {
   renderMatchingHunts();
   renderSelectedHunt();
   renderOutfitters();
-  forceGoogleMapVisible();
+  if (activeMode === 'earth') {
+    refreshGoogleEarth3dBoundaryOverlaySoon();
+  } else if (activeMode === 'dwr') {
+    updateDwrMapFrame(selectedHunt);
+  }
 }
 
 function refreshSelectionMatrix() {
@@ -1591,18 +1595,30 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
     </div>`;
 }
 
+function syncSelectedHuntAcrossMapModes({ closeChooser = true, zoomGoogle = true } = {}) {
+  if (!selectedHunt) return;
+  renderSelectedHunt();
+  renderOutfitters();
+  renderMatchingHunts();
+  if (closeChooser) closeSelectedHuntPopup();
+  styleBoundaryLayer();
+  updateDwrMapFrame(selectedHunt);
+
+  const mode = safe(mapTypeSelect?.value || 'google').toLowerCase();
+  if (mode === 'earth') {
+    refreshGoogleEarth3dBoundaryOverlaySoon();
+    return;
+  }
+  if (mode === 'google' && zoomGoogle && huntUnitsLayer && googleBaselineMap) {
+    zoomToSelectedBoundary();
+  }
+}
+
 window.selectHuntByKey = (key) => {
   const h = huntData.find(x => getHuntRecordKey(x) === key);
-  if (h) { 
-    selectedHunt = h; 
-    renderSelectedHunt(); 
-    renderOutfitters();
-    closeSelectedHuntPopup();
-    renderMatchingHunts();
-    styleBoundaryLayer(); 
-    zoomToSelectedBoundary(); 
-    refreshGoogleEarth3dBoundaryOverlay();
-  }
+  if (!h) return;
+  selectedHunt = h;
+  syncSelectedHuntAcrossMapModes({ closeChooser: true, zoomGoogle: true });
 };
 window.selectHuntByCode = (code) => {
   const want = safe(code).trim().toUpperCase();
@@ -3876,14 +3892,7 @@ function bootstrapPendingHuntSelection() {
   const match = huntData.find((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase() === pendingCode);
   if (!match) return;
   selectedHunt = match;
-  renderSelectedHunt();
-  renderOutfitters();
-  renderMatchingHunts();
-  styleBoundaryLayer();
-  refreshGoogleEarth3dBoundaryOverlay();
-  if (huntUnitsLayer && googleBaselineMap) {
-    zoomToSelectedBoundary();
-  }
+  syncSelectedHuntAcrossMapModes({ closeChooser: false, zoomGoogle: true });
 }
 
 // --- BOOTSTRAP ---
@@ -3961,15 +3970,36 @@ function isLikelyGoogleApiKey(value) {
   return /^AIza[0-9A-Za-z_-]{35}$/.test(key);
 }
 
+function getLocalGoogleMapsApiKeyOverride() {
+  if (!isLocalDevHost() || typeof window === 'undefined') return '';
+  const fileOverride = String(window.UOGA_LOCAL_CONFIG?.GOOGLE_MAPS_API_KEY || '').trim();
+  if (isLikelyGoogleApiKey(fileOverride)) return fileOverride;
+  const runtimeOverride = String(window.UOGA_LOCAL_GOOGLE_MAPS_API_KEY || '').trim();
+  if (isLikelyGoogleApiKey(runtimeOverride)) return runtimeOverride;
+  try {
+    const stored = String(localStorage.getItem('uoga_google_maps_api_key') || '').trim();
+    return isLikelyGoogleApiKey(stored) ? stored : '';
+  } catch {
+    return '';
+  }
+}
+
 function resolveGoogleMapsApiKey() {
+  const localOverride = getLocalGoogleMapsApiKeyOverride();
+  if (localOverride) return localOverride;
   return isLikelyGoogleApiKey(GOOGLE_MAPS_API_KEY) ? String(GOOGLE_MAPS_API_KEY).trim() : '';
+}
+
+function getGoogleMapsKeySource() {
+  if (getLocalGoogleMapsApiKeyOverride()) return 'local override key';
+  return isLikelyGoogleApiKey(GOOGLE_MAPS_API_KEY) ? 'config key' : 'missing key';
 }
 
 function getGoogleKeySourceLabel() {
   const resolvedKey = resolveGoogleMapsApiKey();
   if (resolvedKey) {
     const masked = `${resolvedKey.slice(0, 6)}...${resolvedKey.slice(-4)}`;
-    return `${isLocalDevHost() ? 'dev/runtime key' : 'production/runtime key'} (${masked})`;
+    return `${getGoogleMapsKeySource()} (${masked})`;
   }
   return isLocalDevHost() ? 'missing local dev key' : 'missing production key';
 }

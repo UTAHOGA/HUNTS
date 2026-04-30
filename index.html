@@ -346,11 +346,31 @@
   </section>
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
+  <script>
+    (function () {
+      var host = String(window.location && window.location.hostname || '').toLowerCase();
+      var isLocal = window.location.protocol === 'file:'
+        || host === 'localhost'
+        || host === '127.0.0.1'
+        || host === '::1'
+        || host === '[::1]'
+        || host.endsWith('.local')
+        || host.endsWith('.lan')
+        || /^10\./.test(host)
+        || /^192\.168\./.test(host)
+        || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
+      if (!isLocal) return;
+      var localScript = document.createElement('script');
+      localScript.src = './config.local.js?v=20260430-local-config-1';
+      localScript.async = false;
+      document.head.appendChild(localScript);
+    })();
+  </script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
-  <script src="./header-layout.js?v=20260430-google-earth-3d-1"></script>
+  <script src="./header-layout.js?v=20260430-google-earth-3d-2"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260430-earth-reorient-fix-8"></script>
+  <script src="app.js?v=20260430-earth-reorient-fix-11"></script>
   <script src="./google-basemap.js?v=20260430-google-earth-3d-1"></script>
 </body>
 </html>
