@@ -1,6 +1,10 @@
 (() => {
   const DWR_MAP_URL = 'https://dwrapps.utah.gov/huntboundary/hbstart';
   const GOOGLE_EARTH_URL = 'https://earth.google.com/web/@39.3209804,-111.0937311,1730290.51059961a,0d,35y,0h,0t,0r';
+  const isBuilderPage = () => {
+    const path = (window.location && window.location.pathname ? window.location.pathname : '').toLowerCase();
+    return path.endsWith('/index.html') || path.endsWith('/builder.html') || path === '/' || path === '';
+  };
 
   function buildPageNavDropdown() {
     const strip = document.querySelector('.page-nav-strip');
@@ -273,6 +277,7 @@
   }
 
   function normalizeMapSelect() {
+    if (!isBuilderPage()) return document.getElementById('mapTypeSelect');
     let select = document.getElementById('mapTypeSelect');
     if (!select) {
       select = document.createElement('select');
@@ -292,7 +297,7 @@
   }
 
   function ensureVisibleEnginePills(select) {
-    if (!select || document.querySelector('[data-uoga-engine-pills]') || document.querySelector('[data-map-mode-picker]')) return;
+    if (!isBuilderPage() || !select || document.querySelector('[data-uoga-engine-pills]') || document.querySelector('[data-map-mode-picker]')) return;
     const wrapper = document.createElement('div');
     wrapper.className = 'uoga-engine-control';
     wrapper.setAttribute('data-uoga-engine-pills', 'true');
@@ -337,7 +342,7 @@
 
   function bindMapEngine() {
     const select = normalizeMapSelect();
-    if (!select) return;
+    if (!select || !isBuilderPage()) return;
     ensureFrames();
     ensureVisibleEnginePills(select);
     select.addEventListener('change', () => window.setTimeout(() => setMode(select.value), 0));
