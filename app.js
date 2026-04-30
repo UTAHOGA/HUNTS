@@ -1122,10 +1122,6 @@ function forceGoogleMapVisible() {
     dwrMapFrame.hidden = true;
     dwrMapFrame.style.display = '';
   }
-  if (googleEarthFrame) {
-    googleEarthFrame.hidden = true;
-    googleEarthFrame.style.display = '';
-  }
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
   }
@@ -1350,7 +1346,7 @@ function closeSelectedHuntFloat(zoomToUnit = false) {
     zoomToSelectedBoundary();
   }
   if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
-    updateGoogleEarthFrame(selectedHunt);
+    refreshGoogleEarth3dBoundaryOverlaySoon();
   }
 }
 function getSelectedUnitGroups() {
@@ -3382,9 +3378,6 @@ function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
   if (dwrMapFrame) {
     dwrMapFrame.hidden = true;
   }
-  if (googleEarthFrame) {
-    googleEarthFrame.hidden = true;
-  }
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
   }
@@ -3413,9 +3406,6 @@ function applyMapMode() {
   mapWrap.classList.remove('is-google-mode');
   if (dwrMapFrame) {
     dwrMapFrame.hidden = true;
-  }
-  if (googleEarthFrame) {
-    googleEarthFrame.hidden = true;
   }
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
@@ -3452,15 +3442,11 @@ function applyMapMode() {
           refreshGoogleEarth3dBoundaryOverlay();
           return;
         }
-        updateGoogleEarthFrame(selectedHunt);
-        if (googleEarthFrame) googleEarthFrame.hidden = false;
-        updateStatus('Google Earth fallback page active.');
+        updateStatus('Google Earth 3D unavailable. Switch to Google Maps or DWR map.');
       })
       .catch((err) => {
         console.error('Google Earth 3D failed to load.', err);
-        updateGoogleEarthFrame(selectedHunt);
-        if (googleEarthFrame) googleEarthFrame.hidden = false;
-        updateStatus('Google Earth 3D failed to load. Showing the fallback Google Earth page.');
+        updateStatus('Google Earth 3D failed to load. Switch to Google Maps or DWR map.');
       });
     return;
   }
@@ -3904,7 +3890,6 @@ function bootstrapPendingHuntSelection() {
 document.addEventListener('DOMContentLoaded', async () => {
   installGoogleAuthErrorMonitor();
   initDwrFrameEvents();
-  initGoogleEarthFrameEvents();
   window.addEventListener('hashchange', syncMapModeFromHash);
   syncPlannerNavState();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);

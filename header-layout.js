@@ -1,6 +1,5 @@
 (() => {
   const DWR_MAP_URL = 'https://dwrapps.utah.gov/huntboundary/hbstart';
-  const GOOGLE_EARTH_URL = 'https://earth.google.com/web/@39.3209804,-111.0937311,1730290.51059961a,0d,35y,0h,0t,0r';
   const isBuilderPage = () => {
     const path = (window.location && window.location.pathname ? window.location.pathname : '').toLowerCase();
     return path.endsWith('/index.html') || path.endsWith('/builder.html') || path === '/' || path === '';
@@ -169,8 +168,8 @@
       }
       .helper, .empty-note, .hunt-card-meta, .map-chooser-meta { color:#6b5646 !important; }
       .map-stage { position:relative !important; }
-      #map, #googleEarthFrame, #googleEarth3dMap, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
-      #googleEarthFrame, #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
+      #map, #googleEarth3dMap, #dwrMapFrame { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; min-height:100% !important; border:0 !important; }
+      #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
        .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; }
        .topbar-right { display:flex !important; align-items:center !important; justify-content:flex-end !important; flex:0 0 auto !important; margin-left:auto !important; }
@@ -287,19 +286,7 @@
   function ensureFrames() {
     const stage = document.querySelector('.map-stage') || document.querySelector('.map-wrap');
     if (!stage) return {};
-    let earth = document.getElementById('googleEarthFrame');
     let dwr = document.getElementById('dwrMapFrame');
-    if (!earth) {
-      earth = document.createElement('iframe');
-      earth.id = 'googleEarthFrame';
-      earth.className = 'google-earth-frame';
-      earth.title = 'Google Earth';
-      earth.loading = 'lazy';
-      earth.allow = 'geolocation; fullscreen';
-      earth.referrerPolicy = 'no-referrer-when-downgrade';
-      earth.hidden = true;
-      stage.appendChild(earth);
-    }
     if (!dwr) {
       dwr = document.createElement('iframe');
       dwr.id = 'dwrMapFrame';
@@ -311,7 +298,7 @@
       dwr.hidden = true;
       stage.appendChild(dwr);
     }
-    return { earth, dwr };
+    return { dwr };
   }
 
   function normalizeMapSelect() {
@@ -361,13 +348,11 @@
   function setMode(mode) {
     const select = normalizeMapSelect();
     const map = document.getElementById('map');
-    const { earth, dwr } = ensureFrames();
+    const { dwr } = ensureFrames();
     const next = ['google', 'earth', 'dwr'].includes(mode) ? mode : 'google';
     if (select && select.value !== next) select.value = next;
-    if (earth && !earth.src) earth.src = GOOGLE_EARTH_URL;
     if (dwr && !dwr.src) dwr.src = DWR_MAP_URL;
     if (map) map.hidden = next !== 'google';
-    if (earth) earth.hidden = true;
     if (dwr) dwr.hidden = next !== 'dwr';
     document.body.dataset.mapMode = next;
     document.querySelectorAll('[data-engine], [data-map-mode-value]').forEach(btn => {
