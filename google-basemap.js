@@ -188,6 +188,8 @@
     const btn = getToggleBtn();
     if (btn) btn.addEventListener('click', onToggleClick);
 
+    // Force Terrain as the initial basemap on each page load.
+    writePreferredType(DEFAULT_TYPE);
     syncGoogleButtons();
     syncModeVisibility();
     wrapApplyMapMode();

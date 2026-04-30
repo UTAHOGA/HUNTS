@@ -115,9 +115,13 @@
         border-bottom:1px solid #c9a27f !important;
         box-shadow:0 8px 22px rgba(58,37,18,.14) !important;
         color:#2b1c12 !important;
-        flex-wrap:wrap !important;
+        display:grid !important;
+        grid-template-columns:minmax(0, 1fr) auto !important;
+        align-items:center !important;
+        gap:14px !important;
+        flex-wrap:nowrap !important;
       }
-      .topbar-title { flex:1 1 420px !important; min-width:320px !important; display:flex !important; justify-content:center !important; align-items:center !important; padding:0 22px !important; text-align:center !important; }
+      .topbar-title { display:none !important; }
       .topbar-title h1 { margin:0 !important; width:min(720px, 100%) !important; padding:8px 22px 9px !important; border:2px solid rgba(198,42,42,.95) !important; font-family:Georgia, "Times New Roman", serif !important; font-size:clamp(20px,2.15vw,31px) !important; line-height:1.02 !important; font-weight:900 !important; letter-spacing:.04em !important; text-transform:uppercase !important; color:#2b1c12 !important; background:rgba(255,253,248,.78) !important; text-shadow:0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(92,55,24,.16) !important; box-shadow:0 8px 20px rgba(58,37,18,.10) !important; }
       .topbar-title h1::after { content:none !important; }
       .page-nav-strip { display:none !important; visibility:hidden !important; opacity:0 !important; background:transparent !important; border:0 !important; }
@@ -182,10 +186,28 @@
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
-       .topbar-left { display:flex !important; align-items:center !important; justify-content:flex-end !important; gap:14px !important; flex:1 1 auto !important; min-width:0 !important; width:auto !important; }
-       .topbar-right { display:flex !important; align-items:center !important; justify-content:flex-end !important; flex:0 0 auto !important; margin-left:auto !important; }
+       .topbar-left {
+         display:grid !important;
+         grid-template-columns:clamp(180px, 24vw, 340px) minmax(210px, 1fr) minmax(210px, 1fr) !important;
+         align-items:center !important;
+         justify-items:center !important;
+         column-gap:14px !important;
+         row-gap:10px !important;
+         width:100% !important;
+         min-width:0 !important;
+       }
+       .topbar-right {
+         display:flex !important;
+         align-items:center !important;
+         justify-content:flex-end !important;
+         flex:0 0 auto !important;
+         margin-left:0 !important;
+         justify-self:end !important;
+       }
        .uoga-page-nav-control,
        .map-mode-control { position:relative !important; display:flex !important; align-items:center !important; justify-content:center !important; }
+       .uoga-page-nav-control { order:2 !important; grid-column:2 !important; }
+       .map-mode-control { order:3 !important; grid-column:3 !important; }
        .uoga-page-nav-toggle,
        .map-mode-toggle { display:inline-flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:2px !important; width:224px !important; min-height:48px !important; padding:5px 14px !important; cursor:pointer !important; }
        .uoga-page-nav-label,
@@ -269,9 +291,11 @@
          align-items:center !important;
          justify-content:center !important;
          flex:0 0 auto !important;
-         order:-1 !important;
-         margin-right:auto !important;
-         margin-left:clamp(10px, calc((340px - 170px) / 2), 130px) !important;
+         order:1 !important;
+         margin-right:0 !important;
+         margin-left:0 !important;
+         grid-column:1 !important;
+         justify-self:center !important;
        }
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
@@ -293,15 +317,51 @@
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }
       .uoga-engine-pill img { max-height:20px !important; max-width:110px !important; display:block !important; }
       @media (max-width: 1200px) {
-        .instructions-control {
-          margin-left:0 !important;
-          order:0 !important;
-          margin-right:0 !important;
+        .topbar, .topbar.topbar-planner {
+          grid-template-columns:minmax(0, 1fr) !important;
+          justify-items:stretch !important;
         }
+        .topbar-left {
+          display:flex !important;
+          flex-wrap:wrap !important;
+          justify-content:center !important;
+          align-items:center !important;
+          gap:12px !important;
+        }
+        .topbar-right {
+          justify-self:end !important;
+        }
+        .instructions-control {
+          margin:0 !important;
+          order:1 !important;
+          grid-column:auto !important;
+        }
+        .uoga-page-nav-control { order:2 !important; grid-column:auto !important; }
+        .map-mode-control { order:3 !important; grid-column:auto !important; }
       }
       @media (max-width: 900px) {
-        .topbar-title { order:3 !important; flex:1 1 100% !important; padding:4px 0 0 !important; }
-        .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
+        .topbar-left {
+          display:grid !important;
+          grid-template-columns:1fr !important;
+          justify-items:center !important;
+          align-items:center !important;
+          row-gap:10px !important;
+        }
+        .instructions-control,
+        .uoga-page-nav-control,
+        .map-mode-control {
+          grid-column:1 !important;
+          width:min(100%, 320px) !important;
+        }
+        .uoga-page-nav-toggle,
+        .map-mode-toggle {
+          width:100% !important;
+        }
+        .topbar-right {
+          justify-self:center !important;
+          width:100% !important;
+          justify-content:center !important;
+        }
         .ownership-dock, .uoga-backpack-open .ownership-dock { left:12px !important; right:12px !important; max-width:none !important; justify-content:center !important; }
         .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
         .basemap-pop, .uoga-backpack-open .basemap-pop { top:74px !important; right:12px !important; left:auto !important; }
