@@ -156,6 +156,7 @@
        .map-mode-label { font-size:10px !important; line-height:1 !important; color:#f07800 !important; white-space:nowrap !important; }
        .uoga-page-nav-current,
        .map-mode-current { display:inline-flex !important; align-items:center !important; justify-content:center !important; width:100% !important; min-width:0 !important; }
+       .map-mode-logo--dwr-current { max-height:28px !important; max-width:190px !important; width:auto !important; height:auto !important; object-fit:contain !important; }
        .map-mode-option--icononly[data-map-mode-value=\"dwr\"] { min-height:42px !important; }
        .map-mode-option-logo--dwr { width:170px !important; height:34px !important; max-width:170px !important; max-height:34px !important; object-fit:contain !important; }
         .uoga-page-nav-label {
@@ -286,8 +287,8 @@
     wrapper.innerHTML = `
       <span class="uoga-engine-label">Map Selector</span>
       <button type="button" class="uoga-engine-pill" data-engine="google"><img src="./assets/logos/google-maps-logo.png" alt="Google Maps"><span>Google</span></button>
-      <button type="button" class="uoga-engine-pill" data-engine="earth"><img src="./assets/logos/google_earth_logo.png" alt="Google Earth"><span>Earth</span></button>
-      <button type="button" class="uoga-engine-pill" data-engine="dwr"><span>DWR Map</span></button>
+      <button type="button" class="uoga-engine-pill" data-engine="earth"><img src="./assets/logos/google_earth_logo_2.png" alt="Google Earth"><span>Earth</span></button>
+      <button type="button" class="uoga-engine-pill" data-engine="dwr"><img src="./assets/logos/DWR-LOGO-MAP.png" alt="Utah DWR Map"><span>DWR Map</span></button>
     `;
     const oldGroup = select.closest('.control-group');
     const host = document.querySelector('.topbar-left') || document.querySelector('.topbar') || document.body;

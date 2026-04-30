@@ -33,6 +33,7 @@
     .map-mode-label { font-size:10px; line-height:1; color:#f07800; white-space:nowrap; }
     .map-mode-current { display:inline-flex; align-items:center; justify-content:center; width:100%; min-width:0; }
     .map-mode-logo, .map-mode-option-logo { max-height:20px; max-width:118px; width:auto; height:auto; display:block; }
+    .map-mode-logo--dwr-current { max-height:28px; max-width:190px; width:auto; height:auto; object-fit:contain; }
     .map-mode-text { color:#f07800; font-weight:900; letter-spacing:.10em; white-space:nowrap; }
     .map-mode-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
     .map-mode-option { display:inline-flex; align-items:center; justify-content:center; gap:10px; width:224px; min-height:42px; padding:0 14px; cursor:pointer; }
@@ -106,11 +107,11 @@
             </button>
 
             <button type="button" class="map-mode-option map-mode-option--icononly" data-map-mode-value="earth" aria-label="Google Earth">
-              <img class="map-mode-option-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">
+              <img class="map-mode-option-logo" src="./assets/logos/google_earth_logo_2.png" alt="Google Earth">
             </button>
 
             <button type="button" class="map-mode-option map-mode-option--icononly" data-map-mode-value="dwr" aria-label="Utah DWR">
-              <img class="map-mode-option-logo map-mode-option-logo--dwr" src="./assets/logos/DWR-LOGO.png" alt="Utah DWR">
+              <img class="map-mode-option-logo map-mode-option-logo--dwr" src="./assets/logos/DWR-LOGO-MAP.png" alt="Utah DWR Map">
             </button>
           </div>
         </div>
@@ -340,8 +341,8 @@
 
       const modes = {
         google: { html: '<img class="map-mode-logo" src="./assets/logos/google-maps-logo.png" alt="Google Maps">' },
-        earth: { html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo.png" alt="Google Earth">' },
-        dwr: { html: '<img class="map-mode-logo" src="./assets/logos/DWR-LOGO.png" alt="Utah DWR">' }
+        earth: { html: '<img class="map-mode-logo" src="./assets/logos/google_earth_logo_2.png" alt="Google Earth">' },
+        dwr: { html: '<img class="map-mode-logo map-mode-logo--dwr-current" src="./assets/logos/DWR-LOGO-TEXT.png" alt="Utah DWR">' }
       };
 
       function syncPicker() {
