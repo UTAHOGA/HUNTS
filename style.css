@@ -409,6 +409,27 @@
     #globeMap { display: none; background: #0f1723; }
     .map-wrap.is-globe-mode #map { display: none; }
     .map-wrap.is-globe-mode #globeMap { display: block; }
+    :root {
+      --dwr-iframe-top-crop: 42px;
+    }
+    .google-earth-frame,
+    .dwr-map-frame {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      border: 0;
+      background: #fff;
+      min-height: calc(100vh - 225px);
+    }
+    .google-earth-frame {
+      top: 0;
+      height: 100%;
+    }
+    .dwr-map-frame {
+      top: calc(-1 * var(--dwr-iframe-top-crop));
+    }
     
     /* --- NEW OUTFITTER LOGO & LINK STYLES --- */
     .outfitter-card-header { display: grid; grid-template-columns: 62px minmax(0, 1fr); align-items: center; gap: 12px; }
