@@ -124,6 +124,20 @@
     return Number.isFinite(parsed) ? parsed : null;
   }
 
+  function hasValue(value) {
+    const text = String(value ?? '').trim();
+    return !!text && text.toUpperCase() !== 'N/A' && text.toUpperCase() !== 'NOT AVAILABLE';
+  }
+
+  function firstAvailable(source, keys) {
+    if (!source || !Array.isArray(keys)) return null;
+    for (const key of keys) {
+      const value = source[key];
+      if (hasValue(value)) return value;
+    }
+    return null;
+  }
+
   function formatInteger(value) {
     const parsed = num(value);
     return parsed === null ? 'Not available' : parsed.toLocaleString();
@@ -291,9 +305,26 @@
     ladderRows.forEach((row) => {
       const residency = normalizeResidencyLabel(row.residency);
       const group = groupKey(row.hunt_code, residency);
-      const normalized = { ...row, residency, points: num(row.points) };
+      const points = num(row.points);
+      const key = rowKey(row.hunt_code, residency, points);
+      const engineMatch = state.engineByKey.get(key);
+      const normalized = engineMatch
+        ? { ...row, ...engineMatch, residency, points }
+        : { ...row, residency, points };
       if (!state.ladderGroups.has(group)) state.ladderGroups.set(group, []);
       state.ladderGroups.get(group).push(normalized);
+
+      if (engineMatch) {
+        const enrichedEngine = { ...engineMatch, ...row, residency, points };
+        state.engineByKey.set(key, enrichedEngine);
+        const engineGroupRows = state.engineGroups.get(group);
+        if (engineGroupRows && engineGroupRows.length) {
+          const replaceIndex = engineGroupRows.findIndex((candidate) => candidate.points === points);
+          if (replaceIndex >= 0) {
+            engineGroupRows[replaceIndex] = enrichedEngine;
+          }
+        }
+      }
     });
 
     masterRows.forEach((row) => {
@@ -359,12 +390,12 @@
     if (!row) return { value: 'Not available', source: 'unavailable' };
     if (row.status === 'MAX POOL') return { value: '100%', source: 'guaranteed' };
 
-    const projectedOdds = formatProbability(row.odds_2026_projected);
+    const projectedOdds = formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']));
     if (projectedOdds !== 'Not available') {
       return { value: projectedOdds, source: 'projected_total' };
     }
 
-    const randomOdds = formatProbability(row.random_draw_odds_2026);
+    const randomOdds = formatProbability(firstAvailable(row, ['random_draw_odds_2026', 'random_draw_projection_2026']));
     if (randomOdds !== 'Not available') {
       return { value: randomOdds, source: 'random_pool' };
     }
@@ -413,7 +444,7 @@
 
   function getPrimaryOddsLabel(meta, row, displayedOdds) {
     if (isPreferenceAntlerless(meta)) {
-      return `2026 Preference Draw: ${formatProbability(row?.odds_2026_projected)}`;
+      return `2026 Preference Draw: ${formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']))}`;
     }
     if (isRandomOnlyBonusCase(meta, row)) {
       return `2026 Random Draw: ${displayedOdds.value}`;
@@ -500,6 +531,18 @@
       return `${meta.success_percent}%`;
     }
     return 'Not loaded';
+  }
+
+  function getResidentPermitsDisplay(meta, referenceRow) {
+    return firstAvailable(referenceRow, ['permits_2026_res'])
+      || firstAvailable(meta, ['public_resident_permits'])
+      || 'Not loaded';
+  }
+
+  function getNonresidentPermitsDisplay(meta, referenceRow) {
+    return firstAvailable(referenceRow, ['permits_2026_nr'])
+      || firstAvailable(meta, ['public_nonresident_permits'])
+      || 'Not loaded';
   }
 
   function getVerdictState(meta, row, filters, coverageMessage) {
@@ -596,10 +639,10 @@
       if (els.summaryRecommendation) els.summaryRecommendation.textContent = coverageMessage || 'Recommendation not available.';
 
       if (els.selectedResidentPermits) {
-        els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+        els.selectedResidentPermits.textContent = getResidentPermitsDisplay(meta, referenceRow);
       }
       if (els.selectedNonresidentPermits) {
-        els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+        els.selectedNonresidentPermits.textContent = getNonresidentPermitsDisplay(meta, referenceRow);
       }
       if (els.selectedHarvestSuccess) {
         els.selectedHarvestSuccess.textContent = getHarvestSuccessDisplay(meta, referenceRow);
@@ -642,11 +685,11 @@
     }
 
     if (els.selectedResidentPermits) {
-      els.selectedResidentPermits.textContent = meta?.public_resident_permits || 'Not loaded';
+      els.selectedResidentPermits.textContent = getResidentPermitsDisplay(meta, referenceRow);
     }
 
     if (els.selectedNonresidentPermits) {
-      els.selectedNonresidentPermits.textContent = meta?.public_nonresident_permits || 'Not loaded';
+      els.selectedNonresidentPermits.textContent = getNonresidentPermitsDisplay(meta, referenceRow);
     }
 
     if (els.selectedHarvestSuccess) {
@@ -761,12 +804,12 @@
       }
 
       const primaryValue = isPreferenceAntlerless(meta)
-        ? formatProbability(row.odds_2026_projected)
-        : formatProbability(row.max_pool_projection_2026);
+        ? formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026', 'random_draw_odds_2026']))
+        : formatProbability(firstAvailable(row, ['max_pool_projection_2026', 'odds_2026_projected']));
 
       const secondaryCell = isPreferenceAntlerless(meta)
         ? ''
-        : `<td>${formatProbability(row.random_draw_projection_2026)}</td>`;
+        : `<td>${formatProbability(firstAvailable(row, ['random_draw_projection_2026', 'random_draw_odds_2026', 'odds_2026_projected']))}</td>`;
 
       return `
         <tr class="${classes.join(' ')}">
