@@ -111,6 +111,7 @@ const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
 const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
 let devDebugPanelEl = null;
 let devDebugPanelTimerId = null;
+let lastTrackedMapMode = '';
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -152,6 +153,11 @@ const searchInput = document.getElementById('searchInput'),
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
+function trackAnalytics(eventName, props = {}) {
+  try {
+    window.UOGA_ANALYTICS?.track?.(eventName, props);
+  } catch (_) {}
+}
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
   function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
 function setInstructionsOpen(isOpen) {
@@ -1625,6 +1631,12 @@ window.selectHuntByKey = (key) => {
   const h = huntData.find(x => getHuntRecordKey(x) === key);
   if (!h) return;
   selectedHunt = h;
+  trackAnalytics('hunt_selected', {
+    hunt_code: safe(getHuntCode(h)),
+    species: safe(getSpeciesDisplay(h)),
+    hunt_type: safe(getHuntType(h)),
+    weapon: safe(getWeapon(h)),
+  });
   syncSelectedHuntAcrossMapModes({ closeChooser: true, zoomGoogle: true });
 };
 window.selectHuntByCode = (code) => {
@@ -3436,6 +3448,10 @@ function applyMapMode() {
   if (!mapWrap) return;
   const basemapControl = document.getElementById('basemapPopover') || document.getElementById('globeBasemapControl');
   const ownershipDock = document.getElementById('ownershipDock');
+  if (value !== lastTrackedMapMode) {
+    trackAnalytics('map_mode_changed', { mode: value });
+    lastTrackedMapMode = value;
+  }
   syncPlannerNavState();
   syncHashFromMapMode();
 
@@ -3651,6 +3667,7 @@ function initGoogleBaseline() {
   updatePrivateLayersSummary();
   applyMapMode();
   updateStatus('Map ready. Select filters or click a hunt unit.');
+  trackAnalytics('map_loaded', { mode: safe(mapTypeSelect?.value || 'google').toLowerCase() });
   renderDevDebugPanel();
   bindControls();
 }
@@ -3754,6 +3771,15 @@ function bindControls() {
       showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
+    trackAnalytics('filters_applied', {
+      matches: count,
+      species: safe(speciesFilter?.value || ''),
+      sex: safe(sexFilter?.value || ''),
+      hunt_type: safe(huntTypeFilter?.value || ''),
+      hunt_class: safe(huntCategoryFilter?.value || ''),
+      weapon: safe(weaponFilter?.value || ''),
+      unit: safe(unitFilter?.value || ''),
+    });
   });
   clearFiltersBtn?.addEventListener('click', resetAllFilters);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
@@ -3867,6 +3893,11 @@ function bindControls() {
     if (!(target instanceof Node)) return;
     if (instructionsPanel.contains(target) || instructionsTab.contains(target)) return;
     setInstructionsOpen(false);
+  });
+  document.addEventListener('uoga:backpack-changed', () => {
+    const basket = window.UOGA_UI?.getBasket?.();
+    const basketCount = Array.isArray(basket) ? basket.length : 0;
+    trackAnalytics('hunt_saved_to_backpack', { basket_count: basketCount });
   });
 }
 
