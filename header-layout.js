@@ -91,19 +91,35 @@
     const links = Array.from(nav.querySelectorAll('a.utility-link'));
     if (!links.length) return;
     const active = links.find(link => link.classList.contains('active')) || links[0];
+    const activeLabel = active?.textContent?.trim() || 'Builder';
     const wrapper = document.createElement('div');
     wrapper.className = 'uoga-page-nav-control';
     wrapper.setAttribute('data-uoga-page-nav', 'true');
-    wrapper.innerHTML = `
-      <button id="pageNavToggleBtn" class="uoga-page-nav-toggle" type="button" aria-expanded="false">
-        <span class="uoga-page-nav-label">
-          <span class="uoga-page-nav-kicker">Page Navigation</span>
-          <span class="uoga-page-nav-current-page">${active?.textContent?.trim() || 'Builder'}</span>
-        </span>
-      </button>
-      <div class="uoga-page-nav-menu" hidden></div>
-    `;
-    const menu = wrapper.querySelector('.uoga-page-nav-menu');
+    const toggleBtn = document.createElement('button');
+    toggleBtn.id = 'pageNavToggleBtn';
+    toggleBtn.className = 'uoga-page-nav-toggle';
+    toggleBtn.type = 'button';
+    toggleBtn.setAttribute('aria-expanded', 'false');
+
+    const label = document.createElement('span');
+    label.className = 'uoga-page-nav-label';
+    const kicker = document.createElement('span');
+    kicker.className = 'uoga-page-nav-kicker';
+    kicker.textContent = 'Page Navigation';
+    const current = document.createElement('span');
+    current.className = 'uoga-page-nav-current-page';
+    current.textContent = activeLabel;
+
+    label.appendChild(kicker);
+    label.appendChild(current);
+    toggleBtn.appendChild(label);
+
+    const menu = document.createElement('div');
+    menu.className = 'uoga-page-nav-menu';
+    menu.hidden = true;
+
+    wrapper.appendChild(toggleBtn);
+    wrapper.appendChild(menu);
     links.forEach(link => {
       const clone = link.cloneNode(true);
       clone.classList.add('uoga-page-nav-link');
