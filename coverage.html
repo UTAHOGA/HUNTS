@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -225,7 +225,8 @@
       table.coverage-table { min-width: 980px; }
     }
   </style>
-</head>
+  <script src="https://js.sentry-cdn.com/26137c5576f01423efc85f47076f9548.min.js" crossorigin="anonymous"></script>
+  <script src="./sentry-browser-init.js"></script></head>
 <body class="coverage-page theme-dark">
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
@@ -250,17 +251,17 @@
         <h1>Coverage Matrix</h1>
         <p>
           This page shows which hunts have modeled draw pressure, ladder rows, harvest history, and research coverage.
-          It helps us get to “complete and accurate where available” in the priority order you set.
+          It helps us get to â€œcomplete and accurate where availableâ€ in the priority order you set.
         </p>
       </div>
-      <div id="coverageGenerated" class="coverage-badge" aria-label="Generated timestamp">Loading…</div>
+      <div id="coverageGenerated" class="coverage-badge" aria-label="Generated timestamp">Loadingâ€¦</div>
     </section>
 
     <section class="coverage-controls" aria-label="Coverage filters">
       <div class="coverage-grid">
         <div class="coverage-field">
           <label for="searchInput">Search</label>
-          <input id="searchInput" type="text" placeholder="Hunt code, unit name, species…" />
+          <input id="searchInput" type="text" placeholder="Hunt code, unit name, speciesâ€¦" />
         </div>
         <div class="coverage-field">
           <label for="bucketSelect">Priority Bucket</label>
@@ -315,3 +316,4 @@
   <script src="./header-layout.js?v=20260430-header-order-4"></script>
 </body>
 </html>
+

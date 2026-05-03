@@ -5,7 +5,8 @@
   "description": "Local static server for the U.O.G.A. Hunt Planner",
   "scripts": {
     "start": "node server.js",
-    "export:data": "node export-data.js"
+    "export:data": "node export-data.js",
+    "build:pages": "node scripts/build-pages-output.js"
   },
   "devDependencies": {
     "pdf-parse": "^1.1.4",

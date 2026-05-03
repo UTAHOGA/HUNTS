@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -733,13 +733,13 @@
     .signal-legend summary::-webkit-details-marker { display: none; }
 
     .signal-legend summary::after {
-      content: "▾";
+      content: "â–¾";
       color: rgba(240, 120, 0, 0.72);
       font-size: 12px;
       line-height: 1;
     }
 
-    .signal-legend[open] summary::after { content: "▴"; }
+    .signal-legend[open] summary::after { content: "â–´"; }
 
     .signal-legend[open] summary {
       box-shadow: inset 0 0 0 2px rgba(240, 120, 0, 0.22);
@@ -1099,7 +1099,8 @@
       }
     }
   </style>
-</head>
+  <script src="https://js.sentry-cdn.com/26137c5576f01423efc85f47076f9548.min.js" crossorigin="anonymous"></script>
+  <script src="./sentry-browser-init.js"></script></head>
 <body class="research-page">
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
@@ -1352,6 +1353,7 @@
   <script src="./header-layout.js?v=20260430-header-order-4"></script>
 </body>
 </html>
+
 
 
 

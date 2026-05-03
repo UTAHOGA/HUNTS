@@ -109,6 +109,10 @@ const GOOGLE_MAPS_SCRIPT_CHANNEL = 'beta';
 const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
 const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
 const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
+let devDebugPanelEl = null;
+let devDebugPanelTimerId = null;
+let lastTrackedMapMode = '';
+const APP_VERSION = '2026-05-01-analytics-1';
 
 const searchInput = document.getElementById('searchInput'),
   speciesFilter = document.getElementById('speciesFilter'),
@@ -150,6 +154,27 @@ const searchInput = document.getElementById('searchInput'),
 function escapeHtml(v) { return String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function safe(v) { return String(v ?? ''); }
 function firstNonEmpty(...a) { for (let x of a) { let t = safe(x).trim(); if (t) return t; } return ''; }
+function trackAnalytics(eventName, props = {}) {
+  try {
+    const env = isLocalDevHost() ? 'development' : 'production';
+    const mapMode = safe(mapTypeSelect?.value || '').toLowerCase() || 'unknown';
+    const page = (() => {
+      const path = safe(window.location?.pathname || '/').toLowerCase();
+      if (path.endsWith('/research.html')) return 'research';
+      if (path.endsWith('/verify.html')) return 'verify';
+      if (path.endsWith('/hard-copy.html')) return 'hard-copy';
+      if (path.endsWith('/hunt-research.html')) return 'hunt-research';
+      return 'builder';
+    })();
+    window.UOGA_ANALYTICS?.track?.(eventName, {
+      app_version: APP_VERSION,
+      env,
+      page,
+      map_mode: mapMode,
+      ...props
+    });
+  } catch (_) {}
+}
   function titleCaseWords(v) { return safe(v).split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' '); }
   function normalizeVisibleVerificationLabel(v) { return safe(v).replace(/\bVetted\b/g, 'Verified'); }
 function setInstructionsOpen(isOpen) {
@@ -1623,6 +1648,12 @@ window.selectHuntByKey = (key) => {
   const h = huntData.find(x => getHuntRecordKey(x) === key);
   if (!h) return;
   selectedHunt = h;
+  trackAnalytics('hunt_selected', {
+    hunt_code: safe(getHuntCode(h)),
+    species: safe(getSpeciesDisplay(h)),
+    hunt_type: safe(getHuntType(h)),
+    weapon: safe(getWeapon(h)),
+  });
   syncSelectedHuntAcrossMapModes({ closeChooser: true, zoomGoogle: true });
 };
 window.selectHuntByCode = (code) => {
@@ -3400,6 +3431,7 @@ function refreshGoogleEarth3dBoundaryOverlaySoon() {
 }
 
 function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
+  googleMapFailureMessage = reason;
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   googleMapFailureMessage = reason;
@@ -3418,6 +3450,7 @@ function handleGoogleMapUnavailable(reason = 'Google map unavailable.') {
     mapTypeSelect.value = 'google';
   }
   updateStatus(reason);
+  renderDevDebugPanel();
 }
 
 function applyMapMode() {
@@ -3431,6 +3464,11 @@ function applyMapMode() {
   const mapWrap = document.querySelector('.map-wrap');
   if (!mapWrap) return;
   const basemapControl = document.getElementById('basemapPopover') || document.getElementById('globeBasemapControl');
+  const ownershipDock = document.getElementById('ownershipDock');
+  if (value !== lastTrackedMapMode) {
+    trackAnalytics('map_mode_changed', { mode: value });
+    lastTrackedMapMode = value;
+  }
   syncPlannerNavState();
   syncHashFromMapMode();
 
@@ -3443,6 +3481,10 @@ function applyMapMode() {
   if (googleEarth3dMap) {
     googleEarth3dMap.hidden = true;
   }
+  if (ownershipDock) {
+    ownershipDock.hidden = false;
+    ownershipDock.setAttribute('aria-hidden', 'false');
+  }
   if (value !== 'earth') {
     clearGoogleEarth3dBoundaryOverlays();
   }
@@ -3453,6 +3495,10 @@ function applyMapMode() {
     updateDwrMapFrame(getPreferredDwrHuntCandidate());
     if (dwrMapFrame) {
       dwrMapFrame.hidden = false;
+    }
+    if (ownershipDock) {
+      ownershipDock.hidden = true;
+      ownershipDock.setAttribute('aria-hidden', 'true');
     }
     mapWrap.classList.add('is-dwr-mode');
     if (basemapControl) basemapControl.hidden = true;
@@ -3638,6 +3684,8 @@ function initGoogleBaseline() {
   updatePrivateLayersSummary();
   applyMapMode();
   updateStatus('Map ready. Select filters or click a hunt unit.');
+  trackAnalytics('map_loaded', { mode: safe(mapTypeSelect?.value || 'google').toLowerCase() });
+  renderDevDebugPanel();
   bindControls();
 }
 
@@ -3740,6 +3788,15 @@ function bindControls() {
       showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
     }
+    trackAnalytics('filters_applied', {
+      matches: count,
+      species: safe(speciesFilter?.value || ''),
+      sex: safe(sexFilter?.value || ''),
+      hunt_type: safe(huntTypeFilter?.value || ''),
+      hunt_class: safe(huntCategoryFilter?.value || ''),
+      weapon: safe(weaponFilter?.value || ''),
+      unit: safe(unitFilter?.value || ''),
+    });
   });
   clearFiltersBtn?.addEventListener('click', resetAllFilters);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
@@ -3854,6 +3911,11 @@ function bindControls() {
     if (instructionsPanel.contains(target) || instructionsTab.contains(target)) return;
     setInstructionsOpen(false);
   });
+  document.addEventListener('uoga:backpack-changed', () => {
+    const basket = window.UOGA_UI?.getBasket?.();
+    const basketCount = Array.isArray(basket) ? basket.length : 0;
+    trackAnalytics('hunt_saved_to_backpack', { basket_count: basketCount });
+  });
 }
 
 function zoomToSelectedBoundary() {
@@ -3965,6 +4027,7 @@ function bootstrapPendingHuntSelection() {
 // --- BOOTSTRAP ---
 document.addEventListener('DOMContentLoaded', async () => {
   installGoogleAuthErrorMonitor();
+  initDevDebugPanel();
   initDwrFrameEvents();
   window.addEventListener('hashchange', syncMapModeFromHash);
   syncPlannerNavState();
@@ -4108,7 +4171,9 @@ function loadGoogleMapsApiScript(apiKey) {
 function handleGoogleMapsFailure(failureReason) {
   googleApiLoading = false;
   const fallbackMessage = `${failureReason} (${getGoogleKeySourceLabel()}) ${buildGoogleReferrerHint()}`;
+  googleMapFailureMessage = fallbackMessage;
   handleGoogleMapUnavailable(fallbackMessage);
+  renderDevDebugPanel();
 }
 
 function installGoogleAuthErrorMonitor() {
@@ -4132,6 +4197,90 @@ function installGoogleAuthErrorMonitor() {
       handleGoogleMapsFailure('Google map key is invalid.');
     }
   });
+}
+
+function getCurrentMapModeForDebug() {
+  const value = safe(mapTypeSelect?.value).toLowerCase();
+  if (value === 'dwr') return 'dwr';
+  if (value === 'earth') return 'earth';
+  return 'google';
+}
+
+function ensureDevDebugPanel() {
+  if (!isLocalDevHost() || typeof document === 'undefined') return null;
+  if (devDebugPanelEl && document.body.contains(devDebugPanelEl)) return devDebugPanelEl;
+  const panel = document.createElement('aside');
+  panel.id = 'uogaDevDebugPanel';
+  panel.setAttribute('aria-live', 'polite');
+  panel.style.position = 'fixed';
+  panel.style.left = '12px';
+  panel.style.bottom = '12px';
+  panel.style.zIndex = '10050';
+  panel.style.maxWidth = '360px';
+  panel.style.padding = '10px 12px';
+  panel.style.border = '1px solid rgba(0,0,0,0.25)';
+  panel.style.borderRadius = '10px';
+  panel.style.background = 'rgba(18,18,18,0.92)';
+  panel.style.color = '#f7f7f7';
+  panel.style.font = '12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+  panel.style.boxShadow = '0 6px 18px rgba(0,0,0,0.35)';
+  panel.style.pointerEvents = 'none';
+  document.body.appendChild(panel);
+  devDebugPanelEl = panel;
+  return panel;
+}
+
+function renderDevDebugPanel() {
+  if (!isLocalDevHost()) return;
+  const panel = ensureDevDebugPanel();
+  if (!panel) return;
+  const mapMode = getCurrentMapModeForDebug();
+  const keySource = getGoogleMapsKeySource();
+  const lastError = googleMapFailureMessage || 'none';
+  const currentUrl = String(window.location?.href || '');
+  const timestamp = new Date().toISOString();
+  const snapshot = [
+    `time=${timestamp}`,
+    `mode=${mapMode}`,
+    `key_source=${keySource}`,
+    `last_google_error=${lastError}`,
+    `url=${currentUrl}`
+  ].join('\n');
+  panel.innerHTML = [
+    '<div style="font-weight:700; margin-bottom:6px;">UOGA Dev Debug</div>',
+    `<div><strong>map mode:</strong> ${escapeHtml(mapMode)}</div>`,
+    `<div><strong>key source:</strong> ${escapeHtml(keySource)}</div>`,
+    `<div><strong>last google error:</strong> ${escapeHtml(lastError)}</div>`,
+    '<button id="uogaDebugCopyBtn" type="button" style="margin-top:8px; border:1px solid rgba(255,255,255,0.35); border-radius:8px; background:rgba(255,255,255,0.08); color:#fff; padding:6px 8px; font:12px/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; pointer-events:auto; cursor:pointer;">Copy Debug Snapshot</button>'
+  ].join('');
+  const btn = panel.querySelector('#uogaDebugCopyBtn');
+  if (btn) {
+    btn.onclick = async () => {
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(snapshot);
+          btn.textContent = 'Copied';
+        } else {
+          btn.textContent = 'Clipboard unavailable';
+        }
+      } catch {
+        btn.textContent = 'Copy failed';
+      } finally {
+        window.setTimeout(() => {
+          btn.textContent = 'Copy Debug Snapshot';
+        }, 1200);
+      }
+    };
+  }
+}
+
+function initDevDebugPanel() {
+  if (!isLocalDevHost()) return;
+  renderDevDebugPanel();
+  if (devDebugPanelTimerId) {
+    clearInterval(devDebugPanelTimerId);
+  }
+  devDebugPanelTimerId = setInterval(renderDevDebugPanel, 700);
 }
 // === Map mode custom picker sync ===
 document.addEventListener('DOMContentLoaded', () => {
