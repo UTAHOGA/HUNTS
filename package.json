@@ -1,16 +1,24 @@
-{
-  "name": "uoga-hunt-planner",
-  "private": true,
-  "version": "1.0.0",
-  "description": "Local static server for the U.O.G.A. Hunt Planner",
-  "scripts": {
-    "start": "node server.js",
-    "export:data": "node export-data.js",
-    "build:pages": "node scripts/build-pages-output.js"
-  },
-  "devDependencies": {
-    "pdf-parse": "^1.1.4",
-    "pdfkit": "^0.17.2",
-    "xlsx": "^0.18.5"
-  }
-}
+diff --git a/package.json b/package.json
+index feea76753b9a790f38dbea130c90bc78bd4bc4bb..70392e16b54e2cfa335e7669a2725035a839dd85 100644
+--- a/package.json
++++ b/package.json
+@@ -1,15 +1,18 @@
+ {
+   "name": "uoga-hunt-planner",
+   "private": true,
+   "version": "1.0.0",
+   "description": "Local static server for the U.O.G.A. Hunt Planner",
+   "scripts": {
+     "start": "node server.js",
+-    "export:data": "node export-data.js"
++    "export:data": "node export-data.js",
++    "audit:2026": "node audit-2026-completeness.js",
++    "apply:2026:supplements": "node apply-2026-supplements.js",
++    "audit:2026:top500": "node audit-2026-completeness.js --top=500"
+   },
+   "devDependencies": {
+     "pdf-parse": "^1.1.4",
+     "pdfkit": "^0.17.2",
+     "xlsx": "^0.18.5"
+   }
+ }

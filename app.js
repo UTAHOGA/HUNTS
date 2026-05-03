@@ -4033,7 +4033,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   syncPlannerNavState();
   updateStatus(`Loading Google map (${getGoogleKeySourceLabel()})...`);
 
-  const activeGoogleMapsKey = resolveGoogleMapsApiKey();
+  const activeGoogleMapsKey = await resolveGoogleMapsApiKeyWithLocalWait();
   if (!isLikelyGoogleApiKey(activeGoogleMapsKey)) {
     handleGoogleMapUnavailable('Google map disabled until a valid key is provided.');
   }
@@ -4062,6 +4062,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   syncMapModeFromHash();
   applyMapMode();
 });
+
+async function resolveGoogleMapsApiKeyWithLocalWait() {
+  let key = resolveGoogleMapsApiKey();
+  if (isLikelyGoogleApiKey(key) || !isLocalDevHost()) return key;
+
+  // config.local.js is dynamically injected from index.html in local dev and may land after DOMContentLoaded.
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    await new Promise((resolve) => window.setTimeout(resolve, 100));
+    key = resolveGoogleMapsApiKey();
+    if (isLikelyGoogleApiKey(key)) return key;
+  }
+  return key;
+}
 
 function sortWithPreferredOrder(arr, pref) {
     const map = new Map(pref.map((v, i) => [v, i]));
