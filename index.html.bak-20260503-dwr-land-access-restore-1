@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Builder</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
-  <link rel="stylesheet" href="./style.css?v=20260503-dwr-land-access-restore-1" />
+  <link rel="stylesheet" href="./style.css?v=20260430-dropdown-front-3" />
   <style>
     /* Light rebuild pass: keep app.js wiring, improve visual direction. */
     body { background-color:#f4efe4; }
@@ -340,13 +340,11 @@
   <script src="./config.local.js?v=20260430-local-config-1"></script>
   <script src="./uoga-analytics.js"></script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
-  <script src="./header-layout.js?v=20260503-dwr-land-access-restore-1"></script>
+  <script src="./header-layout.js?v=20260430-header-order-4"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
   <script src="app.js?v=20260430-earth-reorient-fix-16"></script>
   <script src="./google-basemap.js?v=20260430-terrain-default-1"></script>
 </body>
 </html>
-
-
 

@@ -1,4 +1,4 @@
-﻿    /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
+    /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
     :root {
       --bg: #f4efe4;
       --panel: rgba(255, 251, 244, 0.97);
@@ -197,13 +197,13 @@
     }
     .toggle-menu summary::-webkit-details-marker { display: none; }
     .toggle-menu summary::after {
-      content: "â–¾";
+      content: "▾";
       font-size: 11px;
       line-height: 1;
       color: var(--muted);
     }
     .toggle-menu-count { color: var(--accent); font-weight: 900; }
-    .toggle-menu[open] summary::after { content: "â–´"; }
+    .toggle-menu[open] summary::after { content: "▴"; }
     .toggle-menu-panel {
       position: absolute;
       top: calc(100% + 8px);
@@ -424,7 +424,7 @@
       z-index: 20090 !important;
     }
     :root {
-      --dwr-iframe-top-crop: 0px;
+      --dwr-iframe-top-crop: 42px;
     }
     .google-earth-frame,
     .dwr-map-frame {
@@ -442,7 +442,7 @@
       height: 100%;
     }
     .dwr-map-frame {
-      top:0;
+      top: calc(-1 * var(--dwr-iframe-top-crop));
     }
     
     /* --- NEW OUTFITTER LOGO & LINK STYLES --- */
@@ -833,4 +833,3 @@
         font-size: 11px;
       }
     }
-

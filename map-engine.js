@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   const DWR_MAP_URL = 'https://dwrapps.utah.gov/huntboundary/hbstart';
 
   function $(id) { return document.getElementById(id); }
@@ -41,10 +41,10 @@
         left:0 !important;
         right:0 !important;
         bottom:0 !important;
-        top:-42px !important;
+        top:0 !important;
         width:100% !important;
-        height:calc(100% + 42px) !important;
-        min-height:calc(100% + 42px) !important;
+        height:100% !important;
+        min-height:100% !important;
         border:0 !important;
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
@@ -192,3 +192,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind, { once: true });
   else bind();
 })();
+
