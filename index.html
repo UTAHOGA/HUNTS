@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -81,7 +81,8 @@
     }
 
   </style>
-</head>
+  <script src="https://js.sentry-cdn.com/26137c5576f01423efc85f47076f9548.min.js" crossorigin="anonymous"></script>
+  <script src="./sentry-browser-init.js"></script></head>
 <body>
   <section class="page-nav-strip" aria-label="Site navigation">
     <div class="page-nav-case">
@@ -240,29 +241,19 @@
           <div class="ownership-case">
             <div class="toggle-row">
               <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-              <details class="toggle-menu">
-                <summary id="federalLayersSummary">Federal</summary>
-                <div class="toggle-menu-panel">
-                  <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-                  <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-                  <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM Detail</span></label>
-                </div>
-              </details>
-              <details class="toggle-menu">
-                <summary id="stateLayersSummary">State</summary>
-                <div class="toggle-menu-panel">
-                  <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-                  <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
-                </div>
-              </details>
-              <details class="toggle-menu">
-                <summary id="privateLayersSummary">Private</summary>
-                <div class="toggle-menu-panel">
-                  <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private Lands</span></label>
-                  <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-                </div>
-              </details>
+            </div>
+            <div style="display:none;" aria-hidden="true">
+              <span id="federalLayersSummary">Federal</span>
+              <span id="stateLayersSummary">State</span>
+              <span id="privateLayersSummary">Private</span>
+              <input id="toggleUSFS" type="checkbox" checked>
+              <input id="toggleBLM" type="checkbox" checked>
+              <input id="toggleBLMDetail" type="checkbox">
+              <input id="toggleSITLA" type="checkbox">
+              <input id="toggleStateParks" type="checkbox">
+              <input id="toggleWma" type="checkbox">
+              <input id="togglePrivate" type="checkbox">
+              <input id="toggleCwmu" type="checkbox">
             </div>
           </div>
         </div>
@@ -346,26 +337,8 @@
   </section>
 
   <script src="./config.js?v=20260423-terrain-inpage-1"></script>
-  <script>
-    (function () {
-      var host = String(window.location && window.location.hostname || '').toLowerCase();
-      var isLocal = window.location.protocol === 'file:'
-        || host === 'localhost'
-        || host === '127.0.0.1'
-        || host === '::1'
-        || host === '[::1]'
-        || host.endsWith('.local')
-        || host.endsWith('.lan')
-        || /^10\./.test(host)
-        || /^192\.168\./.test(host)
-        || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
-      if (!isLocal) return;
-      var localScript = document.createElement('script');
-      localScript.src = './config.local.js?v=20260430-local-config-1';
-      localScript.async = false;
-      document.head.appendChild(localScript);
-    })();
-  </script>
+  <script src="./config.local.js?v=20260430-local-config-1"></script>
+  <script src="./uoga-analytics.js"></script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
   <script src="./header-layout.js?v=20260430-header-order-4"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
@@ -374,3 +347,4 @@
   <script src="./google-basemap.js?v=20260430-terrain-default-1"></script>
 </body>
 </html>
+
