@@ -1,25 +1,49 @@
 /*
   Local development overrides for U.O.G.A.
   ------------------------------------------------------------------
-  1) Copy this file to `config.local.js`
-  2) Replace YOUR_LOCAL_GOOGLE_MAPS_KEY with your localhost key
-  3) Do not commit config.local.js (it is git-ignored)
+  This file is loaded by index.html, so it must stay harmless when the
+  site is served from production or GitHub Pages.
+
+  For local testing, put a browser-restricted localhost key below or set
+  localStorage.uoga_google_maps_api_key in your browser dev tools.
 */
 (function () {
+  function isPrivateIpv4Host(host) {
+    return /^10\./.test(host)
+      || /^192\.168\./.test(host)
+      || /^172\.(1[6-9]|2\d|3[0-1])\./.test(host);
+  }
+
+  function isLocalDevHost() {
+    if (typeof window === 'undefined') return false;
+    if (window.location && window.location.protocol === 'file:') return true;
+    var host = String((window.location && window.location.hostname) || '').toLowerCase();
+    return host === 'localhost'
+      || host === '127.0.0.1'
+      || host === '::1'
+      || host === '[::1]'
+      || host.endsWith('.local')
+      || host.endsWith('.lan')
+      || isPrivateIpv4Host(host);
+  }
+
+  if (!isLocalDevHost()) return;
+
   var localConfig = {
-    GOOGLE_MAPS_API_KEY: 'AIzaSyAjCdthiKfjonK6JNuipHQBek8NSRnPriQ',
-    POSTHOG_PROJECT_KEY: 'phc_wUu7Hy6xrCLfYBqJQXwAMrZNY6huYN43wwcVZHJFW5i8',
+    GOOGLE_MAPS_API_KEY: '',
+    POSTHOG_PROJECT_KEY: '',
     POSTHOG_CONFIG: {
-      // Keep false by default to control cost and privacy.
       enableSessionRecording: false
     }
   };
 
   window.UOGA_LOCAL_CONFIG = Object.assign({}, window.UOGA_LOCAL_CONFIG || {}, localConfig);
 
-  // Keep compatibility with existing config consumers.
-  if (window.UOGA_CONFIG && localConfig.GOOGLE_MAPS_API_KEY && /^AIza[0-9A-Za-z_-]{35}$/.test(localConfig.GOOGLE_MAPS_API_KEY)) {
+  if (
+    window.UOGA_CONFIG
+    && localConfig.GOOGLE_MAPS_API_KEY
+    && /^AIza[0-9A-Za-z_-]{35}$/.test(localConfig.GOOGLE_MAPS_API_KEY)
+  ) {
     window.UOGA_CONFIG.GOOGLE_MAPS_API_KEY = localConfig.GOOGLE_MAPS_API_KEY;
   }
 })();
- 
