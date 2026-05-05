@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="2025_Pheasant_Release_Areas" id="2025_Pheasant_Release_Areas">
+	<SimpleField name="FID" type="int"></SimpleField>
+	<SimpleField name="Region" type="string"></SimpleField>
+	<SimpleField name="Species" type="string"></SimpleField>
+	<SimpleField name="Hunt" type="string"></SimpleField>
+	<SimpleField name="Contact" type="string"></SimpleField>
+	<SimpleField name="Location" type="string"></SimpleField>
+	<SimpleField name="Point_X" type="float"></SimpleField>
+	<SimpleField name="Point_Y" type="float"></SimpleField>
+	<SimpleField name="URL" type="string"></SimpleField>
+</Schema>
+<Folder><name>2025_Pheasant_Release_Areas</name>
+  <Placemark id="2025_Pheasant_Release_Areas.1">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">1</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Joseph Christensen</SimpleData>
+		<SimpleData name="Location">Desert Lake WMA</SimpleData>
+		<SimpleData name="Point_X">-110.79808209</SimpleData>
+		<SimpleData name="Point_Y">39.37685366</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.37685366%2C-110.79808209</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.798093428265,39.3768596197796</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.2">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">2</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Joseph Christensen</SimpleData>
+		<SimpleData name="Location">Huntington WMA</SimpleData>
+		<SimpleData name="Point_X">-110.96721143</SimpleData>
+		<SimpleData name="Point_Y">39.35860607</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.35860607%2C-110.96721143</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.967222800541,39.3586120166528</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.3">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">3</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Joseph Christensen</SimpleData>
+		<SimpleData name="Location">Gordon Creek WMA - Upper Fields</SimpleData>
+		<SimpleData name="Point_X">-111.00883927</SimpleData>
+		<SimpleData name="Point_Y">39.6658343</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.6658343%2C-111.00883927</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.008850684095,39.6658402769098</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.4">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">4</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Joseph Christensen</SimpleData>
+		<SimpleData name="Location">Upper San Rafael WMA - Fuller Bottom</SimpleData>
+		<SimpleData name="Point_X">-110.85632315</SimpleData>
+		<SimpleData name="Point_Y">39.1174378</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.1174378%2C-110.85632315</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.856334463629,39.1174437210821</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.5">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">5</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Joseph Christensen</SimpleData>
+		<SimpleData name="Location">Lower San Rafael WMA - Frenchman's</SimpleData>
+		<SimpleData name="Point_X">-110.33754115</SimpleData>
+		<SimpleData name="Point_Y">38.78328474</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.78328474%2C-110.33754115</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.337552325043,38.7832906596998</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.6">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">6</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.85979562</SimpleData>
+		<SimpleData name="Point_Y">40.00392415</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.00392415%2C-111.85979562</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.85980725356,40.003930108524</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.7">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">7</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.90957741</SimpleData>
+		<SimpleData name="Point_Y">40.00800031</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.00800031%2C-111.90957741</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.909589053319,40.0080062592804</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.8">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">8</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.87988001</SimpleData>
+		<SimpleData name="Point_Y">39.96288612</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.96288612%2C-111.87988001</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.879891635765,39.9628920687121</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.9">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">9</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">KD Bass Walk in Access</SimpleData>
+		<SimpleData name="Point_X">-111.88758839</SimpleData>
+		<SimpleData name="Point_Y">39.9137695</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.9137695%2C-111.88758839</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.887600018133,39.9137754412887</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.10">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">10</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Burraston Ponds WMA</SimpleData>
+		<SimpleData name="Point_X">-111.86992367</SimpleData>
+		<SimpleData name="Point_Y">39.79525626</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.79525626%2C-111.86992367</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.869935275993,39.7952621891293</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.11">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">11</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP_West Mtn Rd</SimpleData>
+		<SimpleData name="Point_X">-111.79482179</SimpleData>
+		<SimpleData name="Point_Y">40.1068709</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.1068709%2C-111.79482179</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.794833422396,40.1068768703889</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.12">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">12</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.77371421</SimpleData>
+		<SimpleData name="Point_Y">40.11988672</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.11988672%2C-111.77371421</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.773725836624,40.1198926986584</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.13">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">13</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">J.Robinson</SimpleData>
+		<SimpleData name="Location">Walt Fitzgerald WMA</SimpleData>
+		<SimpleData name="Point_X">-112.41372707</SimpleData>
+		<SimpleData name="Point_Y">40.18694539</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.18694539%2C-112.41372707</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.413738833381,40.1869513268525</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.14">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">14</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Stewart Lake WMA</SimpleData>
+		<SimpleData name="Point_X">-109.35002094</SimpleData>
+		<SimpleData name="Point_Y">40.35595327</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.35595327%2C-109.35002094</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-109.350032091914,40.3559594557093</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.15">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">15</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">J.Robinson</SimpleData>
+		<SimpleData name="Location">Timpie WMA</SimpleData>
+		<SimpleData name="Point_X">-112.63570719</SimpleData>
+		<SimpleData name="Point_Y">40.75468702</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.75468702%2C-112.63570719</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.635719078025,40.7546930024382</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.16">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">16</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Little Montes Creek WMA</SimpleData>
+		<SimpleData name="Point_X">-109.92914193</SimpleData>
+		<SimpleData name="Point_Y">40.34758082</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.34758082%2C-109.92914193</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-109.929153204853,40.3475869559197</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.17">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">17</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Kevin Conway WMA</SimpleData>
+		<SimpleData name="Point_X">-110.03550539</SimpleData>
+		<SimpleData name="Point_Y">40.18243649</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.18243649%2C-110.03550539</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.035516671085,40.1824426045471</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.18">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">18</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Browns Park WMA</SimpleData>
+		<SimpleData name="Point_X">-109.14636764</SimpleData>
+		<SimpleData name="Point_Y">40.88885915</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.88885915%2C-109.14636764</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-109.146378822945,40.8888654101783</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.19">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">19</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Starvation State Park, Above Reservoir</SimpleData>
+		<SimpleData name="Point_X">-110.54460317</SimpleData>
+		<SimpleData name="Point_Y">40.15632918</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.15632918%2C-110.54460317</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.544614546005,40.1563352519593</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.20">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">20</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Starvation State Park, below dam</SimpleData>
+		<SimpleData name="Point_X">-110.43877395</SimpleData>
+		<SimpleData name="Point_Y">40.18649816</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.18649816%2C-110.43877395</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.438785306974,40.1865042437379</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.21">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">21</SimpleData>
+		<SimpleData name="Region">Northeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Dallon Christensen</SimpleData>
+		<SimpleData name="Location">Pariette Wetlands BLM</SimpleData>
+		<SimpleData name="Point_X">-109.77332878</SimpleData>
+		<SimpleData name="Point_Y">40.03614966</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.03614966%2C-109.77332878</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-109.773339979546,40.0361557780789</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.22">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">22</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Vance Mumford</SimpleData>
+		<SimpleData name="Location">Redmond WMA</SimpleData>
+		<SimpleData name="Point_X">-111.88162564</SimpleData>
+		<SimpleData name="Point_Y">38.97359301</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.97359301%2C-111.88162564</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.881637144109,38.97359884707</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.23">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">23</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Vance Mumford</SimpleData>
+		<SimpleData name="Location">Richfield WMA north of Hwy</SimpleData>
+		<SimpleData name="Point_X">-112.03135727</SimpleData>
+		<SimpleData name="Point_Y">38.77518435</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.77518435%2C-112.03135727</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.03136878123,38.7751901501325</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.24">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">24</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Vance Mumford</SimpleData>
+		<SimpleData name="Location">Richfield WMA South of Hwy 119</SimpleData>
+		<SimpleData name="Point_X">-112.03513382</SimpleData>
+		<SimpleData name="Point_Y">38.76528034</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.76528034%2C-112.03513382</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.035145331024,38.7652861321627</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.25">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">25</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Vance Mumford</SimpleData>
+		<SimpleData name="Location">Annabella WMA</SimpleData>
+		<SimpleData name="Point_X">-112.07633254</SimpleData>
+		<SimpleData name="Point_Y">38.71821748</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.71821748%2C-112.07633254</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.076344061519,38.7182232708105</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.26">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">26</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Kingston Cyn WMA</SimpleData>
+		<SimpleData name="Point_X">-112.11392644</SimpleData>
+		<SimpleData name="Point_Y">38.1928157</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.1928157%2C-112.11392644</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.113937902186,38.1928214273068</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.27">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">27</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">435-691-1383</SimpleData>
+		<SimpleData name="Location">Kingston Cyn WMA</SimpleData>
+		<SimpleData name="Point_X">-112.08242658</SimpleData>
+		<SimpleData name="Point_Y">38.1816844</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.1816844%2C-112.08242658</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.082438040167,38.181690122951</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.28">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">28</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Teresa Griffin</SimpleData>
+		<SimpleData name="Location">Quichapa Lake</SimpleData>
+		<SimpleData name="Point_X">-113.20157277</SimpleData>
+		<SimpleData name="Point_Y">37.63518985</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=37.63518985%2C-113.20157277</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-113.201584387426,37.6351954345826</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.29">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">29</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Teresa Griffin</SimpleData>
+		<SimpleData name="Location">RockyFord WIA</SimpleData>
+		<SimpleData name="Point_X">-112.87781941</SimpleData>
+		<SimpleData name="Point_Y">38.21365707</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.21365707%2C-112.87781941</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.877831029921,38.213662745321</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.30">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">30</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Jim Lamb</SimpleData>
+		<SimpleData name="Location">Bicknell WMA</SimpleData>
+		<SimpleData name="Point_X">-111.53382954</SimpleData>
+		<SimpleData name="Point_Y">38.30245116</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.30245116%2C-111.53382954</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.533840895455,38.3024569339576</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.31">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">31</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Lynn Zubeck</SimpleData>
+		<SimpleData name="Location">Clear Lake</SimpleData>
+		<SimpleData name="Point_X">-112.62839538</SimpleData>
+		<SimpleData name="Point_Y">39.11583044</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.11583044%2C-112.62839538</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.628407049429,39.1158362348565</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.32">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">32</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Lynn Zubeck</SimpleData>
+		<SimpleData name="Location">Pahvant upland area</SimpleData>
+		<SimpleData name="Point_X">-112.38703953</SimpleData>
+		<SimpleData name="Point_Y">39.06280196</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.06280196%2C-112.38703953</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.387051152914,39.0628077664808</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.33">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">33</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Chad Cranney</SimpleData>
+		<SimpleData name="Location">Public Shooting Grounds</SimpleData>
+		<SimpleData name="Point_X">-112.30636072</SimpleData>
+		<SimpleData name="Point_Y">41.57776613</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.57776613%2C-112.30636072</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.306372656849,41.5777722268072</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.34">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">34</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Chad Cranney</SimpleData>
+		<SimpleData name="Location">Salt Creek WMA</SimpleData>
+		<SimpleData name="Point_X">-112.24524927</SimpleData>
+		<SimpleData name="Point_Y">41.65374143</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.65374143%2C-112.24524927</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.245261206809,41.6537475366467</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.35">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">35</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Sam Robertson</SimpleData>
+		<SimpleData name="Location">Bud Phelps WMA</SimpleData>
+		<SimpleData name="Point_X">-111.93213898</SimpleData>
+		<SimpleData name="Point_Y">41.72629626</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.72629626%2C-111.93213898</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.932150855229,41.7263023954286</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.36">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">36</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Sam Robertson</SimpleData>
+		<SimpleData name="Location">Sagmore Farms WIA</SimpleData>
+		<SimpleData name="Point_X">-111.84047184</SimpleData>
+		<SimpleData name="Point_Y">41.59387982</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.59387982%2C-111.84047184</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.840483678823,41.5938859543125</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.37">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">37</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Rich Hansen</SimpleData>
+		<SimpleData name="Location">Harold S. Crane WMA</SimpleData>
+		<SimpleData name="Point_X">-112.13028173</SimpleData>
+		<SimpleData name="Point_Y">41.3359645</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.3359645%2C-112.13028173</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.130293597734,41.3359705859346</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.38">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">38</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Rich Hansen</SimpleData>
+		<SimpleData name="Location">Ogden Bay WMA</SimpleData>
+		<SimpleData name="Point_X">-112.17319709</SimpleData>
+		<SimpleData name="Point_Y">41.19738757</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.19738757%2C-112.17319709</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.173208942261,41.197393635993</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.39">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">39</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Dave England</SimpleData>
+		<SimpleData name="Location">Farmington Bay</SimpleData>
+		<SimpleData name="Point_X">-111.94660415</SimpleData>
+		<SimpleData name="Point_Y">40.93258124</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.93258124%2C-111.94660415</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.946615924989,40.9325872887074</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.40">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">40</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Rusty Robinson</SimpleData>
+		<SimpleData name="Location">Fountain Green WMA</SimpleData>
+		<SimpleData name="Point_X">-111.61409902</SimpleData>
+		<SimpleData name="Point_Y">39.61655939</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.61655939%2C-111.61409902</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.614110551167,39.6165653139528</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.41">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">41</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">J.Robinson</SimpleData>
+		<SimpleData name="Location">Pine Canyon WMA</SimpleData>
+		<SimpleData name="Point_X">-112.23560457</SimpleData>
+		<SimpleData name="Point_Y">40.55326349</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.55326349%2C-112.23560457</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.235616343252,40.5532694804833</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.42">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">42</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Lower Hobble Creek WMA</SimpleData>
+		<SimpleData name="Point_X">-111.64939195</SimpleData>
+		<SimpleData name="Point_Y">40.18415249</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.18415249%2C-111.64939195</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.649403555761,40.184158484222</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.43">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">43</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Powell Slough WMA</SimpleData>
+		<SimpleData name="Point_X">-111.73781527</SimpleData>
+		<SimpleData name="Point_Y">40.27236121</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.27236121%2C-111.73781527</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.737826911185,40.2723672014378</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.44">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">44</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Quichapa Lake</SimpleData>
+		<SimpleData name="Point_X">-113.19769173</SimpleData>
+		<SimpleData name="Point_Y">37.62276467</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=37.62276467%2C-113.19769173</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-113.1977033447,37.6227702553593</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.45">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">45</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Mill Race</SimpleData>
+		<SimpleData name="Point_X">-111.65503837</SimpleData>
+		<SimpleData name="Point_Y">40.20076289</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.20076289%2C-111.65503837</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.655049981158,40.2007688837631</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.46">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">46</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Wallsburg WMA</SimpleData>
+		<SimpleData name="Point_X">-111.41434272</SimpleData>
+		<SimpleData name="Point_Y">40.40887178</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.40887178%2C-111.41434272</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.414354311342,40.4088778178821</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.47">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">47</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Rachael Tuckett</SimpleData>
+		<SimpleData name="Location">RChristensen WIA</SimpleData>
+		<SimpleData name="Point_X">-112.1992803</SimpleData>
+		<SimpleData name="Point_Y">41.91314853</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.91314853%2C-112.1992803</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.199292260459,41.9131546643727</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.48">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">48</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Rachael Tuckett</SimpleData>
+		<SimpleData name="Location">Nature Conservancy</SimpleData>
+		<SimpleData name="Point_X">-112.00853595</SimpleData>
+		<SimpleData name="Point_Y">41.03764235</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.03764235%2C-112.00853595</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.008547747987,41.0376484133722</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.49">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">49</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Sam Robertson</SimpleData>
+		<SimpleData name="Location">Bear River Land Conservancy/BR Access WMA</SimpleData>
+		<SimpleData name="Point_X">-111.90161664</SimpleData>
+		<SimpleData name="Point_Y">41.91849525</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.91849525%2C-111.90161664</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.901628538106,41.918501408637</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.50">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">50</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Manti Meadows</SimpleData>
+		<SimpleData name="Point_X">-111.66306375</SimpleData>
+		<SimpleData name="Point_Y">39.24909224</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.24909224%2C-111.66306375</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.663075241547,39.2490981197132</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.51">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">51</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Santaquin WMA</SimpleData>
+		<SimpleData name="Point_X">-111.80055962</SimpleData>
+		<SimpleData name="Point_Y">39.93673934</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.93673934%2C-111.80055962</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.800571232509,39.9367452925472</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.52">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">52</SimpleData>
+		<SimpleData name="Region">Northern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Chad Cranney</SimpleData>
+		<SimpleData name="Location">Jensen Acquisition - North Public Shooting Grounds</SimpleData>
+		<SimpleData name="Point_X">-112.28976364</SimpleData>
+		<SimpleData name="Point_Y">41.62269525</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=41.62269525%2C-112.28976364</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-112.289775581289,41.6227013448355</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.53">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">53</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact">Brad Crompton</SimpleData>
+		<SimpleData name="Location">Gordon Creek WMA - Gordon Creek</SimpleData>
+		<SimpleData name="Point_X">-110.9530886</SimpleData>
+		<SimpleData name="Point_Y">39.65105402</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.65105402%2C-110.9530886</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.953099999684,39.6510600001136</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.54">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">54</SimpleData>
+		<SimpleData name="Region">Southeastern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Brad Crompton</SimpleData>
+		<SimpleData name="Location">Gordon Creek WMA</SimpleData>
+		<SimpleData name="Point_X">-110.98307859</SimpleData>
+		<SimpleData name="Point_Y">39.64628402</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.64628402%2C-110.98307859</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-110.983090000323,39.6462900003341</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.55">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">55</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">Nephi WMA</SimpleData>
+		<SimpleData name="Point_X">-111.8849723</SimpleData>
+		<SimpleData name="Point_Y">39.75589717</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.75589717%2C-111.8849723</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.884983906633,39.7559030926536</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.56">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">56</SimpleData>
+		<SimpleData name="Region">Southern</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact">Morgan Hinton</SimpleData>
+		<SimpleData name="Location">West Bicknell Bottoms WMA</SimpleData>
+		<SimpleData name="Point_X">-111.56360864</SimpleData>
+		<SimpleData name="Point_Y">38.28813423</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=38.28813423%2C-111.56360864</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.563620000411,38.2881399998297</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.57">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">57</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP_Lincoln Beach</SimpleData>
+		<SimpleData name="Point_X">-111.80329102</SimpleData>
+		<SimpleData name="Point_Y">40.13827607</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.13827607%2C-111.80329102</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.803291015881,40.1382760651955</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.58">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">58</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.89232158</SimpleData>
+		<SimpleData name="Point_Y">39.97781196</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.97781196%2C-111.89232158</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.892321580334,39.9778119567936</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.59">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">59</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.88941407</SimpleData>
+		<SimpleData name="Point_Y">39.95349685</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=39.95349685%2C-111.88941407</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.889414065238,39.9534968490867</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.60">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">60</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP_Lincoln Beach</SimpleData>
+		<SimpleData name="Point_X">-111.80420565</SimpleData>
+		<SimpleData name="Point_Y">40.12456282</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.12456282%2C-111.80420565</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.804205649062,40.1245628245501</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.61">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">61</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.7894535</SimpleData>
+		<SimpleData name="Point_Y">40.11820462</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.11820462%2C-111.7894535</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.789453500195,40.1182046190005</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.62">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">62</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">ULWP</SimpleData>
+		<SimpleData name="Point_X">-111.75988483</SimpleData>
+		<SimpleData name="Point_Y">40.14164909</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.14164909%2C-111.75988483</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.75988482739,40.1416490940456</coordinates></Point>
+  </Placemark>
+  <Placemark id="2025_Pheasant_Release_Areas.63">
+	<ExtendedData><SchemaData schemaUrl="#2025_Pheasant_Release_Areas">
+		<SimpleData name="FID">63</SimpleData>
+		<SimpleData name="Region">Central</SimpleData>
+		<SimpleData name="Species">Pheasant</SimpleData>
+		<SimpleData name="Hunt">Youth and General</SimpleData>
+		<SimpleData name="Contact"></SimpleData>
+		<SimpleData name="Location">BLM</SimpleData>
+		<SimpleData name="Point_X">-111.74545454</SimpleData>
+		<SimpleData name="Point_Y">40.14431459</SimpleData>
+		<SimpleData name="URL">https://www.google.com/maps/search/?api=1&amp;query=40.14431459%2C-111.74545454</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-111.745454543093,40.1443145913285</coordinates></Point>
+  </Placemark>
+</Folder>
+</Document></kml>
