@@ -1,9 +1,0 @@
-file,sheet,header_row,header_cells,status
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\BUCK DEER.xlsx,Sheet1,1,"Southeastern Navajo Buck Deer | DB0001 | Buck | Deer | Any Legal Weapon | Tribal | Oct 18, 2025 - Oct 26, 2025",ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\2026 Elk.xlsx,Sheet1,1,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits | Column1,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\DOE_PRONGHORN.xlsx,Sheet1,2,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\2026_BUCK_PRONGHORN.xlsx,Sheet1,2,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\2026_ANTLERLESS_ELK.xlsx,Sheet1,2,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\ANTLERLESS_MOOSE.xlsx,Sheet1,2,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\deer hunter's choice.xlsx,Sheet1,1,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | permits,ok
-D:\DOCUMENTS\GitHub\HUNTS\pipeline\raw\2026\xlsx\2026_MOUNTAIN_GOAT.xlsx,Sheet1,2,hunt_name | hunt-number | sex-type | species | weapon | hunt-type | season | 2025_res_permit | 2025_nr_permit | Total Permits,ok

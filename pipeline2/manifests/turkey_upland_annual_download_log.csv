@@ -1,6 +1,0 @@
-url,status,dest_path
-https://wildlife.utah.gov/pdf/uplandgame/annual_reports/2020-21.pdf,failed:HTTPError,
-https://wildlife.utah.gov/pdf/uplandgame/annual_reports/2021-22.pdf,failed:HTTPError,
-https://wildlife.utah.gov/pdf/uplandgame/annual_reports/2022-23.pdf,failed:HTTPError,
-https://wildlife.utah.gov/pdf/uplandgame/annual_reports/2023-24.pdf,failed:HTTPError,
-https://wildlife.utah.gov/pdf/uplandgame/annual_reports/2024-25.pdf,failed:HTTPError,
