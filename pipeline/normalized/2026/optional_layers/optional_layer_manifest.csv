@@ -1,0 +1,2 @@
+layer_id,title,status,source_file,web_geojson_path,feature_count,geometry_type,bbox_minx,bbox_miny,bbox_maxx,bbox_maxy,notes
+mule_deer_migration_corridors,Mule Deer Migration Map,prepared_not_enabled,D:/DOCUMENTS/GitHub/HUNTS/pipeline/raw/geojson/Unmapped_Mule_Deer_Migration_Corridors.geojson,D:/DOCUMENTS/GitHub/HUNTS\data\optional_layers\mule_deer_migration_corridors.geojson,2,MultiPolygon,1000000000,1000000000,-1000000000,-1000000000,Optional thematic overlay; not wired to map UI toggle yet.
