@@ -42,3 +42,39 @@ Notes:
 - This load is non-destructive (copy only). Existing site files remain where they were.
 - Future runs should append/update manifests and add run timestamps.
 
+## Truth Build + Cross-Check (2026)
+
+Use this workflow to keep web runtime data fast and trustworthy:
+
+1. Rebuild synchronized SQLite from canonical JSON + full boundary GeoJSON.
+2. Cross-check canonical IDs against full/lite GeoJSON (including composite `member_boundary_ids`).
+3. Optionally scan downloaded geodatabase exports as an independent reference signal.
+
+Scripts:
+- `pipeline/scripts/build_truth_sqlite_from_json.py`
+- `pipeline/scripts/crosscheck_truth_sources.py`
+- `pipeline/scripts/build_and_compare_hunt_geodatabases.py`
+
+Example commands (Windows PowerShell):
+
+```powershell
+& "C:\Users\tyler\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" `
+  pipeline\scripts\build_truth_sqlite_from_json.py
+
+& "C:\Users\tyler\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" `
+  pipeline\scripts\crosscheck_truth_sources.py
+
+& "C:\Users\tyler\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" `
+  pipeline\scripts\build_and_compare_hunt_geodatabases.py `
+  --source-dir "pipeline\RAW\hunt_unit_mapping\sql lite" `
+  --output-db "processed_data\truth_downloads_comprehensive.sqlite" `
+  --active-db "hunt_master_canonical_2026_built.sqlite" `
+  --report "processed_data\truth_downloads_vs_active_db_report.md"
+```
+
+Expected outputs:
+- `processed_data/hunt_truth_from_json.sqlite`
+- `processed_data/truth_crosscheck_report.md`
+- `processed_data/truth_crosscheck_report.json`
+- `processed_data/truth_downloads_comprehensive.sqlite`
+- `processed_data/truth_downloads_vs_active_db_report.md`

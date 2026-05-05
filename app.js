@@ -309,8 +309,12 @@ function buildBoundaryMatcher(hunts) {
     if (!boundaryId) names.forEach(name => prefixNames.add(name));
   });
   return {
-    matches(featureBoundaryId, featureName) {
-      if (boundaryIds.has(featureBoundaryId)) return true;
+    matches(featureBoundaryIds, featureName) {
+      const ids = Array.isArray(featureBoundaryIds) ? featureBoundaryIds : [featureBoundaryIds];
+      for (const id of ids) {
+        const normalizedId = safe(id).trim();
+        if (normalizedId && boundaryIds.has(normalizedId)) return true;
+      }
       if (exactNames.has(featureName)) return true;
       for (const prefix of prefixNames) {
         if (featureName.startsWith(`${prefix}-`) || prefix.startsWith(`${featureName}-`)) return true;
@@ -318,6 +322,61 @@ function buildBoundaryMatcher(hunts) {
       return false;
     }
   };
+}
+
+function parseBoundaryIdCandidates(value) {
+  if (Array.isArray(value)) {
+    return value
+      .flatMap(parseBoundaryIdCandidates)
+      .map(v => safe(v).trim())
+      .filter(Boolean);
+  }
+  if (value == null) return [];
+  const text = safe(value).trim();
+  if (!text) return [];
+  if ((text.startsWith('[') && text.endsWith(']')) || (text.startsWith('{') && text.endsWith('}'))) {
+    try {
+      return parseBoundaryIdCandidates(JSON.parse(text));
+    } catch (_) {
+      // Fall through to delimiter parsing.
+    }
+  }
+  if (/[,\|;\/]/.test(text)) {
+    return text
+      .split(/[,\|;\/]/)
+      .map(v => safe(v).trim())
+      .filter(Boolean);
+  }
+  return [text];
+}
+
+function getFeatureBoundaryCandidateIds(props = {}) {
+  const ids = new Set();
+  const add = (value) => {
+    parseBoundaryIdCandidates(value).forEach(id => {
+      const normalized = safe(id).trim();
+      if (normalized) ids.add(normalized);
+    });
+  };
+  add(props?.BoundaryID);
+  add(props?.Boundary_Id);
+  add(props?.BOUNDARYID);
+  add(props?.boundary_id);
+  add(props?.member_boundary_ids);
+  add(props?.memberBoundaryIds);
+  return [...ids];
+}
+
+function getDataFeatureBoundaryCandidateIds(feature) {
+  if (!feature?.getProperty) return [];
+  return getFeatureBoundaryCandidateIds({
+    BoundaryID: feature.getProperty('BoundaryID'),
+    Boundary_Id: feature.getProperty('Boundary_Id'),
+    BOUNDARYID: feature.getProperty('BOUNDARYID'),
+    boundary_id: feature.getProperty('boundary_id'),
+    member_boundary_ids: feature.getProperty('member_boundary_ids'),
+    memberBoundaryIds: feature.getProperty('memberBoundaryIds')
+  });
 }
 
 let officialBoundaryLookupPromise = null;
@@ -2280,15 +2339,16 @@ function closeSelectedHuntPopup() {
 }
 
 function getFeatureMatches(feature) {
-  const boundaryId = safe(feature?.getProperty('BoundaryID'));
+  const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(feature);
+  const boundaryIdSet = new Set(featureBoundaryIds);
   const boundaryName = normalizeBoundaryKey(feature?.getProperty('Boundary_Name'));
   const displaySource = getDisplayHunts();
   const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
   return source.filter(h => {
-    const hBoundaryId = safe(getBoundaryId(h));
+    const hBoundaryId = safe(getBoundaryId(h)).trim();
     const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
     const hUnitName = normalizeBoundaryKey(getUnitName(h));
-    return hBoundaryId === boundaryId || hUnitCode === boundaryName || hUnitName === boundaryName;
+    return (hBoundaryId && boundaryIdSet.has(hBoundaryId)) || hUnitCode === boundaryName || hUnitName === boundaryName;
   });
 }
 
@@ -3033,7 +3093,7 @@ function getGoogleEarth3dBoundaryFeatures() {
     const matcher = buildBoundaryMatcher([selectedHunt]);
     return features.filter(feature => {
       const props = feature?.properties || {};
-      return matcher.matches(safe(props.BoundaryID), normalizeBoundaryKey(props.Boundary_Name));
+      return matcher.matches(getFeatureBoundaryCandidateIds(props), normalizeBoundaryKey(props.Boundary_Name));
     }).slice(0, 8);
   }
 
@@ -3042,7 +3102,8 @@ function getGoogleEarth3dBoundaryFeatures() {
     const selectedName = normalizeBoundaryKey(selectedBoundaryFeature.getProperty?.('Boundary_Name'));
     return features.filter(feature => {
       const props = feature?.properties || {};
-      return (selectedId && safe(props.BoundaryID) === selectedId)
+      const featureIds = getFeatureBoundaryCandidateIds(props);
+      return (selectedId && featureIds.includes(selectedId))
         || (selectedName && normalizeBoundaryKey(props.Boundary_Name) === selectedName);
     }).slice(0, 8);
   }
@@ -3052,7 +3113,7 @@ function getGoogleEarth3dBoundaryFeatures() {
   const matcher = buildBoundaryMatcher(displayHunts);
   return features.filter(feature => {
     const props = feature?.properties || {};
-    return matcher.matches(safe(props.BoundaryID), normalizeBoundaryKey(props.Boundary_Name));
+    return matcher.matches(getFeatureBoundaryCandidateIds(props), normalizeBoundaryKey(props.Boundary_Name));
   }).slice(0, 12);
 }
 
@@ -3327,7 +3388,6 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
   if (!Polygon3DElement) return;
 
   clearGoogleEarth3dBoundaryOverlays();
-  await getHuntBoundaryGeoJson().catch(err => console.error('3D hunt boundary GeoJSON failed', err));
   const boundaryFeatures = getGoogleEarth3dBoundaryFeatures();
   const focusFeatures = [];
   let drawnOverlays = 0;
@@ -3573,9 +3633,9 @@ function getSelectedHuntCenter() {
   const matcher = buildBoundaryMatcher([selectedHunt]);
   let center = null;
   huntUnitsLayer.forEach(f => {
-    const id = safe(f.getProperty('BoundaryID'));
+    const ids = getDataFeatureBoundaryCandidateIds(f);
     const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(id, name)) {
+    if (matcher.matches(ids, name)) {
       const bounds = new google.maps.LatLngBounds();
       f.getGeometry().forEachLatLng(ll => bounds.extend(ll));
       center = bounds.getCenter();
@@ -3716,16 +3776,16 @@ function styleBoundaryLayer() {
     const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
     let visibleMatches = 0;
     huntUnitsLayer.forEach(f => {
-        const id = safe(f.getProperty('BoundaryID'));
+        const ids = getDataFeatureBoundaryCandidateIds(f);
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-        if (showAllUnits || matcher.matches(id, name)) visibleMatches += 1;
+        if (showAllUnits || matcher.matches(ids, name)) visibleMatches += 1;
     });
     const showFilteredMatches = showBoundaries && (showAllUnits || visibleMatches > 0);
     huntUnitsLayer.setStyle(f => {
-        const id = safe(f.getProperty('BoundaryID'));
+        const ids = getDataFeatureBoundaryCandidateIds(f);
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-        const isMatch = showAllUnits || matcher.matches(id, name);
-        const isSelected = !!selectedMatcher && selectedMatcher.matches(id, name);
+        const isMatch = showAllUnits || matcher.matches(ids, name);
+        const isSelected = !!selectedMatcher && selectedMatcher.matches(ids, name);
         const visible = showFilteredMatches ? isMatch : showBoundaries;
         const emphasized = showFilteredMatches && isMatch;
         return {
@@ -3925,9 +3985,9 @@ function zoomToSelectedBoundary() {
   const matcher = buildBoundaryMatcher([selectedHunt]);
   
   huntUnitsLayer.forEach(f => {
-    const featureBoundaryId = safe(f.getProperty('BoundaryID'));
+    const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(f);
     const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(featureBoundaryId, featureName)) {
+    if (matcher.matches(featureBoundaryIds, featureName)) {
       f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
     }
   });
@@ -3950,9 +4010,9 @@ function zoomToDisplayHuntsBounds() {
   const bounds = new google.maps.LatLngBounds();
   let found = false;
   huntUnitsLayer.forEach(f => {
-    const id = safe(f.getProperty('BoundaryID'));
+    const ids = getDataFeatureBoundaryCandidateIds(f);
     const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(id, name)) {
+    if (matcher.matches(ids, name)) {
       f.getGeometry().forEachLatLng(ll => {
         bounds.extend(ll);
         found = true;
