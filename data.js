@@ -207,6 +207,49 @@ window.UOGA_DATA = (() => {
     return derived;
   }
 
+  function firstNonEmptyRecordValue(...values) {
+    for (const value of values) {
+      const text = String(value ?? '').trim();
+      if (text) return text;
+    }
+    return '';
+  }
+
+  function normalizeHuntRecordForPlannerMatrix(record) {
+    if (!record || typeof record !== 'object') return record;
+    const normalized = { ...record };
+    const huntCode = firstNonEmptyRecordValue(normalized.huntCode, normalized.hunt_code, normalized.HuntCode, normalized.code);
+    const huntName = firstNonEmptyRecordValue(normalized.title, normalized.huntTitle, normalized.hunt_name, normalized.HuntName, normalized.name);
+    const unitName = firstNonEmptyRecordValue(normalized.unitName, normalized.unit_name, normalized.UnitName, normalized.dwr_unit_name, normalized.DwrUnitName, huntName);
+    const unitCode = firstNonEmptyRecordValue(normalized.unitCode, normalized.unit_code, normalized.UnitCode, normalized.boundary_id, normalized.boundaryId, normalized.BoundaryID);
+    const boundaryId = firstNonEmptyRecordValue(normalized.boundaryId, normalized.boundaryID, normalized.BoundaryID, normalized.boundary_id, normalized.originalBoundaryId);
+    const sex = firstNonEmptyRecordValue(normalized.sex, normalized.sex_type, normalized.sexType, normalized.Sex, normalized.SexType);
+    const huntType = firstNonEmptyRecordValue(normalized.huntType, normalized.hunt_type, normalized.HuntType, normalized.type);
+    const huntCategory = firstNonEmptyRecordValue(normalized.huntCategory, normalized.hunt_class, normalized.huntClass, normalized.HuntCategory, normalized.category);
+    const weapon = firstNonEmptyRecordValue(normalized.weapon, normalized.Weapon);
+    const dates = firstNonEmptyRecordValue(normalized.seasonLabel, normalized.season_label, normalized.seasonDates, normalized.season_dates, normalized.dates, normalized.season);
+    const permitsTotal = firstNonEmptyRecordValue(normalized.permitsTotal, normalized.permits_total, normalized.permitTotal, normalized.permit_total, normalized.totalPermits, normalized.total_permits, normalized.quota);
+
+    if (huntCode && !normalized.huntCode) normalized.huntCode = huntCode;
+    if (huntCode && !normalized.code) normalized.code = huntCode;
+    if (huntName && !normalized.title) normalized.title = huntName;
+    if (huntName && !normalized.huntTitle) normalized.huntTitle = huntName;
+    if (unitName && !normalized.unitName) normalized.unitName = unitName;
+    if (unitCode && !normalized.unitCode) normalized.unitCode = unitCode;
+    if (boundaryId && !normalized.boundaryId) normalized.boundaryId = boundaryId;
+    if (sex && !normalized.sex) normalized.sex = sex;
+    if (sex && !normalized.sexType) normalized.sexType = sex;
+    if (huntType && !normalized.huntType) normalized.huntType = huntType;
+    if (huntType && !normalized.type) normalized.type = huntType;
+    if (huntCategory && !normalized.huntCategory) normalized.huntCategory = huntCategory;
+    if (huntCategory && !normalized.category) normalized.category = huntCategory;
+    if (weapon && !normalized.Weapon) normalized.Weapon = weapon;
+    if (dates && !normalized.dates) normalized.dates = dates;
+    if (permitsTotal && !normalized.permitsTotal) normalized.permitsTotal = permitsTotal;
+    if (permitsTotal && !normalized.totalPermits) normalized.totalPermits = permitsTotal;
+    return normalized;
+  }
+
   async function loadHuntDataRecords(deps) {
     const {
       HUNT_DATA_SOURCES,
@@ -229,10 +272,11 @@ window.UOGA_DATA = (() => {
           if (records.length > 0) {
             let added = 0;
             records.forEach(record => {
-              const key = getHuntRecordKey(record);
+              const normalizedRecord = normalizeHuntRecordForPlannerMatrix(record);
+              const key = getHuntRecordKey(normalizedRecord);
               if (!seenKeys.has(key)) {
                 seenKeys.add(key);
-                merged.push(record);
+                merged.push(normalizedRecord);
                 added += 1;
               }
             });
@@ -260,10 +304,11 @@ window.UOGA_DATA = (() => {
       if (derivedSpikeRecords.length) {
         let added = 0;
         derivedSpikeRecords.forEach(record => {
-          const key = getHuntRecordKey(record);
+          const normalizedRecord = normalizeHuntRecordForPlannerMatrix(record);
+          const key = getHuntRecordKey(normalizedRecord);
           if (!seenKeys.has(key)) {
             seenKeys.add(key);
-            merged.push(record);
+            merged.push(normalizedRecord);
             added += 1;
           }
         });
