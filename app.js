@@ -177,6 +177,8 @@ const GOOGLE_MAPS_SCRIPT_CHANNEL = 'beta';
 const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
 const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
 const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
+const GOOGLE_EARTH_ATMOSPHERE_PROFILE = 'standard';
+const GOOGLE_EARTH_TOPOGRAPHY_EXAGGERATION = 1.5;
 const LIVE_FILTER_DESKTOP_DEBOUNCE_MS = 220;
 let devDebugPanelEl = null;
 let devDebugPanelTimerId = null;
@@ -3593,6 +3595,77 @@ function ensureGoogleEarth3dElement() {
   return el;
 }
 
+function applyGoogleEarthAtmosphereProfile(el = googleEarth3dMap) {
+  if (!el) return;
+  // Single default visual treatment (no extra toggle UI).
+  if (GOOGLE_EARTH_ATMOSPHERE_PROFILE === 'standard') {
+    el.style.filter = 'saturate(1.06) contrast(1.04) brightness(1.01)';
+  } else {
+    el.style.filter = '';
+  }
+}
+
+function forceGoogleEarthNavigationControlsOpen(el = googleEarth3dMap) {
+  if (!el) return;
+  // Keep native Earth controls visible.
+  try { el.removeAttribute('default-ui-disabled'); } catch (_) {}
+  try { el.removeAttribute('default-ui-hidden'); } catch (_) {}
+  try { el.defaultUiDisabled = false; } catch (_) {}
+  try { el.defaultUIDisabled = false; } catch (_) {}
+  try { el.defaultUiHidden = false; } catch (_) {}
+  try { el.defaultUIHidden = false; } catch (_) {}
+
+  // Best-effort expansion click for runtimes that collapse nav controls by default.
+  // If internals are inaccessible (closed shadow DOM), this safely no-ops.
+  try {
+    const root = el.shadowRoot;
+    if (!root) return;
+    const expandCandidate = Array.from(root.querySelectorAll('button,[role="button"]')).find((node) => {
+      const label = String(node.getAttribute?.('aria-label') || node.title || node.textContent || '').toLowerCase();
+      const expanded = String(node.getAttribute?.('aria-expanded') || '').toLowerCase();
+      return (
+        (label.includes('navigation') || label.includes('controls') || label.includes('compass') || label.includes('map controls'))
+        && expanded !== 'true'
+      );
+    });
+    if (expandCandidate) expandCandidate.click();
+  } catch (_) {}
+}
+
+function scheduleGoogleEarthControlsOpenPass(el = googleEarth3dMap) {
+  if (!el || typeof window === 'undefined') return;
+  const passes = [0, 280, 900, 1800];
+  passes.forEach((delay) => {
+    window.setTimeout(() => forceGoogleEarthNavigationControlsOpen(el), delay);
+  });
+}
+
+function applyGoogleEarthTopographyBoost(el = googleEarth3dMap) {
+  if (!el) return false;
+  const value = Number(GOOGLE_EARTH_TOPOGRAPHY_EXAGGERATION);
+  if (!Number.isFinite(value) || value <= 0) return false;
+
+  let appliedProperty = false;
+  const propertyCandidates = ['exaggeration', 'terrainExaggeration', 'terrainScale', 'verticalScale', 'elevationScale'];
+  propertyCandidates.forEach((prop) => {
+    try {
+      if (prop in el) {
+        el[prop] = value;
+        appliedProperty = true;
+      }
+    } catch (_) {}
+  });
+
+  // Safe attribute fallback; harmless if unsupported by runtime.
+  ['exaggeration', 'terrain-exaggeration', 'terrain-scale', 'vertical-scale', 'elevation-scale'].forEach((attr) => {
+    try {
+      el.setAttribute(attr, String(value));
+    } catch (_) {}
+  });
+
+  return appliedProperty;
+}
+
 async function ensureGoogleEarth3dMap() {
   const el = ensureGoogleEarth3dElement();
   if (!el) return null;
@@ -3612,6 +3685,10 @@ async function ensureGoogleEarth3dMap() {
   if ('defaultUiHidden' in el) {
     try { el.defaultUiHidden = false; } catch (_) {}
   }
+  forceGoogleEarthNavigationControlsOpen(el);
+  applyGoogleEarthAtmosphereProfile(el);
+  applyGoogleEarthTopographyBoost(el);
+  scheduleGoogleEarthControlsOpenPass(el);
   bindGoogleEarth3dZoomStyleEvents(el);
   syncGoogleEarth3dCamera();
   return el;
@@ -4214,6 +4291,10 @@ function applyMapMode() {
         if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
         if (el) {
           el.hidden = false;
+          forceGoogleEarthNavigationControlsOpen(el);
+          scheduleGoogleEarthControlsOpenPass(el);
+          applyGoogleEarthAtmosphereProfile(el);
+          applyGoogleEarthTopographyBoost(el);
           refreshGoogleEarth3dBoundaryOverlay();
           return;
         }
