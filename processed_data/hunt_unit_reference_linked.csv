@@ -507,8 +507,6 @@ DB1343,Resident,Red Iron,Deer,Any Legal Weapon,CWMU,CWMU,,1,,,,,,,,,0,1,0,-1,GRE
 DB1343,Nonresident,Red Iron,Deer,Any Legal Weapon,CWMU,CWMU,,,,,,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1343_NONRESIDENT,,,,FALSE,FALSE
 DB1344,Resident,Salt Wells,Deer,Any Legal Weapon,CWMU,CWMU,,1,,,,,,,,,0,1,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1344_RESIDENT,,,,FALSE,FALSE
 DB1344,Nonresident,Salt Wells,Deer,Any Legal Weapon,CWMU,CWMU,,,,,,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1344_NONRESIDENT,,,,FALSE,FALSE
-DB1345,Resident,Diamond Mountain CWMU,Deer,Any Legal Weapon,CWMU,CWMU,,1,,,,,,,,,0,1,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1345_RESIDENT,,,,FALSE,FALSE
-DB1345,Nonresident,Diamond Mountain CWMU,Deer,Any Legal Weapon,CWMU,CWMU,,,,,,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1345_NONRESIDENT,,,,FALSE,FALSE
 DB1347,Resident,The Rose of Snowville,Deer,Any Legal Weapon,CWMU,CWMU,,2,,,6,2,,2,,,1,1,0,-6,GREEN,MODELED,modeled_engine,194,209,Cwmu Buck Deer - The Rose Of Snowville - An y Legal Wea pon,TRUE,,,,6,4,66.7,4.3,4,BUCK DEER.xlsx,DB1347_RESIDENT,,,,FALSE,TRUE
 DB1347,Nonresident,The Rose of Snowville,Deer,Any Legal Weapon,CWMU,CWMU,,0,,,6,2,,2,,,0,0,0,-1,GREEN,MODELED,modeled_engine,194,209,Cwmu Buck Deer - The Rose Of Snowville - An y Legal Wea pon,TRUE,,,,6,4,66.7,4.3,4,BUCK DEER.xlsx,DB1347_NONRESIDENT,,,,FALSE,TRUE
 DB1348,Resident,Kimberly,Deer,Any Legal Weapon,CWMU,CWMU,,1,,,,,,,,,0,1,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,DB1348_RESIDENT,,,,FALSE,FALSE
@@ -1727,8 +1725,6 @@ EB3613,Resident,Little Pole Canyon,Elk,Any Legal Weapon,CWMU,CWMU,,1,,,4,,,,,,0,
 EB3613,Nonresident,Little Pole Canyon,Elk,Any Legal Weapon,CWMU,CWMU,,,,,4,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,404,443,Cwmu Bull Elk - Little Pole Can yon - An y Legal Wea pon,TRUE,,,,4,4,100,3.7,5,BULL ELK DATABASE.xlsx,EB3613_NONRESIDENT,,,,FALSE,TRUE
 EB3614,Resident,Tunnel Hollow,Elk,Any Legal Weapon,CWMU,CWMU,,1,,,8,,,,,,0,1,0,-1,GREEN,MODELED,modeled_engine,405,444,Cwmu Bull Elk - Tunnel Hollow - Any Legal Wea pon,TRUE,,,,8,6,75,4.3,3.8,BULL ELK DATABASE.xlsx,EB3614_RESIDENT,,,,FALSE,TRUE
 EB3614,Nonresident,Tunnel Hollow,Elk,Any Legal Weapon,CWMU,CWMU,,,,,8,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,405,444,Cwmu Bull Elk - Tunnel Hollow - Any Legal Wea pon,TRUE,,,,8,6,75,4.3,3.8,BULL ELK DATABASE.xlsx,EB3614_NONRESIDENT,,,,FALSE,TRUE
-EB3617,Resident,Diamond Mountain CWMU,Elk,Any Legal Weapon,CWMU,CWMU,,1,,,,,,,,,0,1,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,EB3617_RESIDENT,,,,FALSE,FALSE
-EB3617,Nonresident,Diamond Mountain CWMU,Elk,Any Legal Weapon,CWMU,CWMU,,,,,,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,,,,FALSE,,,,,,,,,,EB3617_NONRESIDENT,,,,FALSE,FALSE
 EB3619,Resident,Weber Florence Creek/Stillman Creek,Elk,Any Legal Weapon,CWMU,CWMU,,3,,,99,,,,,,1,2,17,-1,GREEN,MODELED,modeled_engine,407,446,Cwmu Bull Elk - Weber Florence Creek/stillman Cree k - An y Legal Wea pon,TRUE,,,,99,87,87.9,3.4,4.8,BULL ELK DATABASE.xlsx,EB3619_RESIDENT,,,,FALSE,TRUE
 EB3619,Nonresident,Weber Florence Creek/Stillman Creek,Elk,Any Legal Weapon,CWMU,CWMU,,,,,99,,,,,,0,0,0,-1,GREEN,MODELED,modeled_engine,407,446,Cwmu Bull Elk - Weber Florence Creek/stillman Cree k - An y Legal Wea pon,TRUE,,,,99,87,87.9,3.4,4.8,BULL ELK DATABASE.xlsx,EB3619_NONRESIDENT,,,,FALSE,TRUE
 EB3620,Resident,The Dirty Dozen,Elk,Any Legal Weapon,CWMU,,,,,,,,,,,,,,,,,,,,,,FALSE,,,,,,,,,BULL ELK DATABASE.xlsx,EB3620_RESIDENT,,,,FALSE,FALSE
@@ -2039,8 +2035,6 @@ LO0008,Resident,Diamond Mtn Landowner Association,Deer,Archery,Limited Entry - P
 LO0008,Nonresident,Diamond Mtn Landowner Association,Deer,Archery,Limited Entry - Private Land Only,,,,,,,,,,,,,,,,,,,,,,FALSE,,,,,,,,,BUCK DEER.xlsx,LO0008_NONRESIDENT,,,,FALSE,FALSE
 LO0009,Resident,Diamond Mtn Landowner Association,Deer,Any Legal Weapon,Limited Entry Landowner,Public,,,,,25,,,,,,,,,,,CONTEXT_ONLY,excluded_special_permit_class,,,,FALSE,,,,25,25,100,2.7,4.3,BUCK DEER.xlsx,LO0009_RESIDENT,,,,FALSE,FALSE
 LO0009,Nonresident,Diamond Mtn Landowner Association,Deer,Any Legal Weapon,Limited Entry Landowner,Public,,,,,25,,,,,,,,,,,CONTEXT_ONLY,excluded_special_permit_class,,,,FALSE,,,,25,25,100,2.7,4.3,BUCK DEER.xlsx,LO0009_NONRESIDENT,,,,FALSE,FALSE
-LO0010,Resident,Diamond Mtn Landowner Association,Deer,Muzzleloader,Limited Entry Landowner,Public,,,,,,,,,,,,,,,,CONTEXT_ONLY,excluded_special_permit_class,,,,FALSE,,,,,,,,,,LO0010_RESIDENT,,,,FALSE,FALSE
-LO0010,Nonresident,Diamond Mtn Landowner Association,Deer,Muzzleloader,Limited Entry Landowner,Public,,,,,,,,,,,,,,,,CONTEXT_ONLY,excluded_special_permit_class,,,,FALSE,,,,,,,,,,LO0010_NONRESIDENT,,,,FALSE,FALSE
 LO0011,Resident,Diamond Mtn Landowner Association,Elk,Archery,Limited Entry - Private Land Only,,,,,,,,,,,,,,,,,,,,,,FALSE,,,,,,,,,BULL ELK DATABASE.xlsx,LO0011_RESIDENT,,,,FALSE,FALSE
 LO0011,Nonresident,Diamond Mtn Landowner Association,Elk,Archery,Limited Entry - Private Land Only,,,,,,,,,,,,,,,,,,,,,,FALSE,,,,,,,,,BULL ELK DATABASE.xlsx,LO0011_NONRESIDENT,,,,FALSE,FALSE
 LO0012,Resident,Diamond Mtn Landowner Association,Deer,Early Any Legal Weapon,Limited Entry Landowner,Public,,,,,12,,,,,,,,,,,CONTEXT_ONLY,excluded_special_permit_class,,,,FALSE,,,,12,12,100,2,4.3,BULL ELK DATABASE.xlsx,LO0012_RESIDENT,,,,FALSE,FALSE

@@ -48,7 +48,7 @@ DB0004,DWR_865,865,,,single_kmz,mapped,processed_data/boundaries/DB0004.geojson,
 DB0005,DWR_865,865,,,single_kmz,mapped,processed_data/boundaries/DB0005.geojson,,,,0
 DB0006,DWR_865,865,,,single_kmz,mapped,processed_data/boundaries/DB0006.geojson,,,,0
 DB0007,UOGA_DB0007_2026,,7;15;32;85;94;108;138;163;185;206;248;609;610;611;612;613;615;621;625;628;629;630;632;633;635;636;714;802,DB0007_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/DB0007.geojson,data/boundaries/kmz/DB0007.kmz,data/boundaries/kml/DB0007.kml,,28
-DB0008,UOGA_DB0008_2026,,,,single_kmz,unavailable,processed_data/boundaries/DB0008.geojson,,,,0
+DB0008,UOGA_DB0008_2026,,101;106;109;218;280;282;311;313,DB0008_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/DB0008.geojson,,,,8
 DB0009,DWR_1,1,,,single_kmz,mapped,processed_data/boundaries/DB0009.geojson,,,,0
 DB0010,DWR_865,865,,,single_kmz,mapped,processed_data/boundaries/DB0010.geojson,,,,0
 DB0011,DWR_865,865,,,single_kmz,mapped,processed_data/boundaries/DB0011.geojson,,,,0
@@ -615,7 +615,7 @@ EA2041,DWR_29,29,,,single_kmz,mapped,processed_data/boundaries/EA2041.geojson,,,
 EA2045,DWR_222,222,,,single_kmz,mapped,processed_data/boundaries/EA2045.geojson,,,,0
 EA2046,DWR_868,868,,,single_kmz,mapped,processed_data/boundaries/EA2046.geojson,,,,0
 EB1000,UOGA_EB1000_2026,,12;17;33;36;41;51;88;108;128;140;163;175;183;206;222;241;449;455;616;617;622;625;629;630;634;683;685,EB1000_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/EB1000.geojson,data/boundaries/kmz/EB1000.kmz,data/boundaries/kml/EB1000.kml,,27
-EB1001,UOGA_EB1001_2026,,,,single_kmz,unavailable,processed_data/boundaries/EB1001.geojson,,,,0
+EB1001,UOGA_EB1001_2026,,18;69;81;94;107;117;129;138;142;163;188;194;276;277;301;304;609;611;613;614;635;636;639;672;868;902;925;947;948,EB1001_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/EB1001.geojson,,,,29
 EB1002,UOGA_EB1002_2026,,18;69;81;94;107;117;129;138;142;163;188;194;276;277;301;304;609;611;613;614;635;636;639;672;868;902;925;947;948,EB1002_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/EB1002.geojson,data/boundaries/kmz/EB1002.kmz,data/boundaries/kml/EB1002.kml,,29
 EB1003,UOGA_EB1003_2026,,12;33;51;88;108;175;183;206;222;241;302;303;455;617;625;629;630;634;685;742;751;867;899;901,EB1003_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/EB1003.geojson,data/boundaries/kmz/EB1003.kmz,data/boundaries/kml/EB1003.kml,,24
 EB1004,UOGA_EB1004_2026,,12;33;51;88;108;175;183;206;222;241;302;303;455;617;625;629;630;634;685;742;751;867;899;901,EB1004_MERGED_2026,merged_kmz,mapped,processed_data/boundaries/EB1004.geojson,data/boundaries/kmz/EB1004.kmz,data/boundaries/kml/EB1004.kml,,24

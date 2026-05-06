@@ -2240,15 +2240,6 @@
       "avgSatisfaction": 5
     },
     {
-      "huntCode": "DB1345",
-      "permits": 10,
-      "hunters": 10,
-      "harvest": 10,
-      "percentSuccess": 100,
-      "avgDays": 2.6,
-      "avgSatisfaction": 4.7
-    },
-    {
       "huntCode": "DB1347",
       "permits": 6,
       "hunters": 6,
@@ -7442,15 +7433,6 @@
       "avgSatisfaction": 3.8
     },
     {
-      "huntCode": "EB3617",
-      "permits": 5,
-      "hunters": 5,
-      "harvest": 5,
-      "percentSuccess": 100,
-      "avgDays": 3.2,
-      "avgSatisfaction": 4.2
-    },
-    {
       "huntCode": "EB3619",
       "permits": 99,
       "hunters": 99,
@@ -7899,15 +7881,6 @@
       "percentSuccess": 100,
       "avgDays": 2.7,
       "avgSatisfaction": 4.3
-    },
-    {
-      "huntCode": "LO0010",
-      "permits": 2,
-      "hunters": 2,
-      "harvest": 2,
-      "percentSuccess": 100,
-      "avgDays": 4,
-      "avgSatisfaction": 4
     },
     {
       "huntCode": "LO0012",

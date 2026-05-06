@@ -1760,15 +1760,6 @@
       "avgSatisfaction": 11
     },
     {
-      "huntCode": "DB1345",
-      "permits": 9,
-      "hunters": 10,
-      "harvest": 10,
-      "percentSuccess": 2.4,
-      "avgDays": 88.9,
-      "avgSatisfaction": 1
-    },
-    {
       "huntCode": "DB1349",
       "permits": 5,
       "hunters": 10,
@@ -4908,15 +4899,6 @@
       "percentSuccess": 5,
       "avgDays": 100,
       "avgSatisfaction": 17
-    },
-    {
-      "huntCode": "EB3617",
-      "permits": 5,
-      "hunters": 5,
-      "harvest": 5,
-      "percentSuccess": 3.5,
-      "avgDays": 100,
-      "avgSatisfaction": 1
     },
     {
       "huntCode": "GO6800",
