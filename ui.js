@@ -380,13 +380,13 @@ window.UOGA_UI = (() => {
     style.id = STYLE_ID;
     style.textContent = `
       .uoga-backpack-shell {
-        position: relative;
-        top: auto;
-        right: auto;
+        position: fixed !important;
+        top: 12px !important;
+        right: 18px !important;
         left: auto;
         flex: 0 0 auto;
         margin-left: 0;
-        z-index: 80;
+        z-index: 2147483646 !important;
         isolation: isolate;
       }
       .topbar-right .uoga-backpack-shell,
@@ -394,7 +394,7 @@ window.UOGA_UI = (() => {
         margin-left: 0;
       }
       .uoga-backpack-shell.is-open {
-        z-index: 90;
+        z-index: 2147483647 !important;
       }
       .uoga-backpack-toggle {
         position: relative;
@@ -477,9 +477,9 @@ window.UOGA_UI = (() => {
         text-align: center;
       }
       .uoga-backpack-panel {
-        position: absolute;
-        top: calc(100% + 10px);
-        right: 0;
+        position: fixed !important;
+        top: 74px !important;
+        right: 14px !important;
         left: auto;
         width: min(430px, calc(100vw - 28px));
         max-height: min(72vh, 760px);
@@ -492,7 +492,7 @@ window.UOGA_UI = (() => {
           linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, transparent), color-mix(in srgb, var(--panel2) 98%, transparent));
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
         backdrop-filter: blur(14px);
-        z-index: 95;
+        z-index: 2147483647 !important;
         transform-origin: top right;
         isolation: isolate;
       }
@@ -678,9 +678,9 @@ window.UOGA_UI = (() => {
       }
       @media (max-width: 900px) {
         .uoga-backpack-shell {
-          position: relative;
-          top: auto;
-          right: auto;
+          position: fixed !important;
+          top: 10px !important;
+          right: 12px !important;
           left: auto;
           width: auto;
           margin-left: 0;
@@ -690,15 +690,15 @@ window.UOGA_UI = (() => {
           justify-content: space-between;
         }
         .uoga-backpack-panel {
-          top: calc(100% + 8px);
-          right: 0;
-          left: auto;
-          bottom: auto;
-          width: min(360px, calc(100vw - 20px));
+          top: auto !important;
+          left: 14px !important;
+          right: 14px !important;
+          bottom: 14px !important;
+          width: auto;
           max-height: min(78vh, 760px);
           padding: 10px;
           border-radius: 24px 24px 20px 20px;
-          transform-origin: top right;
+          transform-origin: bottom center;
         }
         .uoga-backpack-panel::before {
           display: none;
