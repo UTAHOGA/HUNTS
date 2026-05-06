@@ -9,41 +9,24 @@
   <link rel="stylesheet" href="./style.css?v=20260423-planner-header-refine-1" />
   <style>
     body {
-      background:
-        radial-gradient(1200px 460px at 50% -100px, rgba(255, 216, 164, 0.15), transparent 70%),
-        linear-gradient(180deg, #2c1d12 0%, #20150e 100%);
+      background-color: var(--bg);
+      background-image: var(--bg-image);
+      background-size: 100% auto;
+      background-repeat: repeat-y;
+      background-attachment: scroll;
+      background-position: center top;
     }
     .shell { max-width: 1280px; }
     .lodge-panel {
       position: relative;
       border: 1px solid rgba(130, 90, 55, 0.5);
       border-radius: 16px;
-      background:
-        linear-gradient(180deg, rgba(67, 42, 26, 0.92) 0%, rgba(50, 31, 20, 0.96) 100%),
-        repeating-linear-gradient(
-          180deg,
-          rgba(219, 176, 128, 0.08) 0px,
-          rgba(219, 176, 128, 0.08) 2px,
-          rgba(74, 46, 28, 0.06) 2px,
-          rgba(74, 46, 28, 0.06) 36px
-        );
+      background: linear-gradient(180deg, rgba(67, 42, 26, 0.92) 0%, rgba(50, 31, 20, 0.96) 100%);
       box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
       overflow: hidden;
     }
     .lodge-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(
-          180deg,
-          rgba(0, 0, 0, 0.0) 0px,
-          rgba(0, 0, 0, 0.0) 30px,
-          rgba(18, 10, 6, 0.35) 30px,
-          rgba(18, 10, 6, 0.35) 32px
-        );
-      mix-blend-mode: multiply;
+      content: none;
     }
     .lodge-header {
       display: grid;
@@ -158,15 +141,7 @@
       border: 1px solid rgba(170, 128, 88, 0.35);
       border-radius: 12px;
       padding: 10px;
-      background:
-        linear-gradient(180deg, rgba(70, 45, 28, 0.94) 0%, rgba(57, 36, 23, 0.94) 100%),
-        repeating-linear-gradient(
-          0deg,
-          rgba(255, 255, 255, 0.025) 0px,
-          rgba(255, 255, 255, 0.025) 1px,
-          transparent 1px,
-          transparent 22px
-        );
+      background: linear-gradient(180deg, rgba(70, 45, 28, 0.94) 0%, rgba(57, 36, 23, 0.94) 100%);
       color: #f5dfc4;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
     }

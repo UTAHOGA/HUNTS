@@ -4203,7 +4203,9 @@ function applyMapMode() {
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     mapWrap.classList.add('is-earth-mode');
-    setOwnershipControlsExpandedForEarth(true);
+    // Keep ownership menus collapsed in Earth mode; only Earth native map controls
+    // should be prominent for visitors.
+    setOwnershipControlsExpandedForEarth(false);
     const mapEl = document.getElementById('map');
     if (mapEl) mapEl.hidden = true;
     updateStatus('Loading Google Earth 3D...');
