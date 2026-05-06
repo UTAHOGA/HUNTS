@@ -160,6 +160,54 @@
     return `${Math.abs(parsed)} pts above guaranteed`;
   }
 
+  const ML_OPTIONS = {
+    enabled: false,
+    useMlForOddsWhenConfidenceGte: null,
+    maxDivergenceGuardPct: null,
+    ...(window.UOGA_CONFIG?.HUNT_RESEARCH_ML_OPTIONS || {}),
+  };
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function toProbabilityPercent(value) {
+    const parsed = num(value);
+    if (parsed === null) return null;
+    if (parsed >= 0 && parsed <= 1) return parsed * 100;
+    return clamp(parsed, 0, 100);
+  }
+
+  function toProbabilityUnit(value) {
+    const parsed = num(value);
+    if (parsed === null) return null;
+    if (parsed >= 0 && parsed <= 1) return parsed;
+    if (parsed >= 0 && parsed <= 100) return parsed / 100;
+    return clamp(parsed / 100, 0, 1);
+  }
+
+  function hasModeledProbabilityFields(row) {
+    if (!row) return false;
+    return [
+      row.display_odds_pct,
+      row.p_draw_mean,
+      row.p_draw_p10,
+      row.p_draw_p90,
+      row.guaranteed_probability,
+    ].some(hasValue);
+  }
+
+  function getGuaranteedProbability(row) {
+    return toProbabilityUnit(firstAvailable(row, ['guaranteed_probability']));
+  }
+
+  function getProbabilityIntervalSuffix(row) {
+    const p10 = toProbabilityPercent(firstAvailable(row, ['p_draw_p10']));
+    const p90 = toProbabilityPercent(firstAvailable(row, ['p_draw_p90']));
+    if (p10 === null || p90 === null) return '';
+    return ` (${formatProbability(p10)}-${formatProbability(p90)})`;
+  }
+
   function isRandomOnlyBonusCase(meta, row) {
     if (isPreferenceAntlerless(meta)) return false;
     const maxPointPermits = num(row?.max_point_permits_2026);
@@ -380,17 +428,6 @@
     return state.engineGroups.get(groupKey(huntCode, residency)) || [];
   }
 
-<<<<<<< Updated upstream
-  function getModeledCoverageStatus(meta, hasEngineGroup) {
-    if (hasEngineGroup) return '';
-    if (!meta) return 'Hunt not found in the current production backbone.';
-    return 'This hunt exists in the canonical hunt backbone, but it does not currently have modeled draw-pressure coverage.';
-  }
-
-  function getDisplayedOdds(row) {
-    if (!row) return { value: 'Not available', source: 'unavailable' };
-    if (row.status === 'MAX POOL') return { value: '100%', source: 'guaranteed' };
-=======
   function getModeledCoverageStatus(meta, hasEngineGroup) {
     if (hasEngineGroup) return '';
     if (!meta) return 'Hunt not found in the current production backbone.';
@@ -458,7 +495,6 @@
         confidence: getMlConfidence(row),
       };
     }
->>>>>>> Stashed changes
 
     const projectedOdds = formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']));
     if (projectedOdds !== 'Not available') {
@@ -469,15 +505,9 @@
     if (randomOdds !== 'Not available') {
       return { value: randomOdds, source: 'random_pool' };
     }
-<<<<<<< Updated upstream
 
     return { value: 'Not available', source: 'unavailable' };
   }
-=======
-
-    return { value: 'Not available', source: 'unavailable' };
-  }
->>>>>>> Stashed changes
 
   function isPreferenceAntlerless(meta) {
     const huntType = String(meta?.hunt_type || '').trim().toLowerCase();
@@ -519,34 +549,17 @@
   }
 
   function getPrimaryOddsLabel(meta, row, displayedOdds) {
-<<<<<<< Updated upstream
-=======
     if (displayedOdds.source === 'ml_hybrid') {
       const confidence = displayedOdds.confidence === null ? null : Number(displayedOdds.confidence);
       const confidenceLabel = Number.isFinite(confidence) ? ` (conf ${confidence.toFixed(2)})` : '';
       return `2026 ML Hybrid Draw: ${displayedOdds.value}${confidenceLabel}`;
     }
->>>>>>> Stashed changes
     if (isPreferenceAntlerless(meta)) {
       return `2026 Preference Draw: ${formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']))}`;
     }
     if (isRandomOnlyBonusCase(meta, row)) {
       return `2026 Random Draw: ${displayedOdds.value}`;
     }
-<<<<<<< Updated upstream
-    return displayedOdds.source === 'guaranteed'
-      ? '2026 Max Pool: 100%'
-      : `2026 Random Draw: ${displayedOdds.value}`;
-  }
-
-  function getOutlookSignal(meta, row) {
-    const maxPointPermits = num(row?.max_point_permits_2026);
-    if (maxPointPermits !== null && maxPointPermits <= 0) return 'red';
-    if (row?.status === 'MAX POOL') return 'green';
-
-    const maxPoolChance = num(row?.max_pool_projection_2026);
-    if (maxPoolChance !== null && maxPoolChance > 0) return 'yellow';
-=======
     return `2026 Random Draw: ${displayedOdds.value}`;
   }
 
@@ -565,7 +578,6 @@
     if (maxPointPermits !== null && maxPointPermits <= 0) return 'red';
     const maxPoolChance = num(row?.max_pool_projection_2026);
     if (maxPoolChance !== null && maxPoolChance > 0) return 'yellow';
->>>>>>> Stashed changes
 
     const nonresidentPermits = num(meta?.public_nonresident_permits);
     const residentPermits = num(meta?.public_resident_permits);
@@ -659,30 +671,6 @@
       };
     }
 
-<<<<<<< Updated upstream
-    if (isRandomOnlyBonusCase(meta, row)) {
-      return {
-        badge: 'Random Chance Only',
-        message: 'This hunt does not currently offer a meaningful guaranteed path at this residency. Your outcome depends on the random draw only.',
-        className: 'is-red',
-      };
-    }
-
-    if (row.status === 'MAX POOL' || row.draw_outlook === 'GREEN LIGHT') {
-      return {
-        badge: 'Guaranteed',
-        message: `At ${formatInteger(filters.points)} points, you are currently inside the guaranteed line for this hunt.`,
-        className: 'is-green',
-      };
-    }
-
-    if (row.draw_outlook === 'MAY DRAW IN 5-10 YEARS' || num(row.gap) === 1) {
-      return {
-        badge: 'On the Line',
-        message: 'You are near the edge of the guaranteed path. This hunt is still in reach, but pressure and point creep matter.',
-        className: 'is-yellow',
-      };
-=======
     if (isRandomOnlyBonusCase(meta, row)) {
       return {
         badge: 'Random Chance Only',
@@ -696,7 +684,7 @@
     if (guaranteedProbability !== null && guaranteedProbability >= 0.999) {
       return {
         badge: 'Guaranteed',
-        message: `At ${formatInteger(filters.points)} points, this hunt is analytically or mode-land guaranteed.`,
+        message: `At ${formatInteger(filters.points)} points, this hunt is analytically or modeled as guaranteed.`,
         className: 'is-green',
       };
     }
@@ -737,7 +725,6 @@
         message: 'You are near the edge of the guaranteed path. This hunt is still in reach, but pressure and point creep matter.',
         className: 'is-yellow',
       };
->>>>>>> Stashed changes
     }
 
     if (row.draw_outlook === 'POINT CREEP DEFEAT') {
