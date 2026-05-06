@@ -3396,7 +3396,7 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
     const polygonOptions = {
       strokeColor: '#ff6600ff',
       strokeWidth: 5,
-      fillColor: '#ff660038',
+      fillColor: GOOGLE_EARTH_TRANSPARENT_FILL,
       drawsOccludedSegments: true,
       zIndex: 100
     };
