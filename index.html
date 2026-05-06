@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Builder</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
-  <link rel="stylesheet" href="./style.css?v=20260506-popup-viewmap-row-1" />
+  <link rel="stylesheet" href="./style.css?v=20260506-ownership-basemap-fix-1" />
   <style>
     /* Light rebuild pass: keep app.js wiring, improve visual direction. */
     body { background-color:#f4efe4; }
@@ -56,7 +56,7 @@
     .ownership-dock { display:flex !important; align-items:center !important; justify-content:flex-end !important; max-width:min(760px, 48vw) !important; }
     .uoga-backpack-open .ownership-dock { max-width:min(760px, 48vw) !important; }
     .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
-    .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; }
+    .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:wrap !important; overflow:visible !important; }
     .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
     .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
     .basemap-pop[aria-hidden="true"] { display:none !important; }
@@ -76,7 +76,7 @@
       .topbar-title { order:3 !important; flex:1 1 100% !important; padding:4px 0 0 !important; }
       .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
       .ownership-dock, .uoga-backpack-open .ownership-dock { max-width:none !important; justify-content:center !important; }
-      .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
+      .ownership-dock .toggle-row { overflow:visible !important; flex-wrap:wrap !important; justify-content:center !important; }
       .basemap-pop, .uoga-backpack-open .basemap-pop { top:74px !important; right:12px !important; left:auto !important; }
       .controls { margin-left:0 !important; }
     }
@@ -363,11 +363,11 @@
   <script src="./config.local.js?v=20260430-local-config-1"></script>
   <script src="./uoga-analytics.js"></script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
-  <script src="./header-layout.js?v=20260506-basemap-compact-1"></script>
+  <script src="./header-layout.js?v=20260506-ownership-basemap-fix-1"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
 <script src="./boundary-resolver.js?v=20260506-boundary-manifest-2"></script>
 <script src="app.js?v=20260506-popup-viewmap-row-1"></script>
-  <script src="./google-basemap.js?v=20260506-earth-controls-open-1"></script>
+  <script src="./google-basemap.js?v=20260506-basemap-google-only-1"></script>
 </body>
 </html>

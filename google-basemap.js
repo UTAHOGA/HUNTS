@@ -55,7 +55,7 @@
   }
 
   function shouldShowPopover() {
-    return isGoogleMode() || isEarthMode();
+    return isGoogleMode();
   }
 
   function getMode() {
@@ -134,15 +134,12 @@
 
     const panel = getPanel();
     if (panel) {
-      panel.dataset.mapMode = isGoogleMode() ? 'google' : 'earth';
+      panel.dataset.mapMode = isGoogleMode() ? 'google' : 'hidden';
     }
 
     const googleGrid = document.getElementById('googleBasemapGrid');
     if (googleGrid) googleGrid.style.opacity = '1';
-    if (mode === 'earth' && lastMode !== 'earth') {
-      setPanelOpen(true);
-    }
-    if (mode !== 'earth' && mode !== 'google') {
+    if (mode !== 'google') {
       setPanelOpen(false);
     }
     lastMode = mode;

@@ -4173,7 +4173,8 @@ function applyMapMode() {
 
   if (value === 'earth') {
     clearSelectedBoundaryFallbackLayer();
-    if (basemapControl) basemapControl.hidden = false;
+    if (basemapControl) basemapControl.hidden = true;
+    window.UOGA_BASEMAP_UI?.setPanelOpen?.(false);
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     mapWrap.classList.add('is-earth-mode');
@@ -4194,11 +4195,6 @@ function applyMapMode() {
         console.error('Google Earth 3D failed to load.', err);
         updateStatus('Google Earth 3D failed to load. Switch to Google Maps or DWR map.');
       });
-    window.setTimeout(() => {
-      if (safe(mapTypeSelect?.value).toLowerCase() !== 'earth') return;
-      window.UOGA_BASEMAP_UI?.syncModeVisibility?.();
-      window.UOGA_BASEMAP_UI?.setPanelOpen?.(true);
-    }, 0);
     return;
   }
 
