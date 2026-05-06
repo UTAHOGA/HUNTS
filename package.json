@@ -5,7 +5,7 @@
   "description": "Local static server for the U.O.G.A. Hunt Planner",
   "scripts": {
     "start": "node server.js",
-    "build:pages": "echo \"Static Cloudflare Pages deploy: no build step required\"",
+    "build:pages": "node scripts/build-pages-dist.js",
     "export:data": "node export-data.js",
     "audit:2026": "node audit-2026-completeness.js",
     "apply:2026:supplements": "node apply-2026-supplements.js",

@@ -7,6 +7,7 @@ _local_untracked_backup/
 processed_data/*.rebuilt.csv
 style.repaired.css
 config.local.js
+pages-dist/
 
 # Pipeline heavy/raw/generated data (local only)
 pipeline/RAW/
