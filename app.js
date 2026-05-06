@@ -3657,6 +3657,12 @@ function initGoogleBaseline() {
   });
   // Expose the active map instance so UI helpers (google-basemap.js) can reliably control it.
   window.googleBaselineMap = googleBaselineMap;
+  googleBaselineMap.addListener('click', () => {
+    if (shouldSuppressLandClick()) return;
+    closeSelectedHuntPopup();
+    closeSelectedHuntFloat();
+    closeSelectionInfoWindow();
+  });
   googleApiReady = true;
   installPageScrollOnMap('map');
   if (huntBoundaryGeoJson) buildBoundaryLayer();
