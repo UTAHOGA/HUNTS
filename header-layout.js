@@ -236,7 +236,7 @@
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
-       .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
+       .topbar-left { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
        .topbar-right {
          display:flex !important;
          align-items:center !important;
@@ -290,7 +290,7 @@
         .instructions-tab {
           display:inline-flex !important;
           align-items:center !important;
-          justify-content:center !important;
+          justify-content:flex-start !important;
           min-height:42px !important;
           padding:8px 16px !important;
           border-radius:999px !important;
@@ -336,12 +336,14 @@
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
        .instructions-control .qs-step { width:100% !important; max-width:none !important; flex:0 0 auto !important; padding:9px 10px !important; font-size:11px !important; font-weight:900 !important; }
-       .ownership-dock { position:absolute !important; top:12px !important; right:14px !important; z-index:30 !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; max-width:calc(100% - 28px) !important; transition:right 160ms ease, max-width 160ms ease !important; }
+       .ownership-dock { position:relative !important; top:auto !important; right:auto !important; left:auto !important; z-index:10020 !important; display:flex !important; justify-content:flex-start !important; align-items:center !important; max-width:none !important; transition:none !important; margin:0 !important; }
        .ownership-dock[hidden] { display:none !important; }
        .map-wrap.is-dwr-mode .ownership-dock { display:none !important; }
-       .uoga-backpack-open .ownership-dock { right:14px !important; max-width:calc(100% - 28px) !important; }
-       .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
-       .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:nowrap !important; overflow-x:auto !important; scrollbar-width:thin !important; }
+       .uoga-backpack-open .ownership-dock { right:auto !important; max-width:none !important; }
+       .ownership-case { display:flex !important; justify-content:flex-start !important; align-items:center !important; width:auto !important; max-width:min(700px, 55vw) !important; }
+       .ownership-dock .toggle-row { justify-content:flex-start !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:nowrap !important; overflow-x:auto !important; scrollbar-width:thin !important; padding:6px 10px !important; gap:8px !important; border-radius:999px !important; border:1px solid #c9a27f !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important; }
+       .ownership-dock .toggle-chip { flex:0 0 auto !important; }
+       .ownership-dock .toggle-menu summary { min-height:32px !important; padding:6px 12px !important; }
        .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
        .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
        .basemap-pop[aria-hidden="true"] { display:none !important; }
@@ -358,7 +360,7 @@
         .topbar-left {
           display:flex !important;
           flex-wrap:wrap !important;
-          justify-content:center !important;
+          justify-content:flex-start !important;
           align-items:center !important;
           gap:12px !important;
         }
@@ -385,7 +387,7 @@
           justify-content:center !important;
           margin-left:0 !important;
         }
-        .ownership-dock, .uoga-backpack-open .ownership-dock { left:12px !important; right:12px !important; max-width:none !important; justify-content:center !important; }
+        .ownership-dock, .uoga-backpack-open .ownership-dock { left:auto !important; right:auto !important; max-width:100% !important; justify-content:flex-start !important; }
         .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
         .basemap-pop, .uoga-backpack-open .basemap-pop { top:74px !important; right:12px !important; left:auto !important; }
       }

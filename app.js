@@ -249,6 +249,7 @@ function getNormalizedSex(valueOrHunt) {
   if (val.includes('buck')) return 'Buck';
   if (val.includes('bull')) return 'Bull';
   if (val.includes('male only') && hunt) {
+    if (species === 'Moose') return 'Bull';
     if (species === 'Rocky Mountain Bighorn Sheep') return 'Ram';
     if (species === 'Desert Bighorn Sheep') return 'Ram';
   }
@@ -1463,8 +1464,8 @@ function openSelectedHuntFloat() {
         </div>
         <div class="selected-unit-placard-grid">
           <div class="selected-unit-placard-pill">
-            <span class="selected-unit-placard-pill-label">Unit</span>
-            <span class="selected-unit-placard-pill-value">${escapeHtml(getUnitName(selectedHunt) || getHuntTitle(selectedHunt) || 'Not loaded')}</span>
+            <span class="selected-unit-placard-pill-label">Hunt Number</span>
+            <span class="selected-unit-placard-pill-value">${code || 'Not loaded'}</span>
           </div>
           <div class="selected-unit-placard-pill">
             <span class="selected-unit-placard-pill-label">Dates</span>

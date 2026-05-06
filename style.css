@@ -225,6 +225,25 @@
       gap: 8px;
       white-space: normal;
     }
+    .ownership-header-row {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -2px 2px rgba(0,0,0,0.08), 0 4px 10px rgba(58,37,18,0.14);
+    }
+    .ownership-hunt-units {
+      padding-right: 4px;
+    }
+    .ownership-hunt-units input {
+      accent-color: var(--accent);
+    }
+    .ownership-header-row .toggle-menu > summary {
+      min-height: 32px;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+    .ownership-header-row .toggle-menu-panel {
+      margin-top: 4px;
+    }
     .layer-grid { display: grid; gap: 10px; }
     .layer-toggle {
       display: flex;
@@ -513,13 +532,33 @@
     .selected-unit-placard { border: 1px solid rgba(255, 126, 40, 0.72); border-radius: 16px; background: linear-gradient(180deg, rgba(45, 35, 28, 0.97), rgba(21, 16, 13, 0.98)); box-shadow: 0 20px 38px rgba(0,0,0,0.34); color: #fff2e6; overflow: hidden; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     .selected-unit-placard-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); background: linear-gradient(180deg, rgba(255, 117, 35, 0.92), rgba(184, 79, 18, 0.96)); }
     .selected-unit-placard-kicker { margin:0 0 4px; font-size:11px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,244,235,0.86); }
-    .selected-unit-placard-title { margin:0; font-family: var(--font-display); font-size: 22px; line-height: 1; color:#fff9f3; }
+    .selected-unit-placard-title {
+      margin:0;
+      font-family: var(--font-ui);
+      font-size: 22px;
+      line-height: 1;
+      color:#fff9f3;
+      font-weight: 900;
+      font-variant-numeric: lining-nums tabular-nums;
+      font-feature-settings: "lnum" 1, "tnum" 1;
+      letter-spacing: .02em;
+    }
     .selected-unit-placard-close { width: 34px; height: 34px; padding: 0; border-radius: 999px; border: 1px solid rgba(255,255,255,0.34); background: rgba(36, 22, 13, 0.24); color: #fff9f3; box-shadow: none; font-size: 18px; line-height: 1; }
     .selected-unit-placard-body { display:grid; gap:12px; padding:14px; }
     .selected-unit-placard-top { display:grid; grid-template-columns: 52px minmax(0,1fr); gap:12px; align-items:start; }
     .selected-unit-placard-logo { width: 52px; height: 52px; border-radius: 12px; object-fit: contain; background: #fff; padding: 5px; border: 1px solid rgba(255, 214, 185, 0.5); box-shadow: 0 6px 16px rgba(0,0,0,0.24); }
     .selected-unit-placard-code { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: #ffc99b; }
-    .selected-unit-placard-name { margin: 4px 0 0; font-size: 22px; font-weight: 900; line-height: 1.02; color: #fff9f3; }
+    .selected-unit-placard-name {
+      margin: 4px 0 0;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.02;
+      color: #fff9f3;
+      font-family: var(--font-ui);
+      font-variant-numeric: lining-nums tabular-nums;
+      font-feature-settings: "lnum" 1, "tnum" 1;
+      letter-spacing: .01em;
+    }
     .selected-unit-placard-sub { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: #e0c4ad; }
     .selected-unit-placard-grid { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px; }
     .selected-unit-placard-pill {
@@ -539,7 +578,15 @@
       transform: translateY(-2px);
     }
     .selected-unit-placard-pill-label { font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: rgba(47, 29, 18, 0.72); }
-    .selected-unit-placard-pill-value { font-size: 14px; font-weight: 800; line-height: 1.25; color: var(--selected-text); }
+    .selected-unit-placard-pill-value {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.25;
+      color: var(--selected-text);
+      font-family: var(--font-ui);
+      font-variant-numeric: lining-nums tabular-nums;
+      font-feature-settings: "lnum" 1, "tnum" 1;
+    }
     .selected-unit-placard-actions { display:flex; gap:10px; flex-wrap:wrap; }
     .selected-unit-placard-note { font-size: 12px; line-height: 1.4; color: #caa98d; }
     .basemap-pop {

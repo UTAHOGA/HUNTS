@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Builder</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
-  <link rel="stylesheet" href="./style.css?v=20260430-dropdown-front-3" />
+  <link rel="stylesheet" href="./style.css?v=20260506-popup-font-hunt-number-1" />
   <style>
     /* Light rebuild pass: keep app.js wiring, improve visual direction. */
     body { background-color:#f4efe4; }
@@ -52,12 +52,14 @@
     .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
     .instructions-control .instructions-panel[hidden] { display:none !important; }
     .instructions-control .qs-step { width:100% !important; max-width:none !important; flex:0 0 auto !important; padding:9px 10px !important; font-size:11px !important; font-weight:900 !important; }
-    .ownership-dock { position:absolute !important; top:12px !important; right:14px !important; z-index:30 !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; max-width:calc(100% - 28px) !important; transition:right 160ms ease, max-width 160ms ease !important; }
+    .ownership-dock { position:relative !important; top:auto !important; right:auto !important; left:auto !important; z-index:10020 !important; display:flex !important; justify-content:flex-start !important; align-items:center !important; max-width:none !important; transition:none !important; margin:0 !important; }
     .ownership-dock[hidden] { display:none !important; }
     .map-wrap.is-dwr-mode .ownership-dock { display:none !important; }
-    .uoga-backpack-open .ownership-dock { right:14px !important; max-width:calc(100% - 28px) !important; }
-    .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
-    .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:nowrap !important; overflow-x:auto !important; scrollbar-width:thin !important; }
+    .uoga-backpack-open .ownership-dock { right:auto !important; max-width:none !important; }
+    .ownership-case { display:flex !important; justify-content:flex-start !important; align-items:center !important; width:auto !important; max-width:min(700px, 55vw) !important; }
+    .ownership-dock .toggle-row { justify-content:flex-start !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:nowrap !important; overflow-x:auto !important; scrollbar-width:thin !important; padding:6px 10px !important; gap:8px !important; border-radius:999px !important; border:1px solid #c9a27f !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14) !important; }
+    .ownership-dock .toggle-chip { flex:0 0 auto !important; }
+    .ownership-dock .toggle-menu summary { min-height:32px !important; padding:6px 12px !important; }
     .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
     .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
     .basemap-pop[aria-hidden="true"] { display:none !important; }
@@ -67,7 +69,7 @@
     .basemap-pop .globe-basemap-grid { grid-template-columns:1fr !important; gap:8px !important; }
     .basemap-pop .globe-basemap-btn { min-height:36px !important; }
     .topbar { justify-content:flex-start !important; flex-wrap:wrap !important; }
-    .topbar-left { flex:0 0 auto !important; display:flex !important; justify-content:center !important; align-items:center !important; gap:14px !important; }
+    .topbar-left { flex:0 0 auto !important; display:flex !important; justify-content:flex-start !important; align-items:center !important; gap:14px !important; }
     .topbar-right { flex:0 0 auto !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; margin-left:auto !important; }
     .topbar-right .uoga-backpack-shell { margin-left:0 !important; }
     .controls { flex:0 0 auto !important; margin-left:auto !important; }
@@ -76,7 +78,7 @@
       .topbar-left { flex:0 0 auto !important; width:auto !important; display:flex !important; justify-content:flex-start !important; }
       .topbar-title { order:3 !important; flex:1 1 100% !important; padding:4px 0 0 !important; }
       .topbar-right { flex:1 1 100% !important; justify-content:stretch !important; margin-left:0 !important; }
-      .ownership-dock, .uoga-backpack-open .ownership-dock { left:12px !important; right:12px !important; max-width:none !important; justify-content:center !important; }
+      .ownership-dock, .uoga-backpack-open .ownership-dock { left:auto !important; right:auto !important; max-width:100% !important; justify-content:flex-start !important; }
       .ownership-dock .toggle-row { overflow-x:auto !important; flex-wrap:nowrap !important; justify-content:flex-start !important; scrollbar-width:thin !important; }
       .basemap-pop, .uoga-backpack-open .basemap-pop { top:74px !important; right:12px !important; left:auto !important; }
       .controls { margin-left:0 !important; }
@@ -241,8 +243,8 @@
       <section class="map-wrap">
         <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
           <div class="ownership-case">
-            <div class="toggle-row">
-              <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
+            <div class="toggle-row ownership-header-row">
+              <label class="toggle-chip ownership-hunt-units"><input id="toggleDwrUnits" type="checkbox" checked><span class="toggle-chip-label">Hunt<br>Units</span></label>
               <details class="toggle-menu">
                 <summary id="federalLayersSummary">Federal</summary>
                 <div class="toggle-menu-panel">
@@ -256,7 +258,7 @@
                 <div class="toggle-menu-panel">
                   <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
                   <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State Parks</span></label>
-                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">W.M.A.'s</span></label>
+                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">DWR WMA</span></label>
                 </div>
               </details>
               <details class="toggle-menu">
@@ -352,10 +354,10 @@
   <script src="./config.local.js?v=20260430-local-config-1"></script>
   <script src="./uoga-analytics.js"></script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
-  <script src="./header-layout.js?v=20260430-header-order-4"></script>
-  <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
+  <script src="./header-layout.js?v=20260506-land-ownership-header-1"></script>
+  <script src="./ownership-dock.js?v=20260506-land-ownership-header-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
-  <script src="app.js?v=20260430-earth-reorient-fix-16"></script>
+  <script src="app.js?v=20260506-popup-font-hunt-number-1"></script>
   <script src="./google-basemap.js?v=20260430-terrain-default-1"></script>
 </body>
 </html>
