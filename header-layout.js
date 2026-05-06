@@ -336,10 +336,12 @@
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
        .instructions-control .qs-step { width:100% !important; max-width:none !important; flex:0 0 auto !important; padding:9px 10px !important; font-size:11px !important; font-weight:900 !important; }
-       .ownership-dock { position:absolute !important; top:12px !important; right:14px !important; z-index:30 !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; max-width:min(760px, calc(100% - 28px)) !important; transition:right 160ms ease, max-width 160ms ease !important; }
-       .uoga-backpack-open .ownership-dock { right:min(458px, calc(100% - 320px)) !important; max-width:calc(100% - 486px) !important; }
+       .ownership-dock { position:absolute !important; top:12px !important; right:14px !important; z-index:30 !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; max-width:calc(100% - 28px) !important; transition:right 160ms ease, max-width 160ms ease !important; }
+       .ownership-dock[hidden] { display:none !important; }
+       .map-wrap.is-dwr-mode .ownership-dock { display:none !important; }
+       .uoga-backpack-open .ownership-dock { right:14px !important; max-width:calc(100% - 28px) !important; }
        .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
-       .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; }
+       .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:nowrap !important; overflow-x:auto !important; scrollbar-width:thin !important; }
        .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
        .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
        .basemap-pop[aria-hidden="true"] { display:none !important; }
