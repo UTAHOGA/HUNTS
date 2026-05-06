@@ -38,7 +38,6 @@ const rootFiles = [
 ];
 
 const dataFiles = [
-  'data/hunt-boundaries-lite.geojson',
   'data/hunt-master-canonical.json',
   'data/utah-hunt-planner-master-all.json',
   'data/elk_hunt_table_official.json',
@@ -74,6 +73,106 @@ const dirsToCopy = [
   'assets',
   'processed_data/hard_data_exports',
 ];
+
+function simplifyRing(points) {
+  if (!Array.isArray(points) || points.length < 4) return null;
+  const step = points.length > 1200 ? 12 : points.length > 700 ? 8 : points.length > 300 ? 5 : 3;
+  const out = [];
+  for (let i = 0; i < points.length; i += step) {
+    const pt = points[i];
+    if (!Array.isArray(pt) || pt.length < 2) continue;
+    out.push([Number(pt[0].toFixed(5)), Number(pt[1].toFixed(5))]);
+  }
+  const last = points[points.length - 1];
+  if (Array.isArray(last) && last.length >= 2) {
+    const lastRounded = [Number(last[0].toFixed(5)), Number(last[1].toFixed(5))];
+    if (!out.length || out[out.length - 1][0] !== lastRounded[0] || out[out.length - 1][1] !== lastRounded[1]) {
+      out.push(lastRounded);
+    }
+  }
+  if (out.length < 4) return null;
+  if (out[0][0] !== out[out.length - 1][0] || out[0][1] !== out[out.length - 1][1]) {
+    out.push(out[0]);
+  }
+  return out.length >= 4 ? out : null;
+}
+
+async function buildBoundaryArtifacts(missing, tooLarge) {
+  const arcgisPath = path.join(repoRoot, 'data', 'hunt_boundaries_arcgis.json');
+  const liteFallbackPath = path.join(repoRoot, 'data', 'hunt-boundaries-lite.geojson');
+  const outputLite = path.join(outDir, 'data', 'hunt-boundaries-lite.geojson');
+  const outputFullAlias = path.join(outDir, 'data', 'hunt_boundaries.geojson');
+
+  if (await exists(arcgisPath)) {
+    const text = await fs.readFile(arcgisPath, 'utf8');
+    const source = JSON.parse(text);
+    const sourceFeatures = Array.isArray(source.features) ? source.features : [];
+    const features = sourceFeatures.map((feature) => {
+      const attrs = feature?.attributes || {};
+      const rings = feature?.geometry?.rings;
+      if (!Array.isArray(rings) || !rings.length) return null;
+      const simplifiedRings = rings
+        .slice(0, 30)
+        .map(simplifyRing)
+        .filter(Boolean);
+      if (!simplifiedRings.length) return null;
+      const boundaryId = String(attrs.BoundaryID ?? '').trim();
+      const boundaryName = String(attrs.Boundary_Name ?? '').trim();
+      return {
+        type: 'Feature',
+        properties: {
+          boundary_id: boundaryId,
+          BoundaryID: boundaryId,
+          Boundary_Name: boundaryName,
+          boundary_name: boundaryName,
+          source: 'arcgis_lite_individual',
+        },
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: simplifiedRings.map((ring) => [ring]),
+        },
+      };
+    }).filter(Boolean);
+
+    const liteGeoJson = {
+      type: 'FeatureCollection',
+      name: 'hunt-boundaries-lite-individual',
+      metadata: {
+        source: 'data/hunt_boundaries_arcgis.json',
+        purpose: 'Cloudflare-safe individual hunt boundary layer',
+        feature_count: features.length,
+      },
+      features,
+    };
+
+    const payload = JSON.stringify(liteGeoJson);
+    if (Buffer.byteLength(payload, 'utf8') > MAX_PAGES_FILE_BYTES) {
+      tooLarge.push(`generated data/hunt-boundaries-lite.geojson (${(Buffer.byteLength(payload, 'utf8') / (1024 * 1024)).toFixed(1)} MiB)`);
+      return;
+    }
+
+    await ensureParent(outputLite);
+    await fs.writeFile(outputLite, payload, 'utf8');
+    await ensureParent(outputFullAlias);
+    await fs.writeFile(outputFullAlias, payload, 'utf8');
+    return;
+  }
+
+  if (await exists(liteFallbackPath)) {
+    await copyFileIfExists('data/hunt-boundaries-lite.geojson', missing, tooLarge);
+    const fallbackText = await fs.readFile(liteFallbackPath, 'utf8');
+    if (Buffer.byteLength(fallbackText, 'utf8') <= MAX_PAGES_FILE_BYTES) {
+      await ensureParent(outputFullAlias);
+      await fs.writeFile(outputFullAlias, fallbackText, 'utf8');
+    } else {
+      tooLarge.push(`data/hunt-boundaries-lite.geojson (${(Buffer.byteLength(fallbackText, 'utf8') / (1024 * 1024)).toFixed(1)} MiB)`);
+    }
+    return;
+  }
+
+  missing.push('data/hunt_boundaries_arcgis.json');
+  missing.push('data/hunt-boundaries-lite.geojson');
+}
 
 async function exists(filePath) {
   try {
@@ -134,6 +233,7 @@ async function main() {
   for (const relPath of rootFiles) {
     await copyFileIfExists(relPath, missing, tooLarge);
   }
+  await buildBoundaryArtifacts(missing, tooLarge);
   for (const relPath of dataFiles) {
     await copyFileIfExists(relPath, missing, tooLarge);
   }
