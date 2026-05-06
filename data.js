@@ -51,9 +51,11 @@ window.UOGA_DATA = (() => {
         for (const source of OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES) {
           try {
             const json = await fetchJson(source);
-            const features = Array.isArray(json?.features) ? json.features : [];
-            features.forEach(feature => {
-              const attrs = feature?.attributes || {};
+            const rows = Array.isArray(json?.features)
+              ? json.features
+              : (Array.isArray(json) ? json : []);
+            rows.forEach(feature => {
+              const attrs = feature?.attributes || feature || {};
               const huntCode = normalizeHuntCode(attrs.HUNT_NUMBER);
               const boundaryId = safe(attrs.BOUNDARYID).trim();
               const boundaryName = safe(attrs.BOUNDARY_NAME).trim();
@@ -215,6 +217,91 @@ window.UOGA_DATA = (() => {
     return '';
   }
 
+  function classifyBlackBearSupplementalRecord(unitName, seasonText) {
+    const haystack = `${String(unitName || '')} ${String(seasonText || '')}`.toLowerCase();
+    if (haystack.includes('statewide permit')) {
+      return { huntType: 'Statewide', huntCategory: 'Statewide Permit', weapon: 'Any Legal Weapon' };
+    }
+    if (haystack.includes('pursuit')) {
+      return { huntType: 'Pursuit', huntCategory: 'Pursuit', weapon: 'Pursuit Only' };
+    }
+    if (haystack.includes('harvest objective')) {
+      return { huntType: 'Harvest Objective', huntCategory: 'Harvest Objective', weapon: 'Any Legal Weapon' };
+    }
+    if (haystack.includes('private lands only') || haystack.includes('private land only')) {
+      return { huntType: 'Private Land Only', huntCategory: 'Private Land Only', weapon: 'Any Legal Weapon' };
+    }
+    return { huntType: 'Limited Entry', huntCategory: 'Limited Entry', weapon: 'Any Legal Weapon' };
+  }
+
+  function inferBlackBearResidencyLabel(unitName) {
+    const lower = String(unitName || '').toLowerCase();
+    if (lower.includes('nonresident')) return 'Nonresident';
+    if (lower.includes('resident')) return 'Resident';
+    return 'Both';
+  }
+
+  async function loadSupplementalBlackBearRecords(deps) {
+    const {
+      OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,
+      normalizeHuntCode,
+      safe
+    } = deps;
+
+    const source = (Array.isArray(OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES) ? OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES : [])
+      .find(path => /black_bear_hunt_table_official\.json$/i.test(String(path || '')));
+    if (!source) return [];
+
+    let json;
+    try {
+      json = await fetchJson(source);
+    } catch (error) {
+      console.error(`Failed to load supplemental black bear table from ${source}.`, error);
+      return [];
+    }
+
+    const rows = Array.isArray(json) ? json : (Array.isArray(json?.features) ? json.features : []);
+    if (!rows.length) return [];
+
+    const dedupeCodes = new Set();
+    const output = [];
+    rows.forEach((row) => {
+      const attrs = row?.attributes || row || {};
+      const huntCode = normalizeHuntCode(attrs.HUNT_NUMBER);
+      if (!huntCode || dedupeCodes.has(huntCode)) return;
+      dedupeCodes.add(huntCode);
+
+      const unitName = safe(attrs.BOUNDARY_NAME).trim() || `Black Bear Unit ${huntCode}`;
+      const season = safe(attrs.SEASON).trim();
+      const boundaryIdRaw = safe(attrs.BOUNDARYID).trim();
+      const classification = classifyBlackBearSupplementalRecord(unitName, season);
+      const residency = inferBlackBearResidencyLabel(unitName);
+
+      output.push(normalizeHuntRecordForPlannerMatrix({
+        huntCode,
+        code: huntCode,
+        title: unitName,
+        huntTitle: unitName,
+        species: 'Black Bear',
+        huntType: classification.huntType,
+        huntCategory: classification.huntCategory,
+        sex: 'Either Sex',
+        weapon: classification.weapon,
+        residency,
+        unitName,
+        boundaryId: boundaryIdRaw || '',
+        boundaryID: boundaryIdRaw || '',
+        dates: season || 'See current Utah DWR bear guidebook',
+        sourceBoundaryName: unitName,
+        sourceFile: 'black_bear_hunt_table_official.json',
+        sourceType: 'official_supplemental_table',
+        boundaryLink: `https://dwrapps.utah.gov/huntboundary/hbstart?HN=${encodeURIComponent(huntCode)}`
+      }));
+    });
+
+    return output;
+  }
+
   function normalizeHuntRecordForPlannerMatrix(record) {
     if (!record || typeof record !== 'object') return record;
     const normalized = { ...record };
@@ -345,6 +432,29 @@ window.UOGA_DATA = (() => {
       await applyOfficialBoundaryMappings(merged, deps);
     } else {
       console.log(`Using authoritative hunt data source: ${loadedPrimaryLabel}`);
+    }
+
+    const existingHuntCodes = new Set(
+      merged
+        .map(record => firstNonEmptyRecordValue(record?.huntCode, record?.hunt_code, record?.HuntCode, record?.code).toUpperCase())
+        .filter(Boolean)
+    );
+    const supplementalBlackBear = await loadSupplementalBlackBearRecords(deps);
+    if (supplementalBlackBear.length) {
+      let added = 0;
+      supplementalBlackBear.forEach(record => {
+        const huntCode = firstNonEmptyRecordValue(record?.huntCode, record?.hunt_code, record?.HuntCode, record?.code).toUpperCase();
+        if (!huntCode || existingHuntCodes.has(huntCode)) return;
+        const key = getHuntRecordKey(record);
+        if (seenKeys.has(key)) return;
+        seenKeys.add(key);
+        existingHuntCodes.add(huntCode);
+        merged.push(record);
+        added += 1;
+      });
+      if (added) {
+        console.log(`Added ${added} supplemental Black Bear hunt rows from official table for matrix coverage.`);
+      }
     }
 
     return merged;
