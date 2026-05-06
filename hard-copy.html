@@ -51,10 +51,15 @@
       padding: 14px 16px;
       border-bottom: 1px solid rgba(174, 129, 84, 0.28);
       background: rgba(29, 18, 12, 0.42);
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
     }
     .library-toolbar {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       gap: 10px;
       align-items: center;
     }
@@ -88,6 +93,52 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .active-filter-chip {
+      border: 1px solid rgba(202, 156, 108, 0.4);
+      border-radius: 999px;
+      background: rgba(62, 39, 24, 0.9);
+      color: #f5dfc4;
+      font-weight: 700;
+      letter-spacing: .02em;
+      font-size: 12px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .active-filter-chip b {
+      color: #ffcf98;
+      font-weight: 800;
+    }
+    .active-filter-chip .chip-x {
+      font-size: 13px;
+      line-height: 1;
+      color: #ffcf98;
+    }
+    .library-clear {
+      border: 1px solid rgba(206, 157, 103, 0.45);
+      border-radius: 999px;
+      background: rgba(63, 39, 22, 0.92);
+      color: #f5dfc4;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .library-clear:hover {
+      border-color: #d9a264;
+      color: #ffd5a4;
+    }
     .library-chip {
       border: 1px solid rgba(183, 141, 98, 0.42);
       border-radius: 999px;
@@ -114,18 +165,103 @@
       text-transform: uppercase;
       color: #efd4b1;
     }
+    .library-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .library-section-count {
+      border-radius: 999px;
+      border: 1px solid rgba(193, 146, 99, 0.4);
+      background: rgba(57, 34, 22, 0.88);
+      color: #f3d8b6;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 5px 9px;
+      white-space: nowrap;
+    }
     .library-year-block {
       margin-top: 10px;
     }
-    .library-year-title {
-      margin: 0 0 8px;
+    .library-year-toggle {
+      width: 100%;
+      margin: 0;
+      padding: 10px 12px;
+      border: 1px solid rgba(182, 136, 90, 0.32);
+      border-radius: 10px;
+      background: rgba(55, 34, 21, 0.84);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       font-size: 12px;
+      font-weight: 800;
       letter-spacing: .05em;
       text-transform: uppercase;
       color: #d9bc99;
+      cursor: pointer;
+      list-style: none;
+    }
+    .library-year-toggle::-webkit-details-marker { display: none; }
+    .library-year-toggle::after {
+      content: "v";
+      font-size: 11px;
+      color: #e2c5a1;
+    }
+    .library-year-block[open] .library-year-toggle::after {
+      content: "^";
+    }
+    .library-year-title {
+      margin: 0;
+    }
+    .library-year-count {
+      color: #f6d8b2;
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+    .library-year-content {
+      margin-top: 8px;
     }
     #librarySections {
       padding: 14px 16px 18px;
+    }
+    .library-about {
+      margin: 0 16px 16px;
+      border: 1px solid rgba(174, 129, 84, 0.3);
+      border-radius: 12px;
+      background: rgba(42, 26, 17, 0.88);
+      overflow: hidden;
+    }
+    .library-about summary {
+      list-style: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #f2d8b6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .library-about summary::-webkit-details-marker { display: none; }
+    .library-about summary::after {
+      content: "v";
+      color: #d9bc99;
+      font-size: 11px;
+    }
+    .library-about[open] summary::after { content: "^"; }
+    .library-about-body {
+      padding: 0 12px 12px;
+      color: #e2c5a1;
+      font-size: 13px;
+      line-height: 1.45;
     }
     .hard-data-grid {
       display: grid;
@@ -195,6 +331,16 @@
     @media (max-width: 900px) {
       .library-toolbar { grid-template-columns: 1fr; }
       .library-facets { grid-template-columns: 1fr; }
+      .library-head {
+        top: 0;
+        padding: 12px;
+      }
+      #librarySections {
+        padding: 12px;
+      }
+      .library-about {
+        margin: 0 12px 12px;
+      }
     }
   </style>
   <script src="https://js.sentry-cdn.com/26137c5576f01423efc85f47076f9548.min.js" crossorigin="anonymous"></script>
@@ -231,6 +377,7 @@
           <div class="library-toolbar">
             <input id="librarySearch" class="library-search" type="search" placeholder="Search dataset name, type, or description..." aria-label="Search data library">
             <span id="libraryCount" class="helper" aria-live="polite"></span>
+            <button id="libraryClearFilters" class="library-clear" type="button">Clear filters</button>
           </div>
           <div class="library-facets">
             <select id="libraryTypeFilter" class="library-facet" aria-label="Filter by file type">
@@ -241,7 +388,14 @@
             </select>
           </div>
           <div id="libraryChips" class="library-chip-row" role="tablist" aria-label="PDF categories"></div>
+          <div id="activeFilterChips" class="active-filters" aria-live="polite"></div>
         </div>
+        <details class="library-about">
+          <summary>About This Library</summary>
+          <div class="library-about-body">
+            This visitor library is focused on downloadable source PDFs used by the hunt engine workflow. Use category tabs, year filters, and search together for the fastest results.
+          </div>
+        </details>
 
         <div id="librarySections"></div>
 
@@ -282,6 +436,8 @@
       const yearFilterEl = document.getElementById('libraryYearFilter');
       const sectionsEl = document.getElementById('librarySections');
       const countEl = document.getElementById('libraryCount');
+      const clearFiltersEl = document.getElementById('libraryClearFilters');
+      const activeFilterChipsEl = document.getElementById('activeFilterChips');
 
       let activeGroup = 'all';
       let activeType = 'all';
@@ -338,9 +494,49 @@
         });
       }
 
+      function drawActiveFilters() {
+        const query = (searchEl.value || '').trim();
+        const activeBits = [];
+        if (activeGroup !== 'all') activeBits.push({ key: 'group', label: `Section`, value: groupLabel(activeGroup) });
+        if (activeType !== 'all') activeBits.push({ key: 'type', label: 'Type', value: String(activeType).toUpperCase() });
+        if (activeYear !== 'all') activeBits.push({ key: 'year', label: 'Year', value: activeYear });
+        if (query) activeBits.push({ key: 'search', label: 'Search', value: query });
+
+        if (!activeBits.length) {
+          activeFilterChipsEl.innerHTML = '';
+          return;
+        }
+
+        activeFilterChipsEl.innerHTML = activeBits.map(bit => `
+          <button type="button" class="active-filter-chip" data-clear="${escapeHtml(bit.key)}">
+            <span><b>${escapeHtml(bit.label)}:</b> ${escapeHtml(bit.value)}</span>
+            <span class="chip-x" aria-hidden="true">x</span>
+          </button>
+        `).join('');
+
+        activeFilterChipsEl.querySelectorAll('button').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const key = btn.dataset.clear;
+            if (key === 'group') activeGroup = 'all';
+            if (key === 'type') {
+              activeType = 'all';
+              typeFilterEl.value = 'all';
+            }
+            if (key === 'year') {
+              activeYear = 'all';
+              yearFilterEl.value = 'all';
+            }
+            if (key === 'search') searchEl.value = '';
+            drawChips();
+            drawSections();
+          });
+        });
+      }
+
       function drawSections() {
         const filtered = filterItems();
         countEl.textContent = `${filtered.length} of ${parsedItems.length} PDF links`;
+        drawActiveFilters();
         if (!filtered.length) {
           sectionsEl.innerHTML = '<div class="library-empty">No files match this filter.</div>';
           return;
@@ -373,7 +569,7 @@
             return Number(b) - Number(a);
           });
 
-          const yearBlocks = sortedYears.map((yearKey) => {
+          const yearBlocks = sortedYears.map((yearKey, idx) => {
             const yearItems = byYear.get(yearKey) || [];
             yearItems.sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
             const cards = yearItems.map(item => `
@@ -386,17 +582,26 @@
                 </span>
               </a>
             `).join('');
+            const openDefault = activeYear !== 'all' || idx < 2 ? 'open' : '';
             return `
-              <div class="library-year-block">
-                <h4 class="library-year-title">${escapeHtml(yearKey)}</h4>
-                <div class="hard-data-grid" role="list">${cards}</div>
-              </div>
+              <details class="library-year-block" ${openDefault}>
+                <summary class="library-year-toggle">
+                  <span class="library-year-title">${escapeHtml(yearKey)}</span>
+                  <span class="library-year-count">${yearItems.length} files</span>
+                </summary>
+                <div class="library-year-content">
+                  <div class="hard-data-grid" role="list">${cards}</div>
+                </div>
+              </details>
             `;
           }).join('');
 
           return `
             <section class="library-section">
-              <h3>${escapeHtml(groupLabel(group))}</h3>
+              <div class="library-section-head">
+                <h3>${escapeHtml(groupLabel(group))}</h3>
+                <span class="library-section-count">${list.length} PDFs</span>
+              </div>
               ${yearBlocks}
             </section>
           `;
@@ -410,6 +615,16 @@
       });
       yearFilterEl?.addEventListener('change', () => {
         activeYear = yearFilterEl.value || 'all';
+        drawSections();
+      });
+      clearFiltersEl?.addEventListener('click', () => {
+        activeGroup = 'all';
+        activeType = 'all';
+        activeYear = 'all';
+        searchEl.value = '';
+        if (typeFilterEl) typeFilterEl.value = 'all';
+        if (yearFilterEl) yearFilterEl.value = 'all';
+        drawChips();
         drawSections();
       });
       drawChips();
