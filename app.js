@@ -395,6 +395,9 @@ function getResolvedBoundaryIdsForHunt(hunt) {
     manifestRow?.BoundaryID,
   ))).trim();
   if (manifestBoundaryId) return [manifestBoundaryId];
+  // If manifest/display-boundary mapping exists but no explicit DWR ID, do not
+  // fall back to legacy synthetic boundary IDs from hunt records.
+  if (manifestRow) return [];
   const boundaryId = safe(getBoundaryId(hunt)).trim();
   return boundaryId ? [boundaryId] : [];
 }
@@ -2896,6 +2899,9 @@ function buildPopupCardForHunt(hunt) {
   const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
   const heading = escapeHtml(getPanelHeading(hunt));
   const boundaryLink = getBoundaryLink(hunt);
+  const boundaryMeta = getBoundaryDisplaySummary(hunt);
+  const boundaryLine = escapeHtml(boundaryMeta.line);
+  const kmzPath = boundaryMeta.kmzPath;
 
   return `
     <div style="min-width:320px;max-width:420px;border:1px solid rgba(92,65,45,.75);border-radius:14px;overflow:hidden;background:rgba(35,30,26,.96);color:#f4efe4;box-shadow:0 12px 34px rgba(0,0,0,.35);">
@@ -4325,6 +4331,7 @@ function styleBoundaryLayer() {
     }
     const showBoundaries = shouldShowHuntBoundaries();
     const showAllUnits = shouldShowAllHuntUnits();
+    const useIndependentLayerOnly = showBoundaries && !showAllUnits;
     const filtered = getDisplayHunts();
     const matcher = buildBoundaryMatcher(filtered);
     const selectedMatcher = selectedHunt ? buildBoundaryMatcher([selectedHunt]) : null;
@@ -4340,7 +4347,9 @@ function styleBoundaryLayer() {
         const name = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
         const isMatch = showAllUnits || matcher.matches(ids, name);
         const isSelected = !!selectedMatcher && selectedMatcher.matches(ids, name);
-        const visible = showFilteredMatches ? isMatch : showBoundaries;
+        const visible = useIndependentLayerOnly
+          ? false
+          : (showFilteredMatches ? isMatch : showBoundaries);
         const emphasized = showFilteredMatches && isMatch;
         return {
           visible,

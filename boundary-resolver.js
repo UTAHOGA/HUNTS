@@ -217,7 +217,9 @@ window.UOGA_BOUNDARY_RESOLVER = (() => {
     const manifestDwrBoundaryId = normalizeBoundaryId(
       manifestRow?.dwr_boundary_id || manifestRow?.boundary_id,
     );
-    const singleBoundaryId = manifestDwrBoundaryId || huntBoundaryId;
+    // If a manifest row exists, only trust an explicit manifest DWR ID.
+    // This prevents synthetic legacy IDs from being treated as real DWR IDs.
+    const singleBoundaryId = manifestDwrBoundaryId || (!manifestRow ? huntBoundaryId : '');
     const manifestDisplayBoundaryId = safeText(manifestRow?.display_boundary_id || hunt?.display_boundary_id || hunt?.displayBoundaryId);
     const derivedDisplayBoundaryId = manifestDisplayBoundaryId
       || (mergedBoundaryId ? `UOGA_${huntCode}_2026` : (singleBoundaryId ? `DWR_${singleBoundaryId}` : (huntCode ? `UOGA_${huntCode}_2026` : '')));
