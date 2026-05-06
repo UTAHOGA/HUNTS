@@ -14,6 +14,7 @@
   "devDependencies": {
     "pdf-parse": "^1.1.4",
     "pdfkit": "^0.17.2",
+    "wrangler": "^4.88.0",
     "xlsx": "^0.18.5"
   }
 }
