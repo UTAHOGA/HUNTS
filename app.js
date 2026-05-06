@@ -776,7 +776,9 @@ function getFilteredHunts(excludeKey = '') {
 }
 
 function getDisplayHunts() {
-  if (!hasActiveMatrixSelections() && !selectedHunt) return [];
+  if (!hasActiveMatrixSelections()) {
+    return selectedHunt ? [selectedHunt] : [];
+  }
   return getFilteredHunts();
 }
 function shouldShowHuntBoundaries() {
@@ -1473,6 +1475,9 @@ function openSelectedHuntFloat() {
           <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
             Hunt Research
           </button>
+          <button type="button" class="secondary" data-inline-close-selected-hunt>
+            Close
+          </button>
         </div>
         <div class="selected-unit-placard-note">Built to stay just off the left rail so the map area still breathes.</div>
       </div>
@@ -1482,6 +1487,9 @@ function openSelectedHuntFloat() {
   selectedHuntFloat.querySelector('[data-close-selected-hunt-float]')?.addEventListener('click', () => closeSelectedHuntFloat());
   selectedHuntFloat.querySelector('[data-inline-hunt-research]')?.addEventListener('click', () => {
     openHuntResearch(getHuntCode(selectedHunt));
+  });
+  selectedHuntFloat.querySelector('[data-inline-close-selected-hunt]')?.addEventListener('click', () => {
+    closeSelectedHuntFloat();
   });
 }
 
