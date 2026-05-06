@@ -72,6 +72,8 @@ const processedFiles = [
   'processed_data/boundary_registry_2026.csv',
   'processed_data/boundary-manifest-2026.json',
   'processed_data/boundary-manifest-2026.csv',
+  'processed_data/display-boundary-index-2026.json',
+  'processed_data/display-boundary-index-2026.csv',
   'processed_data/outfitter-federal-unit-coverage-review.json',
   'processed_data/coverage-matrix.json',
   'processed_data/normalized-staging-audit.csv',

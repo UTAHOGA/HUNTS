@@ -16,6 +16,7 @@ const {
   OUTFITTERS_DATA_VERSION,
   OUTFITTER_COVERAGE_VERSION,
   HUNT_BOUNDARY_SOURCES,
+  DISPLAY_BOUNDARY_INDEX_SOURCES,
   BOUNDARY_MANIFEST_SOURCES,
   FINALIZED_BOUNDARY_SOURCES,
   COMPOSITE_BOUNDARY_SOURCES,
@@ -132,6 +133,7 @@ let compositeBoundaryMembersByCompositeId = new Map();
 let boundaryManifestLoadPromise = null;
 let boundaryManifestByHuntCode = new Map();
 let boundaryManifestByMergedBoundaryId = new Map();
+let boundaryManifestByDisplayBoundaryId = new Map();
 let boundaryManifestSourceUsed = '';
 let selectedBoundaryFallbackLayer = null;
 
@@ -365,6 +367,7 @@ function getResolvedBoundaryIdsForHunt(hunt) {
   const huntCode = normalizeHuntCodeFromResolver(getHuntCode(hunt));
   const manifestRow = huntCode ? boundaryManifestByHuntCode.get(huntCode) : null;
   const memberIdsFromManifest = parseBoundaryIdListFromResolver(firstNonEmpty(
+    manifestRow?.dwr_member_boundary_ids,
     manifestRow?.member_boundary_ids,
     manifestRow?.memberBoundaryIds,
   ))
@@ -383,6 +386,7 @@ function getResolvedBoundaryIdsForHunt(hunt) {
     .filter(Boolean);
   if (resolved.length) return [...new Set(resolved)];
   const manifestBoundaryId = safe(normalizeBoundaryIdFromResolver(firstNonEmpty(
+    manifestRow?.dwr_boundary_id,
     manifestRow?.boundary_id,
     manifestRow?.boundaryId,
     manifestRow?.BoundaryID,
@@ -489,11 +493,21 @@ async function loadBoundaryManifestRuntime() {
   if (!boundaryManifestLoadPromise) {
     boundaryManifestLoadPromise = (async () => {
       const result = await loadBoundaryManifestFromResolver({
-        sources: BOUNDARY_MANIFEST_SOURCES,
+        sources: [
+          ...(Array.isArray(DISPLAY_BOUNDARY_INDEX_SOURCES) ? DISPLAY_BOUNDARY_INDEX_SOURCES : []),
+          ...(Array.isArray(BOUNDARY_MANIFEST_SOURCES) ? BOUNDARY_MANIFEST_SOURCES : []),
+        ],
         fetchJson,
       });
       boundaryManifestByHuntCode = result?.byHuntCode instanceof Map ? result.byHuntCode : new Map();
       boundaryManifestByMergedBoundaryId = result?.byMergedBoundaryId instanceof Map ? result.byMergedBoundaryId : new Map();
+      boundaryManifestByDisplayBoundaryId = new Map();
+      if (Array.isArray(result?.rows)) {
+        result.rows.forEach((row) => {
+          const displayBoundaryId = safe(row?.display_boundary_id).trim();
+          if (displayBoundaryId) boundaryManifestByDisplayBoundaryId.set(displayBoundaryId, row);
+        });
+      }
       boundaryManifestSourceUsed = safe(result?.sourceUsed).trim();
       if (result?.error) {
         console.warn('Boundary manifest load failed; using legacy boundary mapping fallback.', result.error);
@@ -503,6 +517,7 @@ async function loadBoundaryManifestRuntime() {
       return {
         byHuntCode: boundaryManifestByHuntCode,
         byMergedBoundaryId: boundaryManifestByMergedBoundaryId,
+        byDisplayBoundaryId: boundaryManifestByDisplayBoundaryId,
         sourceUsed: boundaryManifestSourceUsed,
       };
     })();
@@ -526,11 +541,21 @@ function resolveBoundaryForHuntRuntime(hunt) {
 function applyBoundaryManifestToHunts(records) {
   records.forEach((record) => {
     const resolved = resolveBoundaryForHuntRuntime(record);
-    const memberIds = Array.isArray(resolved?.member_boundary_ids)
-      ? resolved.member_boundary_ids.map((id) => safe(id).trim()).filter(Boolean)
+    const memberIds = Array.isArray(resolved?.dwr_member_boundary_ids)
+      ? resolved.dwr_member_boundary_ids.map((id) => safe(id).trim()).filter(Boolean)
       : [];
-    const normalizedBoundaryId = safe(resolved?.boundary_id).trim();
+    const normalizedBoundaryId = safe(resolved?.dwr_boundary_id).trim();
     const resolvedIds = memberIds.length ? memberIds : (normalizedBoundaryId ? [normalizedBoundaryId] : []);
+    const displayBoundaryId = safe(resolved?.display_boundary_id).trim();
+
+    if (displayBoundaryId) {
+      record.display_boundary_id = displayBoundaryId;
+      record.displayBoundaryId = displayBoundaryId;
+    }
+    record.dwr_boundary_id = normalizedBoundaryId || null;
+    record.dwrBoundaryId = normalizedBoundaryId || null;
+    record.dwr_member_boundary_ids = memberIds;
+    record.dwrMemberBoundaryIds = memberIds;
 
     if (resolvedIds.length) {
       record.resolvedBoundaryIds = resolvedIds;
@@ -556,6 +581,10 @@ function applyBoundaryManifestToHunts(records) {
     if (resolved?.boundary_geometry_type) {
       record.boundary_geometry_type = resolved.boundary_geometry_type;
       record.boundaryGeometryType = resolved.boundary_geometry_type;
+    }
+    if (resolved?.dwr_boundary_link && !safe(getBoundaryLink(record)).trim()) {
+      record.boundaryLink = resolved.dwr_boundary_link;
+      record.dwr_boundary_link = resolved.dwr_boundary_link;
     }
     if (memberIds.length) {
       record.member_boundary_ids = memberIds;
@@ -611,21 +640,22 @@ async function applySelectedHuntBoundaryResolution(hunt) {
 
 function getBoundaryDisplaySummary(hunt) {
   const resolved = resolveBoundaryForHuntRuntime(hunt);
+  const memberIds = Array.isArray(resolved.dwr_member_boundary_ids) ? resolved.dwr_member_boundary_ids : [];
   if (resolved.status === 'mapped' && safe(resolved.merged_boundary_id).trim()) {
-    const memberCount = Array.isArray(resolved.member_boundary_ids) ? resolved.member_boundary_ids.length : 0;
+    const memberCount = memberIds.length;
     return {
       line: `Boundary: Merged boundary${memberCount ? `, ${memberCount} DWR member areas` : ''}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
     };
   }
-  if (resolved.status === 'mapped' && safe(resolved.boundary_id).trim()) {
+  if (resolved.status === 'mapped' && safe(resolved.dwr_boundary_id).trim()) {
     return {
-      line: `Boundary: Boundary ID ${safe(resolved.boundary_id)}`,
+      line: `Boundary: Boundary ID ${safe(resolved.dwr_boundary_id)}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
     };
   }
   if (resolved.status === 'fallback_member_features') {
-    const memberCount = Array.isArray(resolved.member_boundary_ids) ? resolved.member_boundary_ids.length : 0;
+    const memberCount = memberIds.length;
     return {
       line: `Boundary: Mapped from member boundaries${memberCount ? ` (${memberCount})` : ''}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
@@ -1530,6 +1560,7 @@ function resetAllFilters() {
   if (unitFilter) unitFilter.value = '';
   selectedHunt = null;
   selectedBoundaryFeature = null;
+  clearSelectedBoundaryFallbackLayer();
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
@@ -1545,6 +1576,7 @@ function handleFilterChange(event) {
   const activeMode = safe(mapTypeSelect?.value || 'google').toLowerCase();
   selectedHunt = null;
   selectedBoundaryFeature = null;
+  clearSelectedBoundaryFallbackLayer();
   closeSelectedHuntPopup();
   closeSelectedHuntFloat();
   closeSelectionInfoWindow();
@@ -1743,7 +1775,17 @@ function closeSelectedHuntFloat(zoomToUnit = false) {
 function getSelectedUnitGroups() {
   const groups = new Map();
   getDisplayHunts().forEach(hunt => {
-    const key = firstNonEmpty(getBoundaryId(hunt), getUnitValue(hunt), getUnitName(hunt), getHuntCode(hunt));
+    const resolved = resolveBoundaryForHuntRuntime(hunt);
+    const key = firstNonEmpty(
+      resolved?.display_boundary_id,
+      resolved?.merged_boundary_id,
+      resolved?.dwr_boundary_id,
+      resolved?.boundary_id,
+      getBoundaryId(hunt),
+      getUnitValue(hunt),
+      getUnitName(hunt),
+      getHuntCode(hunt),
+    );
     if (!key) return;
     if (!groups.has(key)) {
       groups.set(key, {
@@ -1818,6 +1860,10 @@ function openSelectedHuntFloat() {
   const weapon = escapeHtml(getWeapon(selectedHunt) || 'Not loaded');
   const huntType = escapeHtml(getHuntType(selectedHunt) || 'Not loaded');
   const dates = escapeHtml(getDates(selectedHunt) || 'See official hunt details');
+  const boundaryMeta = getBoundaryDisplaySummary(selectedHunt);
+  const boundaryLine = escapeHtml(boundaryMeta.line);
+  const boundaryLink = getBoundaryLink(selectedHunt);
+  const kmzLink = boundaryMeta.kmzPath;
 
   selectedHuntFloat.innerHTML = `
     <section class="selected-unit-placard">
@@ -1846,11 +1892,17 @@ function openSelectedHuntFloat() {
             <span class="selected-unit-placard-pill-label">Dates</span>
             <span class="selected-unit-placard-pill-value">${dates}</span>
           </div>
+          <div class="selected-unit-placard-pill">
+            <span class="selected-unit-placard-pill-label">Boundary</span>
+            <span class="selected-unit-placard-pill-value">${boundaryLine}</span>
+          </div>
         </div>
         <div class="selected-unit-placard-actions">
           <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
             Hunt Research
           </button>
+          ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">View on DWR</a>` : ''}
+          ${kmzLink ? `<a href="${escapeHtml(kmzLink)}" target="_blank" rel="noopener noreferrer">Download KMZ</a>` : ''}
         </div>
         <div class="selected-unit-placard-note">Built to stay just off the left rail so the map area still breathes.</div>
       </div>
@@ -1927,6 +1979,9 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
   const dates = escapeHtml(getDates(hunt) || 'See official hunt details');
   const heading = escapeHtml(getPanelHeading(hunt));
   const boundaryLink = getBoundaryLink(hunt);
+  const boundaryMeta = getBoundaryDisplaySummary(hunt);
+  const boundaryLine = escapeHtml(boundaryMeta.line);
+  const kmzPath = boundaryMeta.kmzPath;
   const panelWidth = roomy ? 760 : (compact ? 480 : 560);
   const panelHeight = roomy ? 420 : (compact ? 184 : 214);
   const wrapperWidth = compact ? `width:${panelWidth}px;max-width:${panelWidth}px;` : `width:${panelWidth}px;max-width:100%;`;
@@ -1987,12 +2042,18 @@ function buildDnrPlate(hunt, compact = false, roomy = false) {
 }
 
 function syncSelectedHuntAcrossMapModes({ closeChooser = true, zoomGoogle = true } = {}) {
-  if (!selectedHunt) return;
+  if (!selectedHunt) {
+    clearSelectedBoundaryFallbackLayer();
+    return;
+  }
   renderSelectedHunt();
   renderOutfitters();
   renderMatchingHunts();
   if (closeChooser) closeSelectedHuntPopup();
   styleBoundaryLayer();
+  applySelectedHuntBoundaryResolution(selectedHunt).catch((error) => {
+    console.warn('Selected hunt boundary resolution failed.', error);
+  });
   updateDwrMapFrame(selectedHunt);
 
   const mode = safe(mapTypeSelect?.value || 'google').toLowerCase();
@@ -2041,6 +2102,10 @@ function renderSelectedHunt() {
   const species = escapeHtml(getSpeciesDisplay(hunt) || '');
   const weapon = escapeHtml(getWeapon(hunt) || '');
   const huntType = escapeHtml(getHuntType(hunt) || '');
+  const boundaryMeta = getBoundaryDisplaySummary(hunt);
+  const boundaryLine = escapeHtml(boundaryMeta.line);
+  const dwrBoundaryLink = getBoundaryLink(hunt);
+  const downloadKmzPath = boundaryMeta.kmzPath;
 
   window.UOGA_UI?.recordRecentHunt?.({
     hunt_code: getHuntCode(hunt),
@@ -2059,6 +2124,9 @@ function renderSelectedHunt() {
         <div><strong>Species:</strong> ${species}</div>
         <div><strong>Weapon:</strong> ${weapon}</div>
         <div><strong>Hunt Type:</strong> ${huntType}</div>
+        <div><strong>${boundaryLine}</strong></div>
+        ${dwrBoundaryLink ? `<div><a href="${escapeHtml(dwrBoundaryLink)}" target="_blank" rel="noopener noreferrer">View on DWR</a></div>` : ''}
+        ${downloadKmzPath ? `<div><a href="${escapeHtml(downloadKmzPath)}" target="_blank" rel="noopener noreferrer">Download KMZ</a></div>` : ''}
 
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
           <button
@@ -2676,7 +2744,9 @@ function buildPopupCardForHunt(hunt) {
         <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${species} | ${sex} | ${huntType}</div>
         <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${weapon}</div>
         <div style="font-size:13px;color:rgba(244,239,228,.78);line-height:1.35;">${dates}</div>
+        <div style="font-size:13px;color:rgba(244,239,228,.9);line-height:1.35;">${boundaryLine}</div>
         ${boundaryLink ? `<button type="button" data-inline-hunt-details class="secondary" style="justify-self:start;">Official Utah DWR Hunt Details</button>` : ''}
+        ${kmzPath ? `<a href="${escapeHtml(kmzPath)}" target="_blank" rel="noopener noreferrer" style="color:#ffba7d;font-weight:700;text-decoration:none;">Download KMZ</a>` : ''}
       </div>
     </div>`;
 }
@@ -3849,6 +3919,7 @@ function applyMapMode() {
   }
 
   if (value === 'dwr') {
+    clearSelectedBoundaryFallbackLayer();
     clearOutfitterMarkers();
     closeSelectedHuntFloat();
     updateDwrMapFrame(getPreferredDwrHuntCandidate());
@@ -3866,6 +3937,7 @@ function applyMapMode() {
   }
 
   if (value === 'earth') {
+    clearSelectedBoundaryFallbackLayer();
     if (basemapControl) basemapControl.hidden = true;
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
@@ -3915,6 +3987,11 @@ function applyMapMode() {
   googleBaselineMap.getStreetView()?.setVisible(false);
   styleBoundaryLayer();
   if (selectedHunt) {
+    applySelectedHuntBoundaryResolution(selectedHunt).catch((error) => {
+      console.warn('Selected hunt boundary resolution failed during map mode apply.', error);
+    });
+  }
+  if (selectedHunt) {
     updateOutfitterMarkers(getMatchingOutfittersForHunt(selectedHunt));
   }
   updateStatus(`${value === 'google' ? 'Google' : titleCaseWords(value)} map active.`);
@@ -3928,7 +4005,19 @@ function resetMapView() {
 }
 
 function getSelectedHuntCenter() {
-  if (!selectedHunt || !huntUnitsLayer) return null;
+  if (!selectedHunt) return null;
+  if (selectedBoundaryFallbackLayer) {
+    const bounds = new google.maps.LatLngBounds();
+    let found = false;
+    selectedBoundaryFallbackLayer.forEach((feature) => {
+      feature.getGeometry().forEachLatLng((latLng) => {
+        bounds.extend(latLng);
+        found = true;
+      });
+    });
+    if (found) return bounds.getCenter();
+  }
+  if (!huntUnitsLayer) return null;
   const matcher = buildBoundaryMatcher([selectedHunt]);
   let center = null;
   huntUnitsLayer.forEach(f => {
@@ -4112,6 +4201,7 @@ function bindControls() {
     closeSelectionInfoWindow();
     selectedHunt = null;
     selectedBoundaryFeature = null;
+    clearSelectedBoundaryFallbackLayer();
     if (toggleDwrUnits && hasActiveMatrixSelections()) {
       toggleDwrUnits.checked = true;
     }
@@ -4278,18 +4368,28 @@ function bindControls() {
 }
 
 function zoomToSelectedBoundary() {
-  if (!huntUnitsLayer || !selectedHunt) return;
+  if (!selectedHunt) return;
   const bounds = new google.maps.LatLngBounds();
   let found = false;
+  if (selectedBoundaryFallbackLayer) {
+    selectedBoundaryFallbackLayer.forEach((feature) => {
+      feature.getGeometry().forEachLatLng((latLng) => {
+        bounds.extend(latLng);
+        found = true;
+      });
+    });
+  }
+  if (!found && !huntUnitsLayer) return;
   const matcher = buildBoundaryMatcher([selectedHunt]);
-  
-  huntUnitsLayer.forEach(f => {
-    const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(f);
-    const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
-    if (matcher.matches(featureBoundaryIds, featureName)) {
-      f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
-    }
-  });
+  if (!found) {
+    huntUnitsLayer.forEach(f => {
+      const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(f);
+      const featureName = normalizeBoundaryKey(f.getProperty('Boundary_Name'));
+      if (matcher.matches(featureBoundaryIds, featureName)) {
+        f.getGeometry().forEachLatLng(ll => { bounds.extend(ll); found = true; });
+      }
+    });
+  }
   if (found) {
     googleBaselineMap.fitBounds(bounds);
     google.maps.event.addListenerOnce(googleBaselineMap, 'bounds_changed', () => {

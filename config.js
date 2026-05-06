@@ -99,6 +99,12 @@ window.UOGA_CONFIG = (() => {
     fromR2(`processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
     fromR2(`boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
+  const DISPLAY_BOUNDARY_INDEX_SOURCES = [
+    `./processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`,
+    fromR2(`processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
+    fromR2(`display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
+  ].filter(Boolean);
   const FINALIZED_BOUNDARY_SOURCES = [
     `./data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`,
     `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
@@ -465,6 +471,7 @@ window.UOGA_CONFIG = (() => {
     HUNT_RESEARCH_DATA_VERSION,
 
     HUNT_BOUNDARY_SOURCES,
+    DISPLAY_BOUNDARY_INDEX_SOURCES,
     BOUNDARY_MANIFEST_SOURCES,
     FINALIZED_BOUNDARY_SOURCES,
     COMPOSITE_BOUNDARY_SOURCES,
