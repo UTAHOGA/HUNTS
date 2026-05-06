@@ -51,19 +51,20 @@ def forecast_demand(rows: Iterable[Mapping[str, object]]) -> dict[tuple[str, str
     result: dict[tuple[str, str, Optional[int]], DemandForecast] = {}
     for key, values in grouped.items():
         ordered = sorted(values, key=lambda x: (x[0] is None, x[0]), reverse=True)
-        recent = ordered[0][1] if len(ordered) > 0 else None
-        prev = ordered[1][1] if len(ordered) > 1 else recent
-        older_vals = [v for _, v in ordered[2:]]
-        older = int(round(sum(older_vals) / len(older_vals))) if older_vals else prev
-
-        if recent is None:
-            forecast = None
-        else:
-            r = float(recent)
-            p = float(prev if prev is not None else recent)
-            o = float(older if older is not None else p)
-            forecast = int(round((0.60 * r) + (0.30 * p) + (0.10 * o)))
-            forecast = max(forecast, 0)
+        applicants = [v for _, v in ordered]
+        forecast = None
+        if applicants:
+            if len(applicants) >= 3:
+                weights = [0.60, 0.30, 0.10]
+                chosen = applicants[:3]
+            elif len(applicants) == 2:
+                weights = [0.70, 0.30]
+                chosen = applicants[:2]
+            else:
+                weights = [1.0]
+                chosen = applicants[:1]
+            weighted = sum(weight * float(value) for weight, value in zip(weights, chosen))
+            forecast = max(0, int(round(weighted)))
 
         result[key] = DemandForecast(
             hunt_code=key[0],

@@ -126,6 +126,7 @@ const loadBoundaryManifestFromResolver = typeof boundaryResolver.loadBoundaryMan
   : async () => ({ sourceUsed: '', rowCount: 0, rows: [], byHuntCode: new Map(), byMergedBoundaryId: new Map(), error: null });
 
 let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, googleEarth3dBoundaryOverlays = [], huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let selectedHuntFocusOnly = false;
 let finalizedBoundaryGeoJson = null;
 let independentBoundaryLayer = null;
 let independentBoundaryRefreshToken = 0;
@@ -1342,6 +1343,8 @@ function getFilteredHunts(excludeKey = '') {
 
 function getDisplayHunts() {
   if (!hasActiveMatrixSelections() && !selectedHunt) return [];
+  if (selectedHuntFocusOnly && selectedHunt) return [selectedHunt];
+  if (selectedHunt && !hasActiveMatrixSelections()) return [selectedHunt];
   return getFilteredHunts();
 }
 function shouldShowHuntBoundaries() {
@@ -1733,6 +1736,7 @@ function resetAllFilters() {
 
 function handleFilterChange(event) {
   const activeMode = safe(mapTypeSelect?.value || 'google').toLowerCase();
+  selectedHuntFocusOnly = false;
   selectedHunt = null;
   selectedBoundaryFeature = null;
   clearSelectedBoundaryFallbackLayer();
@@ -2060,6 +2064,9 @@ function openSelectedHuntFloat() {
           <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
             Hunt Research
           </button>
+          <button type="button" class="secondary hunt-research-ring" data-inline-view-map>
+            View Map
+          </button>
           ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">View on DWR</a>` : ''}
           ${kmzLink ? `<a href="${escapeHtml(kmzLink)}" target="_blank" rel="noopener noreferrer">Download KMZ</a>` : ''}
         </div>
@@ -2069,6 +2076,7 @@ function openSelectedHuntFloat() {
   selectedHuntFloat.classList.add('is-open');
   selectedHuntFloat.setAttribute('aria-hidden', 'false');
   selectedHuntFloat.querySelector('[data-close-selected-hunt-float]')?.addEventListener('click', () => closeSelectedHuntFloat());
+  selectedHuntFloat.querySelector('[data-inline-view-map]')?.addEventListener('click', () => closeSelectedHuntFloat(true));
   selectedHuntFloat.querySelector('[data-inline-hunt-research]')?.addEventListener('click', () => {
     openHuntResearch(getHuntCode(selectedHunt));
   });
@@ -2225,9 +2233,10 @@ function syncSelectedHuntAcrossMapModes({ closeChooser = true, zoomGoogle = true
   }
 }
 
-window.selectHuntByKey = (key) => {
+window.selectHuntByKey = (key, options = {}) => {
   const h = huntData.find(x => getHuntRecordKey(x) === key);
   if (!h) return;
+  selectedHuntFocusOnly = !!options.focusOnly;
   selectedHunt = h;
   trackAnalytics('hunt_selected', {
     hunt_code: safe(getHuntCode(h)),
@@ -2241,7 +2250,7 @@ window.selectHuntByCode = (code) => {
   const want = safe(code).trim().toUpperCase();
   if (!want) return;
   const h = huntData.find(x => safe(getHuntCode(x)).trim().toUpperCase() === want);
-  if (h) window.selectHuntByKey(getHuntRecordKey(h));
+  if (h) window.selectHuntByKey(getHuntRecordKey(h), { focusOnly: true });
 };
 
 function renderSelectedHunt() {
@@ -2985,6 +2994,7 @@ function openMapChooser(feature, matches) {
 
 function openBoundaryPopup(feature, latLng) {
   if (!googleBaselineMap || !feature || !latLng) return;
+  suppressLandClickUntil = Date.now() + 240;
   const matches = getFeatureMatches(feature);
   selectedBoundaryFeature = feature;
   selectedBoundaryMatches = matches.slice();
@@ -4320,6 +4330,11 @@ function initGoogleBaseline() {
     fullscreenControl: true,
     mapTypeControl: false
   });
+  googleBaselineMap.addListener('click', () => {
+    if (shouldSuppressLandClick()) return;
+    closeSelectedHuntFloat();
+    closeSelectedHuntPopup();
+  });
   // Expose the active map instance so UI helpers (google-basemap.js) can reliably control it.
   window.googleBaselineMap = googleBaselineMap;
   googleApiReady = true;
@@ -4410,6 +4425,7 @@ function bindControls() {
     el?.addEventListener('change', handleFilterChange);
   });
   applyFiltersBtn?.addEventListener('click', () => {
+    selectedHuntFocusOnly = false;
     closeSelectedHuntPopup();
     closeSelectedHuntFloat();
     closeSelectionInfoWindow();
@@ -4693,6 +4709,7 @@ function bootstrapPendingHuntSelection() {
   if (!pendingCode) return;
   const match = huntData.find((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase() === pendingCode);
   if (!match) return;
+  selectedHuntFocusOnly = true;
   selectedHunt = match;
   syncSelectedHuntAcrossMapModes({ closeChooser: false, zoomGoogle: true });
 }

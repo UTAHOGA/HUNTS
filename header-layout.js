@@ -91,7 +91,7 @@
     const links = Array.from(nav.querySelectorAll('a.utility-link'));
     if (!links.length) return;
     const active = links.find(link => link.classList.contains('active')) || links[0];
-    const activeLabel = active?.textContent?.trim() || 'Builder';
+    const activeLabel = active?.textContent?.trim() || 'Hunt Builder';
     const wrapper = document.createElement('div');
     wrapper.className = 'uoga-page-nav-control';
     wrapper.setAttribute('data-uoga-page-nav', 'true');
