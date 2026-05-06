@@ -7,3 +7,21 @@ _local_untracked_backup/
 processed_data/*.rebuilt.csv
 style.repaired.css
 config.local.js
+
+# Pipeline heavy/raw/generated data (local only)
+pipeline/RAW/
+pipeline/normalized/
+pipeline/processed/
+pipeline/**/*.html
+pipeline/**/*_files/
+pipeline/**/*.kmz
+pipeline/**/*.kml
+pipeline/**/*.geodatabase
+pipeline/**/*.gpkg
+pipeline/**/*.shp
+pipeline/**/*.shx
+pipeline/**/*.dbf
+pipeline/**/*.prj
+pipeline/**/*.cpg
+pipeline/**/*.xlsx
+pipeline/**/*.xls

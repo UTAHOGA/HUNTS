@@ -54,6 +54,7 @@ Scripts:
 - `pipeline/scripts/build_truth_sqlite_from_json.py`
 - `pipeline/scripts/crosscheck_truth_sources.py`
 - `pipeline/scripts/build_and_compare_hunt_geodatabases.py`
+- `pipeline/scripts/build_utah_draw_ml_feed_v1.py`
 
 Example commands (Windows PowerShell):
 
@@ -70,6 +71,14 @@ Example commands (Windows PowerShell):
   --output-db "processed_data\truth_downloads_comprehensive.sqlite" `
   --active-db "hunt_master_canonical_2026_built.sqlite" `
   --report "processed_data\truth_downloads_vs_active_db_report.md"
+
+& "C:\Users\tyler\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe" `
+  pipeline\scripts\build_utah_draw_ml_feed_v1.py `
+  --engine-csv processed_data\draw_reality_engine.csv `
+  --output-csv processed_data\ml_draw_predictions_v1.csv `
+  --report-json processed_data\ml_draw_predictions_v1_report.json `
+  --model-version utah_draw_hybrid_v1_rules `
+  --source-tag utah_dwr_2026_seed
 ```
 
 Expected outputs:
