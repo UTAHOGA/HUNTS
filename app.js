@@ -127,6 +127,9 @@ const loadBoundaryManifestFromResolver = typeof boundaryResolver.loadBoundaryMan
 
 let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, googleEarth3dBoundaryOverlays = [], huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
 let finalizedBoundaryGeoJson = null;
+let independentBoundaryLayer = null;
+let independentBoundaryRefreshToken = 0;
+const independentBoundaryGeoJsonCache = new Map();
 const googleEarth3dGeoJsonCache = new Map();
 let compositeBoundaryLookupPromise = null;
 let compositeBoundaryMembersByCompositeId = new Map();
@@ -665,6 +668,152 @@ function getBoundaryDisplaySummary(hunt) {
     line: 'Boundary: Boundary unavailable',
     kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
   };
+}
+
+function getDisplayBoundaryIdForHunt(hunt) {
+  const resolved = resolveBoundaryForHuntRuntime(hunt);
+  const displayBoundaryId = safe(resolved?.display_boundary_id).trim();
+  if (displayBoundaryId) return displayBoundaryId;
+  const numericId = safe(resolved?.dwr_boundary_id || resolved?.boundary_id).trim();
+  if (numericId) return `DWR_${numericId}`;
+  const huntCode = safe(getHuntCode(hunt)).trim().toUpperCase();
+  return huntCode ? `UOGA_${huntCode}_2026` : '';
+}
+
+function buildIndependentBoundaryTargets(hunts) {
+  const targetsByDisplayId = new Map();
+  (Array.isArray(hunts) ? hunts : []).forEach((hunt) => {
+    const resolved = resolveBoundaryForHuntRuntime(hunt);
+    const displayBoundaryId = getDisplayBoundaryIdForHunt(hunt);
+    if (!displayBoundaryId) return;
+    const existing = targetsByDisplayId.get(displayBoundaryId) || {
+      displayBoundaryId,
+      hunts: [],
+      geojsonPath: '',
+      featureCollection: null,
+    };
+    existing.hunts.push(hunt);
+    if (!existing.geojsonPath) {
+      existing.geojsonPath = normalizeRelativeGeoPath(resolved?.boundary_geojson_path);
+    }
+    if (!existing.featureCollection && resolved?.feature_collection?.features?.length) {
+      existing.featureCollection = resolved.feature_collection;
+    }
+    targetsByDisplayId.set(displayBoundaryId, existing);
+  });
+  return Array.from(targetsByDisplayId.values());
+}
+
+async function getIndependentBoundaryFeatureCollection(target) {
+  if (!target) return null;
+  if (target.featureCollection?.features?.length) return target.featureCollection;
+  const geojsonPath = safe(target.geojsonPath).trim();
+  if (!geojsonPath) return null;
+  if (independentBoundaryGeoJsonCache.has(geojsonPath)) {
+    return independentBoundaryGeoJsonCache.get(geojsonPath);
+  }
+  const request = fetchGeoJson(geojsonPath)
+    .then((geojson) => geojson)
+    .catch((error) => {
+      independentBoundaryGeoJsonCache.delete(geojsonPath);
+      throw error;
+    });
+  independentBoundaryGeoJsonCache.set(geojsonPath, request);
+  return request;
+}
+
+function clearIndependentBoundaryLayer() {
+  if (independentBoundaryLayer) {
+    independentBoundaryLayer.setMap(null);
+    independentBoundaryLayer = null;
+  }
+}
+
+function ensureIndependentBoundaryLayer() {
+  if (!googleBaselineMap) return null;
+  if (independentBoundaryLayer) return independentBoundaryLayer;
+  independentBoundaryLayer = new google.maps.Data({ map: googleBaselineMap });
+  independentBoundaryLayer.addListener('click', (event) => {
+    openBoundaryPopup(event.feature, event.latLng);
+  });
+  return independentBoundaryLayer;
+}
+
+async function refreshIndependentBoundaryLayer() {
+  const token = ++independentBoundaryRefreshToken;
+  const showBoundaries = shouldShowHuntBoundaries();
+  const showAllUnits = shouldShowAllHuntUnits();
+  const filtered = getDisplayHunts();
+  const huntsToRender = selectedHunt
+    ? [...filtered, selectedHunt]
+    : filtered;
+  const shouldRender = showBoundaries && !showAllUnits && huntsToRender.length > 0;
+  if (!shouldRender) {
+    clearIndependentBoundaryLayer();
+    return;
+  }
+
+  const targets = buildIndependentBoundaryTargets(huntsToRender);
+  if (!targets.length) {
+    clearIndependentBoundaryLayer();
+    return;
+  }
+
+  const loaded = await Promise.all(
+    targets.map(async (target) => {
+      try {
+        const fc = await getIndependentBoundaryFeatureCollection(target);
+        return { target, featureCollection: fc };
+      } catch (error) {
+        console.warn(`Independent boundary load failed for ${target.displayBoundaryId}`, error);
+        return { target, featureCollection: null };
+      }
+    }),
+  );
+  if (token !== independentBoundaryRefreshToken) return;
+
+  const layer = ensureIndependentBoundaryLayer();
+  if (!layer) return;
+
+  clearIndependentBoundaryLayer();
+  const nextLayer = ensureIndependentBoundaryLayer();
+  if (!nextLayer) return;
+
+  let addedFeatureCount = 0;
+  loaded.forEach(({ target, featureCollection }) => {
+    const features = Array.isArray(featureCollection?.features) ? featureCollection.features : [];
+    if (!features.length) return;
+    const huntCodes = [...new Set(target.hunts.map((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase()).filter(Boolean))];
+    const clonedFeatures = features.map((feature) => {
+      const props = { ...(feature?.properties || {}) };
+      props.UOGA_DISPLAY_BOUNDARY_ID = target.displayBoundaryId;
+      props.UOGA_HUNT_CODES = huntCodes.join('|');
+      return {
+        ...feature,
+        properties: props,
+      };
+    });
+    nextLayer.addGeoJson({ type: 'FeatureCollection', features: clonedFeatures });
+    addedFeatureCount += clonedFeatures.length;
+  });
+
+  const selectedDisplayBoundaryId = selectedHunt ? getDisplayBoundaryIdForHunt(selectedHunt) : '';
+  nextLayer.setStyle((feature) => {
+    const featureDisplayBoundaryId = safe(feature.getProperty('UOGA_DISPLAY_BOUNDARY_ID')).trim();
+    const isSelected = selectedDisplayBoundaryId && featureDisplayBoundaryId === selectedDisplayBoundaryId;
+    return {
+      visible: true,
+      strokeColor: isSelected ? '#c84f00' : '#3653b3',
+      strokeWeight: isSelected ? 4 : 1.8,
+      fillColor: isSelected ? '#ff8a3d' : '#3653b3',
+      fillOpacity: isSelected ? 0.22 : 0.08,
+      zIndex: isSelected ? 250 : 200,
+    };
+  });
+
+  if (!addedFeatureCount) {
+    clearIndependentBoundaryLayer();
+  }
 }
 
 let officialBoundaryLookupPromise = null;
@@ -2709,6 +2858,23 @@ function closeSelectedHuntPopup() {
 }
 
 function getFeatureMatches(feature) {
+  const displayBoundaryId = safe(feature?.getProperty?.('UOGA_DISPLAY_BOUNDARY_ID')).trim();
+  const featureHuntCodes = safe(feature?.getProperty?.('UOGA_HUNT_CODES'))
+    .split('|')
+    .map((code) => safe(code).trim().toUpperCase())
+    .filter(Boolean);
+  if (displayBoundaryId || featureHuntCodes.length) {
+    const displaySource = getDisplayHunts();
+    const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
+    return source.filter((hunt) => {
+      const huntCode = safe(getHuntCode(hunt)).trim().toUpperCase();
+      if (!huntCode) return false;
+      if (featureHuntCodes.includes(huntCode)) return true;
+      if (displayBoundaryId) return getDisplayBoundaryIdForHunt(hunt) === displayBoundaryId;
+      return false;
+    });
+  }
+
   const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(feature);
   const boundaryIdSet = new Set(featureBoundaryIds);
   const displaySource = getDisplayHunts();
@@ -4183,6 +4349,9 @@ function styleBoundaryLayer() {
           fillColor: isSelected ? '#ff8a3d' : '#3653b3',
           fillOpacity: visible ? (isSelected ? 0.22 : emphasized ? 0.08 : 0.02) : 0
         };
+    });
+    refreshIndependentBoundaryLayer().catch((error) => {
+      console.warn('Independent boundary layer refresh failed.', error);
     });
 }
 
