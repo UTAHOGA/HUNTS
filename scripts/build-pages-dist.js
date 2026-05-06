@@ -3,6 +3,7 @@ const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outDir = path.join(repoRoot, 'pages-dist');
+const MAX_PAGES_FILE_BYTES = 25 * 1024 * 1024;
 
 const rootFiles = [
   'index.html',
@@ -38,7 +39,6 @@ const rootFiles = [
 
 const dataFiles = [
   'data/hunt-boundaries-lite.geojson',
-  'data/hunt_boundaries.geojson',
   'data/hunt-master-canonical.json',
   'data/utah-hunt-planner-master-all.json',
   'data/elk_hunt_table_official.json',
@@ -60,7 +60,6 @@ const dataFiles = [
 ];
 
 const processedFiles = [
-  'processed_data/hunt_research_2026.json',
   'processed_data/draw_reality_engine.csv',
   'processed_data/point_ladder_view.csv',
   'processed_data/hunt_master_enriched.csv',
@@ -89,11 +88,16 @@ async function ensureParent(filePath) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
 }
 
-async function copyFileIfExists(relPath, missing) {
+async function copyFileIfExists(relPath, missing, tooLarge) {
   const src = path.join(repoRoot, relPath);
   const dest = path.join(outDir, relPath);
   if (!(await exists(src))) {
     missing.push(relPath);
+    return;
+  }
+  const stat = await fs.stat(src);
+  if (stat.size > MAX_PAGES_FILE_BYTES) {
+    tooLarge.push(`${relPath} (${(stat.size / (1024 * 1024)).toFixed(1)} MiB)`);
     return;
   }
   await ensureParent(dest);
@@ -125,15 +129,16 @@ async function main() {
   await fs.mkdir(outDir, { recursive: true });
 
   const missing = [];
+  const tooLarge = [];
 
   for (const relPath of rootFiles) {
-    await copyFileIfExists(relPath, missing);
+    await copyFileIfExists(relPath, missing, tooLarge);
   }
   for (const relPath of dataFiles) {
-    await copyFileIfExists(relPath, missing);
+    await copyFileIfExists(relPath, missing, tooLarge);
   }
   for (const relPath of processedFiles) {
-    await copyFileIfExists(relPath, missing);
+    await copyFileIfExists(relPath, missing, tooLarge);
   }
   for (const relPath of dirsToCopy) {
     await copyDirIfExists(relPath, missing);
@@ -148,6 +153,12 @@ async function main() {
       console.log(`- ${item}`);
     }
   }
+  if (tooLarge.length) {
+    console.log('Skipped oversized paths for Cloudflare Pages (25 MiB limit):');
+    for (const item of tooLarge) {
+      console.log(`- ${item}`);
+    }
+  }
 }
 
 main().catch((error) => {
@@ -155,4 +166,3 @@ main().catch((error) => {
   console.error(error);
   process.exit(1);
 });
-
