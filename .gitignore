@@ -23,4 +23,20 @@ pipeline/**/*.cpg
 pipeline/**/*.xlsx
 pipeline/**/*.xls
 
-.wrangler/
+# .wrangler/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local-only agent/environment files
+.codex/
+
+# Local-only archives and generated outputs
+local_only/
+
+# Backup/temporary files
+*.bak
+*.bak-*
+*.patch

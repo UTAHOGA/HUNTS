@@ -344,10 +344,10 @@
        .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
        .basemap-pop[aria-hidden="true"] { display:none !important; }
        .uoga-backpack-open .basemap-pop { right:min(458px, calc(100% - 320px)) !important; }
-       .basemap-pop .globe-basemap-panel { position:static !important; display:none !important; width:236px !important; padding:8px !important; }
-       .basemap-pop[data-open="true"] .globe-basemap-panel { display:grid !important; gap:8px !important; }
-       .basemap-pop .globe-basemap-grid { grid-template-columns:1fr !important; gap:8px !important; }
-       .basemap-pop .globe-basemap-btn { min-height:36px !important; }
+       .basemap-pop .globe-basemap-panel { position:static !important; display:none !important; width:196px !important; padding:6px !important; border-radius:12px !important; box-shadow:0 14px 30px rgba(26,16,10,.34) !important; }
+       .basemap-pop[data-open="true"] .globe-basemap-panel { display:grid !important; gap:6px !important; }
+       .basemap-pop .globe-basemap-grid { grid-template-columns:1fr !important; gap:6px !important; }
+       .basemap-pop .globe-basemap-btn { min-height:30px !important; padding:5px 10px !important; font-size:11px !important; box-shadow:0 6px 14px rgba(34,22,13,.26) !important; }
        .uoga-engine-control { display:flex !important; align-items:center !important; gap:8px !important; }
        .uoga-engine-label { font-size:10px !important; font-weight:900 !important; color:#f07800 !important; letter-spacing:.08em !important; text-transform:uppercase !important; }
        .uoga-engine-pill { min-height:40px !important; padding:0 16px !important; cursor:pointer !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important; }

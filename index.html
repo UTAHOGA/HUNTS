@@ -61,10 +61,10 @@
     .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
     .basemap-pop[aria-hidden="true"] { display:none !important; }
     .uoga-backpack-open .basemap-pop { right:min(458px, calc(100% - 320px)) !important; }
-    .basemap-pop .globe-basemap-panel { position:static !important; display:none !important; width:236px !important; padding:8px !important; }
-    .basemap-pop[data-open="true"] .globe-basemap-panel { display:grid !important; gap:8px !important; }
-    .basemap-pop .globe-basemap-grid { grid-template-columns:1fr !important; gap:8px !important; }
-    .basemap-pop .globe-basemap-btn { min-height:36px !important; }
+    .basemap-pop .globe-basemap-panel { position:static !important; display:none !important; width:196px !important; padding:6px !important; border-radius:12px !important; box-shadow:0 14px 30px rgba(26,16,10,.34) !important; }
+    .basemap-pop[data-open="true"] .globe-basemap-panel { display:grid !important; gap:6px !important; }
+    .basemap-pop .globe-basemap-grid { grid-template-columns:1fr !important; gap:6px !important; }
+    .basemap-pop .globe-basemap-btn { min-height:30px !important; padding:5px 10px !important; font-size:11px !important; box-shadow:0 6px 14px rgba(34,22,13,.26) !important; }
     .topbar { justify-content:flex-start !important; flex-wrap:wrap !important; }
     .topbar-left { flex:0 0 auto !important; display:flex !important; justify-content:center !important; align-items:center !important; gap:14px !important; }
     .topbar-right { flex:0 0 auto !important; display:flex !important; justify-content:flex-end !important; align-items:center !important; margin-left:auto !important; }
@@ -317,7 +317,7 @@
             <button type="button" class="globe-basemap-btn" data-google-basemap="roadmap">Road Map</button>
             <button type="button" class="globe-basemap-btn" data-google-basemap="terrain">Terrain</button>
             <button type="button" class="globe-basemap-btn" data-google-basemap="satellite">Satellite</button>
-            <button type="button" class="globe-basemap-btn" data-google-basemap="hybrid">Hybrid Labels</button>
+            <button type="button" class="globe-basemap-btn" data-google-basemap="hybrid">SATELITE LABELED</button>
           </div>
         </div>
       </div>
@@ -363,7 +363,7 @@
   <script src="./config.local.js?v=20260430-local-config-1"></script>
   <script src="./uoga-analytics.js"></script>
   <script src="./ui.js?v=20260430-google-earth-3d-1"></script>
-  <script src="./header-layout.js?v=20260503-dwr-land-access-restore-1"></script>
+  <script src="./header-layout.js?v=20260506-basemap-compact-1"></script>
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
 <script src="./boundary-resolver.js?v=20260506-boundary-manifest-2"></script>
