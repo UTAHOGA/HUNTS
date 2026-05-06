@@ -1,0 +1,28 @@
+{
+  "generated_at_utc": "2026-05-06T05:47:01Z",
+  "source": {
+    "canonical_csv": "processed_data/hunt_master_canonical_2026_SOURCE_OF_TRUTH_FINAL_COMPLETE_NO_PARTIALS.csv",
+    "canonical_geojson": "processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson"
+  },
+  "outputs": {
+    "csv": "data/utah/foundation_bundle_2026/utah_hunt_codes_canonical_2026.csv",
+    "xlsx": "data/utah/foundation_bundle_2026/utah_hunt_codes_canonical_2026.xlsx",
+    "geojson": "data/utah/foundation_bundle_2026/utah_boundaries_canonical_2026.geojson",
+    "kml": "data/utah/foundation_bundle_2026/utah_boundaries_canonical_2026.kml",
+    "kmz": "data/utah/foundation_bundle_2026/utah_boundaries_canonical_2026.kmz",
+    "sqlite": "data/utah/foundation_bundle_2026/utah_hunt_foundation_2026.sqlite"
+  },
+  "counts": {
+    "hunt_rows": 1288,
+    "unique_hunt_codes": 1288,
+    "unique_boundary_ids_in_hunt_rows": 347,
+    "kml_placemarks": 165,
+    "sqlite_hunts": 1288,
+    "sqlite_boundaries": 177
+  },
+  "notes": [
+    "This bundle is built from local canonical files and is reproducible.",
+    "KML/KMZ geometries come from the canonical GeoJSON.",
+    "SQLite stores full source JSON for each hunt row and boundary feature."
+  ]
+}

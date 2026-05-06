@@ -16,6 +16,8 @@ const {
   OUTFITTERS_DATA_VERSION,
   OUTFITTER_COVERAGE_VERSION,
   HUNT_BOUNDARY_SOURCES,
+  BOUNDARY_MANIFEST_SOURCES,
+  FINALIZED_BOUNDARY_SOURCES,
   COMPOSITE_BOUNDARY_SOURCES,
   OUTFITTERS_DATA_SOURCES,
   OUTFITTER_FEDERAL_COVERAGE_SOURCES,
@@ -71,10 +73,67 @@ const {
   loadFirstNormalizedList
 } = uogaData;
 
+const boundaryResolver = window.UOGA_BOUNDARY_RESOLVER || {};
+const normalizeHuntCodeFromResolver = typeof boundaryResolver.normalizeHuntCode === 'function'
+  ? boundaryResolver.normalizeHuntCode
+  : (value) => String(value ?? '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+const normalizeBoundaryIdFromResolver = typeof boundaryResolver.normalizeBoundaryId === 'function'
+  ? boundaryResolver.normalizeBoundaryId
+  : (value) => {
+      const raw = String(value ?? '').trim();
+      if (!raw) return '';
+      if (/^-?\d+(\.\d+)?$/.test(raw)) return String(Math.trunc(Number(raw)));
+      return raw;
+    };
+const parseBoundaryIdListFromResolver = typeof boundaryResolver.parseIdList === 'function'
+  ? boundaryResolver.parseIdList
+  : (value) => {
+      if (Array.isArray(value)) return value.flatMap(parseBoundaryIdListFromResolver);
+      const text = String(value ?? '').trim();
+      if (!text) return [];
+      if (/[,\|;\/]/.test(text)) return text.split(/[,\|;\/]/).map(v => String(v).trim()).filter(Boolean);
+      return [text];
+    };
+const indexBoundaryFeaturesFromResolver = typeof boundaryResolver.indexBoundaryFeatures === 'function'
+  ? boundaryResolver.indexBoundaryFeatures
+  : (geojson) => {
+      const byBoundaryId = new Map();
+      const features = Array.isArray(geojson?.features) ? geojson.features : [];
+      features.forEach(feature => {
+        const props = feature?.properties || {};
+        const ids = [
+          props?.BoundaryID,
+          props?.BOUNDARYID,
+          props?.Boundary_Id,
+          props?.boundary_id,
+        ]
+          .flatMap(v => parseBoundaryIdListFromResolver(v))
+          .map(v => normalizeBoundaryIdFromResolver(v))
+          .filter(Boolean);
+        ids.forEach(id => {
+          if (!byBoundaryId.has(id)) byBoundaryId.set(id, []);
+          byBoundaryId.get(id).push(feature);
+        });
+      });
+      return { byBoundaryId, featureCount: features.length };
+    };
+const resolveBoundaryForHuntFromResolver = typeof boundaryResolver.resolveBoundaryForHunt === 'function'
+  ? boundaryResolver.resolveBoundaryForHunt
+  : () => ({ status: 'unavailable' });
+const loadBoundaryManifestFromResolver = typeof boundaryResolver.loadBoundaryManifest === 'function'
+  ? boundaryResolver.loadBoundaryManifest
+  : async () => ({ sourceUsed: '', rowCount: 0, rows: [], byHuntCode: new Map(), byMergedBoundaryId: new Map(), error: null });
+
 let googleBaselineMap = null, googleEarth3dMap = null, googleEarth3dLibraryPromise = null, googleEarth3dBoundaryOverlays = [], huntUnitsLayer = null, googleApiReady = false, huntHoverFeature = null, selectedBoundaryFeature = null, huntData = [], huntBoundaryGeoJson = null, selectedBoundaryMatches = [], selectedHunt = null, selectionInfoWindow = null, usfsLayer = null, blmLayer = null, blmDetailLayer = null, wildernessLayer = null, utahOutlineLayer = null, sitlaLayer = null, stateLandsLayer = null, stateParksLayer = null, wmaLayer = null, cwmuLayer = null, privateLayer = null, outfitters = [], outfitterFederalCoverage = [], outfitterMarkers = [], activeLoads = 0, outfitterMarkerRunId = 0, suppressLandClickUntil = 0;
+let finalizedBoundaryGeoJson = null;
 const googleEarth3dGeoJsonCache = new Map();
 let compositeBoundaryLookupPromise = null;
 let compositeBoundaryMembersByCompositeId = new Map();
+let boundaryManifestLoadPromise = null;
+let boundaryManifestByHuntCode = new Map();
+let boundaryManifestByMergedBoundaryId = new Map();
+let boundaryManifestSourceUsed = '';
+let selectedBoundaryFallbackLayer = null;
 
 function getGooglePreferredBasemapType() {
   const VALID = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
@@ -302,10 +361,39 @@ function getCompositeMemberBoundaryIds(boundaryId) {
   return normalized ? (compositeBoundaryMembersByCompositeId.get(normalized) || []) : [];
 }
 
+function getResolvedBoundaryIdsForHunt(hunt) {
+  const huntCode = normalizeHuntCodeFromResolver(getHuntCode(hunt));
+  const manifestRow = huntCode ? boundaryManifestByHuntCode.get(huntCode) : null;
+  const memberIdsFromManifest = parseBoundaryIdListFromResolver(firstNonEmpty(
+    manifestRow?.member_boundary_ids,
+    manifestRow?.memberBoundaryIds,
+  ))
+    .map(id => safe(normalizeBoundaryIdFromResolver(id)).trim())
+    .filter(Boolean);
+  if (memberIdsFromManifest.length) return [...new Set(memberIdsFromManifest)];
+
+  const resolvedRaw = firstNonEmpty(
+    hunt?.resolvedBoundaryIds,
+    hunt?.resolved_boundary_ids,
+    hunt?.resolvedFeatureIds,
+    hunt?.resolved_feature_ids
+  );
+  const resolved = parseBoundaryIdCandidates(resolvedRaw)
+    .map(id => safe(id).trim())
+    .filter(Boolean);
+  if (resolved.length) return [...new Set(resolved)];
+  const manifestBoundaryId = safe(normalizeBoundaryIdFromResolver(firstNonEmpty(
+    manifestRow?.boundary_id,
+    manifestRow?.boundaryId,
+    manifestRow?.BoundaryID,
+  ))).trim();
+  if (manifestBoundaryId) return [manifestBoundaryId];
+  const boundaryId = safe(getBoundaryId(hunt)).trim();
+  return boundaryId ? [boundaryId] : [];
+}
+
 function buildBoundaryMatcher(hunts) {
   const boundaryIds = new Set();
-  const fallbackExactNames = new Set();
-  const prefixNames = new Set();
   const addBoundaryId = (value) => {
     const normalizedId = safe(value).trim();
     if (!normalizedId) return;
@@ -315,32 +403,14 @@ function buildBoundaryMatcher(hunts) {
     }
   };
   hunts.forEach(hunt => {
-    const boundaryId = safe(getBoundaryId(hunt)).trim();
-    if (boundaryId) addBoundaryId(boundaryId);
-    const boundaryIdLists = [
-      hunt?.boundaryIds,
-      hunt?.officialBoundaryIds,
-      hunt?.externalBoundaryIds
-    ];
-    boundaryIdLists.flatMap(ids => Array.isArray(ids) ? ids : []).forEach(id => {
-      addBoundaryId(id);
-    });
-    const names = getBoundaryNamesForHunt(hunt).map(normalizeBoundaryKey).filter(Boolean);
-    if (!boundaryId) {
-      names.forEach(name => fallbackExactNames.add(name));
-      names.forEach(name => prefixNames.add(name));
-    }
+    getResolvedBoundaryIdsForHunt(hunt).forEach(addBoundaryId);
   });
   return {
-    matches(featureBoundaryIds, featureName) {
+    matches(featureBoundaryIds) {
       const ids = Array.isArray(featureBoundaryIds) ? featureBoundaryIds : [featureBoundaryIds];
       for (const id of ids) {
         const normalizedId = safe(id).trim();
         if (normalizedId && boundaryIds.has(normalizedId)) return true;
-      }
-      if (fallbackExactNames.has(featureName)) return true;
-      for (const prefix of prefixNames) {
-        if (featureName.startsWith(`${prefix}-`) || prefix.startsWith(`${featureName}-`)) return true;
       }
       return false;
     }
@@ -401,6 +471,170 @@ function getDataFeatureBoundaryCandidateIds(feature) {
     member_boundary_ids: feature.getProperty('member_boundary_ids'),
     memberBoundaryIds: feature.getProperty('memberBoundaryIds')
   });
+}
+
+function normalizeRelativeGeoPath(pathValue) {
+  const raw = safe(pathValue).trim();
+  if (!raw) return '';
+  if (/^https?:\/\//i.test(raw)) return raw;
+  if (raw.startsWith('./')) return raw;
+  return `./${raw.replace(/^\/+/, '')}`;
+}
+
+function buildBoundaryFeatureIndexFromGeoJson(geojson) {
+  return indexBoundaryFeaturesFromResolver(geojson || { type: 'FeatureCollection', features: [] });
+}
+
+async function loadBoundaryManifestRuntime() {
+  if (!boundaryManifestLoadPromise) {
+    boundaryManifestLoadPromise = (async () => {
+      const result = await loadBoundaryManifestFromResolver({
+        sources: BOUNDARY_MANIFEST_SOURCES,
+        fetchJson,
+      });
+      boundaryManifestByHuntCode = result?.byHuntCode instanceof Map ? result.byHuntCode : new Map();
+      boundaryManifestByMergedBoundaryId = result?.byMergedBoundaryId instanceof Map ? result.byMergedBoundaryId : new Map();
+      boundaryManifestSourceUsed = safe(result?.sourceUsed).trim();
+      if (result?.error) {
+        console.warn('Boundary manifest load failed; using legacy boundary mapping fallback.', result.error);
+      } else if (boundaryManifestByHuntCode.size) {
+        console.log(`Loaded boundary manifest rows: ${boundaryManifestByHuntCode.size} (${boundaryManifestSourceUsed || 'unknown source'})`);
+      }
+      return {
+        byHuntCode: boundaryManifestByHuntCode,
+        byMergedBoundaryId: boundaryManifestByMergedBoundaryId,
+        sourceUsed: boundaryManifestSourceUsed,
+      };
+    })();
+  }
+  return boundaryManifestLoadPromise;
+}
+
+function getBoundaryFeatureIndex() {
+  return buildBoundaryFeatureIndexFromGeoJson(finalizedBoundaryGeoJson || huntBoundaryGeoJson);
+}
+
+function resolveBoundaryForHuntRuntime(hunt) {
+  const resolved = resolveBoundaryForHuntFromResolver(
+    hunt,
+    boundaryManifestByHuntCode,
+    getBoundaryFeatureIndex(),
+  );
+  return resolved || { status: 'unavailable' };
+}
+
+function applyBoundaryManifestToHunts(records) {
+  records.forEach((record) => {
+    const resolved = resolveBoundaryForHuntRuntime(record);
+    const memberIds = Array.isArray(resolved?.member_boundary_ids)
+      ? resolved.member_boundary_ids.map((id) => safe(id).trim()).filter(Boolean)
+      : [];
+    const normalizedBoundaryId = safe(resolved?.boundary_id).trim();
+    const resolvedIds = memberIds.length ? memberIds : (normalizedBoundaryId ? [normalizedBoundaryId] : []);
+
+    if (resolvedIds.length) {
+      record.resolvedBoundaryIds = resolvedIds;
+      record.resolved_boundary_ids = resolvedIds;
+    }
+
+    if (resolved?.boundary_geojson_path) {
+      record.boundary_geojson_path = resolved.boundary_geojson_path;
+      record.boundaryGeojsonPath = resolved.boundary_geojson_path;
+    }
+    if (resolved?.boundary_kmz_path) {
+      record.boundary_kmz_path = resolved.boundary_kmz_path;
+      record.boundaryKmzPath = resolved.boundary_kmz_path;
+    }
+    if (resolved?.boundary_kml_path) {
+      record.boundary_kml_path = resolved.boundary_kml_path;
+      record.boundaryKmlPath = resolved.boundary_kml_path;
+    }
+    if (resolved?.merged_boundary_id) {
+      record.merged_boundary_id = resolved.merged_boundary_id;
+      record.mergedBoundaryId = resolved.merged_boundary_id;
+    }
+    if (resolved?.boundary_geometry_type) {
+      record.boundary_geometry_type = resolved.boundary_geometry_type;
+      record.boundaryGeometryType = resolved.boundary_geometry_type;
+    }
+    if (memberIds.length) {
+      record.member_boundary_ids = memberIds;
+      record.memberBoundaryIds = memberIds;
+      record.member_boundary_count = memberIds.length;
+      record.memberBoundaryCount = memberIds.length;
+    }
+    record.geometry_status = resolved?.status === 'unavailable' ? 'unavailable' : 'mapped';
+  });
+}
+
+function clearSelectedBoundaryFallbackLayer() {
+  if (selectedBoundaryFallbackLayer) {
+    selectedBoundaryFallbackLayer.setMap(null);
+    selectedBoundaryFallbackLayer = null;
+  }
+}
+
+function drawSelectedBoundaryFallbackFeatureCollection(featureCollection) {
+  clearSelectedBoundaryFallbackLayer();
+  if (!googleBaselineMap) return;
+  const features = Array.isArray(featureCollection?.features) ? featureCollection.features : [];
+  if (!features.length) return;
+  selectedBoundaryFallbackLayer = new google.maps.Data({ map: googleBaselineMap });
+  selectedBoundaryFallbackLayer.addGeoJson({ type: 'FeatureCollection', features });
+  selectedBoundaryFallbackLayer.setStyle({
+    visible: true,
+    strokeColor: '#c84f00',
+    strokeWeight: 4,
+    fillColor: '#ff8a3d',
+    fillOpacity: 0.22,
+  });
+}
+
+async function applySelectedHuntBoundaryResolution(hunt) {
+  clearSelectedBoundaryFallbackLayer();
+  if (!hunt || !googleBaselineMap) return;
+  const resolved = resolveBoundaryForHuntRuntime(hunt);
+  const directPath = normalizeRelativeGeoPath(resolved?.boundary_geojson_path);
+  if (directPath) {
+    try {
+      const geojson = await fetchGeoJson(directPath);
+      drawSelectedBoundaryFallbackFeatureCollection(geojson);
+      return;
+    } catch (error) {
+      console.warn(`Direct boundary GeoJSON load failed for ${safe(getHuntCode(hunt))}: ${directPath}`, error);
+    }
+  }
+  if (resolved?.feature_collection?.features?.length) {
+    drawSelectedBoundaryFallbackFeatureCollection(resolved.feature_collection);
+  }
+}
+
+function getBoundaryDisplaySummary(hunt) {
+  const resolved = resolveBoundaryForHuntRuntime(hunt);
+  if (resolved.status === 'mapped' && safe(resolved.merged_boundary_id).trim()) {
+    const memberCount = Array.isArray(resolved.member_boundary_ids) ? resolved.member_boundary_ids.length : 0;
+    return {
+      line: `Boundary: Merged boundary${memberCount ? `, ${memberCount} DWR member areas` : ''}`,
+      kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
+    };
+  }
+  if (resolved.status === 'mapped' && safe(resolved.boundary_id).trim()) {
+    return {
+      line: `Boundary: Boundary ID ${safe(resolved.boundary_id)}`,
+      kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
+    };
+  }
+  if (resolved.status === 'fallback_member_features') {
+    const memberCount = Array.isArray(resolved.member_boundary_ids) ? resolved.member_boundary_ids.length : 0;
+    return {
+      line: `Boundary: Mapped from member boundaries${memberCount ? ` (${memberCount})` : ''}`,
+      kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
+    };
+  }
+  return {
+    line: 'Boundary: Boundary unavailable',
+    kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
+  };
 }
 
 let officialBoundaryLookupPromise = null;
@@ -494,7 +728,17 @@ function getRequiredUsfsForestsForHunt(hunt) {
   return [...required];
 }
 function getUnitValue(h) { return firstNonEmpty(getUnitCode(h), getUnitName(h)); }
-function getBoundaryId(h) { return firstNonEmpty(h.boundaryId, h.boundaryID, h.BoundaryID, h.boundary_id, h.originalBoundaryId); }
+function getBoundaryId(h) {
+  return firstNonEmpty(
+    h.boundaryIdNumeric,
+    h.boundary_id_numeric,
+    h.boundaryId,
+    h.boundaryID,
+    h.BoundaryID,
+    h.boundary_id,
+    h.originalBoundaryId
+  );
+}
 function normalizeHuntCode(value) { return safe(value).trim().toUpperCase(); }
 function getHuntRecordKey(h) {
   return [
@@ -1394,6 +1638,7 @@ function refreshSelectionMatrix() {
 
 // --- CORE APP LOGIC ---
 async function loadHuntData() {
+  await loadBoundaryManifestRuntime();
   huntData = await loadHuntDataRecords({
     HUNT_DATA_SOURCES,
     ELK_BOUNDARY_TABLE_SOURCES,
@@ -1413,8 +1658,9 @@ async function loadHuntData() {
   });
   const syntheticConservationHunts = buildSyntheticConservationPermitHunts(huntData);
   huntData = [...huntData, ...syntheticConservationHunts];
+  applyBoundaryManifestToHunts(huntData);
   refreshSelectionMatrix();
-  updateStatus(`Loaded ${huntData.length} hunts.`);
+  updateStatus(`Loaded ${huntData.length} hunts.${boundaryManifestByHuntCode.size ? ` Boundary manifest rows: ${boundaryManifestByHuntCode.size}.` : ''}`);
 }
 
 async function loadOfficialElkBoundaryFeatures() {
@@ -2397,22 +2643,11 @@ function closeSelectedHuntPopup() {
 function getFeatureMatches(feature) {
   const featureBoundaryIds = getDataFeatureBoundaryCandidateIds(feature);
   const boundaryIdSet = new Set(featureBoundaryIds);
-  const boundaryName = normalizeBoundaryKey(feature?.getProperty('Boundary_Name'));
   const displaySource = getDisplayHunts();
   const source = (hasActiveMatrixSelections() || selectedHunt) ? displaySource : huntData;
   return source.filter(h => {
-    const hBoundaryId = safe(getBoundaryId(h)).trim();
-    const hUnitCode = normalizeBoundaryKey(getUnitCode(h));
-    const hUnitName = normalizeBoundaryKey(getUnitName(h));
-    if (hBoundaryId) {
-      if (boundaryIdSet.has(hBoundaryId)) return true;
-      if (isCompositeBoundaryId(hBoundaryId)) {
-        const memberIds = getCompositeMemberBoundaryIds(hBoundaryId);
-        if (memberIds.some(memberId => boundaryIdSet.has(memberId))) return true;
-      }
-      return false;
-    }
-    return hUnitCode === boundaryName || hUnitName === boundaryName;
+    const resolvedIds = getResolvedBoundaryIdsForHunt(h);
+    return resolvedIds.some(id => boundaryIdSet.has(id));
   });
 }
 
@@ -4176,7 +4411,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadOutfitters();
   await loadOutfitterFederalCoverage();
   try {
+      finalizedBoundaryGeoJson = await fetchFirstGeoJson(FINALIZED_BOUNDARY_SOURCES);
+  } catch (e) {
+      console.warn('Finalized boundary GeoJSON load failed; boundary-id fallback may be limited.', e);
+  }
+  try {
       huntBoundaryGeoJson = await fetchFirstGeoJson(HUNT_BOUNDARY_SOURCES);
+      if (huntData.length) applyBoundaryManifestToHunts(huntData);
       if (googleApiReady) buildBoundaryLayer();
   } catch(e) { console.error("GeoJSON load failed", e); }
 

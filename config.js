@@ -93,13 +93,34 @@ window.UOGA_CONFIG = (() => {
     fromR2(`processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
+  const BOUNDARY_MANIFEST_SOURCES = [
+    `./processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`,
+    fromR2(`processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
+    fromR2(`boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
+  ].filter(Boolean);
+  const FINALIZED_BOUNDARY_SOURCES = [
+    `./data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    fromR2(`data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`),
+  ].filter(Boolean);
   const COMPOSITE_BOUNDARY_SOURCES = [
+    `./processed_data/composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`,
     `./data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`,
     `${CLOUDFLARE_BASE}/data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`,
     `./processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
     `./processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
     `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
     `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    fromR2(`processed_data/composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
@@ -111,6 +132,8 @@ window.UOGA_CONFIG = (() => {
       required: true,
       authoritative: true,
       candidates: [
+        `./data/hunt-master-canonical-2026-foundation.json?v=${HUNT_DATA_VERSION}`,
+        `${CLOUDFLARE_BASE}/data/hunt-master-canonical-2026-foundation.json?v=${HUNT_DATA_VERSION}`,
         `./data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
         `./processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
         `${CLOUDFLARE_BASE}/processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
@@ -442,6 +465,8 @@ window.UOGA_CONFIG = (() => {
     HUNT_RESEARCH_DATA_VERSION,
 
     HUNT_BOUNDARY_SOURCES,
+    BOUNDARY_MANIFEST_SOURCES,
+    FINALIZED_BOUNDARY_SOURCES,
     COMPOSITE_BOUNDARY_SOURCES,
     HUNT_DATA_SOURCES,
     ELK_BOUNDARY_TABLE_SOURCES,

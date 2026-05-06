@@ -1,0 +1,16 @@
+﻿{
+    "generated_at_utc":  "2026-05-06T05:47:07Z",
+    "output_dir":  "C:\\Users\\tyler\\Desktop\\GitHub\\HUNTS\\data\\utah\\official_downloads_2026",
+    "files":  [
+                  {
+                      "name":  "hunt_master_canonical_2026.csv",
+                      "bytes":  578158,
+                      "modified":  "2026-05-06T03:12:04Z"
+                  },
+                  {
+                      "name":  "statewide_composite_boundaries_2026_FINAL_LOCKED.geojson",
+                      "bytes":  87146863,
+                      "modified":  "2026-05-06T03:12:12Z"
+                  }
+              ]
+}

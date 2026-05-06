@@ -19,6 +19,7 @@ const rootFiles = [
   'app.js',
   'config.js',
   'data.js',
+  'boundary-resolver.js',
   'embed-mode.js',
   'event-handlers.js',
   'google-basemap.js',
@@ -38,6 +39,7 @@ const rootFiles = [
 ];
 
 const dataFiles = [
+  'data/hunt-master-canonical-2026-foundation.json',
   'data/hunt-master-canonical-2026-source-of-truth.json',
   'data/elk_hunt_table_official.json',
   'data/elk_antlerless_hunt_table_official.json',
@@ -56,14 +58,20 @@ const dataFiles = [
   'data/cwmu-boundaries.geojson',
   'data/dwr-GetCWMUBoundaries.json',
   'data/statewide-composite-members-2026-lite.geojson',
+  'data/hunt_boundaries_finalized_2026.geojson',
 ];
 
 const processedFiles = [
+  'processed_data/composite_hunt_unit_mapping_2026.geojson',
   'processed_data/draw_reality_engine.csv',
   'processed_data/point_ladder_view.csv',
   'processed_data/hunt_master_enriched.csv',
   'processed_data/hunt_unit_reference_linked.csv',
   'processed_data/hunt-master-canonical-2026-source-of-truth.json',
+  'processed_data/hunt_code_boundary_map_2026.csv',
+  'processed_data/boundary_registry_2026.csv',
+  'processed_data/boundary-manifest-2026.json',
+  'processed_data/boundary-manifest-2026.csv',
   'processed_data/outfitter-federal-unit-coverage-review.json',
   'processed_data/coverage-matrix.json',
   'processed_data/normalized-staging-audit.csv',
@@ -72,6 +80,8 @@ const processedFiles = [
 
 const dirsToCopy = [
   'assets',
+  'data/boundaries',
+  'processed_data/boundaries',
   'processed_data/hard_data_exports',
 ];
 
