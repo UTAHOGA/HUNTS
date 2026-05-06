@@ -280,15 +280,12 @@ function isMobileViewport() {
 }
 
 function initOwnershipControlInHeader() {
+  // Land ownership controls stay anchored on the left side of the map.
   const dock = document.getElementById('ownershipDock');
-  const host = document.querySelector('.topbar-right');
-  if (!dock || !host || dock.dataset.ownershipHeaderReady === 'true') return;
-
-  dock.classList.add('ownership-dock--header');
+  if (!dock) return;
+  dock.classList.remove('ownership-dock--header');
   dock.hidden = false;
   dock.setAttribute('aria-hidden', 'false');
-  host.insertBefore(dock, host.firstChild);
-  dock.dataset.ownershipHeaderReady = 'true';
 }
 
 function setOwnershipControlsExpandedForEarth(expanded = true) {
@@ -4642,8 +4639,8 @@ function scheduleLiveFilterApply() {
 
 function syncApplyFiltersButtonLabel() {
   if (!applyFiltersBtn) return;
-  applyFiltersBtn.textContent = 'Fly In';
-  applyFiltersBtn.title = 'Focus and animate map to your current filtered hunt units';
+  applyFiltersBtn.textContent = 'Select';
+  applyFiltersBtn.title = 'Select and focus map to your current filtered hunt units';
 }
 
 function bindControls() {
