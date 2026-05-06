@@ -1917,6 +1917,8 @@ function buildMatchingHuntCard(h, selectedKey) {
   const name = escapeHtml(firstNonEmpty(h.hunt_name, getHuntTitle(h), getUnitName(h), ''));
   const code = escapeHtml(getHuntCode(h) || '');
   const codeAttr = escapeHtml(getHuntCode(h) || '');
+  const weapon = escapeHtml(getWeapon(h) || 'Weapon pending');
+  const huntType = escapeHtml(getHuntType(h) || 'Hunt type pending');
   return `
     <div class="hunt-card${selected ? ' is-selected' : ''}" data-hunt-key="${huntKey}" role="button" tabindex="0">
       <div class="hunt-card-head">
@@ -1924,6 +1926,7 @@ function buildMatchingHuntCard(h, selectedKey) {
         <div>
           <div class="hunt-card-code">${code}</div>
           <div class="hunt-card-title">${name}</div>
+          <div class="hunt-card-meta">${weapon} | ${huntType}</div>
         </div>
       </div>
       <div class="hunt-card-actions">
