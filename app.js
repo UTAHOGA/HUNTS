@@ -4624,11 +4624,8 @@ function scheduleLiveFilterApply() {
 
 function syncApplyFiltersButtonLabel() {
   if (!applyFiltersBtn) return;
-  const mobile = isMobileViewport();
-  applyFiltersBtn.textContent = mobile ? 'Apply Filters' : 'Apply / Live';
-  applyFiltersBtn.title = mobile
-    ? 'Apply selected filters'
-    : 'Filters also live-update while typing on desktop';
+  applyFiltersBtn.textContent = 'Fly In';
+  applyFiltersBtn.title = 'Focus and animate map to your current filtered hunt units';
 }
 
 function bindControls() {
@@ -4678,6 +4675,13 @@ function bindControls() {
     }
     styleBoundaryLayer();
     refreshGoogleEarth3dBoundaryOverlaySoon();
+    if (toggleDwrUnits.checked && hasActiveMatrixSelections()) {
+      if (safe(mapTypeSelect?.value).toLowerCase() === 'earth') {
+        refreshGoogleEarth3dBoundaryOverlaySoon();
+      } else if (safe(mapTypeSelect?.value).toLowerCase() === 'google') {
+        zoomToDisplayHuntsBounds();
+      }
+    }
   });
   toggleUSFS?.addEventListener('change', async () => {
     if (toggleUSFS.checked) await ensureUsfsLayer().catch(err => console.error('USFS layer failed', err));
