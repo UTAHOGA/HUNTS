@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 hunt_code,residency,points,odds_2025_actual,odds_2026_projected,guaranteed_marker,user_point_marker
 BI6500,Nonresident,0,N/A,0.000,FALSE,FALSE
 BI6500,Nonresident,1,N/A,0.000,TRUE,FALSE
@@ -53175,3 +53176,8 @@ RS6727,Resident,29,N/A,100.000,FALSE,FALSE
 RS6727,Resident,30,N/A,100.000,FALSE,FALSE
 RS6727,Resident,31,N/A,100.000,FALSE,FALSE
 RS6727,Resident,32,N/A,100.000,FALSE,FALSE
+=======
+hunt_code,residency,points,public_permits_2025,public_permits_2026,public_permits_2026_source,max_point_permits_2025,max_point_permits_2026,random_permits_2025,random_permits_2026,guaranteed_at_2025,guaranteed_at_2026,permit_delta_2025_to_2026,projected_applicants_2026_source,guaranteed_delta_2025_to_2026,applicants_above,applicants_at_level,random_draw_odds_2026,gap,delta_gap,status,trend,draw_outlook
+DB1001,Resident,2,2,2,fixture,1,1,1,1,2,2,0,fixture,0,0,2,50.000,0,0,RANDOM ONLY,YELLOW,RANDOM CHANCE ONLY
+DB1002,Resident,7,,,fixture,,,,,7,7,0,fixture,0,0,0,42.000,0,0,MAX POOL,YELLOW,MAY DRAW IN 5-10 YEARS
+>>>>>>> Stashed changes

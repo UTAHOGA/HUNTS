@@ -380,6 +380,7 @@
     return state.engineGroups.get(groupKey(huntCode, residency)) || [];
   }
 
+<<<<<<< Updated upstream
   function getModeledCoverageStatus(meta, hasEngineGroup) {
     if (hasEngineGroup) return '';
     if (!meta) return 'Hunt not found in the current production backbone.';
@@ -389,6 +390,75 @@
   function getDisplayedOdds(row) {
     if (!row) return { value: 'Not available', source: 'unavailable' };
     if (row.status === 'MAX POOL') return { value: '100%', source: 'guaranteed' };
+=======
+  function getModeledCoverageStatus(meta, hasEngineGroup) {
+    if (hasEngineGroup) return '';
+    if (!meta) return 'Hunt not found in the current production backbone.';
+    return 'This hunt exists in the canonical hunt backbone, but it does not currently have modeled draw-pressure coverage.';
+  }
+
+  function getMlOddsCandidate(row) {
+    return num(firstAvailable(row, ['ml_draw_probability_2026', 'ml_draw_prob_2026', 'ml_draw_probability_pct']));
+  }
+
+  function getMlConfidence(row) {
+    return num(firstAvailable(row, ['ml_confidence', 'ml_confidence_score']));
+  }
+
+  function getDeterministicOddsCandidate(row) {
+    if (!row) return null;
+    const displayOddsPct = num(firstAvailable(row, ['display_odds_pct']));
+    if (displayOddsPct !== null) return displayOddsPct;
+    const pDrawMean = num(firstAvailable(row, ['p_draw_mean']));
+    if (pDrawMean !== null) return toProbabilityPercent(pDrawMean);
+    return num(firstAvailable(row, [
+      'odds_2026_projected',
+      'max_pool_projection_2026',
+      'random_draw_odds_2026',
+      'random_draw_projection_2026',
+    ]));
+  }
+
+  function shouldUseMlHybridOdds(row) {
+    if (!ML_OPTIONS?.enabled) return false;
+    const mlOdds = getMlOddsCandidate(row);
+    if (mlOdds === null) return false;
+
+    const confidence = getMlConfidence(row);
+    const minConfidence = num(ML_OPTIONS.useMlForOddsWhenConfidenceGte);
+    if (confidence !== null && minConfidence !== null && confidence < minConfidence) return false;
+
+    const baselineOdds = getDeterministicOddsCandidate(row);
+    const maxDrift = num(ML_OPTIONS.maxDivergenceGuardPct);
+    if (baselineOdds !== null && maxDrift !== null && Math.abs(mlOdds - baselineOdds) > maxDrift) return false;
+
+    return true;
+  }
+
+  function getDisplayedOdds(row) {
+    if (!row) return { value: 'Not available', source: 'unavailable' };
+    const hasModeledFields = hasModeledProbabilityFields(row);
+    const intervalSuffix = getProbabilityIntervalSuffix(row);
+
+    const displayOddsPct = num(firstAvailable(row, ['display_odds_pct']));
+    if (displayOddsPct !== null) {
+      return { value: `${formatProbability(displayOddsPct)}${intervalSuffix}`, source: 'modeled_display' };
+    }
+
+    const pDrawMean = num(firstAvailable(row, ['p_draw_mean']));
+    if (pDrawMean !== null) {
+      return { value: `${formatProbability(toProbabilityPercent(pDrawMean))}${intervalSuffix}`, source: 'modeled_draw' };
+    }
+
+    if (shouldUseMlHybridOdds(row) && !hasModeledFields) {
+      const mlOdds = getMlOddsCandidate(row);
+      return {
+        value: formatProbability(mlOdds),
+        source: 'ml_hybrid',
+        confidence: getMlConfidence(row),
+      };
+    }
+>>>>>>> Stashed changes
 
     const projectedOdds = formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']));
     if (projectedOdds !== 'Not available') {
@@ -399,9 +469,15 @@
     if (randomOdds !== 'Not available') {
       return { value: randomOdds, source: 'random_pool' };
     }
+<<<<<<< Updated upstream
 
     return { value: 'Not available', source: 'unavailable' };
   }
+=======
+
+    return { value: 'Not available', source: 'unavailable' };
+  }
+>>>>>>> Stashed changes
 
   function isPreferenceAntlerless(meta) {
     const huntType = String(meta?.hunt_type || '').trim().toLowerCase();
@@ -443,12 +519,21 @@
   }
 
   function getPrimaryOddsLabel(meta, row, displayedOdds) {
+<<<<<<< Updated upstream
+=======
+    if (displayedOdds.source === 'ml_hybrid') {
+      const confidence = displayedOdds.confidence === null ? null : Number(displayedOdds.confidence);
+      const confidenceLabel = Number.isFinite(confidence) ? ` (conf ${confidence.toFixed(2)})` : '';
+      return `2026 ML Hybrid Draw: ${displayedOdds.value}${confidenceLabel}`;
+    }
+>>>>>>> Stashed changes
     if (isPreferenceAntlerless(meta)) {
       return `2026 Preference Draw: ${formatProbability(firstAvailable(row, ['odds_2026_projected', 'max_pool_projection_2026']))}`;
     }
     if (isRandomOnlyBonusCase(meta, row)) {
       return `2026 Random Draw: ${displayedOdds.value}`;
     }
+<<<<<<< Updated upstream
     return displayedOdds.source === 'guaranteed'
       ? '2026 Max Pool: 100%'
       : `2026 Random Draw: ${displayedOdds.value}`;
@@ -461,6 +546,26 @@
 
     const maxPoolChance = num(row?.max_pool_projection_2026);
     if (maxPoolChance !== null && maxPoolChance > 0) return 'yellow';
+=======
+    return `2026 Random Draw: ${displayedOdds.value}`;
+  }
+
+  function getOutlookSignal(meta, row) {
+    const guaranteedProbability = getGuaranteedProbability(row);
+    const pDrawMean = num(firstAvailable(row, ['p_draw_mean']));
+    if (guaranteedProbability !== null && guaranteedProbability >= 0.999) return 'green';
+    if (pDrawMean !== null) {
+      const pPercent = toProbabilityPercent(pDrawMean) ?? 0;
+      if (pPercent >= 90) return 'green';
+      if (pPercent >= 25) return 'yellow';
+      return 'red';
+    }
+
+    const maxPointPermits = num(row?.max_point_permits_2026);
+    if (maxPointPermits !== null && maxPointPermits <= 0) return 'red';
+    const maxPoolChance = num(row?.max_pool_projection_2026);
+    if (maxPoolChance !== null && maxPoolChance > 0) return 'yellow';
+>>>>>>> Stashed changes
 
     const nonresidentPermits = num(meta?.public_nonresident_permits);
     const residentPermits = num(meta?.public_resident_permits);
@@ -554,6 +659,7 @@
       };
     }
 
+<<<<<<< Updated upstream
     if (isRandomOnlyBonusCase(meta, row)) {
       return {
         badge: 'Random Chance Only',
@@ -576,6 +682,62 @@
         message: 'You are near the edge of the guaranteed path. This hunt is still in reach, but pressure and point creep matter.',
         className: 'is-yellow',
       };
+=======
+    if (isRandomOnlyBonusCase(meta, row)) {
+      return {
+        badge: 'Random Chance Only',
+        message: 'This hunt does not currently offer a meaningful guaranteed path at this residency. Your outcome depends on the random draw only.',
+        className: 'is-red',
+      };
+    }
+
+    const guaranteedProbability = getGuaranteedProbability(row);
+    const pDrawMean = num(firstAvailable(row, ['p_draw_mean']));
+    if (guaranteedProbability !== null && guaranteedProbability >= 0.999) {
+      return {
+        badge: 'Guaranteed',
+        message: `At ${formatInteger(filters.points)} points, this hunt is analytically or mode-land guaranteed.`,
+        className: 'is-green',
+      };
+    }
+
+    if (pDrawMean !== null) {
+      const pPercent = toProbabilityPercent(pDrawMean) ?? 0;
+      if (pPercent >= 90) {
+        return {
+          badge: 'Very likely',
+          message: 'This hunt is very likely to draw at your selected point level.',
+          className: 'is-green',
+        };
+      }
+      if (pPercent >= 25) {
+        return {
+          badge: 'On the Line',
+          message: 'You are near the modeled line. Pressure and point creep still matter.',
+          className: 'is-yellow',
+        };
+      }
+      if (pPercent > 0) {
+        return {
+          badge: 'Random / Long-shot Chance',
+          message: 'This hunt still has some modeled draw chance, but it is a long shot.',
+          className: 'is-red',
+        };
+      }
+      return {
+        badge: 'Not Catchable Right Now',
+        message: 'The modeled draw probability is currently zero at this point level.',
+        className: 'is-red',
+      };
+    }
+
+    if (row.draw_outlook === 'MAY DRAW IN 5-10 YEARS' || num(row.gap) === 1) {
+      return {
+        badge: 'On the Line',
+        message: 'You are near the edge of the guaranteed path. This hunt is still in reach, but pressure and point creep matter.',
+        className: 'is-yellow',
+      };
+>>>>>>> Stashed changes
     }
 
     if (row.draw_outlook === 'POINT CREEP DEFEAT') {
