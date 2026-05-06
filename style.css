@@ -1,4 +1,4 @@
-﻿    /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
+    /* --- LIGHT MODE (CLASSIC) VARIABLES --- */
     :root {
       --bg: #f4efe4;
       --panel: rgba(255, 251, 244, 0.97);
@@ -197,13 +197,13 @@
     }
     .toggle-menu summary::-webkit-details-marker { display: none; }
     .toggle-menu summary::after {
-      content: "â–¾";
+      content: "v";
       font-size: 11px;
       line-height: 1;
       color: var(--muted);
     }
     .toggle-menu-count { color: var(--accent); font-weight: 900; }
-    .toggle-menu[open] summary::after { content: "â–´"; }
+    .toggle-menu[open] summary::after { content: "^"; }
     .toggle-menu-panel {
       position: absolute;
       top: calc(100% + 8px);
@@ -225,100 +225,39 @@
       gap: 8px;
       white-space: normal;
     }
-    .topbar .land-ownership-control {
+    .topbar .ownership-dock.ownership-dock--header {
       position: relative;
       display: inline-flex;
       align-items: center;
-      flex: 0 0 auto;
+      justify-content: flex-end;
+      flex: 0 1 auto;
+      max-width: min(760px, 48vw);
       z-index: 20060;
     }
-    .topbar .land-ownership-toggle {
-      min-height: 46px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, #fffdf9, #f2e8dc);
-      color: var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -2px 2px rgba(0,0,0,.08), 0 4px 10px rgba(58,37,18,.14);
-      display: inline-flex;
-      flex-direction: column;
+    .topbar .ownership-dock.ownership-dock--header .ownership-case {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
       align-items: center;
-      justify-content: center;
-      gap: 2px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      font-weight: 900;
-      line-height: 1;
-      white-space: nowrap;
     }
-    .topbar .land-ownership-toggle-kicker {
-      font-size: 10px;
-      color: #f07800;
-    }
-    .topbar .land-ownership-toggle-summary {
-      font-size: 11px;
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: #2b1c12;
-    }
-    .topbar .land-ownership-control[data-open="true"] .land-ownership-toggle {
-      border-color: #f07800;
-      background: linear-gradient(180deg,#fff7ee,#ead8c4);
-      box-shadow: inset 0 0 0 2px #f07800, 0 6px 14px rgba(58,37,18,.18);
-    }
-    .topbar .land-ownership-panel {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      min-width: min(760px, calc(100vw - 32px));
-      max-width: min(760px, calc(100vw - 32px));
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255,253,248,.98);
-      box-shadow: 0 14px 34px rgba(58,37,18,.22);
+    .topbar .ownership-dock.ownership-dock--header .toggle-row {
+      width: auto;
+      max-width: 100%;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 7px;
+      border-radius: 14px;
+      background: rgba(255,253,248,.94);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      z-index: 20080;
-    }
-    .topbar .land-ownership-panel[hidden] { display: none; }
-    .topbar .land-ownership-panel .ownership-dock.ownership-dock--header {
-      position: static !important;
-      top: auto !important;
-      right: auto !important;
-      left: auto !important;
-      max-width: 100% !important;
-      display: block !important;
-      z-index: auto !important;
-      transition: none !important;
-    }
-    .topbar .land-ownership-panel .ownership-case {
-      width: 100%;
-      justify-content: flex-start !important;
-    }
-    .topbar .land-ownership-panel .toggle-row {
-      width: 100% !important;
-      justify-content: flex-start !important;
-      gap: 6px !important;
-      padding: 8px !important;
-      border-radius: 14px !important;
       overflow-x: auto;
       flex-wrap: nowrap;
       scrollbar-width: thin;
     }
-    .topbar .land-ownership-panel .toggle-chip {
-      padding: 2px 4px;
-      font-size: 11px;
-      letter-spacing: .03em;
-      flex: 0 0 auto;
-    }
-    .topbar .land-ownership-panel .toggle-chip input {
-      width: 14px;
-      height: 14px;
-    }
-    .topbar .land-ownership-panel .toggle-chip-label {
-      line-height: 1.05;
+    .topbar .ownership-dock.ownership-dock--header .toggle-menu-panel {
+      z-index: 20090;
+      right: 0;
+      left: auto;
     }
     .ownership-toggle-row {
       width: 100%;
@@ -973,4 +912,3 @@
         font-size: 11px;
       }
     }
-

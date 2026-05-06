@@ -274,108 +274,15 @@ function isMobileViewport() {
   return typeof window !== 'undefined' && window.matchMedia('(max-width: 900px)').matches;
 }
 
-function setLandOwnershipPanelOpen(open) {
-  const control = document.getElementById('landOwnershipControl');
-  const toggle = document.getElementById('landOwnershipToggleBtn');
-  const panel = document.getElementById('landOwnershipPanel');
-  if (!control || !toggle || !panel) return;
-  const isOpen = !!open;
-  toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  panel.hidden = !isOpen;
-  panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-  control.dataset.open = isOpen ? 'true' : 'false';
-}
-
-function refreshLandOwnershipSummary() {
-  const summary = document.getElementById('landOwnershipSummary');
-  if (!summary) return;
-  const states = [
-    ['Hunt Units', !!toggleDwrUnits?.checked],
-    ['USFS', !!toggleUSFS?.checked],
-    ['BLM', !!toggleBLM?.checked],
-    ['BLM District', !!toggleBLMDetail?.checked],
-    ['SITLA', !!toggleSITLA?.checked],
-    ['State Parks', !!toggleStateParks?.checked],
-    ['DWR WMA', !!toggleWma?.checked],
-    ['Private', !!togglePrivate?.checked],
-    ['CWMU', !!toggleCwmu?.checked],
-  ];
-  const enabled = states.filter(([, checked]) => checked).map(([label]) => label);
-  if (!enabled.length) {
-    summary.textContent = 'No layers on';
-    return;
-  }
-  const short = enabled.length > 2
-    ? `${enabled[0]}, ${enabled[1]} +${enabled.length - 2}`
-    : enabled.join(' • ');
-  summary.textContent = short;
-}
-
 function initOwnershipControlInHeader() {
   const dock = document.getElementById('ownershipDock');
   const host = document.querySelector('.topbar-right');
   if (!dock || !host || dock.dataset.ownershipHeaderReady === 'true') return;
 
-  const control = document.createElement('div');
-  control.id = 'landOwnershipControl';
-  control.className = 'land-ownership-control';
-  control.dataset.open = 'false';
-
-  const toggle = document.createElement('button');
-  toggle.id = 'landOwnershipToggleBtn';
-  toggle.className = 'land-ownership-toggle';
-  toggle.type = 'button';
-  toggle.setAttribute('aria-expanded', 'false');
-  toggle.setAttribute('aria-controls', 'landOwnershipPanel');
-  toggle.innerHTML = `
-    <span class="land-ownership-toggle-kicker">Land Ownership</span>
-    <span id="landOwnershipSummary" class="land-ownership-toggle-summary">Layers</span>`;
-
-  const panel = document.createElement('div');
-  panel.id = 'landOwnershipPanel';
-  panel.className = 'land-ownership-panel';
-  panel.hidden = true;
-  panel.setAttribute('aria-hidden', 'true');
-
   dock.classList.add('ownership-dock--header');
   dock.hidden = false;
   dock.setAttribute('aria-hidden', 'false');
-  panel.appendChild(dock);
-  control.appendChild(toggle);
-  control.appendChild(panel);
-  host.insertBefore(control, host.firstChild);
-
-  toggle.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setLandOwnershipPanelOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  document.addEventListener('click', (event) => {
-    const target = event.target;
-    if (!(target instanceof Node)) return;
-    if (!control.contains(target)) setLandOwnershipPanelOpen(false);
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setLandOwnershipPanelOpen(false);
-  });
-
-  [
-    toggleDwrUnits,
-    toggleUSFS,
-    toggleBLM,
-    toggleBLMDetail,
-    toggleSITLA,
-    toggleStateParks,
-    toggleWma,
-    togglePrivate,
-    toggleCwmu,
-  ].forEach((input) => {
-    input?.addEventListener('change', refreshLandOwnershipSummary);
-  });
-
-  refreshLandOwnershipSummary();
+  host.insertBefore(dock, host.firstChild);
   dock.dataset.ownershipHeaderReady = 'true';
 }
 
@@ -439,6 +346,7 @@ function getNormalizedSex(valueOrHunt) {
   if (val.includes('buck')) return 'Buck';
   if (val.includes('bull')) return 'Bull';
   if (val.includes('male only') && hunt) {
+    if (species === 'Moose') return 'Bull';
     if (species === 'Rocky Mountain Bighorn Sheep') return 'Ram';
     if (species === 'Desert Bighorn Sheep') return 'Ram';
   }
@@ -2149,7 +2057,7 @@ function openSelectedHuntFloat() {
           <div>
             <div class="selected-unit-placard-code">Utah DWR hunt</div>
             <div class="selected-unit-placard-name">${name}</div>
-            <p class="selected-unit-placard-sub">${species} · ${weapon} · ${huntType}</p>
+            <p class="selected-unit-placard-sub">${species} &middot; ${weapon} &middot; ${huntType}</p>
           </div>
         </div>
         <div class="selected-unit-placard-grid">
@@ -4218,7 +4126,6 @@ function applyMapMode() {
   if (!mapWrap) return;
   const basemapControl = document.getElementById('basemapPopover') || document.getElementById('globeBasemapControl');
   const ownershipDock = document.getElementById('ownershipDock');
-  const ownershipControl = document.getElementById('landOwnershipControl');
   if (value !== lastTrackedMapMode) {
     trackAnalytics('map_mode_changed', { mode: value });
     lastTrackedMapMode = value;
@@ -4239,10 +4146,6 @@ function applyMapMode() {
     ownershipDock.hidden = false;
     ownershipDock.setAttribute('aria-hidden', 'false');
   }
-  if (ownershipControl) {
-    ownershipControl.hidden = false;
-    ownershipControl.setAttribute('aria-hidden', 'false');
-  }
   if (value !== 'earth') {
     clearGoogleEarth3dBoundaryOverlays();
   }
@@ -4258,11 +4161,6 @@ function applyMapMode() {
     if (ownershipDock) {
       ownershipDock.hidden = true;
       ownershipDock.setAttribute('aria-hidden', 'true');
-    }
-    if (ownershipControl) {
-      ownershipControl.hidden = true;
-      ownershipControl.setAttribute('aria-hidden', 'true');
-      setLandOwnershipPanelOpen(false);
     }
     mapWrap.classList.add('is-dwr-mode');
     if (basemapControl) basemapControl.hidden = true;
