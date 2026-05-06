@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="./assets/logos/favicon.ico.png" />
   <title>U.O.G.A. Builder</title>
   <script src="./embed-mode.js?v=20260422-embed-1"></script>
-  <link rel="stylesheet" href="./style.css?v=20260506-ui-fixes-3" />
+  <link rel="stylesheet" href="./style.css?v=20260506-ownership-groups-1" />
   <style>
     /* Light rebuild pass: keep app.js wiring, improve visual direction. */
     body { background-color:#f4efe4; }
@@ -33,7 +33,8 @@
     .map-mode-toggle { display:inline-flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; width:224px; min-height:46px; padding:6px 14px 7px; cursor:pointer; }
     .map-mode-label { font-size:10px; line-height:1; color:#f07800; white-space:nowrap; }
     .map-mode-current { display:inline-flex; align-items:center; justify-content:center; width:100%; min-width:0; }
-    .map-mode-logo, .map-mode-option-logo { max-height:28px; max-width:170px; width:auto; height:auto; display:block; }
+    .map-mode-logo { max-height:20px; max-width:132px; width:auto; height:auto; display:block; }
+    .map-mode-option-logo { max-height:28px; max-width:170px; width:auto; height:auto; display:block; }
     .map-mode-logo--dwr-current { max-height:28px; max-width:190px; width:auto; height:auto; object-fit:contain; }
     .map-mode-text { color:#f07800; font-weight:900; letter-spacing:.10em; white-space:nowrap; }
     .map-mode-menu { position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%); display:grid; grid-template-columns:1fr; gap:8px; z-index:10030; }
@@ -239,21 +240,43 @@
       <section class="map-wrap">
         <div id="ownershipDock" class="ownership-dock" aria-label="Land ownership controls">
           <div class="ownership-case">
-            <div class="toggle-row">
-              <label class="toggle-chip"><input id="toggleDwrUnits" type="checkbox"><span class="toggle-chip-label">Hunt<br>Units</span></label>
-              <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
-              <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
-              <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM<br>District</span></label>
-              <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
-              <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State<br>Parks</span></label>
-              <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">DWR<br>WMA</span></label>
-              <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private</span></label>
-              <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
-            </div>
-            <div style="display:none;" aria-hidden="true">
-              <span id="federalLayersSummary">Federal</span>
-              <span id="stateLayersSummary">State</span>
-              <span id="privateLayersSummary">Private</span>
+            <div class="toggle-row ownership-toggle-row">
+              <label class="toggle-chip ownership-hunt-units-chip"><input id="toggleDwrUnits" type="checkbox" checked><span class="toggle-chip-label">Hunt<br>Units</span></label>
+
+              <details class="toggle-menu ownership-group">
+                <summary>
+                  <span>Federal</span>
+                  <span id="federalLayersSummary" class="toggle-menu-count"></span>
+                </summary>
+                <div class="toggle-menu-panel ownership-toggle-panel">
+                  <label class="toggle-chip"><input id="toggleUSFS" type="checkbox" checked><span class="toggle-chip-label">USFS</span></label>
+                  <label class="toggle-chip"><input id="toggleBLM" type="checkbox" checked><span class="toggle-chip-label">BLM</span></label>
+                  <label class="toggle-chip"><input id="toggleBLMDetail" type="checkbox"><span class="toggle-chip-label">BLM<br>Detail</span></label>
+                </div>
+              </details>
+
+              <details class="toggle-menu ownership-group">
+                <summary>
+                  <span>State</span>
+                  <span id="stateLayersSummary" class="toggle-menu-count"></span>
+                </summary>
+                <div class="toggle-menu-panel ownership-toggle-panel">
+                  <label class="toggle-chip"><input id="toggleSITLA" type="checkbox"><span class="toggle-chip-label">SITLA</span></label>
+                  <label class="toggle-chip"><input id="toggleStateParks" type="checkbox"><span class="toggle-chip-label">State<br>Parks</span></label>
+                  <label class="toggle-chip"><input id="toggleWma" type="checkbox"><span class="toggle-chip-label">DWR<br>WMA</span></label>
+                </div>
+              </details>
+
+              <details class="toggle-menu ownership-group">
+                <summary>
+                  <span>Private</span>
+                  <span id="privateLayersSummary" class="toggle-menu-count"></span>
+                </summary>
+                <div class="toggle-menu-panel ownership-toggle-panel">
+                  <label class="toggle-chip"><input id="togglePrivate" type="checkbox"><span class="toggle-chip-label">Private</span></label>
+                  <label class="toggle-chip"><input id="toggleCwmu" type="checkbox"><span class="toggle-chip-label">CWMU</span></label>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -344,7 +367,7 @@
   <script src="./ownership-dock.js?v=20260430-subheader-1"></script>
   <script src="./data.js?v=20260404-selection-matrix-fix-1"></script>
 <script src="./boundary-resolver.js?v=20260506-boundary-manifest-2"></script>
-<script src="app.js?v=20260506-ui-fixes-3"></script>
+<script src="app.js?v=20260506-ownership-groups-1"></script>
   <script src="./google-basemap.js?v=20260506-earth-controls-open-1"></script>
 </body>
 </html>

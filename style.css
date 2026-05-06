@@ -320,6 +320,44 @@
     .topbar .land-ownership-panel .toggle-chip-label {
       line-height: 1.05;
     }
+    .ownership-toggle-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .ownership-hunt-units-chip {
+      padding-right: 4px;
+      flex: 0 0 auto;
+    }
+    .ownership-group {
+      flex: 0 0 auto;
+    }
+    .ownership-group > summary {
+      min-height: 34px;
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ownership-group .toggle-menu-count {
+      min-width: 26px;
+      text-align: center;
+      font-size: 11px;
+    }
+    .ownership-toggle-panel {
+      min-width: 190px;
+      padding: 8px;
+      gap: 6px;
+    }
+    .ownership-toggle-panel .toggle-chip {
+      padding: 2px 4px;
+      font-size: 11px;
+    }
     .layer-grid { display: grid; gap: 10px; }
     .layer-toggle {
       display: flex;
@@ -832,6 +870,10 @@
       .toggle-menu-panel {
         left: auto;
         right: 0;
+      }
+      .ownership-group .toggle-menu-panel {
+        left: 0;
+        right: auto;
       }
       .selected-hunt-float {
         position: fixed;

@@ -2957,17 +2957,17 @@ async function updateOutfitterMarkers(matches) {
 function updateStateLayersSummary() {
   if (!stateLayersSummary) return;
   const count = [toggleSITLA, toggleStateParks, toggleWma].filter(el => !!el?.checked).length;
-  stateLayersSummary.innerHTML = count ? `State <span class="toggle-menu-count">(${count})</span>` : 'State';
+  stateLayersSummary.textContent = count ? `(${count})` : '';
 }
 function updateFederalLayersSummary() {
   if (!federalLayersSummary) return;
   const count = [toggleUSFS, toggleBLM, toggleBLMDetail].filter(el => !!el?.checked).length;
-  federalLayersSummary.innerHTML = count ? `Federal <span class="toggle-menu-count">(${count})</span>` : 'Federal';
+  federalLayersSummary.textContent = count ? `(${count})` : '';
 }
 function updatePrivateLayersSummary() {
   if (!privateLayersSummary) return;
   const count = [togglePrivate, toggleCwmu].filter(el => !!el?.checked).length;
-  privateLayersSummary.innerHTML = count ? `Private <span class="toggle-menu-count">(${count})</span>` : 'Private';
+  privateLayersSummary.textContent = count ? `(${count})` : '';
 }
 
 function openSelectedHuntPopup() {
