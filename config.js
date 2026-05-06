@@ -89,19 +89,26 @@ window.UOGA_CONFIG = (() => {
     ============================================================================
   */
   const HUNT_BOUNDARY_SOURCES = [
+    `./processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const BOUNDARY_MANIFEST_SOURCES = [
+    `./processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
     fromR2(`boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const DISPLAY_BOUNDARY_INDEX_SOURCES = [
+    `./processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
     fromR2(`display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const FINALIZED_BOUNDARY_SOURCES = [
+    `./data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`,
     fromR2(`data/hunt_boundaries_finalized_2026.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`),
@@ -109,6 +116,10 @@ window.UOGA_CONFIG = (() => {
     fromR2(`hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const COMPOSITE_BOUNDARY_SOURCES = [
+    `./processed_data/composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `./data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`composite_hunt_unit_mapping_2026.geojson?v=${HUNT_DATA_VERSION}`),
     fromR2(`data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`),
