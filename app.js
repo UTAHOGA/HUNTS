@@ -1916,7 +1916,6 @@ function buildMatchingHuntCard(h, selectedKey) {
   const huntKey = escapeHtml(getHuntRecordKey(h));
   const name = escapeHtml(firstNonEmpty(h.hunt_name, getHuntTitle(h), getUnitName(h), ''));
   const code = escapeHtml(getHuntCode(h) || '');
-  const codeAttr = escapeHtml(getHuntCode(h) || '');
   const weapon = escapeHtml(getWeapon(h) || 'Weapon pending');
   const huntType = escapeHtml(getHuntType(h) || 'Hunt type pending');
   return `
@@ -1932,9 +1931,6 @@ function buildMatchingHuntCard(h, selectedKey) {
       <div class="hunt-card-actions">
         <button type="button" class="secondary hunt-research-ring" data-hunt-select-key="${huntKey}">
           Select
-        </button>
-        <button type="button" class="secondary hunt-research-ring" data-hunt-research-code="${codeAttr}">
-          Hunt Research
         </button>
       </div>
     </div>`;
@@ -4668,21 +4664,13 @@ function bindControls() {
       if (key) window.selectHuntByKey(key);
       return;
     }
-    const researchBtn = event.target.closest('[data-hunt-research-code]');
-    if (researchBtn) {
-      event.stopPropagation();
-      event.preventDefault();
-      const code = researchBtn.getAttribute('data-hunt-research-code');
-      if (code) openHuntResearch(code);
-      return;
-    }
     const card = event.target.closest('[data-hunt-key]');
     if (!card) return;
     window.selectHuntByKey(card.getAttribute('data-hunt-key'));
   });
   document.getElementById('matchingHunts')?.addEventListener('keydown', event => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    if (event.target.closest('[data-hunt-research-code], [data-hunt-select-key]')) return;
+    if (event.target.closest('[data-hunt-select-key]')) return;
     const card = event.target.closest('[data-hunt-key]');
     if (!card) return;
     event.preventDefault();
