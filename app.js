@@ -178,6 +178,7 @@ const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
 const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
 const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
 const GOOGLE_EARTH_ATMOSPHERE_PROFILE = 'standard';
+const ENABLE_SELECTED_HUNT_FLOAT = false;
 const GOOGLE_EARTH_TOPOGRAPHY_EXAGGERATION = 1.5;
 const LIVE_FILTER_DESKTOP_DEBOUNCE_MS = 220;
 let devDebugPanelEl = null;
@@ -1929,6 +1930,9 @@ function buildMatchingHuntCard(h, selectedKey) {
         </div>
       </div>
       <div class="hunt-card-actions">
+        <button type="button" class="secondary hunt-research-ring" data-hunt-select-key="${huntKey}">
+          Select
+        </button>
         <button type="button" class="secondary hunt-research-ring" data-hunt-research-code="${codeAttr}">
           Hunt Research
         </button>
@@ -2043,6 +2047,11 @@ function openSelectedUnitsChooser() {
 }
 
 function openSelectedHuntFloat() {
+  // Keep interaction lightweight: map clicks + hunt cards should drive selection/fly-in.
+  if (!ENABLE_SELECTED_HUNT_FLOAT) {
+    closeSelectedHuntFloat();
+    return;
+  }
   if (safe(mapTypeSelect?.value).toLowerCase() === 'dwr') {
     closeSelectedHuntFloat();
     return;
@@ -3037,11 +3046,20 @@ function openBoundaryPopup(feature, latLng) {
   closeSelectedHuntPopup();
   fitDataFeatureBounds(feature, 11);
   const boundaryName = firstNonEmpty(feature?.getProperty?.('Boundary_Name'), 'Selected Unit');
-  if (matches.length) {
-    updateStatus(`${matches.length} matching hunt${matches.length === 1 ? '' : 's'} in ${boundaryName}. Use Apply Filters or Available Hunts to choose one.`);
-  } else {
-    updateStatus(`Zoomed to ${boundaryName}.`);
+  if (matches.length > 1) {
+    openMapChooser(feature, matches);
+    updateStatus(`${matches.length} matching hunts in ${boundaryName}. Choose one to fly in.`);
+    return;
   }
+  if (matches.length === 1) {
+    const key = getHuntRecordKey(matches[0]);
+    if (key) {
+      window.selectHuntByKey(key);
+      updateStatus(`Selected ${getHuntCode(matches[0]) || 'hunt'} in ${boundaryName}.`);
+      return;
+    }
+  }
+  updateStatus(`Zoomed to ${boundaryName}.`);
 }
 
 async function loadOutfitters() {
@@ -4642,6 +4660,14 @@ function bindControls() {
   syncApplyFiltersButtonLabel();
   window.addEventListener('resize', syncApplyFiltersButtonLabel);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
+    const selectBtn = event.target.closest('[data-hunt-select-key]');
+    if (selectBtn) {
+      event.stopPropagation();
+      event.preventDefault();
+      const key = selectBtn.getAttribute('data-hunt-select-key');
+      if (key) window.selectHuntByKey(key);
+      return;
+    }
     const researchBtn = event.target.closest('[data-hunt-research-code]');
     if (researchBtn) {
       event.stopPropagation();
@@ -4656,7 +4682,7 @@ function bindControls() {
   });
   document.getElementById('matchingHunts')?.addEventListener('keydown', event => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
-    if (event.target.closest('[data-hunt-research-code]')) return;
+    if (event.target.closest('[data-hunt-research-code], [data-hunt-select-key]')) return;
     const card = event.target.closest('[data-hunt-key]');
     if (!card) return;
     event.preventDefault();
