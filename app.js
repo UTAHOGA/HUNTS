@@ -177,9 +177,11 @@ const GOOGLE_MAPS_SCRIPT_CHANNEL = 'beta';
 const GOOGLE_MAPS_SCRIPT_LIBRARIES = 'maps3d';
 const GOOGLE_EARTH_OUTLINE_ONLY_RANGE = 120000;
 const GOOGLE_EARTH_TRANSPARENT_FILL = 'rgba(0,0,0,0)';
+const LIVE_FILTER_DESKTOP_DEBOUNCE_MS = 220;
 let devDebugPanelEl = null;
 let devDebugPanelTimerId = null;
 let lastTrackedMapMode = '';
+let liveFilterDebounceTimerId = null;
 const APP_VERSION = '2026-05-01-analytics-1';
 
 const searchInput = document.getElementById('searchInput'),
@@ -1787,6 +1789,7 @@ function handleFilterChange(event) {
     updateDwrMapFrame(getPreferredDwrHuntCandidate());
   }
   maybeAutoAdvanceFilterMatrix(changedId);
+  scheduleLiveFilterApply();
 }
 
 function refreshSelectionMatrix() {
@@ -4434,47 +4437,45 @@ function styleBoundaryLayer() {
     });
 }
 
-function bindControls() {
-  if (controlsBound) return;
-  controlsBound = true;
+function runApplyFiltersFlow(trigger = 'manual') {
+  selectedHuntFocusOnly = false;
+  closeSelectedHuntPopup();
+  closeSelectedHuntFloat();
+  closeSelectionInfoWindow();
+  selectedHunt = null;
+  selectedBoundaryFeature = null;
+  clearSelectedBoundaryFallbackLayer();
+  if (toggleDwrUnits && hasActiveMatrixSelections()) {
+    toggleDwrUnits.checked = true;
+  }
+  refreshSelectionMatrix();
+  styleBoundaryLayer();
+  refreshGoogleEarth3dBoundaryOverlay();
+  renderMatchingHunts();
+  renderSelectedHunt();
+  renderOutfitters();
 
-  searchInput?.addEventListener('input', handleFilterChange);
-  searchInput?.addEventListener('change', handleFilterChange);
-  [speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
-    el?.addEventListener('change', handleFilterChange);
-  });
-  applyFiltersBtn?.addEventListener('click', () => {
-    selectedHuntFocusOnly = false;
-    closeSelectedHuntPopup();
-    closeSelectedHuntFloat();
-    closeSelectionInfoWindow();
-    selectedHunt = null;
-    selectedBoundaryFeature = null;
-    clearSelectedBoundaryFallbackLayer();
-    if (toggleDwrUnits && hasActiveMatrixSelections()) {
-      toggleDwrUnits.checked = true;
-    }
-    refreshSelectionMatrix();
-    styleBoundaryLayer();
-    refreshGoogleEarth3dBoundaryOverlay();
-    renderMatchingHunts();
-    renderSelectedHunt();
-    renderOutfitters();
-    const results = getDisplayHunts();
-    const count = results.length;
-    const selectedUnitValue = safe(unitFilter?.value).trim();
-    const selectedUnitGroups = getSelectedUnitGroups();
+  const results = getDisplayHunts();
+  const count = results.length;
+  const selectedUnitValue = safe(unitFilter?.value).trim();
+  const selectedUnitGroups = getSelectedUnitGroups();
+  const isLive = trigger === 'live';
+
+  if (!isLive) {
     if (typeof window !== 'undefined' && document.getElementById('matchingHunts')) {
       document.getElementById('matchingHunts').scrollTop = 0;
     }
     scrollSidebarToHuntResults();
-    if (!count) {
-      updateStatus('No matching hunts found for the current filters.');
-    } else if (selectedUnitGroups.length > 1 && !selectedUnitValue) {
-      zoomToDisplayHuntsBounds();
-      openSelectedUnitsChooser();
-      updateStatus(`${count} matching hunts across ${selectedUnitGroups.length} selected units.`);
-    } else {
+  }
+
+  if (!count) {
+    updateStatus('No matching hunts found for the current filters.');
+  } else if (!isLive && selectedUnitGroups.length > 1 && !selectedUnitValue) {
+    zoomToDisplayHuntsBounds();
+    openSelectedUnitsChooser();
+    updateStatus(`${count} matching hunts across ${selectedUnitGroups.length} selected units.`);
+  } else {
+    if (!isLive) {
       if (selectedUnitValue && selectedUnitGroups.length === 1) {
         zoomToDisplayHuntsBounds();
       } else if (!selectedUnitValue) {
@@ -4485,18 +4486,56 @@ function bindControls() {
         : firstNonEmpty(selectedUnitGroups[0]?.unitName, 'Available Hunts');
       showHuntMatchesChooser(chooserTitle, results, 'Available Hunts');
       updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} applied.`);
+    } else {
+      updateStatus(`${count} matching hunt${count === 1 ? '' : 's'} (live update).`);
     }
-    trackAnalytics('filters_applied', {
-      matches: count,
-      species: safe(speciesFilter?.value || ''),
-      sex: safe(sexFilter?.value || ''),
-      hunt_type: safe(huntTypeFilter?.value || ''),
-      hunt_class: safe(huntCategoryFilter?.value || ''),
-      weapon: safe(weaponFilter?.value || ''),
-      unit: safe(unitFilter?.value || ''),
-    });
+  }
+
+  trackAnalytics('filters_applied', {
+    trigger,
+    matches: count,
+    species: safe(speciesFilter?.value || ''),
+    sex: safe(sexFilter?.value || ''),
+    hunt_type: safe(huntTypeFilter?.value || ''),
+    hunt_class: safe(huntCategoryFilter?.value || ''),
+    weapon: safe(weaponFilter?.value || ''),
+    unit: safe(unitFilter?.value || ''),
   });
+}
+
+function scheduleLiveFilterApply() {
+  if (isMobileViewport()) return;
+  if (!googleBaselineMap) return;
+  if (liveFilterDebounceTimerId) {
+    window.clearTimeout(liveFilterDebounceTimerId);
+  }
+  liveFilterDebounceTimerId = window.setTimeout(() => {
+    runApplyFiltersFlow('live');
+  }, LIVE_FILTER_DESKTOP_DEBOUNCE_MS);
+}
+
+function syncApplyFiltersButtonLabel() {
+  if (!applyFiltersBtn) return;
+  const mobile = isMobileViewport();
+  applyFiltersBtn.textContent = mobile ? 'Apply Filters' : 'Apply / Live';
+  applyFiltersBtn.title = mobile
+    ? 'Apply selected filters'
+    : 'Filters also live-update while typing on desktop';
+}
+
+function bindControls() {
+  if (controlsBound) return;
+  controlsBound = true;
+
+  searchInput?.addEventListener('input', handleFilterChange);
+  searchInput?.addEventListener('change', handleFilterChange);
+  [speciesFilter, sexFilter, huntTypeFilter, weaponFilter, huntCategoryFilter, unitFilter].forEach(el => {
+    el?.addEventListener('change', handleFilterChange);
+  });
+  applyFiltersBtn?.addEventListener('click', () => runApplyFiltersFlow('manual'));
   clearFiltersBtn?.addEventListener('click', resetAllFilters);
+  syncApplyFiltersButtonLabel();
+  window.addEventListener('resize', syncApplyFiltersButtonLabel);
   document.getElementById('matchingHunts')?.addEventListener('click', event => {
     const researchBtn = event.target.closest('[data-hunt-research-code]');
     if (researchBtn) {
