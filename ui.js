@@ -380,9 +380,12 @@ window.UOGA_UI = (() => {
     style.id = STYLE_ID;
     style.textContent = `
       .uoga-backpack-shell {
-        position: relative;
+        position: fixed;
+        top: 12px;
+        right: 18px;
+        left: auto;
         flex: 0 0 auto;
-        margin-left: 10px;
+        margin-left: 0;
         z-index: 2147483646;
         isolation: isolate;
       }
@@ -391,7 +394,7 @@ window.UOGA_UI = (() => {
         margin-left: 0;
       }
       .uoga-backpack-shell.is-open {
-        position: relative;
+        position: fixed;
         z-index: 2147483647;
       }
       .uoga-backpack-toggle {
@@ -476,9 +479,9 @@ window.UOGA_UI = (() => {
       }
       .uoga-backpack-panel {
         position: fixed;
-        top: 78px;
-        left: calc(100vw - 444px);
-        right: auto;
+        top: 74px;
+        right: 14px;
+        left: auto;
         width: min(430px, calc(100vw - 28px));
         max-height: min(72vh, 760px);
         display: none;
@@ -498,8 +501,8 @@ window.UOGA_UI = (() => {
           content: "";
           position: absolute;
           top: -16px;
-          left: var(--uoga-backpack-notch-left, auto);
-          right: auto;
+          right: 26px;
+          left: auto;
           width: 132px;
           height: 28px;
         border: 1px solid var(--line);
@@ -676,11 +679,15 @@ window.UOGA_UI = (() => {
       }
       @media (max-width: 900px) {
         .uoga-backpack-shell {
-          width: 100%;
+          position: fixed;
+          top: 10px;
+          right: 12px;
+          left: auto;
+          width: auto;
           margin-left: 0;
         }
         .uoga-backpack-toggle {
-          width: 100%;
+          width: auto;
           justify-content: space-between;
         }
         .uoga-backpack-panel {

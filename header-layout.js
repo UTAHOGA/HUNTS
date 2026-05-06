@@ -128,12 +128,28 @@
     const host = header.querySelector('.topbar-left') || header;
     const mapControl = host.querySelector('.map-mode-control');
     if (mapControl && mapControl.parentElement === host) {
-      mapControl.insertAdjacentElement('afterend', wrapper);
+      mapControl.insertAdjacentElement('beforebegin', wrapper);
     } else {
       host.insertBefore(wrapper, host.firstChild);
     }
     strip.remove();
     bindPageNavControl(wrapper);
+  }
+
+  function normalizeTopbarControlOrder() {
+    const host = document.querySelector('.topbar-left');
+    if (!host) return;
+    const pageNav = host.querySelector('.uoga-page-nav-control');
+    const mapControl = host.querySelector('.map-mode-control, [data-uoga-engine-pills], [data-map-mode-picker]');
+    const instructions = host.querySelector('.instructions-control');
+
+    // Desired order:
+    // 1) Page Navigation (left)
+    // 2) Map Selector (middle)
+    // 3) Instructions (right of those controls)
+    if (pageNav && pageNav.parentElement === host) host.prepend(pageNav);
+    if (mapControl && mapControl.parentElement === host && pageNav) pageNav.insertAdjacentElement('afterend', mapControl);
+    if (instructions && instructions.parentElement === host) host.appendChild(instructions);
   }
 
   function injectLightPillStyle() {
@@ -236,7 +252,7 @@
       }
       #googleEarth3dMap, #dwrMapFrame { background:#fffdf8 !important; z-index:2 !important; }
       .map-mode-native { position:absolute !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; }
-       .topbar-left { display:flex !important; align-items:center !important; justify-content:center !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
+       .topbar-left { display:flex !important; align-items:center !important; justify-content:flex-start !important; gap:14px !important; flex:0 0 auto !important; width:auto !important; min-width:0 !important; }
        .topbar-right {
          display:flex !important;
          align-items:center !important;
@@ -329,18 +345,68 @@
          align-items:center !important;
          justify-content:center !important;
          flex:0 0 auto !important;
-         order:-1 !important;
-         margin-right:auto !important;
-         margin-left:clamp(10px, calc((340px - 170px) / 2), 130px) !important;
+         order:0 !important;
+         margin-right:0 !important;
+         margin-left:0 !important;
        }
        .instructions-control .instructions-panel { position:absolute !important; top:calc(100% + 8px) !important; left:50% !important; transform:translateX(-50%) !important; display:grid !important; grid-template-columns:1fr !important; gap:8px !important; width:236px !important; max-width:calc(100vw - 28px) !important; padding:8px !important; border:1px solid #c9a27f !important; border-radius:16px !important; background:rgba(255,253,248,.98) !important; box-shadow:0 14px 34px rgba(58,37,18,.22) !important; z-index:10035 !important; }
        .instructions-control .instructions-panel[hidden] { display:none !important; }
        .instructions-control .qs-step { width:100% !important; max-width:none !important; flex:0 0 auto !important; padding:9px 10px !important; font-size:11px !important; font-weight:900 !important; }
-       .ownership-dock { display:flex !important; align-items:center !important; justify-content:flex-end !important; max-width:min(760px, 48vw) !important; }
-       .uoga-backpack-open .ownership-dock { max-width:min(760px, 48vw) !important; }
-       .ownership-case { display:flex !important; justify-content:flex-end !important; align-items:center !important; width:100% !important; }
-       .ownership-dock .toggle-row { justify-content:flex-end !important; width:auto !important; max-width:100% !important; background:rgba(255,253,248,.94) !important; backdrop-filter:blur(10px) !important; -webkit-backdrop-filter:blur(10px) !important; flex-wrap:wrap !important; overflow:visible !important; }
-       .ownership-dock .toggle-menu-panel { z-index:10040 !important; right:0 !important; left:auto !important; }
+       .map-wrap .ownership-dock {
+         position:absolute !important;
+         left:14px !important;
+         top:14px !important;
+         right:auto !important;
+         z-index:34 !important;
+         display:flex !important;
+         align-items:flex-start !important;
+         justify-content:flex-start !important;
+         max-width:260px !important;
+       }
+       .uoga-backpack-open .map-wrap .ownership-dock { left:14px !important; max-width:260px !important; }
+       .map-wrap .ownership-case { display:flex !important; justify-content:flex-start !important; align-items:flex-start !important; width:100% !important; }
+       .map-wrap .ownership-dock .toggle-row {
+         display:grid !important;
+         grid-template-columns:1fr !important;
+         justify-items:stretch !important;
+         align-items:stretch !important;
+         gap:8px !important;
+         width:100% !important;
+         max-width:260px !important;
+         padding:10px !important;
+         border-radius:14px !important;
+         background:rgba(255,253,248,.96) !important;
+         border:1px solid #c9a27f !important;
+         backdrop-filter:blur(10px) !important;
+         -webkit-backdrop-filter:blur(10px) !important;
+         overflow:visible !important;
+       }
+       .map-wrap .ownership-hunt-units-chip {
+         justify-content:flex-start !important;
+         padding:8px 10px !important;
+         border:1px solid var(--line) !important;
+         border-radius:12px !important;
+         background:var(--panel2) !important;
+       }
+       .map-wrap .ownership-hunt-units-chip .toggle-chip-label { text-align:left !important; }
+       .map-wrap .ownership-group {
+         width:100% !important;
+         margin:0 !important;
+       }
+       .map-wrap .ownership-group > summary {
+         width:100% !important;
+         min-height:38px !important;
+         padding:8px 10px !important;
+         border-radius:12px !important;
+         justify-content:space-between !important;
+         display:flex !important;
+       }
+       .map-wrap .ownership-dock .toggle-menu-panel {
+         z-index:10040 !important;
+         left:0 !important;
+         right:auto !important;
+         width:min(280px, calc(100vw - 30px)) !important;
+       }
        .basemap-pop { position:absolute !important; top:68px !important; right:14px !important; z-index:31 !important; display:grid !important; justify-items:end !important; gap:8px !important; transition:right 160ms ease !important; }
        .basemap-pop[aria-hidden="true"] { display:none !important; }
        .uoga-backpack-open .basemap-pop { right:min(458px, calc(100% - 320px)) !important; }
@@ -356,14 +422,14 @@
         .topbar-left {
           display:flex !important;
           flex-wrap:wrap !important;
-          justify-content:center !important;
+          justify-content:flex-start !important;
           align-items:center !important;
           gap:12px !important;
         }
         .topbar-right { margin-left:auto !important; }
         .instructions-control {
           margin-left:0 !important;
-          margin-right:auto !important;
+          margin-right:0 !important;
           order:0 !important;
         }
       }
@@ -371,7 +437,7 @@
         .topbar-left {
           display:flex !important;
           flex-wrap:wrap !important;
-          justify-content:center !important;
+          justify-content:flex-start !important;
           align-items:center !important;
           gap:10px !important;
         }
@@ -383,8 +449,17 @@
           justify-content:center !important;
           margin-left:0 !important;
         }
-        .ownership-dock, .uoga-backpack-open .ownership-dock { max-width:none !important; justify-content:center !important; }
-        .ownership-dock .toggle-row { overflow:visible !important; flex-wrap:wrap !important; justify-content:center !important; }
+        .map-wrap .ownership-dock, .uoga-backpack-open .map-wrap .ownership-dock {
+          left:10px !important;
+          top:10px !important;
+          max-width:min(240px, calc(100vw - 26px)) !important;
+          justify-content:flex-start !important;
+        }
+        .map-wrap .ownership-dock .toggle-row {
+          overflow:visible !important;
+          max-width:min(240px, calc(100vw - 26px)) !important;
+          justify-items:stretch !important;
+        }
         .basemap-pop, .uoga-backpack-open .basemap-pop { top:74px !important; right:12px !important; left:auto !important; }
       }
     `;
@@ -487,8 +562,10 @@
   function init() {
     injectLightPillStyle();
     buildPageNavDropdown();
+    normalizeTopbarControlOrder();
     bindTopbarOverlayPriority();
     bindMapEngine();
+    normalizeTopbarControlOrder();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
