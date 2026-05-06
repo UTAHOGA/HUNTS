@@ -48,8 +48,13 @@
     return (sel && sel.value === 'google') || false;
   }
 
+  function isEarthMode() {
+    const sel = getMapTypeSelect();
+    return (sel && sel.value === 'earth') || false;
+  }
+
   function shouldShowPopover() {
-    return isGoogleMode();
+    return isGoogleMode() || isEarthMode();
   }
 
   function applyToGoogleMap() {
@@ -121,7 +126,7 @@
 
     const panel = getPanel();
     if (panel) {
-      panel.dataset.mapMode = isGoogleMode() ? 'google' : 'external';
+      panel.dataset.mapMode = isGoogleMode() ? 'google' : 'earth';
     }
 
     const googleGrid = document.getElementById('googleBasemapGrid');
@@ -198,6 +203,11 @@
     document.addEventListener('click', onDocClick, { passive: true });
     document.addEventListener('keydown', onKeyDown);
     document.addEventListener('change', onMapTypeChange, { passive: true });
+
+    window.UOGA_BASEMAP_UI = {
+      setPanelOpen,
+      syncModeVisibility,
+    };
 
     // Google map loads async; apply preference once it's available.
     let tries = 0;
