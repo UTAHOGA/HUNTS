@@ -38,9 +38,7 @@ const rootFiles = [
 ];
 
 const dataFiles = [
-  'data/hunt-master-canonical.json',
   'data/hunt-master-canonical-2026-source-of-truth.json',
-  'data/utah-hunt-planner-master-all.json',
   'data/elk_hunt_table_official.json',
   'data/elk_antlerless_hunt_table_official.json',
   'data/pronghorn_hunt_table_official.json',

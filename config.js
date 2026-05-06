@@ -115,15 +115,6 @@ window.UOGA_CONFIG = (() => {
         `./processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
         `${CLOUDFLARE_BASE}/processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
         `${CLOUDFLARE_BASE}/data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
-        `./data/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
-      ],
-    },
-    {
-      label: 'Legacy hunt master fallback',
-      required: false,
-      authoritative: false,
-      candidates: [
-        `./data/utah-hunt-planner-master-all.json?v=${HUNT_DATA_VERSION}`,
       ],
     },
   ];
