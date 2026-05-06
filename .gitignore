@@ -40,3 +40,10 @@ local_only/
 *.bak
 *.bak-*
 *.patch
+
+# Local PDF ingest inbox / generated review artifacts
+_pdf_inbox/
+
+# Generated PDF ingest review packages
+processed_data/pdf_ingest/
+
