@@ -2165,15 +2165,13 @@ function openSelectedHuntFloat() {
             <span class="selected-unit-placard-pill-label">Boundary</span>
             <span class="selected-unit-placard-pill-value">${boundaryLine}</span>
           </div>
-          <div class="selected-unit-placard-pill selected-unit-placard-pill--map">
-            <button type="button" class="secondary hunt-research-ring selected-unit-placard-map-btn" data-inline-view-map>
-              View Map
-            </button>
-          </div>
         </div>
         <div class="selected-unit-placard-actions">
-          <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
+          <button type="button" class="secondary hunt-research-ring selected-unit-placard-primary-btn" data-inline-hunt-research>
             Hunt Research
+          </button>
+          <button type="button" class="secondary hunt-research-ring selected-unit-placard-map-btn selected-unit-placard-primary-btn" data-inline-view-map>
+            View Map
           </button>
           ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">View on DWR</a>` : ''}
           ${kmzLink ? `<a href="${escapeHtml(kmzLink)}" target="_blank" rel="noopener noreferrer">Download KMZ</a>` : ''}
