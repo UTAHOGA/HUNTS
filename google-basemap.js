@@ -2,6 +2,7 @@
   const STORAGE_KEY = 'uoga_google_basemap_type_v2';
   const DEFAULT_TYPE = 'terrain';
   const VALID_TYPES = new Set(['roadmap', 'terrain', 'hybrid', 'satellite']);
+  let lastMode = '';
 
   const CROP_BASEMAP_PANEL_ON_SELECT = true;
 
@@ -55,6 +56,12 @@
 
   function shouldShowPopover() {
     return isGoogleMode() || isEarthMode();
+  }
+
+  function getMode() {
+    if (isGoogleMode()) return 'google';
+    if (isEarthMode()) return 'earth';
+    return 'dwr';
   }
 
   function applyToGoogleMap() {
@@ -119,6 +126,7 @@
   function syncModeVisibility() {
     const popover = getPopover();
     if (!popover) return;
+    const mode = getMode();
     const show = shouldShowPopover();
     popover.setAttribute('aria-hidden', show ? 'false' : 'true');
     popover.hidden = !show;
@@ -131,6 +139,13 @@
 
     const googleGrid = document.getElementById('googleBasemapGrid');
     if (googleGrid) googleGrid.style.opacity = '1';
+    if (mode === 'earth' && lastMode !== 'earth') {
+      setPanelOpen(true);
+    }
+    if (mode !== 'earth' && mode !== 'google') {
+      setPanelOpen(false);
+    }
+    lastMode = mode;
   }
 
   function onToggleClick(e) {
