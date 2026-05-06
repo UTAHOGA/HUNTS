@@ -369,14 +369,10 @@ function getCompositeMemberBoundaryIds(boundaryId) {
 function getResolvedBoundaryIdsForHunt(hunt) {
   const huntCode = normalizeHuntCodeFromResolver(getHuntCode(hunt));
   const manifestRow = huntCode ? boundaryManifestByHuntCode.get(huntCode) : null;
-  const memberIdsFromManifest = parseBoundaryIdListFromResolver(firstNonEmpty(
-    manifestRow?.dwr_member_boundary_ids,
-    manifestRow?.member_boundary_ids,
-    manifestRow?.memberBoundaryIds,
-  ))
-    .map(id => safe(normalizeBoundaryIdFromResolver(id)).trim())
-    .filter(Boolean);
-  if (memberIdsFromManifest.length) return [...new Set(memberIdsFromManifest)];
+  const manifestGeojsonPath = safe(firstNonEmpty(
+    manifestRow?.boundary_geojson_path,
+    manifestRow?.boundaryGeojsonPath,
+  )).trim();
 
   const resolvedRaw = firstNonEmpty(
     hunt?.resolvedBoundaryIds,
@@ -395,6 +391,17 @@ function getResolvedBoundaryIdsForHunt(hunt) {
     manifestRow?.BoundaryID,
   ))).trim();
   if (manifestBoundaryId) return [manifestBoundaryId];
+  // If this hunt has a direct boundary GeoJSON path, rendering should use that
+  // path; do not expand member IDs into broad legacy feature matching.
+  if (manifestGeojsonPath) return [];
+  const memberIdsFromManifest = parseBoundaryIdListFromResolver(firstNonEmpty(
+    manifestRow?.dwr_member_boundary_ids,
+    manifestRow?.member_boundary_ids,
+    manifestRow?.memberBoundaryIds,
+  ))
+    .map(id => safe(normalizeBoundaryIdFromResolver(id)).trim())
+    .filter(Boolean);
+  if (memberIdsFromManifest.length) return [...new Set(memberIdsFromManifest)];
   // If manifest/display-boundary mapping exists but no explicit DWR ID, do not
   // fall back to legacy synthetic boundary IDs from hunt records.
   if (manifestRow) return [];

@@ -66,7 +66,7 @@ window.UOGA_CONFIG = (() => {
     Keep them scoped by feature family.
     ============================================================================
   */
-  const HUNT_DATA_VERSION = '20260404-selection-matrix-fix-1';
+  const HUNT_DATA_VERSION = '20260506-boundary-geojson-render-1';
   const OUTFITTERS_DATA_VERSION = '20260327-city-logo-refresh-1';
   const OUTFITTER_COVERAGE_VERSION = '20260327-federal-coverage-demo-1';
   const HUNT_RESEARCH_DATA_VERSION = '20260404-hunt-reference-link-1';
@@ -98,11 +98,16 @@ window.UOGA_CONFIG = (() => {
   const BOUNDARY_MANIFEST_SOURCES = [
     `./processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
+    `${CLOUDFLARE_BASE}/processed_data/boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`,
     fromR2(`boundary-manifest-2026.json?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const DISPLAY_BOUNDARY_INDEX_SOURCES = [
     `./processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/display-boundary-index-2026.csv?v=${HUNT_DATA_VERSION}`,
     fromR2(`processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
+    fromR2(`processed_data/display-boundary-index-2026.csv?v=${HUNT_DATA_VERSION}`),
+    `${CLOUDFLARE_BASE}/processed_data/display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/display-boundary-index-2026.csv?v=${HUNT_DATA_VERSION}`,
     fromR2(`display-boundary-index-2026.json?v=${HUNT_DATA_VERSION}`),
   ].filter(Boolean);
   const FINALIZED_BOUNDARY_SOURCES = [
