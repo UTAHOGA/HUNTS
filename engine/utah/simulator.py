@@ -10,7 +10,7 @@ from statistics import mean
 from typing import Dict, Iterable, List, Mapping, MutableMapping, Sequence, Tuple
 
 from .constants import DEFAULT_PREDICTION_YEAR, MODEL_VERSION, RULE_VERSION
-from .models import Application, ApplicationUnit, DrawResult, DrawState, Hunt, PredictionAggregate, Quota, SimulationResult, UtahRuleConfig, normalize_residency
+from .models import Application, ApplicationUnit, DrawResult, DrawState, DrawSystem, Hunt, PredictionAggregate, Quota, SimulationResult, UtahRuleConfig, normalize_residency
 from .rules import can_group_fit_quota, derive_quota, get_draw_order
 
 
@@ -39,7 +39,7 @@ def _select_choice(unit: ApplicationUnit, remaining_by_hunt: MutableMapping[str,
 
 
 def _tickets_for_unit(unit: ApplicationUnit, config: UtahRuleConfig) -> int:
-    if unit.point_type == "bonus":
+    if unit.point_type == DrawSystem.BONUS:
         return max(1, 1 + int(unit.effective_points))
     return 1
 
@@ -114,7 +114,7 @@ def build_application_units(applications: Sequence[Application]) -> List[Applica
                 youth_only_flag=bool(application.youth_flag),
                 valid_flag=bool(application.valid_flag),
                 eligible_flag=bool(application.eligible_flag),
-                random_ticket_count=1 if application.point_type != "bonus" else max(1, 1 + int(application.points_before_draw)),
+                random_ticket_count=1 if application.point_type != DrawSystem.BONUS else max(1, 1 + int(application.points_before_draw)),
                 reason_codes=tuple(),
             )
         )
@@ -171,7 +171,7 @@ def run_simulation_once(draw_state: DrawState, seed: int) -> SimulationResult:
     if drawn_ids:
         ordered_units = [unit for unit in ordered_units if unit.application_unit_id not in drawn_ids]
 
-    if draw_state.hunt.rule_system == "preference":
+    if draw_state.hunt.rule_system == DrawSystem.PREFERENCE:
         for points in sorted({unit.effective_points for unit in ordered_units}, reverse=True):
             bucket = [unit for unit in ordered_units if unit.effective_points == points]
             rng.shuffle(bucket)

@@ -7,6 +7,7 @@ from .models import (
     ApplicationUnit,
     DrawResult,
     DrawState,
+    DrawSystem,
     Group,
     Hunt,
     PredictionAggregate,
@@ -14,4 +15,6 @@ from .models import (
     SimulationResult,
     UtahRuleConfig,
 )
-
+from .materialize_engine import materialize_engine
+from .schema import BonusDrawInput
+from .simulate_bonus_draw import BonusDrawProbability, compute_bonus_draw_probability

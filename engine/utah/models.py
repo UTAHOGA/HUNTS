@@ -7,6 +7,14 @@ from math import floor
 from typing import Iterable, List, Optional, Sequence, Tuple
 
 
+class DrawSystem:
+    BONUS = "bonus"
+    PREFERENCE = "preference"
+    HARVEST_OBJECTIVE = "harvest_objective"
+    GENERAL = "general"
+    UNKNOWN = "unknown"
+
+
 def normalize_residency(value: object) -> str:
     text = str(value or "").strip().lower()
     if text in {"nonresident", "non-resident", "nr"}:

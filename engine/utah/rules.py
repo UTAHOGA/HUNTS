@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Iterable, List, Sequence, Tuple
 
-from .models import Application, ApplicationUnit, Group, Hunt, Quota, UtahRuleConfig, floor_average, normalize_choices
+from .models import Application, ApplicationUnit, DrawSystem, Group, Hunt, Quota, UtahRuleConfig, floor_average, normalize_choices
 
 
 DEFAULT_DRAW_ORDER: Tuple[str, ...] = (
@@ -18,6 +18,40 @@ DEFAULT_DRAW_ORDER: Tuple[str, ...] = (
     "cmwu",
     "other",
 )
+
+def _text(value: object) -> str:
+    return str(value or "").strip().lower()
+
+
+def classify_utah_draw_rule(row: dict[str, object] | Application | Hunt) -> str:
+    """Conservative classifier for Utah draw rule system."""
+    if isinstance(row, Application):
+        combined = f"{_text(row.point_type)} {_text(row.draw_type)} {_text(row.species)}"
+    elif isinstance(row, Hunt):
+        combined = f"{_text(row.rule_system)} {_text(row.hunt_type)} {_text(row.hunt_code)}"
+    else:
+        combined = " ".join(
+            _text(row.get(key))
+            for key in (
+                "draw_system",
+                "rule_system",
+                "point_type",
+                "draw_type",
+                "hunt_type",
+                "hunt_class",
+                "hunt_name",
+            )
+        )
+
+    if any(token in combined for token in ("bonus", "limited entry", "once in a lifetime", "once-in-a-lifetime", "oial", "premium limited")):
+        return DrawSystem.BONUS
+    if any(token in combined for token in ("preference", "dedicated hunter", "antlerless", "general-season buck deer", "general season buck deer")):
+        return DrawSystem.PREFERENCE
+    if "harvest objective" in combined:
+        return DrawSystem.HARVEST_OBJECTIVE
+    if "general" in combined:
+        return DrawSystem.GENERAL
+    return DrawSystem.UNKNOWN
 
 
 def calculate_effective_group_points(member_points: Sequence[int]) -> int:
@@ -64,12 +98,12 @@ def derive_quota(quota: Quota, hunt: Hunt, config: UtahRuleConfig) -> Quota:
     preference_quota = quota.preference_quota
     youth_reserved = quota.youth_reserved_quota
 
-    if hunt.rule_system == "bonus":
+    if hunt.rule_system == DrawSystem.BONUS:
         if reserved is None:
             reserved = int(total * config.bonus_reserved_fraction)
         if random_quota is None:
             random_quota = max(total - reserved, 0)
-    elif hunt.rule_system == "preference":
+    elif hunt.rule_system == DrawSystem.PREFERENCE:
         if preference_quota is None:
             preference_quota = total
 
@@ -106,7 +140,7 @@ def build_application_unit(
     reason_codes = tuple(reason_codes or ())
     group_size = group.group_size if group else 1
     effective_points = group.effective_points if group else application.points_before_draw
-    ticket_count = 1 + max(effective_points, 0) if application.point_type == "bonus" else 1
+    ticket_count = 1 + max(effective_points, 0) if application.point_type == DrawSystem.BONUS else 1
     return ApplicationUnit(
         application_unit_id=application.application_id if not group else group.group_id,
         member_application_ids=(application.application_id,),
