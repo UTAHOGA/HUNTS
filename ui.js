@@ -282,6 +282,23 @@ window.UOGA_UI = (() => {
     trayPanel.setAttribute('aria-hidden', 'true');
   }
 
+  function lockBackpackTopLayer() {
+    if (!trayShell || !trayPanel) return;
+    trayShell.style.setProperty('position', 'fixed', 'important');
+    trayShell.style.setProperty('top', '12px', 'important');
+    trayShell.style.setProperty('right', '18px', 'important');
+    trayShell.style.setProperty('left', 'auto', 'important');
+    trayShell.style.setProperty('z-index', '2147483646', 'important');
+
+    trayPanel.style.setProperty('position', 'fixed', 'important');
+    trayPanel.style.setProperty('z-index', '2147483647', 'important');
+
+    if (window.innerWidth <= 900) {
+      trayShell.style.setProperty('top', '10px', 'important');
+      trayShell.style.setProperty('right', '12px', 'important');
+    }
+  }
+
   function positionBackpackTray() {
     if (!trayButton || !trayPanel) return;
     const rect = trayButton.getBoundingClientRect();
@@ -313,6 +330,7 @@ window.UOGA_UI = (() => {
 
   function openBackpackTray() {
     if (!trayShell || !trayButton || !trayPanel) return;
+    lockBackpackTopLayer();
     renderBackpackTray();
     positionBackpackTray();
     trayOpen = true;
@@ -782,6 +800,7 @@ window.UOGA_UI = (() => {
     trayPanel = trayShell.querySelector('.uoga-backpack-panel');
     trayBadge = trayShell.querySelector('.uoga-backpack-badge');
     traySections = trayShell.querySelector('.uoga-backpack-sections');
+    lockBackpackTopLayer();
 
     trayButton.addEventListener('click', (event) => {
       event.stopPropagation();
