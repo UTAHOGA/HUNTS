@@ -242,26 +242,26 @@
       </div>
       <div class="panel-body">
         <div class="library-head">
-          <p class="helper">Searchable library for hard data, exports, and source files. Add or update links in the manifest and this page refreshes automatically.</p>
+          <p class="helper">Search and download official/source PDFs used in the hunt data pipeline. This page is PDF-only for visitor review.</p>
           <div class="library-toolbar">
             <input id="librarySearch" class="library-search" type="search" placeholder="Search dataset name, type, or description..." aria-label="Search data library">
             <span id="libraryCount" class="helper" aria-live="polite"></span>
           </div>
           <div class="library-facets">
             <select id="libraryTypeFilter" class="library-facet" aria-label="Filter by file type">
-              <option value="all">All file types</option>
+              <option value="all">All document types</option>
             </select>
             <select id="libraryYearFilter" class="library-facet" aria-label="Filter by year">
               <option value="all">All years</option>
             </select>
           </div>
-          <div id="libraryChips" class="library-chip-row" role="tablist" aria-label="Data categories"></div>
+          <div id="libraryChips" class="library-chip-row" role="tablist" aria-label="PDF categories"></div>
         </div>
 
         <div id="librarySections"></div>
 
         <p class="helper" style="margin-top: 14px;">
-          Tip: If a file opens in the browser, use the browser download icon to save it locally.
+          Tip: Click any card to open the PDF. Use the browser download button to save a local copy.
         </p>
       </div>
     </section>
@@ -270,7 +270,7 @@
   <script src="./ui.js?v=20260423-mobile-polish-1"></script>
   <script src="./header-layout.js?v=20260430-header-order-4"></script>
   <script>
-    const HARD_DATA_MANIFEST_URL = './processed_data/hard_data_exports/hard_data_manifest.web.json';
+    const HARD_DATA_MANIFEST_URL = './processed_data/hard_data_exports/hard_copy_pdf_manifest.web.json';
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -282,10 +282,9 @@
 
     function groupLabel(key) {
       const map = {
-        tools: 'Tools',
-        exports: 'Exports',
-        canonical: 'Canonical',
-        raw_library: 'Raw Library'
+        draw_odds: 'Draw Odds / Results',
+        harvest_report: 'Harvest Reports',
+        regulation: 'Regulations / Guidebooks'
       };
       return map[key] || key;
     }
