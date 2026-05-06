@@ -1,0 +1,482 @@
+{
+  "generated_at": "2026-05-05T23:17:53.140Z",
+  "kept_runtime_data_files": [
+    "bighorn_sheep_hunt_table_official.json",
+    "bison_hunt_table_official.json",
+    "black_bear_hunt_table_official.json",
+    "canonical/hunt-master-canonical.json",
+    "conservation-permit-areas.json",
+    "conservation-permit-hunt-table-2025-27.json",
+    "cougar_hunt_table_official.json",
+    "cwmu-boundaries.geojson",
+    "dwr-GetCWMUBoundaries.json",
+    "elk_antlerless_hunt_table_official.json",
+    "elk_hunt_table_official.json",
+    "hunt-boundaries-lite.geojson",
+    "hunt-master-canonical.json",
+    "hunt_boundaries.geojson",
+    "moose_hunt_table_official.json",
+    "mountain_goat_hunt_table_official.json",
+    "outfitters-public.json",
+    "outfitters.json",
+    "pronghorn_hunt_table_official.json",
+    "turkey_hunt_table_official.json",
+    "utah-hunt-planner-master-all.json"
+  ],
+  "kept_runtime_processed_files": [
+    "draw_reality_engine.csv",
+    "hunt_master_enriched.csv",
+    "hunt_research_2026.json",
+    "hunt_unit_reference_linked.csv",
+    "outfitter-federal-unit-coverage-review.json",
+    "point_ladder_view.csv"
+  ],
+  "moved": {
+    "data": [
+      {
+        "name": "2026 LE BULL ELK .XLS",
+        "to": "local_only/data_sources_not_runtime/2026 LE BULL ELK .XLS"
+      },
+      {
+        "name": "2026MountainGoatOnce_in_a_Lifetime EXCEL.xlsx",
+        "to": "local_only/data_sources_not_runtime/2026MountainGoatOnce_in_a_Lifetime EXCEL.xlsx"
+      },
+      {
+        "name": "2026MountainGoatOnce_in_a_Lifetime2 GEO.geojson",
+        "to": "local_only/data_sources_not_runtime/2026MountainGoatOnce_in_a_Lifetime2 GEO.geojson"
+      },
+      {
+        "name": "2026MountainGoatOnce_in_a_Lifetime2_.KMZ",
+        "to": "local_only/data_sources_not_runtime/2026MountainGoatOnce_in_a_Lifetime2_.KMZ"
+      },
+      {
+        "name": "2026PronghornLimitedEntry_-6120172427821280967.txt",
+        "to": "local_only/data_sources_not_runtime/2026PronghornLimitedEntry_-6120172427821280967.txt"
+      },
+      {
+        "name": "blm-surface-ownership-shapefile",
+        "to": "local_only/data_sources_not_runtime/blm-surface-ownership-shapefile"
+      },
+      {
+        "name": "conservation-permit-hunt-table-2025-27-audit.json",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-hunt-table-2025-27-audit.json"
+      },
+      {
+        "name": "conservation-permit-hunt-table-2025-27-summary.json",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-hunt-table-2025-27-summary.json"
+      },
+      {
+        "name": "conservation-permit-hunt-table-2025-27.csv",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-hunt-table-2025-27.csv"
+      },
+      {
+        "name": "conservation-permit-hunt-table-2025-27.html",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-hunt-table-2025-27.html"
+      },
+      {
+        "name": "conservation-permit-workbook-2025-27-raw.csv",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-workbook-2025-27-raw.csv"
+      },
+      {
+        "name": "conservation-permit-workbook-2025-27-raw.json",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-workbook-2025-27-raw.json"
+      },
+      {
+        "name": "conservation-permit-workbook-2025-27-summary.json",
+        "to": "local_only/data_sources_not_runtime/conservation-permit-workbook-2025-27-summary.json"
+      },
+      {
+        "name": "cwmu-boundaries-shapefile",
+        "to": "local_only/data_sources_not_runtime/cwmu-boundaries-shapefile"
+      },
+      {
+        "name": "GENERAL BULL ELK.geojson",
+        "to": "local_only/data_sources_not_runtime/GENERAL BULL ELK.geojson"
+      },
+      {
+        "name": "GENERAL ELK .KMZ",
+        "to": "local_only/data_sources_not_runtime/GENERAL ELK .KMZ"
+      },
+      {
+        "name": "GOAT .CSV 2026.csv",
+        "to": "local_only/data_sources_not_runtime/GOAT .CSV 2026.csv"
+      },
+      {
+        "name": "hunt-boundaries-shapefile",
+        "to": "local_only/data_sources_not_runtime/hunt-boundaries-shapefile"
+      },
+      {
+        "name": "hunt-unit-authority-review-register-2026-03-28.html",
+        "to": "local_only/data_sources_not_runtime/hunt-unit-authority-review-register-2026-03-28.html"
+      },
+      {
+        "name": "hunt-unit-permit-checklist-2026-03-28.html",
+        "to": "local_only/data_sources_not_runtime/hunt-unit-permit-checklist-2026-03-28.html"
+      },
+      {
+        "name": "hunt_boundaries_arcgis.json",
+        "to": "local_only/data_sources_not_runtime/hunt_boundaries_arcgis.json"
+      },
+      {
+        "name": "L.E. ELK 2026.csv",
+        "to": "local_only/data_sources_not_runtime/L.E. ELK 2026.csv"
+      },
+      {
+        "name": "LOA_2024_ GEO PRIVATE LOA.geojson",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_ GEO PRIVATE LOA.geojson"
+      },
+      {
+        "name": "LOA_2024_gdb_ .KMZ",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_gdb_ .KMZ"
+      },
+      {
+        "name": "LOA_2024_gdb_ EXCEL.xlsx",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_gdb_ EXCEL.xlsx"
+      },
+      {
+        "name": "LOA_2024_gdb_-2965368397397759606.geojson",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_gdb_-2965368397397759606.geojson"
+      },
+      {
+        "name": "LOA_2024_gdb_-416225797007074243.kmz",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_gdb_-416225797007074243.kmz"
+      },
+      {
+        "name": "LOA_2024_gdb_-9038420874631206616.xlsx",
+        "to": "local_only/data_sources_not_runtime/LOA_2024_gdb_-9038420874631206616.xlsx"
+      },
+      {
+        "name": "logo-review-assets",
+        "to": "local_only/data_sources_not_runtime/logo-review-assets"
+      },
+      {
+        "name": "logo-sourcing-approved.json",
+        "to": "local_only/data_sources_not_runtime/logo-sourcing-approved.json"
+      },
+      {
+        "name": "outfitters-master.json",
+        "to": "local_only/data_sources_not_runtime/outfitters-master.json"
+      },
+      {
+        "name": "PRONGHORN 2026 .KMZ",
+        "to": "local_only/data_sources_not_runtime/PRONGHORN 2026 .KMZ"
+      },
+      {
+        "name": "PRONGHORN 2026 EXCEL.xlsx",
+        "to": "local_only/data_sources_not_runtime/PRONGHORN 2026 EXCEL.xlsx"
+      },
+      {
+        "name": "PRONGHORN 2026 GEO.geojson",
+        "to": "local_only/data_sources_not_runtime/PRONGHORN 2026 GEO.geojson"
+      },
+      {
+        "name": "PRONGHORN 2026 L.E. .CSV",
+        "to": "local_only/data_sources_not_runtime/PRONGHORN 2026 L.E. .CSV"
+      },
+      {
+        "name": "sitla-ownership-shapefile",
+        "to": "local_only/data_sources_not_runtime/sitla-ownership-shapefile"
+      },
+      {
+        "name": "uoga-outfitter-review-checklist-template-2026-03-28.html",
+        "to": "local_only/data_sources_not_runtime/uoga-outfitter-review-checklist-template-2026-03-28.html"
+      },
+      {
+        "name": "usfs-surface-ownership-shapefile",
+        "to": "local_only/data_sources_not_runtime/usfs-surface-ownership-shapefile"
+      },
+      {
+        "name": "utah-black-bear-habitat.geojson",
+        "to": "local_only/data_sources_not_runtime/utah-black-bear-habitat.geojson"
+      },
+      {
+        "name": "utah-elk-habitat.geojson",
+        "to": "local_only/data_sources_not_runtime/utah-elk-habitat.geojson"
+      },
+      {
+        "name": "utah-migration-corridors-lite.geojson",
+        "to": "local_only/data_sources_not_runtime/utah-migration-corridors-lite.geojson"
+      },
+      {
+        "name": "utah-migration-stopovers-lite.geojson",
+        "to": "local_only/data_sources_not_runtime/utah-migration-stopovers-lite.geojson"
+      },
+      {
+        "name": "utah-mule-deer-habitat.geojson",
+        "to": "local_only/data_sources_not_runtime/utah-mule-deer-habitat.geojson"
+      },
+      {
+        "name": "utah-state-parks-shapefile",
+        "to": "local_only/data_sources_not_runtime/utah-state-parks-shapefile"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries deer.geojson",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries deer.geojson"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_2025_-hunt table.xlsx",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_2025_-hunt table.xlsx"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_2025_elk.csv",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_2025_elk.csv"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_2025_elk.geojson",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_2025_elk.geojson"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_2025_hunt table.csv",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_2025_hunt table.csv"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_2025_hunt table.geojson",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_2025_hunt table.geojson"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_deer.csv",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_deer.csv"
+      },
+      {
+        "name": "Utah_Big_Game_Hunt_Boundaries_deer.xlsx",
+        "to": "local_only/data_sources_not_runtime/Utah_Big_Game_Hunt_Boundaries_deer.xlsx"
+      },
+      {
+        "name": "Utah_Turkey_Habitat_1487432346387562039.xlsx",
+        "to": "local_only/data_sources_not_runtime/Utah_Turkey_Habitat_1487432346387562039.xlsx"
+      },
+      {
+        "name": "Utah_Turkey_Habitat_4260097535588659570.kmz",
+        "to": "local_only/data_sources_not_runtime/Utah_Turkey_Habitat_4260097535588659570.kmz"
+      },
+      {
+        "name": "wma-boundaries-shapefile",
+        "to": "local_only/data_sources_not_runtime/wma-boundaries-shapefile"
+      }
+    ],
+    "processed_data": [
+      {
+        "name": "active_vs_local_json_sqlite_report.md",
+        "to": "local_only/processed_outputs_not_runtime/active_vs_local_json_sqlite_report.md"
+      },
+      {
+        "name": "antlerless_draw_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/antlerless_draw_2025.csv"
+      },
+      {
+        "name": "coverage-matrix.json",
+        "to": "local_only/processed_outputs_not_runtime/coverage-matrix.json"
+      },
+      {
+        "name": "draw_breakdown_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/draw_breakdown_2025.csv"
+      },
+      {
+        "name": "draw_reality_view.csv",
+        "to": "local_only/processed_outputs_not_runtime/draw_reality_view.csv"
+      },
+      {
+        "name": "harvest-metrics-2024-bg-report.csv",
+        "to": "local_only/processed_outputs_not_runtime/harvest-metrics-2024-bg-report.csv"
+      },
+      {
+        "name": "harvest-metrics-2024-bg-report.json",
+        "to": "local_only/processed_outputs_not_runtime/harvest-metrics-2024-bg-report.json"
+      },
+      {
+        "name": "harvest-metrics-2025-prelim.csv",
+        "to": "local_only/processed_outputs_not_runtime/harvest-metrics-2025-prelim.csv"
+      },
+      {
+        "name": "harvest-metrics-2025-prelim.json",
+        "to": "local_only/processed_outputs_not_runtime/harvest-metrics-2025-prelim.json"
+      },
+      {
+        "name": "harvest_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/harvest_2025.csv"
+      },
+      {
+        "name": "historical_trend_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/historical_trend_2025.csv"
+      },
+      {
+        "name": "hunt-master-canonical.json",
+        "to": "local_only/processed_outputs_not_runtime/hunt-master-canonical.json"
+      },
+      {
+        "name": "hunt_database_2026_completeness_report.json",
+        "to": "local_only/processed_outputs_not_runtime/hunt_database_2026_completeness_report.json"
+      },
+      {
+        "name": "hunt_database_complete.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_database_complete.csv"
+      },
+      {
+        "name": "hunt_decision_output.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_decision_output.csv"
+      },
+      {
+        "name": "hunt_join_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_join_2025.csv"
+      },
+      {
+        "name": "hunt_master_canonical_2026_SOURCE_OF_TRUTH_FINAL_COMPLETE_NO_PARTIALS.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_master_canonical_2026_SOURCE_OF_TRUTH_FINAL_COMPLETE_NO_PARTIALS.csv"
+      },
+      {
+        "name": "hunt_permits_rac_2025_2026.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_permits_rac_2025_2026.csv"
+      },
+      {
+        "name": "hunt_scores_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_scores_2025.csv"
+      },
+      {
+        "name": "hunt_truth_from_json.sqlite",
+        "to": "local_only/processed_outputs_not_runtime/hunt_truth_from_json.sqlite"
+      },
+      {
+        "name": "hunt_truth_local_build.sqlite",
+        "to": "local_only/processed_outputs_not_runtime/hunt_truth_local_build.sqlite"
+      },
+      {
+        "name": "hunt_with_outfitters_2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/hunt_with_outfitters_2025.csv"
+      },
+      {
+        "name": "local_truth_field_diffs.csv",
+        "to": "local_only/processed_outputs_not_runtime/local_truth_field_diffs.csv"
+      },
+      {
+        "name": "local_truth_vs_built_report.md",
+        "to": "local_only/processed_outputs_not_runtime/local_truth_vs_built_report.md"
+      },
+      {
+        "name": "normalized-staging-audit.csv",
+        "to": "local_only/processed_outputs_not_runtime/normalized-staging-audit.csv"
+      },
+      {
+        "name": "normalized-staging-audit.json",
+        "to": "local_only/processed_outputs_not_runtime/normalized-staging-audit.json"
+      },
+      {
+        "name": "processed_data_hunt_database_2026_completeness_report.json",
+        "to": "local_only/processed_outputs_not_runtime/processed_data_hunt_database_2026_completeness_report.json"
+      },
+      {
+        "name": "processed_data_hunt_database_2026_gaps.csv",
+        "to": "local_only/processed_outputs_not_runtime/processed_data_hunt_database_2026_gaps.csv"
+      },
+      {
+        "name": "projected_bonus_draw_2026_simulated.csv",
+        "to": "local_only/processed_outputs_not_runtime/projected_bonus_draw_2026_simulated.csv"
+      },
+      {
+        "name": "raw-backup-catalog.csv",
+        "to": "local_only/processed_outputs_not_runtime/raw-backup-catalog.csv"
+      },
+      {
+        "name": "raw-backup-catalog.json",
+        "to": "local_only/processed_outputs_not_runtime/raw-backup-catalog.json"
+      },
+      {
+        "name": "recommended_permits_2026.csv",
+        "to": "local_only/processed_outputs_not_runtime/recommended_permits_2026.csv"
+      },
+      {
+        "name": "sleeper-report-elk-deer-2025.csv",
+        "to": "local_only/processed_outputs_not_runtime/sleeper-report-elk-deer-2025.csv"
+      },
+      {
+        "name": "sleeper-report-elk-deer-2025.json",
+        "to": "local_only/processed_outputs_not_runtime/sleeper-report-elk-deer-2025.json"
+      },
+      {
+        "name": "statewide_composite_boundaries_2026.geojson",
+        "to": "local_only/processed_outputs_not_runtime/statewide_composite_boundaries_2026.geojson"
+      },
+      {
+        "name": "statewide_composite_boundaries_2026_FINAL_LOCKED.geojson",
+        "to": "local_only/processed_outputs_not_runtime/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson"
+      },
+      {
+        "name": "truth_crosscheck_report.json",
+        "to": "local_only/processed_outputs_not_runtime/truth_crosscheck_report.json"
+      },
+      {
+        "name": "truth_crosscheck_report.md",
+        "to": "local_only/processed_outputs_not_runtime/truth_crosscheck_report.md"
+      },
+      {
+        "name": "truth_downloads_comprehensive.sqlite",
+        "to": "local_only/processed_outputs_not_runtime/truth_downloads_comprehensive.sqlite"
+      },
+      {
+        "name": "truth_downloads_vs_active_db_report.md",
+        "to": "local_only/processed_outputs_not_runtime/truth_downloads_vs_active_db_report.md"
+      }
+    ],
+    "root": [
+      {
+        "name": "deer_2025_bonus_random_audit.csv",
+        "to": "local_only/root_artifacts_not_runtime/deer_2025_bonus_random_audit.csv"
+      },
+      {
+        "name": "deer_2025_bonus_random_summary.csv",
+        "to": "local_only/root_artifacts_not_runtime/deer_2025_bonus_random_summary.csv"
+      },
+      {
+        "name": "hunts_scan_repair.patch",
+        "to": "local_only/root_artifacts_not_runtime/hunts_scan_repair.patch"
+      },
+      {
+        "name": "hunt_database_foundation_dwr_aligned.sqlite",
+        "to": "local_only/root_artifacts_not_runtime/hunt_database_foundation_dwr_aligned.sqlite"
+      },
+      {
+        "name": "hunt_database_gaps.csv",
+        "to": "local_only/root_artifacts_not_runtime/hunt_database_gaps.csv"
+      },
+      {
+        "name": "hunt_history_2025_2026_dwr_aligned.csv",
+        "to": "local_only/root_artifacts_not_runtime/hunt_history_2025_2026_dwr_aligned.csv"
+      },
+      {
+        "name": "hunt_master_canonical_2026_built.csv",
+        "to": "local_only/root_artifacts_not_runtime/hunt_master_canonical_2026_built.csv"
+      },
+      {
+        "name": "hunt_master_canonical_2026_built.sqlite",
+        "to": "local_only/root_artifacts_not_runtime/hunt_master_canonical_2026_built.sqlite"
+      },
+      {
+        "name": "point_ladder_view.csv",
+        "to": "local_only/root_artifacts_not_runtime/point_ladder_view.csv"
+      },
+      {
+        "name": "processed_data_hunt_database_2026_completeness_report.json",
+        "to": "local_only/root_artifacts_not_runtime/processed_data_hunt_database_2026_completeness_report.json"
+      },
+      {
+        "name": "utah-hunt-planner-master-all.md.txt",
+        "to": "local_only/root_artifacts_not_runtime/utah-hunt-planner-master-all.md.txt"
+      },
+      {
+        "name": "header-layout.js.bak-20260503-dwr-land-access-restore-1",
+        "to": "local_only/root_artifacts_not_runtime/header-layout.js.bak-20260503-dwr-land-access-restore-1"
+      },
+      {
+        "name": "index.html.bak-20260503-dwr-land-access-restore-1",
+        "to": "local_only/root_artifacts_not_runtime/index.html.bak-20260503-dwr-land-access-restore-1"
+      },
+      {
+        "name": "map-engine.js.bak-20260503-dwr-land-access-restore-1",
+        "to": "local_only/root_artifacts_not_runtime/map-engine.js.bak-20260503-dwr-land-access-restore-1"
+      },
+      {
+        "name": "style.css.bak-20260503-dwr-land-access-restore-1",
+        "to": "local_only/root_artifacts_not_runtime/style.css.bak-20260503-dwr-land-access-restore-1"
+      }
+    ]
+  }
+}
