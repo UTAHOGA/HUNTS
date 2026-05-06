@@ -654,24 +654,25 @@ async function applySelectedHuntBoundaryResolution(hunt) {
 
 function getBoundaryDisplaySummary(hunt) {
   const resolved = resolveBoundaryForHuntRuntime(hunt);
+  const huntNumber = safe(getHuntCode(hunt)).trim().toUpperCase();
   const memberIds = Array.isArray(resolved.dwr_member_boundary_ids) ? resolved.dwr_member_boundary_ids : [];
   if (resolved.status === 'mapped' && safe(resolved.merged_boundary_id).trim()) {
     const memberCount = memberIds.length;
     return {
-      line: `Boundary: Merged boundary${memberCount ? `, ${memberCount} DWR member areas` : ''}`,
+      line: `Boundary: Hunt Number ${huntNumber || 'Unavailable'}${memberCount ? ` (${memberCount} mapped areas)` : ''}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
     };
   }
   if (resolved.status === 'mapped' && safe(resolved.dwr_boundary_id).trim()) {
     return {
-      line: `Boundary: Boundary ID ${safe(resolved.dwr_boundary_id)}`,
+      line: `Boundary: Hunt Number ${huntNumber || 'Unavailable'}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
     };
   }
   if (resolved.status === 'fallback_member_features') {
     const memberCount = memberIds.length;
     return {
-      line: `Boundary: Mapped from member boundaries${memberCount ? ` (${memberCount})` : ''}`,
+      line: `Boundary: Hunt Number ${huntNumber || 'Unavailable'}${memberCount ? ` (${memberCount} mapped areas)` : ''}`,
       kmzPath: normalizeRelativeGeoPath(resolved.boundary_kmz_path),
     };
   }
@@ -2059,13 +2060,15 @@ function openSelectedHuntFloat() {
             <span class="selected-unit-placard-pill-label">Boundary</span>
             <span class="selected-unit-placard-pill-value">${boundaryLine}</span>
           </div>
+          <div class="selected-unit-placard-pill selected-unit-placard-pill--map">
+            <button type="button" class="secondary hunt-research-ring selected-unit-placard-map-btn" data-inline-view-map>
+              View Map
+            </button>
+          </div>
         </div>
         <div class="selected-unit-placard-actions">
           <button type="button" class="secondary hunt-research-ring" data-inline-hunt-research>
             Hunt Research
-          </button>
-          <button type="button" class="secondary hunt-research-ring" data-inline-view-map>
-            View Map
           </button>
           ${boundaryLink ? `<a href="${escapeHtml(boundaryLink)}" target="_blank" rel="noopener noreferrer">View on DWR</a>` : ''}
           ${kmzLink ? `<a href="${escapeHtml(kmzLink)}" target="_blank" rel="noopener noreferrer">Download KMZ</a>` : ''}
