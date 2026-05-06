@@ -3665,6 +3665,35 @@ function getGoogleEarth3dBoundaryFeatures() {
   }).slice(0, 12);
 }
 
+async function getGoogleEarth3dBoundaryFeaturesResolved() {
+  const sourceHunts = selectedHunt ? [selectedHunt] : getDisplayHunts();
+  if (!sourceHunts.length) return [];
+  if (!selectedHunt && shouldShowAllHuntUnits()) return [];
+
+  const targets = buildIndependentBoundaryTargets(sourceHunts);
+  if (!targets.length) return getGoogleEarth3dBoundaryFeatures();
+
+  const collected = [];
+  for (const target of targets) {
+    try {
+      const fc = await getIndependentBoundaryFeatureCollection(target);
+      const features = Array.isArray(fc?.features) ? fc.features : [];
+      if (!features.length) continue;
+      const huntCodes = [...new Set(target.hunts.map((hunt) => safe(getHuntCode(hunt)).trim().toUpperCase()).filter(Boolean))];
+      features.forEach((feature) => {
+        const props = { ...(feature?.properties || {}) };
+        props.UOGA_DISPLAY_BOUNDARY_ID = target.displayBoundaryId;
+        props.UOGA_HUNT_CODES = huntCodes.join('|');
+        collected.push({ ...feature, properties: props });
+      });
+    } catch (error) {
+      console.warn(`Google Earth boundary load failed for ${target.displayBoundaryId}`, error);
+    }
+  }
+
+  return collected.length ? collected : getGoogleEarth3dBoundaryFeatures();
+}
+
 function closeRingIfNeeded(points) {
   if (points.length < 3) return points;
   const first = points[0];
@@ -3936,7 +3965,7 @@ async function refreshGoogleEarth3dBoundaryOverlay() {
   if (!Polygon3DElement) return;
 
   clearGoogleEarth3dBoundaryOverlays();
-  const boundaryFeatures = getGoogleEarth3dBoundaryFeatures();
+  const boundaryFeatures = await getGoogleEarth3dBoundaryFeaturesResolved();
   const focusFeatures = [];
   let drawnOverlays = 0;
 
