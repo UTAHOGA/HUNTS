@@ -1379,10 +1379,13 @@ function getDisplayHunts() {
   return getFilteredHunts();
 }
 function shouldShowHuntBoundaries() {
-  return hasActiveMatrixSelections() || !!selectedHunt || !!toggleDwrUnits?.checked;
+  // Show hunt unit geometry only after user has started matrix selection
+  // (or explicitly selected a hunt), with Hunt Units acting as a master toggle.
+  return !!toggleDwrUnits?.checked && (hasActiveMatrixSelections() || !!selectedHunt);
 }
 function shouldShowAllHuntUnits() {
-  return !!toggleDwrUnits?.checked && !hasActiveMatrixSelections() && !selectedHunt;
+  // We intentionally avoid default "paint whole state" behavior on initial load.
+  return false;
 }
 function normalizeListValues(values) {
   if (Array.isArray(values)) return values.map(v => safe(v).trim()).filter(Boolean);
