@@ -288,6 +288,19 @@ function initOwnershipControlInHeader() {
   dock.dataset.ownershipHeaderReady = 'true';
 }
 
+function setOwnershipControlsExpandedForEarth(expanded = true) {
+  const dock = document.getElementById('ownershipDock');
+  if (!dock) return;
+  const groups = dock.querySelectorAll('details.ownership-group');
+  groups.forEach((group) => {
+    if (expanded) {
+      group.setAttribute('open', '');
+    } else {
+      group.removeAttribute('open');
+    }
+  });
+}
+
 function openHuntResearch(huntCode, residency = 'Resident', points = 12) {
   const code = String(huntCode || '').trim().toUpperCase();
   const normalizedResidency = String(residency || '').trim().toLowerCase().replace(/[\s_-]+/g, '') === 'nonresident'
@@ -3567,6 +3580,9 @@ function ensureGoogleEarth3dElement() {
     el.setAttribute('tilt', '64');
     el.setAttribute('heading', '25');
     el.setAttribute('gesture-handling', 'greedy');
+    // Keep Google Earth native controls enabled.
+    el.removeAttribute('default-ui-disabled');
+    el.removeAttribute('default-ui-hidden');
     el.hidden = true;
     el.addEventListener('gmp-error', () => {
       el.hidden = true;
@@ -3587,6 +3603,15 @@ async function ensureGoogleEarth3dMap() {
   const maps3d = await googleEarth3dLibraryPromise;
   googleEarth3dMap = el;
   el.mode = maps3d?.MapMode?.HYBRID || 'hybrid';
+  // Keep Google Earth native controls enabled.
+  el.removeAttribute('default-ui-disabled');
+  el.removeAttribute('default-ui-hidden');
+  if ('defaultUiDisabled' in el) {
+    try { el.defaultUiDisabled = false; } catch (_) {}
+  }
+  if ('defaultUiHidden' in el) {
+    try { el.defaultUiHidden = false; } catch (_) {}
+  }
   bindGoogleEarth3dZoomStyleEvents(el);
   syncGoogleEarth3dCamera();
   return el;
@@ -4178,6 +4203,7 @@ function applyMapMode() {
     googleBaselineMap?.getStreetView?.()?.setVisible(false);
     clearOutfitterMarkers();
     mapWrap.classList.add('is-earth-mode');
+    setOwnershipControlsExpandedForEarth(true);
     const mapEl = document.getElementById('map');
     if (mapEl) mapEl.hidden = true;
     updateStatus('Loading Google Earth 3D...');
