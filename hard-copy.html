@@ -131,6 +131,16 @@
       text-transform: uppercase;
       color: #efd4b1;
     }
+    .library-year-block {
+      margin-top: 10px;
+    }
+    .library-year-title {
+      margin: 0 0 8px;
+      font-size: 12px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #d9bc99;
+    }
     #librarySections {
       padding: 14px 16px 18px;
     }
@@ -284,6 +294,7 @@
       const map = {
         draw_odds: 'Draw Odds / Results',
         harvest_report: 'Harvest Reports',
+        conservation_permits: 'Conservation Permits',
         regulation: 'Regulations / Guidebooks'
       };
       return map[key] || key;
@@ -301,9 +312,15 @@
       let activeType = 'all';
       let activeYear = 'all';
       const parsedItems = items.map((item) => {
+        const combined = String(`${item.title || ''} ${item.subtitle || ''} ${item.href || ''}`).toLowerCase();
+        let group = String(item.group || '').toLowerCase().trim() || 'raw_library';
+        if (combined.includes('conservation permit') || combined.includes('conservation_permit') || combined.includes('expo')) {
+          group = 'conservation_permits';
+        }
         const yearMatch = String(`${item.title || ''} ${item.subtitle || ''} ${item.href || ''}`).match(/\b(20\d{2})\b/);
         return {
           ...item,
+          group,
           type: String(item.type || '').toLowerCase().trim() || 'file',
           year: yearMatch ? yearMatch[1] : ''
         };
@@ -348,7 +365,7 @@
 
       function drawSections() {
         const filtered = filterItems();
-        countEl.textContent = `${filtered.length} of ${parsedItems.length} file links`;
+        countEl.textContent = `${filtered.length} of ${parsedItems.length} PDF links`;
         if (!filtered.length) {
           sectionsEl.innerHTML = '<div class="library-empty">No files match this filter.</div>';
           return;
@@ -358,27 +375,54 @@
           if (!byGroup.has(item.group)) byGroup.set(item.group, []);
           byGroup.get(item.group).push(item);
         });
-        sectionsEl.innerHTML = Array.from(byGroup.entries()).map(([group, list]) => {
-          list.sort((a, b) => {
-            const yearA = Number(a.year || 0);
-            const yearB = Number(b.year || 0);
-            if (yearA !== yearB) return yearB - yearA;
-            return String(a.title || '').localeCompare(String(b.title || ''));
+        const groupOrder = ['draw_odds', 'harvest_report', 'conservation_permits', 'regulation'];
+        const sortedGroups = Array.from(byGroup.keys()).sort((a, b) => {
+          const ai = groupOrder.includes(a) ? groupOrder.indexOf(a) : 999;
+          const bi = groupOrder.includes(b) ? groupOrder.indexOf(b) : 999;
+          if (ai !== bi) return ai - bi;
+          return a.localeCompare(b);
+        });
+
+        sectionsEl.innerHTML = sortedGroups.map((group) => {
+          const list = byGroup.get(group) || [];
+          const byYear = new Map();
+          list.forEach(item => {
+            const yearKey = item.year || 'Unknown year';
+            if (!byYear.has(yearKey)) byYear.set(yearKey, []);
+            byYear.get(yearKey).push(item);
           });
-          const cards = list.map(item => `
-            <a class="hard-data-card" role="listitem" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">
-              <span class="hard-data-ico" aria-hidden="true">${escapeHtml((item.type || 'file').slice(0, 4))}</span>
-              <span>
-                <span class="hard-data-title">${escapeHtml(item.title)}</span>
-                <span class="hard-data-sub">${escapeHtml(item.subtitle || '')}</span>
-                <span class="hard-data-meta">${escapeHtml((item.type || '').toUpperCase())}${item.year ? ` | ${escapeHtml(item.year)}` : ''}</span>
-              </span>
-            </a>
-          `).join('');
+
+          const sortedYears = Array.from(byYear.keys()).sort((a, b) => {
+            if (a === 'Unknown year') return 1;
+            if (b === 'Unknown year') return -1;
+            return Number(b) - Number(a);
+          });
+
+          const yearBlocks = sortedYears.map((yearKey) => {
+            const yearItems = byYear.get(yearKey) || [];
+            yearItems.sort((a, b) => String(a.title || '').localeCompare(String(b.title || '')));
+            const cards = yearItems.map(item => `
+              <a class="hard-data-card" role="listitem" href="${escapeHtml(item.href)}" target="_blank" rel="noopener noreferrer">
+                <span class="hard-data-ico" aria-hidden="true">${escapeHtml((item.type || 'file').slice(0, 4))}</span>
+                <span>
+                  <span class="hard-data-title">${escapeHtml(item.title)}</span>
+                  <span class="hard-data-sub">${escapeHtml(item.subtitle || '')}</span>
+                  <span class="hard-data-meta">${escapeHtml((item.type || '').toUpperCase())}${item.year ? ` | ${escapeHtml(item.year)}` : ''}</span>
+                </span>
+              </a>
+            `).join('');
+            return `
+              <div class="library-year-block">
+                <h4 class="library-year-title">${escapeHtml(yearKey)}</h4>
+                <div class="hard-data-grid" role="list">${cards}</div>
+              </div>
+            `;
+          }).join('');
+
           return `
             <section class="library-section">
               <h3>${escapeHtml(groupLabel(group))}</h3>
-              <div class="hard-data-grid" role="list">${cards}</div>
+              ${yearBlocks}
             </section>
           `;
         }).join('');
