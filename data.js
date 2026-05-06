@@ -299,6 +299,33 @@ window.UOGA_DATA = (() => {
       throw new Error('Unable to load any hunt data records.');
     }
 
+    // Backfill boundary IDs by hunt code across merged sources so unit mapping can
+    // stay comprehensive even when one source omits boundary assignments.
+    const boundaryByHuntCode = new Map();
+    merged.forEach(record => {
+      const huntCode = firstNonEmptyRecordValue(record?.huntCode, record?.hunt_code, record?.HuntCode, record?.code).toUpperCase();
+      const boundaryId = firstNonEmptyRecordValue(record?.boundaryId, record?.boundaryID, record?.BoundaryID, record?.boundary_id, record?.originalBoundaryId);
+      if (huntCode && boundaryId && !boundaryByHuntCode.has(huntCode)) {
+        boundaryByHuntCode.set(huntCode, boundaryId);
+      }
+    });
+    let boundaryBackfills = 0;
+    merged.forEach(record => {
+      const existingBoundaryId = firstNonEmptyRecordValue(record?.boundaryId, record?.boundaryID, record?.BoundaryID, record?.boundary_id, record?.originalBoundaryId);
+      if (existingBoundaryId) return;
+      const huntCode = firstNonEmptyRecordValue(record?.huntCode, record?.hunt_code, record?.HuntCode, record?.code).toUpperCase();
+      const backfillBoundaryId = huntCode ? boundaryByHuntCode.get(huntCode) : '';
+      if (!backfillBoundaryId) return;
+      if (!record.boundaryId) record.boundaryId = backfillBoundaryId;
+      if (!record.boundaryID) record.boundaryID = backfillBoundaryId;
+      if (!record.BoundaryID) record.BoundaryID = backfillBoundaryId;
+      if (!record.boundary_id) record.boundary_id = backfillBoundaryId;
+      boundaryBackfills += 1;
+    });
+    if (boundaryBackfills) {
+      console.log(`Backfilled boundaryId for ${boundaryBackfills} hunt rows using merged huntCode matches.`);
+    }
+
     if (!authoritativeLoaded) {
       const derivedSpikeRecords = await loadDerivedSpikeElkRecords(merged, deps);
       if (derivedSpikeRecords.length) {

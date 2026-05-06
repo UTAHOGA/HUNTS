@@ -33,7 +33,12 @@ window.UOGA_CONFIG = (() => {
       || host.endsWith('.lan')
       || isPrivateIpv4Host(host);
   }
+  const UOGA_LOCAL_CONFIG = (typeof window !== 'undefined' && window.UOGA_LOCAL_CONFIG && typeof window.UOGA_LOCAL_CONFIG === 'object')
+    ? window.UOGA_LOCAL_CONFIG
+    : {};
   const CLOUDFLARE_BASE = 'https://json.uoga.workers.dev';
+  const CLOUDFLARE_R2_BASE = String(UOGA_LOCAL_CONFIG.CLOUDFLARE_R2_BASE || '').trim().replace(/\/+$/, '');
+  const fromR2 = (relPath) => CLOUDFLARE_R2_BASE ? `${CLOUDFLARE_R2_BASE}/${relPath}` : '';
 
   /*
     ============================================================================
@@ -81,9 +86,23 @@ window.UOGA_CONFIG = (() => {
     ============================================================================
   */
   const HUNT_BOUNDARY_SOURCES = [
-    `./data/hunt-boundaries-lite.geojson?v=${HUNT_DATA_VERSION}`,
-    `./data/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
-    `${CLOUDFLARE_BASE}/hunt_boundaries.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    fromR2(`processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
+  ].filter(Boolean);
+  const COMPOSITE_BOUNDARY_SOURCES = [
+    `./data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `./processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`,
+    `${CLOUDFLARE_BASE}/processed_data/statewide_composite_boundaries_2026.geojson?v=${HUNT_DATA_VERSION}`,
+    fromR2(`data/statewide-composite-members-2026-lite.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`processed_data/statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
+    fromR2(`statewide_composite_boundaries_2026_FINAL_LOCKED.geojson?v=${HUNT_DATA_VERSION}`),
   ];
 
   const HUNT_DATA_SOURCES = [
@@ -92,10 +111,11 @@ window.UOGA_CONFIG = (() => {
       required: true,
       authoritative: true,
       candidates: [
+        `./data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
+        `./processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
+        `${CLOUDFLARE_BASE}/processed_data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
+        `${CLOUDFLARE_BASE}/data/hunt-master-canonical-2026-source-of-truth.json?v=${HUNT_DATA_VERSION}`,
         `./data/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
-        `./data/canonical/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
-        `${CLOUDFLARE_BASE}/canonical/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
-        `${CLOUDFLARE_BASE}/hunt-master-canonical.json?v=${HUNT_DATA_VERSION}`,
       ],
     },
     {
@@ -423,6 +443,7 @@ window.UOGA_CONFIG = (() => {
     UTAH_LOCATION_BOUNDS,
 
     CLOUDFLARE_BASE,
+    CLOUDFLARE_R2_BASE,
 
     HUNT_DATA_VERSION,
     OUTFITTERS_DATA_VERSION,
@@ -430,6 +451,7 @@ window.UOGA_CONFIG = (() => {
     HUNT_RESEARCH_DATA_VERSION,
 
     HUNT_BOUNDARY_SOURCES,
+    COMPOSITE_BOUNDARY_SOURCES,
     HUNT_DATA_SOURCES,
     ELK_BOUNDARY_TABLE_SOURCES,
     OFFICIAL_HUNT_BOUNDARY_TABLE_SOURCES,

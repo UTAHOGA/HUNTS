@@ -39,6 +39,7 @@ const rootFiles = [
 
 const dataFiles = [
   'data/hunt-master-canonical.json',
+  'data/hunt-master-canonical-2026-source-of-truth.json',
   'data/utah-hunt-planner-master-all.json',
   'data/elk_hunt_table_official.json',
   'data/elk_antlerless_hunt_table_official.json',
@@ -56,6 +57,7 @@ const dataFiles = [
   'data/outfitters.json',
   'data/cwmu-boundaries.geojson',
   'data/dwr-GetCWMUBoundaries.json',
+  'data/statewide-composite-members-2026-lite.geojson',
 ];
 
 const processedFiles = [
@@ -63,6 +65,7 @@ const processedFiles = [
   'processed_data/point_ladder_view.csv',
   'processed_data/hunt_master_enriched.csv',
   'processed_data/hunt_unit_reference_linked.csv',
+  'processed_data/hunt-master-canonical-2026-source-of-truth.json',
   'processed_data/outfitter-federal-unit-coverage-review.json',
   'processed_data/coverage-matrix.json',
   'processed_data/normalized-staging-audit.csv',

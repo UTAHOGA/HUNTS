@@ -31,6 +31,7 @@
 
   var localConfig = {
     GOOGLE_MAPS_API_KEY: '',
+    CLOUDFLARE_R2_BASE: '',
     POSTHOG_PROJECT_KEY: '',
     POSTHOG_CONFIG: {
       enableSessionRecording: false
